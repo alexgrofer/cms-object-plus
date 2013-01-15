@@ -46,9 +46,9 @@ class AdminController extends Controller {
         }
         //init urls
         $paramslisturl = explode('/',$this->actionParams['r']);
+		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
         $this->dicturls['admin'] = $this->createUrl($paramslisturl[1].'/');
         $this->dicturls['class'] = $paramslisturl[2];
-        //а как сделать в пользовательском контроллере?
         $this->dicturls['all'] = implode('/',array_slice($paramslisturl,1));
         $this->dicturls['paramslist'] = array_merge(array_slice($paramslisturl,3), array('','','','','','',''));
         $indexaction = array_search('action',$this->dicturls['paramslist']);
