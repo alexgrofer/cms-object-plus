@@ -133,6 +133,10 @@ abstract class AbsBaseHeaders extends CActiveRecord // (Django) class AbsBaseHea
             $objectcurrentlink = $namelinkallmodel::model()->findByAttributes(array('idobj' => $this->id, 'uclass_id' => $this->uclass_id));
             $this->_tempthislink = $objectcurrentlink;
         }
+        if(!$this->_tempthislink) {
+            throw new CException(Yii::t('cms','None sublinks object "{id_obj}" class "{class}" table "{nametable}"',
+            array('{class}'=>$this->uclass_id,'{id_obj}'=>$this->id, '{nametable}'=>$this->getNameLinksModel())));
+        }
         return $this->_tempthislink;
     }
     public function editlinks($type, $class, $idsheaders) {
