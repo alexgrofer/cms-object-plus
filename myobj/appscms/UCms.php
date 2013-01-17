@@ -40,7 +40,7 @@ class UCms {
         
     }
     private function __construct($currentcontroller=null, $conf=null) {
-        $this->config = require(dirname(__FILE__).($conf ?: '/config.php'));
+        $this->config = require(dirname(__FILE__).($conf ?: '/config/main.php'));
         $this->_controller = $currentcontroller;
     }
     
