@@ -5,13 +5,15 @@ $assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('application
 $cs->registerCoreScript('jquery');
 //$cs->registerScriptFile($assetsFolder.'/js/main.js',CClientScript::POS_END); //load end tag body
 //$cs->registerCssFile($assetsFolder.'/css/main.css');
+$cs->registerScriptFile($assetsFolder.'/bootstrap/js/bootstrap.min.js');
+$cs->registerCssFile($assetsFolder.'/bootstrap/css/bootstrap.min.css');
 
 $urladm = Yii::app()->createUrl('myobj/admin');
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset='utf-8'>
+    <meta charset='utf-8'>
 </head>
 <style>
 form .row {padding:0;margin-left:0}
@@ -24,7 +26,24 @@ input, select {height: auto !important; vertical-align:top !important;}
 <body>
 <div style="padding: 10px">
 <?php if(!Yii::app()->user->isGuest) {?>
-<p class="well"><a href="<?=$urladm?>/objects/models/classes/">classes</a> | <a href="<?=$urladm?>/objects/models/properties/">properties</a> |-----| <a href="<?=$urladm?>/objects/class/templates_sys/">templates</a> | <a href="<?=$urladm?>/objects/class/views_sys/">views</a> | <a href="<?=$urladm?>/objects/class/navigation_sys/">nav</a> | <a href="<?=$urladm?>/objects/class/groups_sys/">groups</a> |-----| <a href="<?=$urladm?>/objects/models/">MODELS</a> | <a href="<?=$urladm?>/objects/ui/">UI</a> | ---- | <a href="<?=$urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a></p>
+<div class="well">
+    <a href="<?=$urladm?>/objects/models/classes/">classes</a> | 
+    <a href="<?=$urladm?>/objects/models/properties/">properties</a> |-----| 
+<div class="btn-group">
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    mvc
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li><a href="<?=$urladm?>/objects/class/templates_sys/">templates</a></li>
+    <li><a href="<?=$urladm?>/objects/class/views_sys/">views</a></li>
+    <li><a href="<?=$urladm?>/objects/class/navigation_sys/">nav</a></li>
+</div>
+    <a href="<?=$urladm?>/objects/class/groups_sys/">groups</a> |-----| 
+    <a href="<?=$urladm?>/objects/models/">MODELS</a> | 
+    <a href="<?=$urladm?>/objects/ui/">UI</a> | ---- | 
+    <a href="<?=$urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
+</div>
 
 <?php
 $this->renderClip('header');

@@ -346,7 +346,6 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 ');
 echo '<div style="padding-bottom: 60px">'.apicms\utils\pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate).'</div>';
 }
-echo apicms\utils\GUID();
 ?>
 <input name="idsall" type="hidden" value="<?php echo implode(',',$idsall);?>" />
 </form>

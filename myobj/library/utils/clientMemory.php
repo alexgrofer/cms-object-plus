@@ -220,7 +220,7 @@ class clientMemory extends AbsClientMemory {
 }
 
 
-
+/*
 $ident = 'd2sfk34dflk34sdsss'; //идентификатор сесии клиента
 
 $objclientMemoryCookie = clientMemory::init($ident,'db','2min'); //инизиализация сессии
@@ -238,3 +238,4 @@ else {
     print_r($objclientMemoryCookieBasket);
     
 }
+*/

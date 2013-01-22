@@ -1,7 +1,6 @@
 <?php
 Yii::import('application.modules.myobj.appscms.api.dep_store.Catalog');
-Yii::import('application.modules.myobj.library.utils.clientMemory');
-$dsds = new clientMemory();
+
 /// start menu
 $str_menu_link='';
 if($this->dicturls['paramslist'][2]!='') {

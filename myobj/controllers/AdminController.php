@@ -1,8 +1,7 @@
 ﻿<?php
 Yii::import('application.modules.myobj.appscms.UCms');
 Yii::import('application.modules.myobj.appscms.api.utils',true);
-Yii::import('ext.bootstrap.components.Bootstrap');
-$bs=new Bootstrap();$bs->init();unset($bs);
+
 class AdminController extends Controller {
     public $layout='/layouts/admin/column1';
     public $apcms;
