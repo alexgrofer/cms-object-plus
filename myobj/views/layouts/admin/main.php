@@ -3,8 +3,9 @@ $cs = Yii::app()->getClientScript();
 $cs->coreScriptPosition=CClientScript::POS_HEAD; //load into tag
 $assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.myobj.assets'));
 $cs->registerCoreScript('jquery');
-//$cs->registerScriptFile($assetsFolder.'/js/main.js',CClientScript::POS_END); //load end tag body
-//$cs->registerCssFile($assetsFolder.'/css/main.css');
+
+//$cs->registerScriptFile($assetsFolder.'/js/admin.main.js',CClientScript::POS_END);
+//$cs->registerCssFile($assetsFolder.'/css/admin.main.css');
 $cs->registerScriptFile($assetsFolder.'/bootstrap/js/bootstrap.min.js');
 $cs->registerCssFile($assetsFolder.'/bootstrap/css/bootstrap.min.css');
 
@@ -21,7 +22,7 @@ input, select {height: auto !important; vertical-align:top !important;}
 .cgreen {color: green}
 .cred {color: red}
 .errorMessage {color: red}
-.phor2px {padding: 5px !important}
+.padding5px {padding: 5px !important}
 </style>
 <body>
 <div style="padding: 10px">
@@ -50,5 +51,8 @@ $this->renderClip('header');
 }?>
 <?php echo $content; ?>
 </div>
+<script>
+
+</script>
 </body>
 </html>

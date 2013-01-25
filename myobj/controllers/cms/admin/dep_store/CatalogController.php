@@ -3,19 +3,84 @@ Yii::import('application.modules.myobj.appscms.api.dep_store.Catalog');
 
 /// start menu
 $str_menu_link='';
-if($this->dicturls['paramslist'][2]!='') {
-$_ = array(
-    'catalog'=>'',
+$array_catalog = array(
+    'catalog'=>array(''),
+    'options'=>array('options'),
+    'params'=>array('params'),
 );
-foreach($_ as $key => $value) {
+foreach($array_catalog as $key => $value) {
     $class='';
-    if($this->apcms->isLastUrl($value)) {
-        $class='disabled';
-    }
-$str_menu_link .= '<a class="btn btn-success '.$class.'" href="'.$this->apcms->geturlpage('storedep_catalog', $value).'">'.$key.'</a> ';
-}}
-$this->setVarRender('str_menu_link',($str_menu_link)?'<div class="label label-info phor2px">'.$str_menu_link.'</div>':'');
+    $str_menu_link .= '<a class="btn btn-success" href="'.$this->apcms->geturlpage('storedep_catalog', $value[0]).'">'.$key.'</a> ';
+}unset($array_catalog);
+$this->setVarRender('str_menu_link',($str_menu_link)?'<div class="label label-info">'.$str_menu_link.'</div>':'');
 /// end menu
+switch($this->dicturls['paramslist'][2]) {
+/// contoll options
+case 'options':
+Yii::import('application.modules.myobj.appscms.api.dep_store.Option');
+if(in_array($this->dicturls['paramslist'][3],array('edit','remove')) && $this->dicturls['paramslist'][4]!='') {
+    // REMOVE
+    if($this->dicturls['paramslist'][2]=='remove' && (int)$this->dicturls['paramslist'][4]!=0) {
+        Option::del($this->dicturls['paramslist'][4]);
+        $this->redirect($this->apcms->geturlpage('storedep_option'));
+        Yii::app()->end();
+    }
+    // EDIT, CREATE
+    $idobject = (int)$this->dicturls['paramslist'][4] ?: null;
+    $objOption = DepstoreOption::model()->findByPk($idobject) ?: (new DepstoreOption());
+    $form = $objOption->UserFormModel->initform($_POST);
+    if(count($_POST) && $form->validate()) {
+        $model = $form->model;
+        Option::edit_creat(
+            array(
+                'name'=>$model->name,
+                'type'=>$model->type,
+                'range'=>$model->range,
+                //'guid'=>'',
+            ),
+            $idobject
+        );
+        $this->redirect($this->apcms->geturlpage('storedep_option'));
+    }
+    //render param
+    $this->setVarRender('form',$form);
+    // END
+    $view = '/admin/dep_store/catalog/optionsobj';
+}
+else {
+    $view = '/admin/dep_store/catalog/optionslist';
+}
+break;
+/// contoll params
+case 'params':
+if($this->dicturls['paramslist'][4]=='edit' && $this->dicturls['paramslist'][5]!='') {
+    //подключаем в форму модель редактирования 
+    // EDIT, CREATE
+    $idobject = (int)$this->dicturls['paramslist'][5] ?: null;
+    $objOption = DepstoreOptionParams::model()->findByPk($idobject) ?: (new DepstoreOptionParams());
+    $form = $objOption->UserFormModel->initform($_POST);
+    if(count($_POST) && $form->validate()) {
+        $model = $form->model;
+        Option::edit_creat_param(
+            array(
+                'val'=>$model->val,
+                'id_option'=>$this->dicturls['paramslist'][3],
+            ),
+            $idobject
+        );
+        $this->redirect($this->apcms->geturlpage('storedep_option', 'params/'.$this->dicturls['paramslist'][3]));
+    }
+    //render param
+    $this->setVarRender('form',$form);
+    // END
+    $view = '/admin/dep_store/catalog/paramsobj';
+}
+else {
+$view = '/admin/dep_store/catalog/paramslist';
+}
+break;
+/// contoll catalog
+default:
 if(in_array($this->dicturls['paramslist'][2],array('edit','remove')) && $this->dicturls['paramslist'][3]!='') {
     // REMOVE
     if($this->dicturls['paramslist'][2]=='remove' && (int)$this->dicturls['paramslist'][3]!=0) {
@@ -43,8 +108,9 @@ if(in_array($this->dicturls['paramslist'][2],array('edit','remove')) && $this->d
     //render param
     $this->setVarRender('form',$form);
     //
-    $view = '/admin/dep_store/catalog/obj';
+    $view = '/admin/dep_store/catalog/catalogobj';
 }
 else {
-    $view = '/admin/dep_store/catalog/list';
+    $view = '/admin/dep_store/catalog/cataloglist';
+}
 }

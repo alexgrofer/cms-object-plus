@@ -33,7 +33,6 @@ if(in_array($this->dicturls['paramslist'][2],array('edit','remove')) && $this->d
             array(
                 'name'=>$model->name,
                 'type'=>$model->type,
-                'exp'=>$model->exp,
                 'range'=>$model->range,
                 //'guid'=>'',
             ),

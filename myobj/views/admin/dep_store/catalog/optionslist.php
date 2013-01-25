@@ -25,7 +25,8 @@ foreach(Option::get() as $value) {
     foreach(Option::getNameparams() as $colname) {
         echo '<td>'.$value[$colname].'</td>';
     }
-    echo '<td><a title="link params" href="'.$this->apcms->geturlpage('storedep_option','params/'.$value['id']).'"><i class="icon-resize-small"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a title="edit" href="'.$this->apcms->geturlpage('storedep_option','edit/'.$value['id']).'"><i class="icon-edit"></i></a> | --- <a title="remove" onclick="return confirm(\'remove id - '.$value['id'].'\')" href="'.$this->apcms->geturlpage('storedep_option','remove/'.$value['id']).'"><i class="icon-remove"></i></a></td>';
+    $link_params='<a title="link params" href="'.$this->apcms->geturlpage('storedep_catalog','params/option/'.$value['id']).'"><i class="icon-resize-small"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;';
+    echo '<td>'.$link_params.'<a title="edit" href="'.$this->apcms->geturlpage('storedep_catalog','edit/'.$value['id']).'"><i class="icon-edit"></i></a> | --- <a title="remove" onclick="return confirm(\'remove id - '.$value['id'].'\')" href="'.$this->apcms->geturlpage('storedep_catalog','remove/'.$value['id']).'"><i class="icon-remove"></i></a></td>';
     echo '</tr>';
 }
 ?>

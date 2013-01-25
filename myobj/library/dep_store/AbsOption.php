@@ -8,7 +8,7 @@ interface IOption {
 }
 
 abstract class AbsOption implements IOption {
-    protected static $nameparams = array('name','type','exp','range');
+    protected static $nameparams = array('name','type','range');
     public static function getNameparams() {
         return static::$nameparams;
     }

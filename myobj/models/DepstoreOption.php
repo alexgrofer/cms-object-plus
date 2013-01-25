@@ -3,7 +3,6 @@ class DepstoreOption extends CActiveRecord
 {
     public $name;
     public $type;
-    public $exp;
     public $range;
     public function gettypeAr() {
         return array('1'=>'val','2'=>'bool','3'=>'select');
@@ -19,7 +18,7 @@ class DepstoreOption extends CActiveRecord
     public function rules() {
         return array(
             array('name, type', 'required'),
-            array('exp, range', 'default', 'value'=>''),
+            array('range', 'default', 'value'=>''),
         );
     }
     public function relations()
@@ -36,9 +35,6 @@ class DepstoreOption extends CActiveRecord
             'type'=>array(
                 'type'=>'dropdownlist',
                 'items'=>$this->gettypeAr(),
-            ),
-            'exp'=>array(
-                'type'=>'text',
             ),
             'range'=>array(
                 'type'=>'text',
