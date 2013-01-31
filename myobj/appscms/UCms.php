@@ -27,8 +27,9 @@ class UCms {
         //
         return $this->_controller->createUrl($str_slice.'/'.$addelem,$params);
     }
-    function isLastUrl($strlsturl) {
-        if($strlsturl!='' && preg_match('~./'.$strlsturl.'/?$~',$this->_controller->actionParams['r'])) {
+    function isFirstUrl($strlsturl,$start=4) {
+        echo implode('/',array_slice(explode('/',$this->_controller->actionParams['r']),$start));
+        if($strlsturl!='' && preg_match('~^'.$strlsturl.'~',implode('/',array_slice(explode('/',$this->_controller->actionParams['r']),$start)))) {
             return true;
         }
         return false;
