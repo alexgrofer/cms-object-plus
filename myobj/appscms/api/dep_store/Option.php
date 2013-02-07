@@ -9,11 +9,17 @@ class Option extends AbsOption {
         return $arr;
         //FACADE END
     }
-    public static function getParams($idoption) {
+    public static function getParams($idoption=null) {
         //example $filterarr=array(['id'=>5[,'name'=>'nameelem']])
         //FACADE START
-        $objOption = DepstoreOption::model()->findByPk($idoption);
-        $arr = $objOption->params;
+        $arr = array();
+        if($idoption) {
+            $objOption = DepstoreOption::model()->findByPk($idoption);
+            $arr = $objOption->params;
+        }
+        else {
+            $arr = DepstoreOptionParams::model()->findAll();
+        }
         return $arr;
         //FACADE END
     }
@@ -40,6 +46,11 @@ class Option extends AbsOption {
     public static function del($id) {
         //FACADE START
         DepstoreOption::model()->deleteByPk($id);
+        //FACADE END
+    }
+    public static function delParam($id) {
+        //FACADE START
+        DepstoreOptionParams::model()->deleteByPk($id);
         //FACADE END
     }
 }

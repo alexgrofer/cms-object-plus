@@ -1,6 +1,6 @@
 <?php
 Yii::import('application.modules.myobj.appscms.api.dep_store.Catalog');
-
+Yii::import('application.modules.myobj.appscms.api.dep_store.Option');
 /// start menu
 $str_menu_link='';
 $array_catalog = array(
@@ -10,20 +10,21 @@ $array_catalog = array(
 );
 foreach($array_catalog as $key => $value) {
     $class='';
-    $str_menu_link .= '<a class="btn btn-success" href="'.$this->apcms->geturlpage('storedep_catalog', $value[0]).'">'.$key.'</a> ';
+    if($this->apcms->isFirstUrl($key,5)) {
+        $class='disabled';
+    }
+    $str_menu_link .= '<a class="btn btn-success '.$class.'" href="'.$this->apcms->geturlpage('storedep_catalog', $value[0]).'">'.$key.'</a> ';
 }unset($array_catalog);
 $this->setVarRender('str_menu_link',($str_menu_link)?'<div class="label label-info">'.$str_menu_link.'</div>':'');
 /// end menu
 switch($this->dicturls['paramslist'][2]) {
 /// contoll options
 case 'options':
-Yii::import('application.modules.myobj.appscms.api.dep_store.Option');
 if(in_array($this->dicturls['paramslist'][3],array('edit','remove')) && $this->dicturls['paramslist'][4]!='') {
     // REMOVE
-    if($this->dicturls['paramslist'][2]=='remove' && (int)$this->dicturls['paramslist'][4]!=0) {
+    if($this->dicturls['paramslist'][3]=='remove' && (int)$this->dicturls['paramslist'][4]!=0) {
         Option::del($this->dicturls['paramslist'][4]);
-        $this->redirect($this->apcms->geturlpage('storedep_option'));
-        Yii::app()->end();
+        $this->redirect($this->apcms->geturlpage('storedep_catalog','options'));
     }
     // EDIT, CREATE
     $idobject = (int)$this->dicturls['paramslist'][4] ?: null;
@@ -40,7 +41,8 @@ if(in_array($this->dicturls['paramslist'][3],array('edit','remove')) && $this->d
             ),
             $idobject
         );
-        $this->redirect($this->apcms->geturlpage('storedep_option'));
+        if($idobject) $this->refresh();
+        $this->redirect($this->apcms->geturlpage('storedep_catalog','options'));
     }
     //render param
     $this->setVarRender('form',$form);
@@ -53,8 +55,11 @@ else {
 break;
 /// contoll params
 case 'params':
-if($this->dicturls['paramslist'][4]=='edit' && $this->dicturls['paramslist'][5]!='') {
-    //подключаем в форму модель редактирования 
+if((in_array($this->dicturls['paramslist'][3],array('edit','remove')) && $this->dicturls['paramslist'][4]!='') || $this->dicturls['paramslist'][4]=='edit') {
+    if($this->dicturls['paramslist'][3]=='remove' && (int)$this->dicturls['paramslist'][4]!=0) {
+        Option::delParam($this->dicturls['paramslist'][4]);
+        $this->redirect($this->apcms->geturlpage('storedep_catalog','params'));
+    }
     // EDIT, CREATE
     $idobject = (int)$this->dicturls['paramslist'][5] ?: null;
     $objOption = DepstoreOptionParams::model()->findByPk($idobject) ?: (new DepstoreOptionParams());
@@ -68,7 +73,9 @@ if($this->dicturls['paramslist'][4]=='edit' && $this->dicturls['paramslist'][5]!
             ),
             $idobject
         );
-        $this->redirect($this->apcms->geturlpage('storedep_option', 'params/'.$this->dicturls['paramslist'][3]));
+        if($idobject) $this->refresh();
+
+        $this->redirect($this->apcms->geturlpage('storedep_catalog','params/option/'.$this->dicturls['paramslist'][3]));
     }
     //render param
     $this->setVarRender('form',$form);
@@ -86,7 +93,6 @@ if(in_array($this->dicturls['paramslist'][2],array('edit','remove')) && $this->d
     if($this->dicturls['paramslist'][2]=='remove' && (int)$this->dicturls['paramslist'][3]!=0) {
         Catalog::del($this->dicturls['paramslist'][3]);
         $this->redirect($this->apcms->geturlpage('storedep_catalog'));
-        Yii::app()->end();
     }
     // EDIT, CREATE
     
@@ -103,7 +109,9 @@ if(in_array($this->dicturls['paramslist'][2],array('edit','remove')) && $this->d
             ),
             $idobject
         );
+        if($idobject) $this->refresh();
         $this->redirect($this->apcms->geturlpage('storedep_catalog'));
+        
     }
     //render param
     $this->setVarRender('form',$form);

@@ -5,6 +5,7 @@ interface IOption {
     public static function edit_creat($id,$p_array);
     public static function edit_creat_param($id,$p_array);
     public static function del($id);
+    public static function delParam($id);
 }
 
 abstract class AbsOption implements IOption {
