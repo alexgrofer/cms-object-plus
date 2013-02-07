@@ -1,5 +1,5 @@
 ﻿<?php
-abstract class AbsBaseHeaders extends CActiveRecord // (Django) class AbsBaseHeaders(models.Model):
+abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(models.Model):
 {
     public function tableName()
     {
@@ -49,12 +49,13 @@ abstract class AbsBaseHeaders extends CActiveRecord // (Django) class AbsBaseHea
     }
     public function setuiprop($array) {
         // $array=array('condition'=>array(array('p1','<=','23'), 'or', array('p2','=','val')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
+        $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
         if(array_key_exists('condition',$array) && count($array['condition'])) {
             $textsql = '';
             foreach($array['condition'] as $cond) {
                 if(is_array($cond)) {
-                    $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$this->getallprop()[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property.codename='".$cond[0]."')";
+                    $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property.codename='".$cond[0]."')";
                 }
                 else {
                     $textsql .= ' '.$cond.' ';
@@ -69,9 +70,9 @@ abstract class AbsBaseHeaders extends CActiveRecord // (Django) class AbsBaseHea
             $array['order'] = array(array('intst222', 'desc'), array('st1', 'asc'));
             
             foreach($array['order'] as $arpropelem) {
-                $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$this->getallprop()[$arpropelem[0]]->id);
+                $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id);
                 $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
-                $typeprop = $arrconfcms['TYPES_COLUMNS'][$this->getallprop()[$arpropelem[0]]->myfield];
+                $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
                 $this->dbCriteria->order .= (($this->dbCriteria->order)?',':'').'(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
             }
         }
@@ -209,17 +210,4 @@ abstract class AbsBaseHeaders extends CActiveRecord // (Django) class AbsBaseHea
             $objectcurrentlink->delete();
         }
     }
-    
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
-            ),
-        );
-    }
-
 }

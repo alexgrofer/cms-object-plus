@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseLines extends CActiveRecord // (Django) class AbsBaseLines(models.Model):
+abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(models.Model):
 {
     
     public $uptextfield; //models.TextField(blank=True)
@@ -41,13 +41,5 @@ abstract class AbsBaseLines extends CActiveRecord // (Django) class AbsBaseLines
             $this->$namefunkloader($this->uptextfield);
         }
         return parent::beforeSave();
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-        );
     }
 }

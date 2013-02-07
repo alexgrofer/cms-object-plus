@@ -1,13 +1,9 @@
 <?php
-class DepstoreCatalog extends CActiveRecord
+class DepstoreCatalog extends AbsModel
 {
     public $name;
     public $top;
     
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
     public function tableName()
     {
         return 'setcms_'.strtolower(get_class($this));
@@ -25,17 +21,6 @@ class DepstoreCatalog extends CActiveRecord
             ),
             'top'=>array(
                 'type'=>'text',
-            ),
-        );
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
             ),
         );
     }

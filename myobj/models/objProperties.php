@@ -1,5 +1,5 @@
 <?php
-class objProperties extends CActiveRecord
+class objProperties extends AbsModel
 {
     public $name; //models.CharField(max_length=255)
     public $codename; //models.CharField(max_length=30,unique=True)
@@ -10,11 +10,6 @@ class objProperties extends CActiveRecord
     public $required; //models.BooleanField(blank=True)
     public $udefault=''; //models.CharField(max_length=255,blank=True)
     public $setcsv=''; //models.CharField(max_length=255,blank=True)
-    
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
  
     public function tableName()
     {
@@ -91,17 +86,6 @@ class objProperties extends CActiveRecord
             'setcsv'=>array(
                 'type'=>'textarea',
             )
-        );
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
-            ),
         );
     }
 }

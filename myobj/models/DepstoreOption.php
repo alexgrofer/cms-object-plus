@@ -1,15 +1,11 @@
 <?php
-class DepstoreOption extends CActiveRecord
+class DepstoreOption extends AbsModel
 {
     public $name;
     public $type;
     public $range;
     public function gettypeAr() {
         return array('1'=>'val','2'=>'bool','3'=>'select');
-    }
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
     }
     public function tableName()
     {
@@ -38,17 +34,6 @@ class DepstoreOption extends CActiveRecord
             ),
             'range'=>array(
                 'type'=>'text',
-            ),
-        );
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
             ),
         );
     }

@@ -272,8 +272,9 @@ foreach($listall as $obj) {
         echo '<td>'.$obj->$colname.'</td>';
     }
     if($REND_thispropsui) {
+        $properties = $obj->get_properties();
         foreach(array_keys($REND_thispropsui) as $colname) {
-            echo '<td>'.$obj->get_properties()[$colname].'</td>';
+            echo '<td>'.$properties[$colname].'</td>';
         }
     }
     $uihtml = '';

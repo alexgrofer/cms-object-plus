@@ -1,13 +1,9 @@
 <?php
-class Ugroup extends CActiveRecord
+class Ugroup extends AbsModel
 {
     public $name;
     public $guid;
     
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
     public function tableName()
     {
         return 'setcms_'.strtolower(get_class($this));
@@ -29,17 +25,6 @@ class Ugroup extends CActiveRecord
             $this->guid = apicms\utils\GUID();
         }
         return parent::beforeSave();
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
-            ),
-        );
     }
 
 }

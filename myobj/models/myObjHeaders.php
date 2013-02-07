@@ -6,10 +6,6 @@ class myObjHeaders extends AbsBaseHeaders
     public $sort; //models.IntegerField(blank=True,null=True,default=0)
     public $bpublic; //models.BooleanField(blank=True) --
     //table links
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
     
     public function rules()
     {

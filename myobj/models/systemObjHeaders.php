@@ -8,11 +8,6 @@ class systemObjHeaders extends AbsBaseHeaders
     public $vp2; //models.CharField(max_length=255,blank=True)
     public $bp1; //models.BooleanField(blank=True) --
     
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
-    
     public function rules()
     {
         return array(

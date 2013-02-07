@@ -1,14 +1,10 @@
 <?php
-class User extends CActiveRecord
+class User extends AbsModel
 {
     public $login;
     public $password;
     public $email;
     
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
     public function tableName()
     {
         return 'setcms_'.strtolower(get_class($this));
@@ -51,16 +47,4 @@ class User extends CActiveRecord
             ),
     );
     }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
-            ),
-        );
-    }
-
 }

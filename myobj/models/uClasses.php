@@ -1,15 +1,11 @@
 <?php
-class uClasses extends CActiveRecord
+class uClasses extends AbsModel
 {
     public $name; //models.CharField(max_length=255)
     public $codename; //models.CharField(max_length=30,unique=True)
     public $description; //models.CharField(max_length=255,blank=True)
     public $tablespace; //models.PositiveSmallIntegerField(choices=MYCONF.MYSPACE_TABLES_CHOICES, default=1)
     
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    } 
     public function tableName()
     {
         return 'setcms_'.strtolower(get_class($this));
@@ -70,17 +66,6 @@ class uClasses extends CActiveRecord
             'tablespace'=>array(
                 'type'=>'dropdownlist',
                 'items'=>$this->getTSPACESOptions(),
-            ),
-        );
-    }
-    public function behaviors()
-    {
-        return array(
-            'UserRelated'=>array(
-                'class'=>'ext.behaviors.model.RelatedBehavior',
-            ),
-            'UserFormModel'=>array(
-                'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
             ),
         );
     }
