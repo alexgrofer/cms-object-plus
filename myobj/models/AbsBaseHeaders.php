@@ -134,10 +134,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             $objectcurrentlink = $namelinkallmodel::model()->findByAttributes(array('idobj' => $this->id, 'uclass_id' => $this->uclass_id));
             $this->_tempthislink = $objectcurrentlink;
         }
-        if(!$this->_tempthislink) {
-            throw new CException(Yii::t('cms','None sublinks object "{id_obj}" class "{class}" table "{nametable}"',
-            array('{class}'=>$this->uclass_id,'{id_obj}'=>$this->id, '{nametable}'=>$this->getNameLinksModel())));
-        }
+        if(!$this->_tempthislink) return false;
         return $this->_tempthislink;
     }
     public function editlinks($type, $class, $idsheaders) {
@@ -154,14 +151,18 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $CRITERIA->compare('uclass_id',$classid);
         $linksobjects = $namelinkallmodel::model()->findAll($CRITERIA);
         if(!$linksobjects) {
-            throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}"',
-            array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders))));
+            throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}, table_links "{nametable}"',
+            array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
         }
         
         $objectcurrentlink->UserRelated->links_edit($type,'links',$linksobjects);
     }
     public function getobjlinks($class) {
         $objectcurrentlink = $this->_getobjectlink();
+        if(!$objectcurrentlink) {
+            throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
+            array('{class}'=>$this->uclass_id, '{idlink}'=>$this->id,'{nametable}'=>$this->getNameLinksModel())));
+        }
         $CRITERIA = new CDbCriteria();
         $objclass = \uClasses::getclass($class);
         //проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
