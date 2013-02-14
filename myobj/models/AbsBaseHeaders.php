@@ -67,7 +67,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();
-            $array['order'] = array(array('intst222', 'desc'), array('st1', 'asc'));
             
             foreach($array['order'] as $arpropelem) {
                 $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id);

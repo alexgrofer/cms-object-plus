@@ -3,17 +3,16 @@
 </style>
 <?php
 if(array_key_exists('serach_param',$_POST) && trim($_POST['serach_param'])!='') {
-    $REND_model->dbCriteria->compare($REND_model->tableAlias.'.'.$_POST['filter_param'],$_POST['serach_param'],((array_key_exists('serach_flaz_like_param',$_POST) && trim($_POST['serach_flaz_like_param'])!='')?true:false));
+    //$REND_model->dbCriteria->compare($REND_model->tableAlias.'.'.$_POST['filter_param'],$_POST['serach_param'],((array_key_exists('serach_flaz_like_param',$_POST) && trim($_POST['serach_flaz_like_param'])!='')?true:false));
+    $REND_model->dbCriteria->addCondition(($REND_model->tableAlias.'.'.$_POST['filter_param'].' '.$_POST['serach_condition']).' :serach_condition');
+    $REND_model->dbCriteria->params = array(':serach_condition' => $_POST['serach_param']);
 }
 
 if(array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='') {
-    $likekf='';
-    if(array_key_exists('serach_flaz_like_prop',$_POST) && trim($_POST['serach_flaz_like_prop'])!='') {
-        $likekf = '%';
-    }
-    $array_search = array($_POST['filter_prop'],(($likekf!='')?'LIKE':'='),"'".$likekf.$_POST['serach_prop'].$likekf."'");
+    //serach_prop_condition
+    $array_search = array($_POST['filter_prop'], $_POST['serach_prop_condition'],"'".$_POST['serach_prop']."'");
     $REND_model = $REND_model->setuiprop(array('condition' => array($array_search)));
-    unset($array_search,$likekf);
+    unset($array_search);
 }
 
 if(array_key_exists('order_by_prop',$_POST) && $_POST['order_by_prop']!='-') {
@@ -188,9 +187,10 @@ $select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exist
 $select_search_params = CHtml::dropDownList('filter_param', ((array_key_exists('filter_param',$_POST) && $_POST['filter_param'])?$_POST['filter_param']:''),$select_array);
 unset($select_array);
 ?>
-<div id="filtersort">
-params: <?php echo $select_search_params;?>
-<input name="serach_flaz_like_param" type="checkbox" <?php echo (array_key_exists('serach_flaz_like_param',$_POST) && trim($_POST['serach_flaz_like_param'])!='')?'checked':'';?> />
+
+<div id="filtersort" class="well" style="padding:0; padding-top:15px">
+params: <?php echo $select_search_params;?> 
+<input  class="input-mini" name="serach_condition" type="text" value="<?php echo (array_key_exists('serach_condition',$_POST) && trim($_POST['serach_condition'])!='')?$_POST['serach_condition']:'=';?>" />
 <input name="serach_param" type="text" value="<?php echo (array_key_exists('serach_param',$_POST) && trim($_POST['serach_param'])!='')?$_POST['serach_param']:'';?>" />
 <?php
 if($REND_objclass!==null && count($REND_objclass->properties)) {
@@ -207,8 +207,8 @@ if($REND_thispropsui) {
 }
 $select_search_props = CHtml::dropDownList('filter_prop', ((array_key_exists('filter_prop',$_POST) && $_POST['filter_prop'])?$_POST['filter_prop']:''),$list_prop);
 ?>
-| - | prop: <?php echo $select_search_props;?>
-<input name="serach_flaz_like_prop" type="checkbox" <?php echo (array_key_exists('serach_flaz_like_prop',$_POST) && trim($_POST['serach_flaz_like_prop'])!='')?'checked':'';?> />
+| - | prop: <?php echo $select_search_props;?> 
+<input  class="input-mini" name="serach_prop_condition" type="text" value="<?php echo (array_key_exists('serach_prop_condition',$_POST) && trim($_POST['serach_prop_condition'])!='')?$_POST['serach_prop_condition']:'=';?>" />
 <input name="serach_prop" type="text" value="<?php echo (array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='')?$_POST['serach_prop']:'';?>" />
 <?php } ?>
 <input  class="btn" name="button_serach_prop" type="submit" value="find" />
@@ -226,8 +226,8 @@ $select_search_props = CHtml::dropDownList('filter_prop', ((array_key_exists('fi
 
 if($COUNT_P) {
 ?>
-<table class="table table-striped table-bordered table-condensed">
-<tr>
+<table class="table table-striped table-bordered table-condensed table-hover">
+<tr class="success">
 <td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
 </tr>
 <?php
