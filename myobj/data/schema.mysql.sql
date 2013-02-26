@@ -229,14 +229,17 @@ INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1B
 -- (One to M) User -> Groups
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
 -- ------- STORE
-CREATE TABLE `setcms_depstorecatalog` (
+CREATE TABLE `setcms_depstore_cat_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `top` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  `left_key` int(11) NOT NULL DEFAULT 0,
+  `right_key` int(11) NOT NULL DEFAULT 0,
+  `level` int(11) NOT NULL DEFAULT 0, 
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `left_key` (`left_key`,`right_key`,`level`)
 );
 
-CREATE TABLE `setcms_depstoreoption` (
+CREATE TABLE `setcms_depstore_cat_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `type` tinyint(4) NOT NULL,
@@ -245,7 +248,15 @@ CREATE TABLE `setcms_depstoreoption` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `setcms_depstoreoptionparams` (
+CREATE TABLE `setcms_depstore_cat_category_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
+  `option_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_id` (`category_id`,`option_id`)
+);
+
+CREATE TABLE `setcms_depstore_cat_option_params` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `val` varchar(255) NOT NULL,
   `id_option` int(11) NOT NULL,
