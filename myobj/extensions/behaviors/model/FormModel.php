@@ -21,7 +21,18 @@ class FormModel extends CActiveRecordBehavior {
         $model = $this->getOwner();
         $confform = array('elements' => array());
         $dinamicForm = new EmptyForm();
-        $confform['elements'] = $model->ElementsForm();
+        if(method_exists($model,'ElementsForm')) {
+            $confform['elements'] = $model->ElementsForm();
+            $rulesall = $model->rules();
+        }
+        else {
+            if(!method_exists($model,'rules') || (method_exists($model,'rules') && !count($model->rules()))) {
+                $rulesall = array(array(implode(',',array_keys($model->attributes)),'safe'));
+            }
+            
+            $confform['elements'] = array_fill_keys(array_keys($model->attributes), array('type'=>'text'));
+        }
+        
         $oldelements = $confform['elements'];
         if(count($params_f)) {
             $arrnewelem = array();
@@ -35,7 +46,6 @@ class FormModel extends CActiveRecordBehavior {
                 $confform['elements'] = $arrnewelem;
             }
             $revelem = array();
-            $rulesall = $model->rules();
             
             foreach($params_f as $newparam) {
                 if(is_array($newparam)) {
@@ -54,7 +64,7 @@ class FormModel extends CActiveRecordBehavior {
 
         foreach($confform['elements'] as $key => $value) {
             $namemodelprop = $key;
-            if(!property_exists($model, $key) && $revelem) {
+            if(!property_exists($model, $key) && isset($revelem)) {
                 if(array_key_exists($key,$revelem)) {
                     $namemodelprop = $revelem[$key];
                 }
@@ -74,11 +84,8 @@ class FormModel extends CActiveRecordBehavior {
                 $dinamicForm->$key = $value;
             }
         }
-        $dinamicForm->rules = $model->rules();
+        $dinamicForm->rules = $rulesall;
         $dinamicForm->attributeLabels = $model->attributeLabels();
-        if(isset($rulesall)) {
-            $dinamicForm->rules = $rulesall;
-        }
         //error unicue
         foreach($dinamicForm->rules as $key => $arrrule) {
             if($arrrule[1]=='unique') {
