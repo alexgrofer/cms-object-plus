@@ -2,10 +2,13 @@
 .pagination input {display:none}
 </style>
 <?php
-if(array_key_exists('serach_param',$_POST) && trim($_POST['serach_param'])!='') {
-    //$REND_model->dbCriteria->compare($REND_model->tableAlias.'.'.$_POST['filter_param'],$_POST['serach_param'],((array_key_exists('serach_flaz_like_param',$_POST) && trim($_POST['serach_flaz_like_param'])!='')?true:false));
-    $REND_model->dbCriteria->addCondition(($REND_model->tableAlias.'.'.$_POST['filter_param'].' '.$_POST['serach_condition']).' :serach_condition');
-    $REND_model->dbCriteria->params = array(':serach_condition' => $_POST['serach_param']);
+if(array_key_exists('serach_param',$_POST)) {
+    foreach($_POST['serach_param'] as $key => $value) {
+        if($value!='') {
+            $REND_model->dbCriteria->addCondition(($REND_model->tableAlias.'.'.$_POST['filter_param'][$key].' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key);
+            $REND_model->dbCriteria->params[':serach_condition_'.$key] = $_POST['serach_param'][$key];
+        }
+    }
 }
 
 if(array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='') {
@@ -90,7 +93,6 @@ elseif($this->dicturls['class']=='objects') {
 ?>
 <form method="post">
 <?php
-$checkids = '';
 $selectorsids = array();
 $selectorsids_excluded = array();
 $COUNTVIEWELEMS = $this->apcms->config['countelements'];
@@ -122,7 +124,7 @@ if(array_key_exists('selectorsids_excluded',$_POST) && $_POST['selectorsids_excl
     $selectorsids_excluded = explode(',',$_POST['selectorsids_excluded']);
 }
 if(array_key_exists('checkedaction',$_POST) || strpos(implode('',array_keys($_POST)),'goin_')!==false) {
-    foreach(explode(',',$_POST['idsall']) as $id) {
+    foreach(explode(',',$_POST['pkeys_all']) as $id) {
         if(in_array('elemch_'.$id,array_keys($_POST))!==false) {
             if(in_array($id,$arrchecked)===false) {
                 $selectorsids[] = $id;
@@ -184,15 +186,29 @@ foreach($select_array as $key => $value) {
     
 }
 $select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exists('order_by_param',$_POST) && $_POST['order_by_param'])?$_POST['order_by_param']:''),$order_by_array);
-$select_search_params = CHtml::dropDownList('filter_param', ((array_key_exists('filter_param',$_POST) && $_POST['filter_param'])?$_POST['filter_param']:''),$select_array);
-unset($select_array);
+
 ?>
 
 <div id="filtersort" class="well" style="padding:0; padding-top:15px">
-params: <?php echo $select_search_params;?> 
-<input  class="input-mini" name="serach_condition" type="text" value="<?php echo (array_key_exists('serach_condition',$_POST) && trim($_POST['serach_condition'])!='')?$_POST['serach_condition']:'=';?>" />
-<input name="serach_param" type="text" value="<?php echo (array_key_exists('serach_param',$_POST) && trim($_POST['serach_param'])!='')?$_POST['serach_param']:'';?>" />
+params:<br/>
 <?php
+$n_p=0;
+do {
+if(isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') {
+    $n_p++;
+    continue;
+}
+echo CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
+?> 
+<input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
+;?>" />
+<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" /><br/>
+<?php
+$n_p++;
+}
+while(isset($_POST['serach_param']) && $n_p <= count($_POST['serach_param']));
+unset($select_array);
+
 if($REND_objclass!==null && count($REND_objclass->properties)) {
 $list_prop = CHtml::listData($REND_objclass->properties, 'codename', 'name');
 $order_by_array = array('-'=>'-');
@@ -231,7 +247,7 @@ if($COUNT_P) {
 <td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
 </tr>
 <?php
-$idsall = array();
+$pkeys_all = array();
 
 
 $relations_links_model = '';
@@ -250,7 +266,7 @@ if(isset($rel_arr_vis)) {
                 $objclass = uClasses::getclass($this->dicturls['paramslist'][1]);
                 $nameparammodel = $this->apcms->config['spacescl'][$objclass->tablespace]['namemodel'];
             }
-            $typerelat = ($val[0]==$REND_model::MANY_MANY)?'add':'set';
+            $typerelat = ($val[0]==$REND_model::MANY_MANY || $val[0]==$REND_model::HAS_MANY)?'add':'set';
             $name_current_model = $namerelat;
             $namemodel_alias = array_search($namerelat,$rel_arr_vis);
             if(array_key_exists($namemodel_alias, $this->apcms->config['controlui'][$this->dicturls['class']]['models'])) {
@@ -263,11 +279,11 @@ if(isset($rel_arr_vis)) {
 
 
 foreach($listall as $obj) {
-    $strchecked=(in_array($obj->id, $selectorsids)!==false || (in_array($obj->id,$arrchecked)!==false && in_array($obj->id,$selectorsids_excluded)===false) || array_key_exists('allsetchecked',$_POST))?'checked="checked"':'';
+    $strchecked=(in_array($obj->primaryKey, $selectorsids)!==false || (in_array($obj->primaryKey,$arrchecked)!==false && in_array($obj->primaryKey,$selectorsids_excluded)===false) || array_key_exists('allsetchecked',$_POST))?'checked="checked"':'';
     
-    $idsall[] = $obj->id;
+    $pkeys_all[] = $obj->primaryKey;
     
-    echo '<tr><td><input name="elemch_'.$obj->id.'" type="checkbox" '.$strchecked.' /></td>';
+    echo '<tr><td><input name="elemch_'.$obj->primaryKey.'" type="checkbox" '.$strchecked.' /></td>';
     foreach(array_keys($REND_thisparamsui) as $colname) {
         echo '<td>'.$obj->$colname.'</td>';
     }
@@ -278,19 +294,19 @@ foreach($listall as $obj) {
         }
     }
     $uihtml = '';
-    if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->id.'"><i class="icon-edit"></i></a>';
+    if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'"><i class="icon-edit"></i></a>';
     
-        if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->id.'/action/edit/0/"><i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->id.'">objects</a>';
-        if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->id.'">links</a>';
+        if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/"><i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
+        if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
         
-        if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->id).'">group_permission</a>';
+        if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
         
-        if($arrayuirow['editlinksclass']) $uihtml .= ' | <a href="'.$arrayuirow['editlinksclass'].$obj->id.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
+        if($arrayuirow['editlinksclass']) $uihtml .= ' | <a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
 
     
-    if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('%IDELEMENT%',$obj->id,$relations_links_model);
+    if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('%IDELEMENT%',$obj->primaryKey,$relations_links_model);
     
-    $uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->id.'\')" href="'.$arrayuirow['remove'].$obj->id.'"><i class="icon-remove"></i></a>';
+    $uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
     echo '<td>'.$uihtml.' </td></tr>';
 }
 
@@ -348,7 +364,7 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 echo '<div style="padding-bottom: 60px">'.apicms\utils\pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate).'</div>';
 }
 ?>
-<input name="idsall" type="hidden" value="<?php echo implode(',',$idsall);?>" />
+<input name="pkeys_all" type="hidden" value="<?php echo implode(',',$pkeys_all);?>" />
 </form>
 <?php
 }
