@@ -162,6 +162,7 @@ class FormModel extends CActiveRecordBehavior {
                         $value = array('ObjCUploadedFile'=>$ObjCUploadedFile,'path'=>$path,'funcload'=>$namefuncload);
                     }
                 }
+                $revelem = array();
                 //start prop
                 if(($posptop = strpos($key, 'prop_'))!==false) {
                     $trynameprop = substr($key,0,$posptop);
