@@ -272,7 +272,10 @@ if(isset($rel_arr_vis)) {
             if(array_key_exists($namemodel_alias, $this->apcms->config['controlui'][$this->dicturls['class']]['models'])) {
                 $name_current_model = $namemodel_alias;
             }
-            $relations_links_model .= ' | <a href="'.$urladmclass.'/objects/models/'.$name_current_model.'/action/relationobj/%IDELEMENT%/'.$typerelat.'/models/'.$nameparammodel.'">'.$namerelat.'</a>';
+            $print_link = ' | <a href="'.$urladmclass.'/objects/models/'.$name_current_model.'/action/%s/IDELEMENT/'.$typerelat.'/models/'.$nameparammodel.'">%s</a>';
+            $relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
+            if($REND_model::HAS_MANY) $relations_links_model .= sprintf($print_link,'relationobjonly','<');
+            unset($print_link);
         }
     }
 }
@@ -304,7 +307,7 @@ foreach($listall as $obj) {
         if($arrayuirow['editlinksclass']) $uihtml .= ' | <a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
 
     
-    if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('%IDELEMENT%',$obj->primaryKey,$relations_links_model);
+    if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
     
     $uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
     echo '<td>'.$uihtml.' </td></tr>';

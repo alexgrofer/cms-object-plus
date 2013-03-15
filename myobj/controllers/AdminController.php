@@ -79,6 +79,8 @@ class AdminController extends Controller {
                     $this->setVarRender('REND_confmodel',$settui[$findelem]);
                 }
                 elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
+                    //если не равно пост и есть relationobjonly=название модели
+                    //сделать для теста а потом уже тут полностью поправить 
                     $params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
                     $findelem = $this->dicturls['paramslist'][1];
                     //alias model
@@ -176,16 +178,23 @@ class AdminController extends Controller {
                         }
                         break;
                     case 'relationobj':
+                    case 'relationobjonly':
+                        //найти в реляции название столбца по которому бдет поиск и установить ктитерию
+                        //объект пока не делаем
+                        $subnamemodel = $this->dicturls['paramslist'][7];
+                        $namemodelself = $this->dicturls['paramslist'][1];
                         //selectedarr
-                        $params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][7]];
+                        $params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$subnamemodel];
                         //is alias
                         if(!is_array($params_modelget)) {
                             $namealias = $params_modelget;
                             $params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$namealias];unset($namealias);
                         }
                         $NAMEMODEL_get = $params_modelget['namemodel'];
+                        $relation_model = $NAMEMODEL_get::model()->relations();
                         $objrelated = $NAMEMODEL_get::model()->findByPk($this->dicturls['actionid']);
-                        if($this->dicturls['paramslist'][7]=='classes') {
+                        $objrelself = $objrelated->$namemodelself;
+                        if($subnamemodel=='classes') {
                             if($this->dicturls['paramslist'][1]=='classes') {
                             //classes filter is NameLinksModel equally
                             $ids_spaces_equal = array();
@@ -197,12 +206,18 @@ class AdminController extends Controller {
                             $this->param_contr['current_class_name'] = $objrelated->codename;
                             $this->param_contr['current_class_spacename'] = $this->apcms->config['spacescl'][$objrelated->tablespace]['namemodel'];
                         }
-                        $namemodelself = $this->dicturls['paramslist'][1];
+                        elseif($this->dicturls['action'] == 'relationobjonly') {
+                            $type_relation_self = $relation_model[$namemodelself][0];
+                            $name_pk_link_relation_self = $relation_model[$namemodelself][2];
+                            if($type_relation_self  == CActiveRecord::HAS_MANY) {
+                                $modelAD->dbCriteria->addCondition($name_pk_link_relation_self.' = '.$objrelated->primaryKey);
+                            }
+                        }
                         if($this->paramsrender['REND_relation'] && array_key_exists($namemodelself,$this->paramsrender['REND_relation'])) {
                             $namemodelself = $this->paramsrender['REND_relation'][$namemodelself];
                         }
                         $params_extra_action_job['name_model'] = $namemodelself;
-                        $objrelself = $objrelated->$namemodelself;
+                        
                         if($objrelself) {
                             if(is_array($objrelself)) {
                                 $this->paramsrender['REND_selectedarr'] = apicms\utils\arrvaluesmodel($objrelself,'id');
@@ -211,6 +226,7 @@ class AdminController extends Controller {
                                 $this->paramsrender['REND_selectedarr'] = array($objrelself->id);
                             }
                         }
+                        
                         unset($namemodelself);
                         break;
                     case 'remove':
@@ -222,7 +238,6 @@ class AdminController extends Controller {
                         }
                         break;
                 }
-                
                 
                 break;
             case 'logout':
