@@ -107,6 +107,7 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
             break;
         case 'relationobj':
             $typerelat = $paramslist[5];
+            $fk = $paramslist[4];
             $params_modelget = \UCms::getInstance()->config['controlui']['objects']['models'][$paramslist[7]];
             //is alias
             if(!is_array($params_modelget)) {
@@ -117,11 +118,11 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
             $obj = $NAMEMODEL_get::model()->findByPk($this_id);
             if(count($listset)) {
                 if($typerelat=='set') $listset = $listset[0];
-                $obj->UserRelated->links_edit($typerelat,$params_extra['name_model'],$listset);
+                $obj->UserRelated->links_edit($typerelat,$params_extra['name_model'],$listset,$fk);
             }
             if(count($listsetexcluded)) {
                 if($typerelat!='set') {
-                    $obj->UserRelated->links_edit('remove',$params_extra['name_model'],$listsetexcluded);
+                    $obj->UserRelated->links_edit('remove',$params_extra['name_model'],$listsetexcluded,$fk);
                 }
             }
     }
