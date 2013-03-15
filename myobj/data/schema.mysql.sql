@@ -195,10 +195,8 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
     (4,'handle_sys','handle_sys','',2),
     (5,'navigation_sys','navigation_sys','',2),
     (6,'param_sys','param_sys','',2),
-    -- DEP_STORE_GOODS
-    (7,'param_depstore_goods','param_depstore_goods','',3),
     -- example classes
-    (8,'example news','example_news','',1);
+    (7,'example news','example_news','',1);
 INSERT INTO `setcms_uclasses_association` (`id`,`from_uclasses_id`,`to_uclasses_id`) VALUES
     (1,2,1), -- [views_sys]<>-----groups_sys
     (2,5,2), -- [navigation_sys]<>-----views_sys
@@ -229,7 +227,7 @@ INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1B
 -- (One to M) User -> Groups
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
 -- ------- STORE
-CREATE TABLE `setcms_depstore_cat_category` (
+CREATE TABLE `setcms_dep_cat_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `left_key` int(11) NOT NULL DEFAULT 0,
@@ -239,7 +237,7 @@ CREATE TABLE `setcms_depstore_cat_category` (
   UNIQUE KEY `left_key` (`left_key`,`right_key`,`level`)
 );
 
-CREATE TABLE `setcms_depstore_cat_option` (
+CREATE TABLE `setcms_dep_cat_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `type` tinyint(4) NOT NULL,
@@ -248,7 +246,7 @@ CREATE TABLE `setcms_depstore_cat_option` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `setcms_depstore_cat_category_option` (
+CREATE TABLE `setcms_dep_cat_category_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -256,7 +254,7 @@ CREATE TABLE `setcms_depstore_cat_category_option` (
   UNIQUE KEY `category_id` (`category_id`,`option_id`)
 );
 
-CREATE TABLE `setcms_depstore_cat_option_params` (
+CREATE TABLE `setcms_dep_cat_option_params` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `val` varchar(255) NOT NULL,
   `id_option` int(11) NOT NULL,

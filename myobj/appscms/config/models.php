@@ -26,6 +26,16 @@ $models = array(
     'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
     'group' => array('namemodel' => 'Ugroup', 'relation' => false, 'cols' => array('id'=>'id','name'=>'name','guid'=>'guid')),
     'userpasport' => array('namemodel' => 'UserPasport', 'relation' => false, 'cols' => array('id'=>'id','firstname'=>'first name','lastname'=>'last name')),
+    //STORE
+    'depcat' => array(
+        'namemodel' => 'DepCatCategory', 'relation' => array('depcatoption'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+        'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
+    'depcatoption' => array(
+        'namemodel' => 'DepCatOption', 'relation' => array('depcatoptionparams'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+        'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
+    'depcatoptionparams' => array(
+        'namemodel' => 'DepCatOptionParam', 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+        'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
     
     //headers links example
     /*
@@ -40,4 +50,6 @@ $models_menu = array(
         array('user'),
         array('group'),
         array('userpasport'),
+        //STORE
+        array('depcat'),
 );
