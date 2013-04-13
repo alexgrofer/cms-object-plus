@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $cs = Yii::app()->getClientScript();
 $cs->coreScriptPosition=CClientScript::POS_HEAD; //load into tag
 $assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.myobj.assets'));

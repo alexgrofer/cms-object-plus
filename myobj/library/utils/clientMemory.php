@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 abstract class AbsClientMemory {
     protected $codename;
     protected $dateExpired; //example 1sec,1min,3hour,7day,5month,3year

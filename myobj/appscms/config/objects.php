@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $objects = array(
     //codename class
     'myObjHeaders' => array(

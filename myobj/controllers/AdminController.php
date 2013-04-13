@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 Yii::import('application.modules.myobj.appscms.UCms');
 Yii::import('application.modules.myobj.appscms.api.utils',true);
 
@@ -280,3 +280,4 @@ class AdminController extends Controller {
         $this->render($view, $this->paramsrender);
     }
 }
+?>

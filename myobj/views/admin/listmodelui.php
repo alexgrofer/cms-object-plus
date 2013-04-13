@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $templ = '<p><a href="'.$this->dicturls['admin'].'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/%s">%s</a></p>';
 

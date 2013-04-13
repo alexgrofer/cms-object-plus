@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $classes_system = array(
     'group'=>'groups_sys',
     'template'=>'templates_sys',

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $models = array(
     'classes' => array(
         'namemodel' => 'uClasses',

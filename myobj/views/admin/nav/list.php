@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $listall = $REND_model->findAll();
 
 $urladmclass = $this->dicturls['admin'];

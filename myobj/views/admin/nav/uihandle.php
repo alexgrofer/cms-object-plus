@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if(!$REND_acces_write) {
     echo '<p class="alert">not acces edit</p>';
 }

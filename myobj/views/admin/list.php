@@ -1,4 +1,4 @@
-﻿<style>
+<style>
 .pagination input {display:none}
 </style>
 <?php
