@@ -193,6 +193,10 @@ class AdminController extends Controller {
                         $NAMEMODEL_get = $params_modelget['namemodel'];
                         $relation_model = $NAMEMODEL_get::model()->relations();
                         $objrelated = $NAMEMODEL_get::model()->findByPk($this->dicturls['actionid']);
+						//возможно что ссылка на медель в реляции может называться по другому но в следствии того что в списке настроек моделей уже есть настройка для нее
+						if(isset($params_modelget['relation'][$namemodelself])) {
+							$namemodelself = $params_modelget['relation'][$namemodelself];
+						}
                         $objrelself = $objrelated->$namemodelself;
                         if($subnamemodel=='classes') {
                             if($this->dicturls['paramslist'][1]=='classes') {
