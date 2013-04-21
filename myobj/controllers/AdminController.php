@@ -210,11 +210,14 @@ class AdminController extends Controller {
                             $this->param_contr['current_class_name'] = $objrelated->codename;
                             $this->param_contr['current_class_spacename'] = $this->apcms->config['spacescl'][$objrelated->tablespace]['namemodel'];
                         }
-                        elseif($this->dicturls['action'] == 'relationobjonly') {
+                        
+                        if($this->dicturls['action'] == 'relationobjonly') {
                             $type_relation_self = $relation_model[$namemodelself][0];
-                            $name_pk_link_relation_self = $relation_model[$namemodelself][2];
-                            if($type_relation_self  == CActiveRecord::HAS_MANY) {
-                                $modelAD->dbCriteria->addCondition($name_pk_link_relation_self.' = '.$objrelated->primaryKey);
+                            if($type_relation_self  == CActiveRecord::MANY_MANY) {
+                            	$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,'id'));
+                            }
+                            else {
+                            	$modelAD->dbCriteria->addCondition($relation_model[$namemodelself][2].' = '.$objrelated->primaryKey);
                             }
                         }
                         if($this->paramsrender['REND_relation'] && array_key_exists($namemodelself,$this->paramsrender['REND_relation'])) {
