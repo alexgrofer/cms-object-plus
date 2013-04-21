@@ -28,22 +28,22 @@ input, select {height: auto !important; vertical-align:top !important;}
 <div style="padding: 10px">
 <?php if(!Yii::app()->user->isGuest) {?>
 <div class="well">
-    <a href="<?=$urladm?>/objects/models/classes/">classes</a> | 
-    <a href="<?=$urladm?>/objects/models/properties/">properties</a> |-----| 
+    <a href="<?php echo $urladm?>/objects/models/classes/">classes</a> | 
+    <a href="<?php echo $urladm?>/objects/models/properties/">properties</a> |-----| 
 <div class="btn-group">
   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
     mvc
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-    <li><a href="<?=$urladm?>/objects/class/templates_sys/">templates</a></li>
-    <li><a href="<?=$urladm?>/objects/class/views_sys/">views</a></li>
-    <li><a href="<?=$urladm?>/objects/class/navigation_sys/">nav</a></li>
+    <li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
+    <li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
+    <li><a href="<?php echo $urladm?>/objects/class/navigation_sys/">nav</a></li>
 </div>
-    <a href="<?=$urladm?>/objects/class/groups_sys/">groups</a> |-----| 
-    <a href="<?=$urladm?>/objects/models/">MODELS</a> | 
-    <a href="<?=$urladm?>/objects/ui/">UI</a> | ---- | 
-    <a href="<?=$urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
+    <a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----| 
+    <a href="<?php echo $urladm?>/objects/models/">MODELS</a> | 
+    <a href="<?php echo $urladm?>/objects/ui/">UI</a> | ---- | 
+    <a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
 </div>
 
 <?php
