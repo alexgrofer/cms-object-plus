@@ -17,6 +17,7 @@ class EmptyForm extends CFormModel {
 }
 
 class FormModel extends CActiveRecordBehavior {
+	private $revelem = array();
     public function initform($POSTORGET, $params_f=array()) {
         $model = $this->getOwner();
         $confform = array('elements' => array());
@@ -45,7 +46,6 @@ class FormModel extends CActiveRecordBehavior {
             if(count($arrnewelem)) {
                 $confform['elements'] = $arrnewelem;
             }
-            $revelem = array();
             
             foreach($params_f as $newparam) {
                 if(is_array($newparam)) {
@@ -53,7 +53,7 @@ class FormModel extends CActiveRecordBehavior {
                     unset($confform['elements'][$newparam[0]]);
                     foreach($rulesall as $key => $rule) {
                         if(strpos($rule[0],$newparam[0])!==false) {
-                            $revelem[$newparam[1]] = $newparam[0];
+                            $this->revelem[$newparam[1]] = $newparam[0];
                             $rulesall[$key][0] = preg_replace('/(^|\,|\s)'.$newparam[0].'/','$1'.$newparam[1],$rule[0]);
                         }
                     }
@@ -64,9 +64,9 @@ class FormModel extends CActiveRecordBehavior {
 
         foreach($confform['elements'] as $key => $value) {
             $namemodelprop = $key;
-            if(!property_exists($model, $key) && isset($revelem)) {
-                if(array_key_exists($key,$revelem)) {
-                    $namemodelprop = $revelem[$key];
+            if(!property_exists($model, $key) && count($this->revelem)) {
+                if(array_key_exists($key,$this->revelem)) {
+                    $namemodelprop = $this->revelem[$key];
                 }
                 else {
                     continue;
@@ -162,7 +162,7 @@ class FormModel extends CActiveRecordBehavior {
                         $value = array('ObjCUploadedFile'=>$ObjCUploadedFile,'path'=>$path,'funcload'=>$namefuncload);
                     }
                 }
-                $revelem = array();
+				
                 //start prop
                 if(($posptop = strpos($key, 'prop_'))!==false) {
                     $trynameprop = substr($key,0,$posptop);
@@ -171,8 +171,8 @@ class FormModel extends CActiveRecordBehavior {
                 //end prop
                 else {
                     $namemodelprop = $key;
-                    if(!property_exists($model, $key) && $revelem) {
-                        $namemodelprop = $revelem[$key];
+                    if(!property_exists($model, $key) && count($this->revelem)) {
+                        $namemodelprop = $this->revelem[$key];
                     }
                     $model->$namemodelprop = $value;
                 }
