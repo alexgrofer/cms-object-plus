@@ -10,6 +10,7 @@ $arrayheader = array(
     'class' => '',
     'id-object' => '',
 );
+$_sl='<a href="'.Yii::app()->createUrl('myobj/admin').'/objects/class/%s">%s</a>';
 if($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
     $arrayheader['model'] = "'".$this->dicturls['paramslist'][1]."'";
     if($this->dicturls['paramslist'][3]=='edit') {
@@ -21,22 +22,22 @@ if($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1
         $arrayheader['relation-model'] = "'".$this->dicturls['paramslist'][1]."'";
         if(true) {
             $arrayheader['id-object'] = '';
-            $arrayheader['class'] = "'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][4]."), table-space='".$this->param_contr['current_class_spacename']."'";
+            $arrayheader['class'] = sprintf($_sl,$this->dicturls['paramslist'][4],"'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][4]."), table-space='".$this->param_contr['current_class_spacename']."'");
         }
     }
     elseif($this->dicturls['paramslist'][3]=='links') {
-        $arrayheader['class'] = "'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][2]."), table-space='".$this->param_contr['current_class_spacename']."'";
+        $arrayheader['class'] = sprintf($_sl,$this->dicturls['paramslist'][2],"'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][2]."), table-space='".$this->param_contr['current_class_spacename']."'");
         $arrayheader['id-object'] = "'".$this->dicturls['paramslist'][4]."'";
     }
 }
 elseif($this->dicturls['paramslist'][0]=='class') {
-    $arrayheader['class'] = "'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][1]."), table-space='".$this->param_contr['current_class_spacename']."'";
+    $arrayheader['class'] = sprintf($_sl,$this->dicturls['paramslist'][1],"'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][1]."), table-space='".$this->param_contr['current_class_spacename']."'");
     if(in_array($this->dicturls['paramslist'][3],array('edit','edittempl'))) {
         $arrayheader['id-object'] = "'".$this->dicturls['paramslist'][4]."'";
     }
     elseif($this->dicturls['paramslist'][3]=='lenksobjedit') {
-        $arrayheader['assotiation-class'] = "'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][6]."), table-space='".$this->param_contr['current_class_spacename']."'";
-        $arrayheader['class'] = "'".$this->param_contr['current_class_ass_name']."'(".$this->dicturls['paramslist'][1]."), table-space='".$this->param_contr['current_class_ass_spacename']."'";
+        $arrayheader['assotiation-class'] = sprintf($_sl,$this->dicturls['paramslist'][6],"'".$this->param_contr['current_class_name']."'(".$this->dicturls['paramslist'][6]."), table-space='".$this->param_contr['current_class_spacename']."'");
+        $arrayheader['class'] = sprintf($_sl,$this->dicturls['paramslist'][1],"'".$this->param_contr['current_class_ass_name']."'(".$this->dicturls['paramslist'][1]."), table-space='".$this->param_contr['current_class_ass_spacename']."'");
         $arrayheader['id-object'] = "'".$this->dicturls['paramslist'][4]."'";
     }
 }
