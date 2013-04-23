@@ -78,6 +78,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         return $this;
     }
     private $_prev_save_prop = array();
+	//метод позволяет установить новое свойство для объекта
     public function set_properties($name, $value) {
         $this->_prev_save_prop[$name] = $value;
     }
@@ -177,6 +178,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         
         return $objmodel;
     }
+	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
     public function afterSave() {
         if($this->flagAutoAddedLinks) {
             $namelinkallmodel = $this->getNameLinksModel();
@@ -188,12 +190,13 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                 $objectcurrentlink->save();
             }
         }
-        //setproperties
+        //если были изменены свойства то сохраняем их
         if(count($this->_prev_save_prop)) {
             $this->_f_prev_save_prop();
         }
     }
-    function afterDelete() {
+	//именно перед удалением beforeDelete объекта нужно удалить его 1строки, 2ссылки в (таблице ссылок для объектов)
+    function beforeDelete() {
         //del lines
         if($this->isitlines == true && count($this->lines)) {
             $idslines = apicms\utils\arrvaluesmodel($this->lines, 'id');
@@ -209,5 +212,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             }
             $objectcurrentlink->delete();
         }
+		return parent::beforeDelete();
     }
 }

@@ -31,11 +31,13 @@ class uClasses extends AbsModel
             
         );
     }
-    public function afterDelete() {
+	//именно перед удалением beforeDelete - удалить объекты класса Перед его удалением, иначе невозможно будет узнать параметры класса при их удалении
+    public function beforeDelete() {
         //delete our objects
         foreach($this->objects()->findAll() as $obj) {
             $obj->delete();
         }
+		return parent::beforeDelete();
     }
     public function getTSPACESOptions(){
         $oprion = array();
