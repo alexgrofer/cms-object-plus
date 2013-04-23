@@ -55,7 +55,7 @@ $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 $urladmclass = $this->dicturls['admin'];
 $arrayuirow = array(
     'edit' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',
-    'remove' => $urladmclass.'/'.$this->dicturls['class'].'/action/remove/',
+    'remove' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/remove/',
     'objects' => '',
     'links' => '',
     'editlinksclass' => '',
