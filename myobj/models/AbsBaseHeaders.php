@@ -195,11 +195,14 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             $this->_f_prev_save_prop();
         }
     }
-	//именно перед удалением beforeDelete объекта нужно удалить его 1строки, 2ссылки в (таблице ссылок для объектов)
+	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
     function beforeDelete() {
         //del lines
         if($this->isitlines == true && count($this->lines)) {
-            $idslines = apicms\utils\arrvaluesmodel($this->lines, 'id');
+			$this->UserRelated->links_edit('clear','lines'); //очистить ссылки на строки в дочерней тиблице
+            //удалить строки этого объекта
+			//в таблице строк объекта мы ничего не знаем о объекте так как работаем через настраиваемую таблицу строк, ключа объекта в ней нет, поэтому возможет только подобный метод удаления
+			$idslines = apicms\utils\arrvaluesmodel($this->lines, 'id');
             $CRITERIA = new CDbCriteria();
             $CRITERIA->addInCondition('id', $idslines);
             $this->lines[0]->model()->deleteAll($CRITERIA);
@@ -208,9 +211,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $objectcurrentlink = $this->_getobjectlink();
         if($objectcurrentlink) {
             if(count($objectcurrentlink->links)) {
-                $objectcurrentlink->UserRelated->links_edit('clear','links');
+                $objectcurrentlink->UserRelated->links_edit('clear','links'); //очистить ссылки на *ссылки в дочерней тиблице
             }
-            $objectcurrentlink->delete();
+            $objectcurrentlink->delete(); //удалить ссылку
         }
 		return parent::beforeDelete();
     }
