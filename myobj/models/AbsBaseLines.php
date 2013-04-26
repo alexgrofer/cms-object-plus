@@ -24,22 +24,4 @@ abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(mode
             array('uptimefield, updatefield, upintegerfield, upfloatfield', 'default', 'value'=>null),
         );
     }
-    // do all the work
-    public function defloadfunc($arrupload) { //$arrupload = array keys: [path,ObjCUploadedFile,funcload]
-        $namefile = $arrupload['path'].$arrupload['ObjCUploadedFile']->getName();
-        $arrupload['ObjCUploadedFile']->saveAs($namefile);
-        $this->uptextfield = $namefile;
-        return $namefile;
-    }
-    public function beforeSave() {
-        //saves files
-        if(is_array($this->uptextfield) && array_key_exists('ObjCUploadedFile',$this->uptextfield)) {
-            $namefunkloader = 'defloadfunc';
-            if($this->uptextfield['funcload']!='') {
-                $namefunkloader = $this->uptextfield['funcload'];
-            }
-            $this->$namefunkloader($this->uptextfield);
-        }
-        return parent::beforeSave();
-    }
 }

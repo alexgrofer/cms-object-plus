@@ -30,7 +30,6 @@ return array(
         '5'=>'url',
         '6'=>'email',
         '7'=>'bool',
-        '8'=>'file',
     ),
     'TYPES_COLUMNS' => array(
         '1'=>'upcharfield',
@@ -40,7 +39,6 @@ return array(
         '5'=>'uptextfield',
         '6'=>'upcharfield',
         '7'=>'upcharfield',
-        '8'=>'uptextfield',
     ),
     'TYPES_MYFIELDS' => array(
         'str'=>'text',
@@ -51,18 +49,11 @@ return array(
         'ip'=>'text',
         'email'=>'text',
         'bool'=>'checkbox',
-        'file'=>'file',
     ),
     'rulesvalidatedef' => array( //Valid values include 'string', 'integer', 'float', 'array', 'date', 'time' and 'datetime'.
         'str' => '
 type
 type=>string
-',
-        'file' => '
-file
-types=>jpg, gif, png
-us_set_patch=>media/files/
-us_set_funk_lines_loader=>defloadfunc
 ',
         'datetime' => '
 type

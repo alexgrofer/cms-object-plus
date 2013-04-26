@@ -92,8 +92,6 @@ class FormModel extends CActiveRecordBehavior {
                 unset($dinamicForm->rules[$key]);
             }
         }
-        $patch_files = array();
-        $funk_files = array();
         //start prop
         if(method_exists(get_class($model),'get_properties')) {
         $arrconfcms = UCms::getInstance()->config;
@@ -129,14 +127,6 @@ class FormModel extends CActiveRecordBehavior {
                             $addarrsett[$typeval] = $val;
                         }
                     }
-                    if(strpos($keyval,'us_set_patch')!==false) {
-                        list($typeval,$val) = explode('=>',trim($keyval));
-                        $patch_files[$nameelem] = $val;
-                    }
-                    if(strpos($keyval,'us_set_funk_lines_loader')!==false) {
-                        list($typeval,$val) = explode('=>',trim($keyval));
-                        $funk_files[$nameelem] = $val;
-                    }
                 }
                 $dinamicForm->rules[] = $addarrsett;
             }
@@ -148,21 +138,6 @@ class FormModel extends CActiveRecordBehavior {
         if(array_key_exists('EmptyForm',$POSTORGET)!==false && $form->validate()) {
             if(!$model->id && method_exists(get_class($model),'get_properties')) $model->uclass_id = $model->uclass->id;
             foreach($POSTORGET['EmptyForm'] as $key => $value) {
-                if($ObjCUploadedFile = CUploadedFile::getInstance($form->model,$key)) {
-                    $path='';
-                    $namefuncload='';
-                    if(array_key_exists($key,$patch_files)) {
-                        $path = $patch_files[$key];
-                    }
-                    if(array_key_exists($key,$funk_files)) {
-                        $namefuncload = $funk_files[$key];
-                    }
-                    $value = $ObjCUploadedFile;
-                    if(($posptop = strpos($key, 'prop_'))!==false) {
-                        $value = array('ObjCUploadedFile'=>$ObjCUploadedFile,'path'=>$path,'funcload'=>$namefuncload);
-                    }
-                }
-				
                 //start prop
                 if(($posptop = strpos($key, 'prop_'))!==false) {
                     $trynameprop = substr($key,0,$posptop);
