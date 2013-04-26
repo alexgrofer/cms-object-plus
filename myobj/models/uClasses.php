@@ -16,6 +16,7 @@ class uClasses extends AbsModel
         return array(
             'properties'=>array(self::MANY_MANY, 'objProperties', 'setcms_uclasses_objproperties(from_uclasses_id, to_objproperties_id)'), //properties = models.ManyToManyField(objProperties,blank=True)
             'association'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(from_uclasses_id, to_uclasses_id)'), //association = models.ManyToManyField("self",blank=True))
+			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
         );
     }
     public function rules()
@@ -31,6 +32,9 @@ class uClasses extends AbsModel
             
         );
     }
+	public function getobjectCount() {
+		return $this->objects()->count();
+	}
 	//именно перед удалением beforeDelete - удалить объекты класса Перед его удалением, иначе невозможно будет узнать параметры класса при их удалении
     public function beforeDelete() {
         //delete our objects
@@ -90,6 +94,7 @@ class uClasses extends AbsModel
     }
     //user func classes
     //comment doc
+	//поиск класса по codename или id
     static function getclass($classidorname) {
         $papamfind = ((int)$classidorname)?'id':'codename';
         if(is_array($classidorname)) {

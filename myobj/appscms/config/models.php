@@ -4,7 +4,7 @@ $models = array(
         'namemodel' => 'uClasses',
         'edit' => null,
         'relation' => array('properties', 'classes' => 'association'),
-        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace'),
+        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj'),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'order_by' => array(array('id', 'desc')),
