@@ -20,8 +20,8 @@ class ObjController extends Controller {
         //config['language_def'] = ru
         //set params['LANGi18n'] = en
         //create - protected/messages/ru/app.php //or magazine.php
-        //code - return array('�����'=>'city')
-        //echo user view or template - Yii::t('app', '�����'); //or magazine
+        //code - return array('город'=>'city')
+        //echo user view or template - Yii::t('app', 'город'); //or magazine
         
         Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
         if(!$lastindnav || in_array($lastindnav,$this->apcms->config['languages'])) {
@@ -31,17 +31,9 @@ class ObjController extends Controller {
         $objnav = uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $lastindnav, 'bp1' => true));
         
         if($objnav) {
-            $templates = $objnav->getobjlinks('templates_sys');
-            
-            if(!count($templates)) {
-                echo 'none template';
-                return;
-            }
-            //���� ��� ��������
-            //throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
-            //array('{class}'=>get_class($this), '{property}'=>$name)));
-            if(!($templateobj = $objnav->getobjlinks('templates_sys')->findAll())) {
-                throw new CException(Yii::t('cms','Not template'));
+            //если нет объекта шаблона привязанного к этому объекту навигации
+            if(!($templateobj = $objnav->getobjlinks('templates_sys')->count())) {
+                throw new CException(Yii::t('cms','none object template'));
             }
             $this->apcms->setparams['OBJNAV'] = $objnav;
             $this->render('/user/templates/'.$templateobj[0]->vp1);
