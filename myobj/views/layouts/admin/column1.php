@@ -12,7 +12,7 @@ $arrayheader = array(
 );
 $_sl='<a href="'.Yii::app()->createUrl('myobj/admin').'/objects/class/%s">%s</a>';
 $_ing_cl=',table-space='.$this->param_contr['current_class_conf_array']['namemodel'].', name-links-model='.$this->param_contr['current_class_conf_array']['namelinksmodel'];
-$_ing_cl_ass=',table-space='.$this->param_contr['current_class_ass_spacename']['namemodel'].', name-links-model='.$this->param_contr['current_class_conf_array']['namelinksmodel'];
+$_ing_cl_ass=',table-space='.$this->param_contr['current_class_ass_conf_array']['namemodel'].', name-links-model='.$this->param_contr['current_class_conf_array']['namelinksmodel'];
 if($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
     $arrayheader['model'] = "'".$this->dicturls['paramslist'][1]."'";
     if($this->dicturls['paramslist'][3]=='edit') {
@@ -48,10 +48,7 @@ foreach($arrayheader as $key => $val) {
         echo '<code class="headermen"><b>'.$key.'</b>: '.$val.'</code>';
     }
 }
-/*
-нужно узнать урл как узнать??
-дальше просматриваем его и в зависимости от строения посать хидер
-*/
+
 ?>
 <?php $this->endClip() ?>
 <?php $this->beginContent('/layouts/admin/main'); ?>
