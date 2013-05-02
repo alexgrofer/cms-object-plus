@@ -15,6 +15,12 @@ class objProperties extends AbsModel
     {
         return 'setcms_'.strtolower(get_class($this));
     }
+    public function relations()
+    {
+        return array(
+            'classes'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
+        );
+    }
     public function rules()
     {
         return array(

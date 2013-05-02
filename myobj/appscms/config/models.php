@@ -19,7 +19,7 @@ $models = array(
     'properties' => array(
         'namemodel' => 'objProperties',
         'edit' => null,
-        'relation' => null,
+        'relation' => array('classes'),
         'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => null,
