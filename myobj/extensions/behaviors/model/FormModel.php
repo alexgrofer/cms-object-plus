@@ -18,7 +18,7 @@ class EmptyForm extends CFormModel {
 
 class FormModel extends CActiveRecordBehavior {
 	private $revelem = array();
-    public function initform($POSTORGET, $params_f=array()) {
+    public function initform($POSTORGET, $params_f=array(), $arbitrary_elements=array()) {
         $model = $this->getOwner();
         $confform = array('elements' => array());
         $dinamicForm = new EmptyForm();
@@ -134,6 +134,16 @@ class FormModel extends CActiveRecordBehavior {
             $confform['elements'][$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
         }
         }
+        //добавление произвольных элементов к форме
+        //необходимо добавление анонимной функции для проверок - сделать
+        //добавить возможность добавлять массив rule - сделать
+        foreach($arbitrary_elements as $AElement) {
+            $dinamicForm->$AElement['name'] = isset($AElement['def_value'])?$AElement['def_value']:'';
+            $confform['elements'][$AElement['name']] = array('type' => isset($AElement['type'])?$AElement['type']:'text');
+            $dinamicForm->rules[] = array($AElement['name'], 'safe');
+            //array rules
+            //set lamda function
+        }
         $form = new CForm($confform,$dinamicForm);
         if(array_key_exists('EmptyForm',$POSTORGET)!==false && $form->validate()) {
             if(!$model->id && method_exists(get_class($model),'get_properties')) $model->uclass_id = $model->uclass->id;
@@ -149,7 +159,9 @@ class FormModel extends CActiveRecordBehavior {
                     if(!property_exists($model, $key) && count($this->revelem)) {
                         $namemodelprop = $this->revelem[$key];
                     }
-                    $model->$namemodelprop = $value;
+                    if(property_exists($model, $namemodelprop)) {
+                        $model->$namemodelprop = $value;
+                    }
                 }
             }
         }

@@ -53,6 +53,10 @@ $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
 $urladmclass = $this->dicturls['admin'];
+$relationLinkOnly='';
+if(in_array($this->dicturls['action'],array('relationobjonly','relationobj'))) {
+    $relationLinkOnly = 'selfobjrelation/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
+}
 $arrayuirow = array(
     'edit' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',
     'remove' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/remove/',
@@ -60,7 +64,7 @@ $arrayuirow = array(
     'links' => '',
     'editlinksclass' => '',
     'navgroup' => '',
-    'new' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/0/',
+    'new' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly,
 );
 $headershtml = '';
 
@@ -77,7 +81,7 @@ if($this->dicturls['class']=='objects' && $this->dicturls['paramslist'][0]=='mod
 
 elseif($this->dicturls['class']=='objects') {
     $arrayuirow['edit'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/';
-    $arrayuirow['new'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/';
+    $arrayuirow['new'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly;
     $arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
     $arrayuirow['remove'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
     //groups views
@@ -150,7 +154,6 @@ if(array_key_exists('checkedaction',$_POST) || strpos(implode('',array_keys($_PO
 printf($htmlinput,'hidden','idpage',($idpage+1),'');
 printf($htmlinput,'hidden','selectorsids',implode(',',$selectorsids),'');
 printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_excluded),'');
-
 
 ?>
 <a  class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
@@ -274,7 +277,7 @@ foreach($listall as $obj) {
         }
     }
     $uihtml = '';
-    if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'"><i class="icon-edit"></i></a>';
+    if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'').'"><i class="icon-edit"></i></a>';
     
         if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/"><i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
         if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
