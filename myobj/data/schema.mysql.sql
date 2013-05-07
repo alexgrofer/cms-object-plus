@@ -203,22 +203,35 @@ INSERT INTO `setcms_uclasses_association` (`id`,`from_uclasses_id`,`to_uclasses_
     (3,5,3), -- [navigation_sys]<>-----views_sys
     (4,5,4), -- [navigation_sys]<>-----views_sys
     (5,5,6); -- [navigation_sys]<>-----views_sys
-INSERT INTO `setcms_systemobjheaders` (`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
+INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
 -- Class (setcms_uclasses) id = 1
-(1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
-(1,'guest','',0,'guestsys','guestsys',0),
-(1,'authorized','',0,'authorizedsys','authorizedsys',0),
--- Example 
+(1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
+(2,1,'guest','',0,'guestsys','guestsys',0),
+(3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
+-- Example TO
 -- navigation - Class (navigation_sys) id = 5
-(5,'index','',0,'0','index',1),
-(5,'news list','',0,'0','news',1),
-(5,'news object','',0,'0','news object',1),
+(4,5,'index','',0,'0','index',1),
+(5,5,'news list','',0,'0','news',1),
+(6,5,'news object','',0,'0','news object',1),
 -- templates - Class (templates_sys) id = 3
-(3,'example index','',0,'example/index','',0),
-(3,'example main','',0,'example/main','',0),
+(7,3,'example index','',0,'example/index','',0),
+(8,3,'example main','',0,'example/main','',0),
 -- views - Class (views_sys) id = 2
-(2,'example list news','',0,'example/listnews','',0),
-(2,'example object news','',0,'example/getobjnews','',0);
+(9,2,'example list news','',0,'example/listnews','',0),
+(10,2,'example object news','',0,'example/getobjnews','',0);
+-- Object Links (—сылки дл€ возможности прив€зок, создаютс€ автоматически при создании объекта если стоит настройка автомотического создани€ объекта ссылки)
+INSERT INTO `setcms_linksobjectsallsystem` (`id`,`idobj`,`uclass_id`) VALUES
+(1,1,1),
+(2,2,1),
+(3,3,1),
+(4,4,5),
+(5,5,5),
+(6,6,5),
+(7,7,3),
+(8,8,3),
+(9,9,2),
+(10,10,2);
+-- Example DO
 -- User
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','ivanov');
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`,`userpasport_id`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com',1);
@@ -240,9 +253,8 @@ CREATE TABLE `setcms_dep_cat_category` (
 CREATE TABLE `setcms_dep_cat_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  `exp` varchar(45) NOT NULL,
-  `range` varchar(255) NOT NULL,
+  `type` tinyint(4) NOT NULL, -- (логическое(да,нет(неважно это значит не учитывать в шаблоне('не важно'))),число(диапазон ставить в exp,выбор нескольких(чекбоксы мн. выбора))
+  `range` varchar(255) DEFAULT NULL, -- диапазон '20-400'
   PRIMARY KEY (`id`)
 );
 
@@ -260,11 +272,3 @@ CREATE TABLE `setcms_dep_cat_option_params` (
   `id_option` int(11) NOT NULL,
    PRIMARY KEY (`id`) 
 );
-
-CREATE  TABLE `setcms_sessiondb` (
-  `session_key` varchar(40) NOT NULL,
-  `session_data` longtext NOT NULL,
-  `expire_date` datetime NOT NULL,
-  PRIMARY KEY (`session_key`)
-);
-COMMIT;
