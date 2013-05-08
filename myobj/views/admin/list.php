@@ -203,11 +203,12 @@ $n_p++;
 if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') || (isset($_POST['serach_param']) && !isset($_POST['serach_param'][$n_p])) && $n_p != max(array_keys($_POST['serach_param']))+1) {
     continue;
 }
-echo '<p>'.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
+echo '<p> <input type="checkbox" /> <span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
 ?> 
 <input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
 <input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
+<input type="checkbox" /> <span>)</span> <input type="checkbox" /> AND
 </p>
 <?php
 }

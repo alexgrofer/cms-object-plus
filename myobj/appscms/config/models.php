@@ -2,12 +2,19 @@
 $models = array(
     'classes' => array(
         'namemodel' => 'uClasses',
-        'edit' => null,
+		//дополнительные настройки
+        'edit' => null, //все
+		//'witch' => null, //можно описать полностью включая select, condition, тип join
+		'witch' => array('relattest', 'relattest.relattest2'),
+		'find' => array('id', 'prop_m_o__test', 'relattest.name', 'relattest.relattest2.name'), //параметр, свойство, реляц модели relattest параметра  name,
+		//свойство искать по 'prop_m_o__', реляционную таблицу по точке последнии два слова
+		'sort' => array('id', 'prop_test', 'relattest.name', 'relattest.relattest2.name'),
+		'addcontroller' => '', //дополнительный контроллер если необходим - может быть необходим при редактировании
         'relation' => array('properties', 'classes' => 'association'),
-        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj'),
+        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj'), // добавить relattest.relattest2.name
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-        'order_by' => array(array('id', 'desc')),
+        'order_by' => array(array('id', 'desc')), //проверить возможность relattest.relattest2.name ASC, причем добавить в массив
     ),
     'properties' => array(
         'namemodel' => 'objProperties',
