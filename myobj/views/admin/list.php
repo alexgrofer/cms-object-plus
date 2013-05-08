@@ -178,6 +178,7 @@ if(count($selectorsids) || count($selectorsids_excluded)) {
 
 <?php
 
+
 $select_array = $REND_thisparamsui;
 $order_by_array = array('-'=>'-');
 foreach($select_array as $key => $value) {
@@ -188,65 +189,40 @@ foreach($select_array as $key => $value) {
 $select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exists('order_by_param',$_POST) && $_POST['order_by_param'])?$_POST['order_by_param']:''),$order_by_array);
 
 ?>
-
-<div id="filtersort" class="well" style="padding:0; padding-top:15px">
-params:<br/>
+<style>
+.finderlisttop {padding:5px 0}
+.finderlisttop p {margin:0}
+</style>
+<div>
+<div class="finderlisttop">
+ 
 <?php
 $n_p=0;
 do {
-if(isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') {
-    $n_p++;
+$n_p++;
+if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') || (isset($_POST['serach_param']) && !isset($_POST['serach_param'][$n_p])) && $n_p != max(array_keys($_POST['serach_param']))+1) {
     continue;
 }
-echo CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
+echo '<p>'.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
 ?> 
 <input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
-<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" /><br/>
+<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
+</p>
 <?php
-$n_p++;
 }
-while(isset($_POST['serach_param']) && $n_p <= count($_POST['serach_param']));
+while(isset($_POST['serach_param']) && $n_p <= max(array_keys($_POST['serach_param'])));
 unset($select_array);
-
-if($REND_objclass!==null && count($REND_objclass->properties)) {
-$list_prop = CHtml::listData($REND_objclass->properties, 'codename', 'name');
-$order_by_array = array('-'=>'-');
-foreach($list_prop as $key => $value) {
-    $order_by_array[$key] = $value;
-    $order_by_array[$key.'---desc'] = $value.'-desc';
-    
-}
-
-if($REND_thispropsui) {
-    $select_order_by_prop = CHtml::dropDownList('order_by_prop', ((array_key_exists('order_by_prop',$_POST) && $_POST['order_by_prop'])?$_POST['order_by_prop']:''),$order_by_array);
-}
-$select_search_props = CHtml::dropDownList('filter_prop', ((array_key_exists('filter_prop',$_POST) && $_POST['filter_prop'])?$_POST['filter_prop']:''),$list_prop);
 ?>
-| - | prop: <?php echo $select_search_props;?> 
-<input  class="input-mini" name="serach_prop_condition" type="text" value="<?php echo (array_key_exists('serach_prop_condition',$_POST) && trim($_POST['serach_prop_condition'])!='')?$_POST['serach_prop_condition']:'=';?>" />
-<input name="serach_prop" type="text" value="<?php echo (array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='')?$_POST['serach_prop']:'';?>" />
-<?php } ?>
-<input  class="btn" name="button_serach_prop" type="submit" value="find" />
-<?php if($REND_thispropsui) {?>
-| -- | sort prop: 
-<?php echo $select_order_by_prop;?>
-<input class="btn" name="button_order_by_prop" type="submit" value="sort" />
-<?php }?>
-| -- | sort param: 
-<?php echo $select_order_by_param;?>
-<input class="btn" name="button_order_by_prop" type="submit" value="sort" />
 </div>
-<?php
+</div>
 
-
-if($COUNT_P) {
-?>
 <table class="table table-striped table-bordered table-condensed table-hover">
 <tr class="success">
 <td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
 </tr>
 <?php
+if($COUNT_P) {
 $pkeys_all = array();
 
 
