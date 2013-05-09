@@ -34,8 +34,17 @@ if(array_key_exists('submit',$_POST)) {
                     if($keysidhandle[$tmplhandl]->name!=$tmplhandl_name) {
                         $keysidhandle[$tmplhandl]->name=$tmplhandl_name;
                     }
-                    $keysidhandle[$tmplhandl]->vp1 = $idview;
-                    $keysidhandle[$tmplhandl]->save();
+                    if($idview==0 && $keysidhandle[$tmplhandl]->vp1) {
+
+                        //автоматически если удаляем ссылки есть такая задача
+                        $keysidhandle[$tmplhandl]->delete();
+                        //task можно не удалять а только отвязывать и ставить vp1 = 0 потом при создании искать свободный
+                        //$REND_model->editlinks('remove','handle_sys',$keysidhandle[$tmplhandl]->id);
+                    }
+                    else {
+                        $keysidhandle[$tmplhandl]->vp1 = $idview;
+                        $keysidhandle[$tmplhandl]->save();
+                    }
                 }
             }
             elseif($idview!='0') {
@@ -47,8 +56,7 @@ if(array_key_exists('submit',$_POST)) {
                 $newhandle->save();
                 $REND_model->editlinks('add','handle_sys',$newhandle);
             }
-            
-            echo $tmplhandl.'------'.$idview.'<br/>';
+
         }
     }
     if($this->dicturls['actionid']=='0') {

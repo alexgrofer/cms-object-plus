@@ -32,11 +32,11 @@ class ObjController extends Controller {
         
         if($objnav) {
             //если нет объекта шаблона привязанного к этому объекту навигации
-            if(!($templateobj = $objnav->getobjlinks('templates_sys')->count())) {
+            if(!($templateobj = $objnav->getobjlinks('templates_sys')->find())) {
                 throw new CException(Yii::t('cms','none object template'));
             }
             $this->apcms->setparams['OBJNAV'] = $objnav;
-            $this->render('/user/templates/'.$templateobj[0]->vp1);
+            $this->render('/user/templates/'.$templateobj->vp1);
         }
         else {
             throw new CHttpException(404,'page not is find');
