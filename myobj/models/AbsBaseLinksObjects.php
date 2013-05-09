@@ -8,8 +8,16 @@ abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLin
     {
         $namestrthisclass = get_class($this);
         return array(
-            'uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id'), // uclass = models.ForeignKey(uClasses)
             'links'=>array(self::MANY_MANY, $namestrthisclass,'setcms_'.strtolower($namestrthisclass).'_links(from_self_id, to_self_id)'), // links = models.ManyToManyField("self",blank=True)
         );
+    }
+    //task удалить все ссылки на этот объект других классов (у других классов могут быть ссылки на этот объект)
+    function beforeDelete() {
+        if(!parent::beforeDelete()) return false;
+        //
+        //тут можно удалить только запросом написать запрос
+        //print_r($this);
+        //echo 5;
+        exit;
     }
 }

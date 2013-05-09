@@ -27,7 +27,6 @@ $objects = array(
         $classes_system['handle'] => array(
             'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view'),
             'edit' => array('name', 'sort', array('vp1','idview')),
-            'relation' => array('uclass'),
             'groups_read' => null,
             'groups_write' => null,
         ),
