@@ -25,6 +25,7 @@ class User extends AbsModel
         );
     }
     protected function beforeSave() {
+        if(!parent::beforeSave()) return false;
         if(!$this->isNewRecord) {
             $objuser = $this->model()->findByPk($this->id);
             if($objuser->password!=$this->password) {
@@ -32,7 +33,6 @@ class User extends AbsModel
             }
         }
         else $this->password = md5($this->password);
-        return parent::beforeSave();
     }
     public function ElementsForm() {
         return array(

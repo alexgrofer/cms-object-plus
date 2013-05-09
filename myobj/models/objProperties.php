@@ -40,6 +40,7 @@ class objProperties extends AbsModel
         );
     }
     public function beforeSave() {
+        if(!parent::beforeSave()) return false;
         if(trim($this->setcsv)=='') {
             $arrconfcms = UCms::getInstance()->config;
             if(array_key_exists($arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield],$arrconfcms['rulesvalidatedef'])) {
@@ -47,7 +48,6 @@ class objProperties extends AbsModel
                 $this->setcsv = $valdefsetcsv;
             }
         }
-        return parent::beforeSave();
     }
     public function getTYPES_MYFIELDSOptions() {
         return UCms::getInstance()->config['TYPES_MYFIELDS_CHOICES'];

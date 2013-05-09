@@ -180,6 +180,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
     }
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
     public function afterSave() {
+        if(!parent::afterSave()) return false;
         if($this->flagAutoAddedLinks) {
             $namelinkallmodel = $this->getNameLinksModel();
             $objectcurrentlink = $this->_getobjectlink();
@@ -197,6 +198,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
     }
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
     function beforeDelete() {
+        if(!parent::beforeDelete()) return false;
         //del lines
         if($this->isitlines == true && count($this->lines)) {
 			$this->UserRelated->links_edit('clear','lines'); //очистить ссылки на строки в дочерней тиблице
@@ -215,6 +217,5 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             }
             $objectcurrentlink->delete(); //удалить ссылку
         }
-		return parent::beforeDelete();
     }
 }
