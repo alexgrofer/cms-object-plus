@@ -130,7 +130,7 @@ class FormModel extends CActiveRecordBehavior {
                 }
                 $dinamicForm->rules[] = $addarrsett;
             }
-            
+
             $confform['elements'][$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
         }
         }
@@ -156,7 +156,7 @@ class FormModel extends CActiveRecordBehavior {
                 //end prop
                 else {
                     $namemodelprop = $key;
-                    if(!property_exists($model, $key) && count($this->revelem)) {
+                    if(!property_exists($model, $key) && count($this->revelem) && array_key_exists($key,$this->revelem)) {
                         $namemodelprop = $this->revelem[$key];
                     }
                     if(property_exists($model, $namemodelprop)) {
