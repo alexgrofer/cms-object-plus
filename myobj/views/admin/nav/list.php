@@ -13,7 +13,7 @@ $listobjsort = apicms\utils\treelem($listall,'id','vp1',0,'&nbsp;&nbsp;&nbsp;&nb
 ?>
 <a class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
 <form method="post">
-<table class="table table-striped table-bordered table-condensed">
+<table class="table table-striped table-bordered table-condensed table-hover">
 <tr>
 <td><input class="btn btn-primary" type="submit" name="push_0" value="0" /></td>
 <td>id</td>
