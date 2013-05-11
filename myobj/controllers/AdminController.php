@@ -21,6 +21,8 @@ class AdminController extends Controller {
             'REND_acces_read'=>true,
             'REND_acces_write'=>true,
             'REND_relation'=>null,
+            'REND_witch'=>null,
+            'REND_find'=>null,
         );
     public function setVarRender($name,$value) {
         $this->paramsrender[$name] = $value;
@@ -142,6 +144,13 @@ class AdminController extends Controller {
                 
                 if(array_key_exists('relation',$settui[$findelem])) {
                     $this->setVarRender('REND_relation',$settui[$findelem]['relation']);
+                }
+
+                $this->setVarRender('REND_find',array_key_exists('find',$settui[$findelem])?$settui[$findelem]['find']:$this->paramsrender['REND_thisparamsui']);
+
+                if(array_key_exists('witch', $settui[$findelem])) {
+                    $this->setVarRender('REND_witch',$settui[$findelem]['witch']);
+                    $modelAD->dbCriteria->with = $settui[$findelem]['witch'];
                 }
                 
                 $namecontroller = (array_key_exists('controller', $settui[$findelem]))?$settui[$findelem]['controller']:null;

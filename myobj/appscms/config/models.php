@@ -2,19 +2,22 @@
 $models = array(
     'classes' => array(
         'namemodel' => 'uClasses',
-		//äîïîëíèòåëüíûå íàñòðîéêè
-        'edit' => null, //âñå
-		//'witch' => null, //ìîæíî îïèñàòü ïîëíîñòüþ âêëþ÷àÿ select, condition, òèï join
-		'witch' => array('relattest', 'relattest.relattest2'),
-		'find' => array('id', 'prop_m_o__test', 'relattest.name', 'relattest.relattest2.name'), //ïàðàìåòð, ñâîéñòâî, ðåëÿö ìîäåëè relattest ïàðàìåòðà  name,
-		//ñâîéñòâî èñêàòü ïî 'prop_m_o__', ðåëÿöèîííóþ òàáëèöó ïî òî÷êå ïîñëåäíèè äâà ñëîâà
-		'sort' => array('id', 'prop_test', 'relattest.name', 'relattest.relattest2.name'),
-		'addcontroller' => '', //äîïîëíèòåëüíûé êîíòðîëëåð åñëè íåîáõîäèì - ìîæåò áûòü íåîáõîäèì ïðè ðåäàêòèðîâàíèè
+		//Ð´Ð¾Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ðµ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸
+        'edit' => null, //Ð²ÑÐµ
+		//'witch' => array('relattest', 'relattest.relattest2'), task Ð”Ð¾Ð´ÐµÐ»Ð°Ñ‚ÑŒ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ð¼ÐµÑ‚Ð¾Ð´Ð¾Ð¼
+        //task ÑÐ´ÐµÐ»Ð°Ñ‚ÑŒ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð¸ÑÐºÐ°Ñ‚ÑŒ Ð¿Ð¾ ÑÐ²Ð¾Ð¹ÑÑ‚Ð²Ð°Ð¼ Ð² Ð¾Ð´Ð½Ð¾Ð¼ Ð¼ÐµÐ½ÑŽ, Ð¸ Ð¿Ð¾ Ñ€ÐµÐ»ÑÑ†Ð¸ÑÐ¼ Ð²Ð¾Ð¿Ñ€Ð¾Ñ ÐºÐ°Ðº Ð¸ÑÐºÐ°Ñ‚ÑŒ Ñ‚Ð°Ðº relattest2.name Ð¸Ð»Ð¸ relattest.relattest2.name
+        //Ñ relattest2.name Ð¿Ñ€Ð¾Ñ‰Ðµ Ð¸ÑÐºÐ°Ñ‚ÑŒ Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ðµ
+		//'find' => array('id'=>'id', 'prop_test'=>'prep_test', 'relattest.name' => 'relattest.name', 'relattest.relattest2.name'=>'relattest.relattest2.name'),
+		//task Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð² ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²ÐºÐ° Ñ€ÐµÐ»ÑÑ†Ð¸Ð¸ ÐºÐ°ÐºÐ¸Ðµ Ð¸Ð¼ÐµÐ½Ð° Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð²Ñ‹ÑˆÐµ
+        //'sort' => array('id', 'prop_test', 'relattest.name', 'relattest.relattest2.name'),
+		'addcontroller' => '', //task Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ
         'relation' => array('properties', 'classes' => 'association'),
-        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj'), // äîáàâèòü relattest.relattest2.name
+        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',
+        //'relattest2.id'=>'name123' //task Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ Ð¿Ð¾ÑÐ»Ðµ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¼ÐµÑ‚Ð¾Ð´ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð²Ñ‹Ñ‚Ð°ÑÐºÐ¸Ð²Ð°ÐµÑ‚ Ð±ÐµÐ· Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¾Ð²  Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ relattest.relattest2.name
+        ),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-        'order_by' => array(array('id', 'desc')), //ïðîâåðèòü âîçìîæíîñòü relattest.relattest2.name ASC, ïðè÷åì äîáàâèòü â ìàññèâ
+        'order_by' => array('id DESC'), //Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ relattest.relattest2.name ASC, Ð¿Ñ€Ð¸Ñ‡ÐµÐ¼ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð² Ð¼Ð°ÑÑÐ¸Ð²
     ),
     'properties' => array(
         'namemodel' => 'objProperties',
@@ -25,7 +28,7 @@ $models = array(
         'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => null,
-        'order_by' => array(array('id', 'desc')),
+        'order_by' => array(array('id DESC')),
     ),
     //alias
     'uclass' => 'classes',

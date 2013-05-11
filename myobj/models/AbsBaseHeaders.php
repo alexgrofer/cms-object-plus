@@ -41,12 +41,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $this->_allproperties;
     }
-    public function order_cols_model($arrorder) {
-        foreach($arrorder as $arpropelem) {
-            $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
-            $this->dbCriteria->order .= (($this->dbCriteria->order)?',':'').($this->tableAlias).'.'.$arpropelem[0].' '.$typf;
-        }
-    }
     public function setuiprop($array) {
         // $array=array('condition'=>array(array('p1','<=','23'), 'or', array('p2','=','val')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
         $properties = $this->getallprop();

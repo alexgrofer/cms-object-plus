@@ -5,11 +5,17 @@
 if(array_key_exists('serach_param',$_POST)) {
     foreach($_POST['serach_param'] as $key => $value) {
         if($value!='') {
-            $REND_model->dbCriteria->addCondition(($REND_model->tableAlias.'.'.$_POST['filter_param'][$key].' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key);
+            $tableAlias = '';
+            if(strpos($_POST['filter_param'][$key],'.')===false) {
+                $tableAlias = $REND_model->tableAlias.'.';
+            }
+
+            $REND_model->dbCriteria->addCondition(($tableAlias.$_POST['filter_param'][$key].' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key);
             $REND_model->dbCriteria->params[':serach_condition_'.$key] = $_POST['serach_param'][$key];
         }
     }
 }
+
 
 if(array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='') {
     //serach_prop_condition
@@ -23,20 +29,14 @@ if(array_key_exists('order_by_prop',$_POST) && $_POST['order_by_prop']!='-') {
     $REND_model->setuiprop(array('order'=>array($filterprop)));
 }
 else {
-    if($REND_order_by_param) {
-        $filterprop = $REND_order_by_param;
-    }
+    $filterprop = array();
     if(array_key_exists('order_by_param',$_POST) && $_POST['order_by_param']!='-') {
         $filterprop = array(explode('---',$_POST['order_by_param']));
     }
-    if(isset($filterprop) && $this->dicturls['paramslist'][0]!='class') {
-        $REND_model->dbCriteria->order = implode(' ',$filterprop[0]);
+    elseif($REND_order_by_param) {
+        $filterprop = $REND_order_by_param;
     }
-    else {
-        if(isset($filterprop)) {
-        $REND_model->order_cols_model($filterprop);
-        }
-    }
+    $REND_model->dbCriteria->order = implode(',',$filterprop);
 }
 
 $modelCRITERIA = $REND_model->dbCriteria;
@@ -182,7 +182,7 @@ if(count($selectorsids) || count($selectorsids_excluded)) {
 <?php
 
 
-$select_array = $REND_thisparamsui;
+$select_array = $REND_find;
 $order_by_array = array('-'=>'-');
 foreach($select_array as $key => $value) {
     $order_by_array[$key] = $value;
@@ -220,16 +220,15 @@ unset($select_array);
 ?>
 </div>
 </div>
-
+<?php
+$pkeys_all = array();
+if($COUNT_P) {
+?>
 <table class="table table-striped table-bordered table-condensed table-hover">
 <tr class="success">
 <td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
 </tr>
 <?php
-if($COUNT_P) {
-$pkeys_all = array();
-
-
 $relations_links_model = '';
 
 $relconfsetting = $REND_confmodel;
@@ -265,10 +264,24 @@ foreach($listall as $obj) {
     $strchecked=(in_array($obj->primaryKey, $selectorsids)!==false || (in_array($obj->primaryKey,$arrchecked)!==false && in_array($obj->primaryKey,$selectorsids_excluded)===false) || array_key_exists('allsetchecked',$_POST))?'checked="checked"':'';
     
     $pkeys_all[] = $obj->primaryKey;
+
+
+
+
     
     echo '<tr><td><input name="elemch_'.$obj->primaryKey.'" type="checkbox" '.$strchecked.' /></td>';
     foreach(array_keys($REND_thisparamsui) as $colname) {
-        echo '<td>'.$obj->$colname.'</td>';
+        $valobj = '';
+        if(strpos($colname, '.')!==false) {
+            $arrRlname=explode('.',$colname);
+            $valobj = $obj->$arrRlname[0]->$arrRlname[1];
+
+        }
+        else {
+            $valobj = $obj->$colname;
+        }
+
+        echo '<td>'.$valobj.'</td>';
     }
     if($REND_thispropsui) {
         $properties = $obj->get_properties();
@@ -351,4 +364,5 @@ echo '<div style="padding-bottom: 60px">'.apicms\utils\pagination($idpage,$COUNT
 </form>
 <?php
 }
+else echo '<div class="well">none objects</div>';
 ?>
