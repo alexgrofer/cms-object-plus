@@ -36,7 +36,7 @@ $models = array(
     //USER
     'user' => array('namemodel' => 'User', 'relation' => array('group','userpasport'), 'cols' => array('id'=>'id','login'=>'user name'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
     'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
-    'group' => array('namemodel' => 'Ugroup', 'relation' => false, 'cols' => array('id'=>'id','name'=>'name','guid'=>'guid')),
+    'group' => array('namemodel' => 'Ugroup', 'relation' => false, 'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
     'userpasport' => array('namemodel' => 'UserPasport', 'relation' => false, 'cols' => array('id'=>'id','firstname'=>'first name','lastname'=>'last name')),
     //STORE
     'depcat' => array(
@@ -48,7 +48,11 @@ $models = array(
     'depcatoptionparams' => array(
         'namemodel' => 'DepCatOptionParam', 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
-    
+    'graphic_sale' => array(
+        'controller' => 'admin/dep_store/graphic_sale.php',
+        'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'), //не отображается в меню
+        //'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+    ),
     //headers links example
     /*
     'myObjHeaders' => array('namemodel' => 'myObjHeaders', 'cols' => array('id'=>'ids','name'=>'name')),
@@ -56,12 +60,4 @@ $models = array(
     'lines' => 'myObjLines', //alias
     'property' => 'properties', //alias
     */
-);
-
-$models_menu = array(
-        array('user'),
-        array('group'),
-        array('userpasport'),
-        //STORE
-        array('depcat'),
 );

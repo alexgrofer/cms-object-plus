@@ -30,6 +30,9 @@ class AdminController extends Controller {
     public function getUrlBeforeAction() {
         return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
     }
+    public function getMenuhtml() {
+        return $this->renderPartial('/admin/myui');
+    }
     public function run($actionID) {
         $this->apcms = UCms::getInstance($this);
         //login
@@ -93,10 +96,10 @@ class AdminController extends Controller {
                     }
                     $this->setVarRender('REND_confmodel',$params_modelget);
                     $NAMEMODEL_get = $params_modelget['namemodel'];
-                    
+
                     $modelAD =  $NAMEMODEL_get::model();
                     $settui = $this->apcms->config['controlui'][$this->dicturls['class']]['models'];
-                    
+
                     //view links class obj
                     if($this->dicturls['paramslist'][3]=='links') {
                         $actclass = $modelAD->findByPk($this->dicturls['paramslist'][2]);
@@ -110,7 +113,7 @@ class AdminController extends Controller {
                     $settui = $this->apcms->config['controlui']['ui'];
                     $findelem = $this->dicturls['paramslist'][1];
                 }
-                
+
                 if(isset($settui)) {
                 /// acces
                 if(array_key_exists('groups_read',$settui[$findelem]) && $settui[$findelem]['groups_read']) {
@@ -128,7 +131,7 @@ class AdminController extends Controller {
                     unset($result);
                 }
                 ///// set setting
-                $this->setVarRender('REND_thisparamsui',array_key_exists('cols',$settui[$findelem]) ? $settui[$findelem]['cols'] : array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
+                $this->setVarRender('REND_thisparamsui',array_key_exists('cols',$settui[$findelem]) ? $settui[$findelem]['cols'] : ($modelAD)?array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)):'');
                 
                 if(array_key_exists('cols_props',$settui[$findelem])) {
                     $this->setVarRender('REND_thispropsui',$settui[$findelem]['cols_props']);
@@ -284,10 +287,6 @@ class AdminController extends Controller {
                     $this->redirect(Yii::app()->request->url);
                 }
             }
-        }
-        //list UI or Models
-        if($this->dicturls['paramslist'][1]=='' && in_array($this->dicturls['paramslist'][0],array('models','ui'))) {
-            $view = '/admin/listmodelui';
         }
         if($this->paramsrender['REND_acces_read']===false) {
             $view = '/admin/acces';

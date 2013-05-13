@@ -7,7 +7,3 @@ $ui = array(
         //'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
     ),
 );
-
-$ui_menu = array(
-    array('graphic_sale'),
-);

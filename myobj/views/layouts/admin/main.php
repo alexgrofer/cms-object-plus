@@ -39,10 +39,10 @@ input, select {height: auto !important; vertical-align:top !important;}
     <li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
     <li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
     <li><a href="<?php echo $urladm?>/objects/class/navigation_sys/">nav</a></li>
+  </ul>
 </div>
-    <a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----| 
-    <a href="<?php echo $urladm?>/objects/models/">MODELS</a> | 
-    <a href="<?php echo $urladm?>/objects/ui/">UI</a> | ---- | 
+    <a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----|
+    <?php echo $this->getMenuhtml(); ?>
     <a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
 </div>
 

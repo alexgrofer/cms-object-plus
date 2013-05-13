@@ -11,6 +11,7 @@ $classes_system = array(
 require(dirname(__FILE__).'/objects.php');
 require(dirname(__FILE__).'/models.php');
 require(dirname(__FILE__).'/UI.php');
+
 return array(
     'controlui' => array(
         'objects' => array( //columns header type model, controller inside myobj/controllers/cms
@@ -20,8 +21,6 @@ return array(
         'ui' => $ui,
     ),
     'spacescl' => $set_spaces,
-    'menumodel' => $models_menu,
-    'menuui' => $ui_menu,
     'TYPES_MYFIELDS_CHOICES' => array(
         '1'=>'str',
         '2'=>'text',
