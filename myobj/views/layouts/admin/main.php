@@ -45,7 +45,7 @@ input, select {height: auto !important; vertical-align:top !important;}
     <?php echo $this->getMenuhtml(); ?>
     <a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
 </div>
-
+<?php echo $this->getMenuhtmlSub(); ?>
 <?php
 $this->renderClip('header');
 }?>

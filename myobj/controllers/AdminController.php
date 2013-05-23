@@ -33,6 +33,9 @@ class AdminController extends Controller {
     public function getMenuhtml() {
         return $this->renderPartial('/admin/myui');
     }
+    public function getMenuhtmlSub() {
+        return $this->renderPartial('/admin/myui_sub');
+    }
     public function run($actionID) {
         $this->apcms = UCms::getInstance($this);
         //login
