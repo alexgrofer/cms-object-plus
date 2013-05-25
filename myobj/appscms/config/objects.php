@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $objects = array(
     //codename class
     'myObjHeaders' => array(
@@ -58,7 +58,7 @@ $objects = array(
         ),
         $classes_system['params'] => array(
             'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
-            'edit' => array('name', array('vp1','codename')),
+            'edit' => array('name', array('vp1','codename'),'content'),
             'groups_read' => null,
             'groups_write' => null,
         ),

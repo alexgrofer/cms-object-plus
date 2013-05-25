@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 Yii::import('application.modules.myobj.appscms.UCms');
 Yii::import('application.modules.myobj.appscms.api.utils',true);
 
@@ -134,8 +134,12 @@ class AdminController extends Controller {
                     unset($result);
                 }
                 ///// set setting
-                $this->setVarRender('REND_thisparamsui',array_key_exists('cols',$settui[$findelem]) ? $settui[$findelem]['cols'] : ($modelAD)?array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)):'');
-                
+                if(array_key_exists('cols',$settui[$findelem])) {
+                    $this->setVarRender('REND_thisparamsui',$settui[$findelem]['cols']);
+                }
+                else {
+                    $this->setVarRender('REND_thisparamsui',array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
+                }
                 if(array_key_exists('cols_props',$settui[$findelem])) {
                     $this->setVarRender('REND_thispropsui',$settui[$findelem]['cols_props']);
                 }
