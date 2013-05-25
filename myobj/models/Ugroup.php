@@ -21,13 +21,13 @@ class Ugroup extends AbsModel
         );
     }
     protected function beforeSave() {
-        if(parent::beforeSave()) {
+        if(parent::beforeSave()!==false) {
             if($this->isNewRecord) {
                 $this->guid = apicms\utils\GUID();
             }
             return true;
         }
-        else return false;
+        else return parent::beforeSave();
     }
 
 }

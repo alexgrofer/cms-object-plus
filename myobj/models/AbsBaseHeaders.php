@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(models.Model):
 {
     public function tableName()
@@ -174,21 +174,24 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
     }
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
     public function afterSave() {
-        if(!parent::afterSave()) return false;
-        if($this->flagAutoAddedLinks) {
-            $namelinkallmodel = $this->getNameLinksModel();
-            $objectcurrentlink = $this->_getobjectlink();
-            if(!$objectcurrentlink) {
-                $objectcurrentlink = new $namelinkallmodel();
-                $objectcurrentlink->idobj = $this->id;
-                $objectcurrentlink->uclass_id = $this->uclass_id;
-                $objectcurrentlink->save();
+        if(parent::afterSave()!==false) {
+            if($this->flagAutoAddedLinks) {
+                $namelinkallmodel = $this->getNameLinksModel();
+                $objectcurrentlink = $this->_getobjectlink();
+                if(!$objectcurrentlink) {
+                    $objectcurrentlink = new $namelinkallmodel();
+                    $objectcurrentlink->idobj = $this->id;
+                    $objectcurrentlink->uclass_id = $this->uclass_id;
+                    $objectcurrentlink->save();
+                }
             }
+            //если были изменены свойства то сохраняем их
+            if(count($this->_prev_save_prop)) {
+                $this->_f_prev_save_prop();
+            }
+            return true;
         }
-        //если были изменены свойства то сохраняем их
-        if(count($this->_prev_save_prop)) {
-            $this->_f_prev_save_prop();
-        }
+        else return parent::afterSave();
     }
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
     function beforeDelete() {

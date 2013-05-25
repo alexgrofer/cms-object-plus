@@ -18,7 +18,7 @@ abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLin
         //print_r($this);
         //echo 5;
         //exit;
-        return true;
-        parent::beforeDelete();
+
+        return parent::beforeDelete();
     }
 }
