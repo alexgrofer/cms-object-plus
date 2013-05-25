@@ -40,14 +40,17 @@ class objProperties extends AbsModel
         );
     }
     public function beforeSave() {
-        if(!parent::beforeSave()) return false;
-        if(trim($this->setcsv)=='') {
-            $arrconfcms = UCms::getInstance()->config;
-            if(array_key_exists($arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield],$arrconfcms['rulesvalidatedef'])) {
-                $valdefsetcsv = $arrconfcms['rulesvalidatedef'][$arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield]];
-                $this->setcsv = $valdefsetcsv;
+        if(parent::beforeSave()) {
+            if(trim($this->setcsv)=='') {
+                $arrconfcms = UCms::getInstance()->config;
+                if(array_key_exists($arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield],$arrconfcms['rulesvalidatedef'])) {
+                    $valdefsetcsv = $arrconfcms['rulesvalidatedef'][$arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield]];
+                    $this->setcsv = $valdefsetcsv;
+                }
             }
+            return true;
         }
+        else return false;
     }
     public function getTYPES_MYFIELDSOptions() {
         return UCms::getInstance()->config['TYPES_MYFIELDS_CHOICES'];

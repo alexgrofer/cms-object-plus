@@ -25,14 +25,19 @@ class User extends AbsModel
         );
     }
     protected function beforeSave() {
-        if(!parent::beforeSave()) return false;
-        if(!$this->isNewRecord) {
-            $objuser = $this->model()->findByPk($this->id);
-            if($objuser->password!=$this->password) {
+        if(parent::beforeSave()) {
+            if(!$this->isNewRecord) {
+                $objuser = $this->model()->findByPk($this->id);
+                if($objuser->password!=$this->password) {
+                    $this->password = md5($this->password);
+                }
+            }
+            else {
                 $this->password = md5($this->password);
             }
+            return true;
         }
-        else $this->password = md5($this->password);
+        else return false;
     }
     public function ElementsForm() {
         return array(

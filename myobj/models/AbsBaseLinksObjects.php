@@ -13,11 +13,12 @@ abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLin
     }
     //task удалить все ссылки на этот объект других классов (у других классов могут быть ссылки на этот объект)
     function beforeDelete() {
-        if(!parent::beforeDelete()) return false;
         //
         //тут можно удалить только запросом написать запрос
         //print_r($this);
         //echo 5;
-        exit;
+        //exit;
+        return true;
+        parent::beforeDelete();
     }
 }
