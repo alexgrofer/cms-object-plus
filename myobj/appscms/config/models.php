@@ -28,7 +28,7 @@ $models = array(
         'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
         'groups_write' => null,
-        'order_by' => array(array('id DESC')),
+        'order_by' => array('id DESC'),
     ),
     //alias
     'uclass' => 'classes',
