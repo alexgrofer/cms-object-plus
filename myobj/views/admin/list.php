@@ -1,4 +1,4 @@
-<style>
+﻿<style>
 .pagination input {display:none}
 </style>
 <?php
@@ -54,7 +54,7 @@ $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
 $urladmclass = $this->dicturls['admin'];
 $relationLinkOnly='';
-if(in_array($this->dicturls['action'],array('relationobjonly','relationobj'))) {
+if($this->dicturls['action']=='relationobjonly') {
     $relationLinkOnly = 'selfobjrelation/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
 }
 $arrayuirow = array(
