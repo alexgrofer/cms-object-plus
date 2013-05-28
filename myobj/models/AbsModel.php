@@ -26,7 +26,14 @@ abstract class AbsModel extends CActiveRecord
     public function setMTMcol($model,$array_elems,$array_value) {
         return $this->UserRelated->links_edit('edit',$model,$array_elems,$array_value);
     }
-    public function addMTObjects($model,$array_elems,$fk=Null) {
-        return $this->UserRelated->links_edit('add',$model,$array_elems,$fk);
+
+    public function addSelfObjects($model,$elems,$fk=Null) {
+        $relations = $this->relations();
+        $type = 'add';
+        if(($relations[$model][0]!=CActiveRecord::MANY_MANY)) {
+            $type='set';
+            $elems = is_array($elems)?$elems[0]:$elems;
+        }
+        return $this->UserRelated->links_edit($type,$model,$elems,$fk);
     }
 }

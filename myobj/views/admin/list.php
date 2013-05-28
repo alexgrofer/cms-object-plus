@@ -55,7 +55,7 @@ $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 $urladmclass = $this->dicturls['admin'];
 $relationLinkOnly='';
 if($this->dicturls['action']=='relationobjonly') {
-    $relationLinkOnly = 'selfobjrelation/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
+    $relationLinkOnly = $this->dicturls['paramslist'][3].'/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
 }
 $arrayuirow = array(
     'edit' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',

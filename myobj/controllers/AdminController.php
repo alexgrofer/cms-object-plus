@@ -23,6 +23,7 @@ class AdminController extends Controller {
             'REND_relation'=>null,
             'REND_witch'=>null,
             'REND_find'=>null,
+            'REND_selfobjrelationElements'=>null,
         );
     public function setVarRender($name,$value) {
         $this->paramsrender[$name] = $value;
@@ -161,6 +162,10 @@ class AdminController extends Controller {
                 if(array_key_exists('witch', $settui[$findelem])) {
                     $this->setVarRender('REND_witch',$settui[$findelem]['witch']);
                     $modelAD->dbCriteria->with = $settui[$findelem]['witch'];
+                }
+
+                if(array_key_exists('selfobjrelationElements', $settui[$findelem])) {
+                    $this->setVarRender('REND_selfobjrelationElements',$settui[$findelem]['selfobjrelationElements']);
                 }
                 
                 $namecontroller = (array_key_exists('controller', $settui[$findelem]))?$settui[$findelem]['controller']:null;

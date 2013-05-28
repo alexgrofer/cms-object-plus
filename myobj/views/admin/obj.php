@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if(!$REND_acces_write) {
     //должно делаться в контроллере - или добавить мини контроллер ?
     echo '<p class="alert">not acces edit</p>';
@@ -10,12 +10,12 @@ $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
 //потом убрать переменную в контроллер, название поля не нужно хранить в настройках оно уже и так есть в настройке реляции
 $REND_addElem=array();
-if($this->dicturls['paramslist'][5]=='selfobjrelation') {
+if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
     $array_names_v_mtm = array();
     $nameps_mtm = '_col_mtm_model';
 
     //смотрим в конфиге какие колонки из дочерней таблице показываем при selfobjrelation
-    foreach($this->apcms->config['controlui']['objects']['models'][$this->dicturls['paramslist'][1]]['selfobjrelationElements'][$this->dicturls['paramslist'][8]] as $namer) {
+    foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
         //убрать из цикла
         $SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
         $REND_addElem[]=array('name'=>$namer.$nameps_mtm, 'def_value'=>$SelectArr[$namer]);
@@ -45,15 +45,12 @@ echo $form;
 if(count($_POST) && $form->validate()) {
     $REND_model->save();
 
-    if(isset($array_names_v_mtm) && $this->dicturls['actionid']=='0') {
-        $REND_model->addMTObjects($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]));
+    if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
+        $REND_model->addSelfObjects($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]));
     }
 
 
     foreach($_POST['EmptyForm'] as $key => $val) {
-
-        //если существует параметр в запросе и подходит под $nameps_mtm, если есть в списке конфигурации $array_names_v_mtm,если не равен предыдущему значению
-        //изменение данных в дочерней таблице при selfobjrelation, если есть параметры в конфиге вообще
         if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
             $array_edit_post_mtmparam = array();
             if(($pos = strpos($key,$nameps_mtm)) && array_key_exists(($name_norm = substr($key,0,$pos)),$array_names_v_mtm) && (array_key_exists($name_norm, $array_names_v_mtm) && $array_names_v_mtm[$name_norm]!=$val)) {
@@ -73,7 +70,12 @@ if(count($_POST) && $form->validate()) {
 
 
     if($this->dicturls['actionid']=='0') {
-        $this->redirect($this->getUrlBeforeAction());
+        //print_r($_SERVER);exit;Yii::app()->request->getUrlReferrer();
+        $urlRedirect = $this->getUrlBeforeAction();
+        if($this->dicturls['paramslist'][5]=='relationobjonly') {
+            $urlRedirect = $urlRedirect.'action/'.$this->dicturls['paramslist'][5].'/'.$this->dicturls['paramslist'][6].'/add/'.$this->dicturls['paramslist'][7].'/'.$this->dicturls['paramslist'][8];
+        }
+        $this->redirect($urlRedirect);
     }
     else {
         $this->redirect(Yii::app()->request->url);
