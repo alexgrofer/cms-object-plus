@@ -5,4 +5,10 @@ class DepCatOptionParam extends AbsModel
     {
         return 'setcms_dep_cat_option_params';
     }
+    public function relations()
+    {
+        return array(
+            'depcatoption'=>array(self::HAS_ONE, 'DepCatOption', 'id_option'),
+        );
+    }
 }
