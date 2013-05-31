@@ -42,22 +42,20 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         return $this->_allproperties;
     }
     public function setuiprop($array) {
-        // $array=array('condition'=>array(array('p1','<=','23'), 'or', array('p2','=','val')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
+        // $array=array('condition'=>array(array('p1','<=','23', 'AND'), array('p2','IN(','1,2,3)', 'OR')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
         $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
-        if(array_key_exists('condition',$array) && count($array['condition'])) {
+        $i = 1;
+        if(array_key_exists('condition',$array)) {
             $textsql = '';
             foreach($array['condition'] as $cond) {
-                if(is_array($cond)) {
-                    $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property.codename='".$cond[0]."')";
-                }
-                else {
-                    $textsql .= ' '.$cond.' ';
-                }
+                if(count($array['condition'])==3) $cond[3] = 'AND';
+                if($i==count($array['condition'])) $cond[3] = '';
+                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property.codename='".$cond[0]."') ".$cond[3]." ";
+                $i++;
             }
             $this->dbCriteria->with['lines'] = array('with' => 'property', 'condition'=>$textsql);
             $this->dbCriteria->with['uclass.properties'] = array();
-            
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();

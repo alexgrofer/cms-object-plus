@@ -3,25 +3,33 @@
 </style>
 <?php
 if(array_key_exists('serach_param',$_POST)) {
+    $array_search_rop = array();
     foreach($_POST['serach_param'] as $key => $value) {
         if($value!='') {
             $tableAlias = '';
-            if(strpos($_POST['filter_param'][$key],'.')===false) {
+            $valueSearchElem = $_POST['filter_param'][$key];
+            $typecond = (array_key_exists('serach_cond',$_POST) && isset($_POST['serach_cond'][$key]) && $_POST['serach_cond'][$key])?'OR':'AND';
+            //если параметр модели указан без псевдонима таблицы
+            if(strpos($valueSearchElem,'.')===false) {
                 $tableAlias = $REND_model->tableAlias.'.';
             }
+            //для свойств
+            if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
+                $valueSearchElem = substr($valueSearchElem,0,$pos_prop);
+                $array_search_rop[] = array($valueSearchElem,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
+                continue;
+            }
 
-            $REND_model->dbCriteria->addCondition(($tableAlias.$_POST['filter_param'][$key].' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key);
+            $REND_model->dbCriteria->addCondition(($tableAlias.$valueSearchElem.' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key,$typecond);
             $REND_model->dbCriteria->params[':serach_condition_'.$key] = $_POST['serach_param'][$key];
         }
     }
-}
+    //поиск по свойствам объекта сделать несколько
+    if(count($array_search_rop)) {
+        $REND_model = $REND_model->setuiprop(array('condition' => $array_search_rop));
+        unset($array_search);
+    }
 
-
-if(array_key_exists('serach_prop',$_POST) && trim($_POST['serach_prop'])!='') {
-    //serach_prop_condition
-    $array_search = array($_POST['filter_prop'], $_POST['serach_prop_condition'],"'".$_POST['serach_prop']."'");
-    $REND_model = $REND_model->setuiprop(array('condition' => array($array_search)));
-    unset($array_search);
 }
 
 if(array_key_exists('order_by_prop',$_POST) && $_POST['order_by_prop']!='-') {
@@ -89,7 +97,7 @@ elseif($this->dicturls['class']=='objects') {
     if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
         $arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
     }
-    
+
     if($this->dicturls['action']=='lenksobjedit') {
         $arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][6].'/links/';
     }
@@ -148,7 +156,7 @@ if(array_key_exists('checkedaction',$_POST) || strpos(implode('',array_keys($_PO
     }
     $selectorsids = array_unique($selectorsids);
     $selectorsids_excluded = array_unique($selectorsids_excluded);
-    
+
 }
 
 printf($htmlinput,'hidden','idpage',($idpage+1),'');
@@ -182,13 +190,30 @@ if(count($selectorsids) || count($selectorsids_excluded)) {
 <?php
 
 
-$select_array = $REND_find;
+$select_params_model = $REND_find;
 $order_by_array = array('-'=>'-');
-foreach($select_array as $key => $value) {
+foreach($select_params_model as $key => $value) {
     $order_by_array[$key] = $value;
     $order_by_array[$key.'---desc'] = $value.'-desc';
-    
+
 }
+
+if($REND_objclass!==null && count($REND_objclass->properties)) {
+$list_prop = CHtml::listData($REND_objclass->properties, 'codename', 'name');
+foreach($list_prop as $key_name_prop => $name_prop) {
+    $select_params_model[$key_name_prop.'__prop'] = $name_prop.'__prop';
+}
+//prop order
+foreach($list_prop as $key => $value) {
+    $order_by_array[$key] = $value;
+    $order_by_array[$key.'---desc'] = $value.'-desc';
+
+}
+//exit;
+}
+
+
+
 $select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exists('order_by_param',$_POST) && $_POST['order_by_param'])?$_POST['order_by_param']:''),$order_by_array);
 
 ?>
@@ -198,7 +223,7 @@ $select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exist
 </style>
 <div>
 <div class="finderlisttop">
- 
+
 <?php
 $n_p=0;
 do {
@@ -206,18 +231,19 @@ $n_p++;
 if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') || (isset($_POST['serach_param']) && !isset($_POST['serach_param'][$n_p])) && $n_p != max(array_keys($_POST['serach_param']))+1) {
     continue;
 }
-echo '<p> <input type="checkbox" /> <span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_array);
-?> 
+echo '<p> <input type="checkbox" /> <span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
+?>
 <input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
 <input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
-<input type="checkbox" /> <span>)</span> <input type="checkbox" /> AND
+<input type="checkbox" /> <span>)</span> <input name="serach_cond[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> /> OR
 </p>
 <?php
 }
 while(isset($_POST['serach_param']) && $n_p <= max(array_keys($_POST['serach_param'])));
 unset($select_array);
 ?>
+<input class="btn"  type="submit" value="find">
 </div>
 </div>
 <?php
@@ -262,13 +288,13 @@ if(isset($rel_arr_vis)) {
 
 foreach($listall as $obj) {
     $strchecked=(in_array($obj->primaryKey, $selectorsids)!==false || (in_array($obj->primaryKey,$arrchecked)!==false && in_array($obj->primaryKey,$selectorsids_excluded)===false) || array_key_exists('allsetchecked',$_POST))?'checked="checked"':'';
-    
+
     $pkeys_all[] = $obj->primaryKey;
 
 
 
 
-    
+
     echo '<tr><td><input name="elemch_'.$obj->primaryKey.'" type="checkbox" '.$strchecked.' /></td>';
     foreach(array_keys($REND_thisparamsui) as $colname) {
         $valobj = '';
@@ -291,17 +317,17 @@ foreach($listall as $obj) {
     }
     $uihtml = '';
     if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'').'"><i class="icon-edit"></i></a>';
-    
+
         if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/"><i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
         if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
-        
+
         if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
-        
+
         if($arrayuirow['editlinksclass']) $uihtml .= ' | <a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
 
-    
+
     if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
-    
+
     $uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
     echo '<td>'.$uihtml.' </td></tr>';
 }
@@ -339,11 +365,11 @@ $tamplate = array(
         'nextpg'=>'<li class="next"><input type="submit" name="goin_%s" value="true" /><a id="nextpg" href="#">Ctrl &rarr;</a></li>',
         'nextright'=>'<li><input type="submit" name="goin_%s" value="true" /><a href="#">&raquo;</a></li>',
         'elem'=>'<li%s><input type="submit" name="goin_%s" value="true" /><a href="#">%s</a>
-            
+
         </li>',
         'pagination' => '
         <div id="pagination" class="pagination">
-        
+
             <ul class="pager">
                 %s
             </ul>
@@ -361,8 +387,8 @@ echo '<div style="padding-bottom: 60px">'.apicms\utils\pagination($idpage,$COUNT
 }
 ?>
 <input name="pkeys_all" type="hidden" value="<?php echo implode(',',$pkeys_all);?>" />
-</form>
 <?php
 }
 else echo '<div class="well">none objects</div>';
 ?>
+</form>

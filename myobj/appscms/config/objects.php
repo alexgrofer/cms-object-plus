@@ -16,6 +16,11 @@ $objects = array(
             'relation' => array('lines'),
         ),
         */
+        'test' => array(
+            'cols_props' => array('int_req'=>'int_req','strprop1_def_123'=>'strprop1_def_123'),
+            'order_by' => array('t.id DESC'), //? а мы можем тут написать алиас типа t.id
+            'relation' => array('lines'),
+        ),
         
     ), //cols
     'systemObjHeaders' => array(
