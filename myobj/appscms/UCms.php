@@ -35,9 +35,9 @@ class UCms {
         return false;
     }
     public function runProject($id_project) {
-        //каждому проекто в каком то конфиге задаются параметры  {'IDKLKSLSK' => array('nameconfuser'=>'sdsdsd.php', 'confsys'=>'dssdsd.php')}
-        // static::getInstance(); - первый вызов getInstance - потом будет только возвр текущий объект
-        //т. е переделать на if (self::$_instance !== null) {
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  {'IDKLKSLSK' => array('nameconfuser'=>'sdsdsd.php', 'confsys'=>'dssdsd.php')}
+        // static::getInstance(); - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ getInstance - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+        //пїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ if (self::$_instance !== null) {
         
     }
     private function __construct($currentcontroller=null, $conf=null) {
@@ -69,7 +69,8 @@ class UCms {
         $patchview = apicms\utils\URender($id,$this->_thisnavhandles);
         if($patchview!='') {
             Yii::beginProfile('Loade_handle_v:'.$patchview);
-            $render =  $this->_controller->render('..\..\views\user\views\\'.$patchview);
+
+            $render =  $this->_controller->render('/../views/user/views/'.$patchview);
             Yii::endProfile('Loade_handle_v:'.$patchview);
             return $render;
             
