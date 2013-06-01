@@ -7,21 +7,17 @@ $objects = array(
             'groups_read' => null,
             'groups_write' => null,
         ),
-        //headers links example
-        /*
-        'exampleclass' => array(
+        //headers links example news
+        'news' => array(
             'cols' => array('id'=>'id','name'=>'name'),
-            'cols_props' => array('newtexttest'=>'newtexttest',),
-            'order_by' => array(array('id', 'desc')),
-            'relation' => array('lines'),
+            'cols_props' => array('text_news'=>'text_news','annotation_news'=>'annotation_news'),
+            'order_by' => array('id desc'),
         ),
-        */
-        'test' => array(
-            'cols_props' => array('int_req'=>'int_req','strprop1_def_123'=>'strprop1_def_123'),
-            'order_by' => array('t.id DESC'), //? а мы можем тут написать алиас типа t.id
-            'relation' => array('lines'),
+        'news_section' => array(
+            'cols' => array('id'=>'id','name'=>'name'),
+            'cols_props' => array('codename_news_section'=>'codename_news_section'),
+            'order_by' => array('id desc'),
         ),
-        
     ), //cols
     'systemObjHeaders' => array(
         'default' => array(
