@@ -41,6 +41,10 @@ class uClasses extends AbsModel
         foreach($this->objects()->findAll() as $obj) {
             $obj->delete();
         }
+        //очистить ссылки его свойств
+        $this->UserRelated->links_edit('clear','properties');
+        //очистить ссылки асоциации с другими классами
+        $this->UserRelated->links_edit('clear','association');
         return parent::beforeDelete();
     }
     public function getTSPACESOptions(){
