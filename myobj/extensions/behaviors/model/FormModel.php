@@ -110,9 +110,8 @@ class FormModel extends CActiveRecordBehavior {
             if($prop->maxfield) $dinamicForm->rules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
             if($prop->required) $dinamicForm->rules[] = array($nameelem, 'required');
             if($prop->udefault) $dinamicForm->rules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
-            
+
             $nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-            if($nametypef=='bool') $dinamicForm->rules[] = array($nameelem, 'boolean');
             if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
                 $addarrsett = array($nameelem);
                 $parsecvs = str_getcsv($prop->setcsv,"\n");
@@ -130,6 +129,15 @@ class FormModel extends CActiveRecordBehavior {
                 }
                 $dinamicForm->rules[] = $addarrsett;
             }
+            //для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
+            else {
+                $dinamicForm->rules[] = array($nameelem, 'safe');
+            }
+            if($nametypef=='bool') $dinamicForm->rules[] = array($nameelem, 'boolean');
+            if($nametypef=='url') $dinamicForm->rules[] = array($nameelem, 'url');
+            if($nametypef=='email') $dinamicForm->rules[] = array($nameelem, 'email');
+
+            $nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
 
             $confform['elements'][$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
         }
