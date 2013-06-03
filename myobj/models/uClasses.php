@@ -93,7 +93,7 @@ class uClasses extends AbsModel
         $modelheaders = new $NameClassHeader();
         $modelheaders->dbCriteria->compare('uclass_id',$this->id);
         $modelheaders->dbCriteria->select = array('t.*');
-        
+        $modelheaders->uclass_id = $this->id;
         return $modelheaders;
     }
     //user func classes
