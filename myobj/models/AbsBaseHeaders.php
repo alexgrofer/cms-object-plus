@@ -31,6 +31,22 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
     }
     */
     //user
+    private $_is_force_prop = false;
+    public function set_force_prop($flag=false) {
+        if($flag) {
+            $this->dbCriteria->with['lines_alias.property'] = array();
+            $this->dbCriteria->with['uclass.properties'] = array();
+        }
+        else {
+            unset($this->dbCriteria->with['lines_alias.property']);
+            unset($this->dbCriteria->with['uclass.properties']);
+        }
+        $_is_force_prop = $flag;
+    }
+    public function status_set_force_prop() {
+        return $this->_is_force_prop;
+    }
+
     public $setproperties = array();
     private $_allproperties = array();
     public function getallprop() {
@@ -55,10 +71,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                     throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
                     array('{prop}'=>$cond[0], '{class}'=>$this->uclass->codename)));
                 }
-                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property.codename='".$cond[0]."') ".$cond[3]." ";
+                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property_alias.codename='".$cond[0]."') ".$cond[3]." ";
                 $i++;
             }
-            $this->dbCriteria->with['lines'] = array('with' => 'property', 'condition'=>$textsql);
+            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$textsql);
             $this->dbCriteria->with['uclass.properties'] = array();
         }
         if(array_key_exists('order',$array) && count($array['order'])) {

@@ -11,9 +11,9 @@ abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(mode
     
     public function relations()
     {
-        return array(
-            'property'=>array(self::BELONGS_TO, 'objProperties', 'property_id'), // property = models.ForeignKey(objProperties)
-        );
+        $arr_relationsdef = array('property'=>array(self::BELONGS_TO, 'objProperties', 'property_id')); // property = models.ForeignKey(objProperties)
+        $arr_relationsdef['property_alias'] = $arr_relationsdef['property'];
+        return $arr_relationsdef;
     }
     
     public function rules()

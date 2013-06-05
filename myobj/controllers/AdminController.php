@@ -78,6 +78,8 @@ class AdminController extends Controller {
                         $this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->id));
                     }
                     $modelAD = $actclass->objects();
+                    //вытащить одним запросом вместе со свойствами
+                    $modelAD->set_force_prop(true);
                     
                     $settui = $this->apcms->config['controlui'][$this->dicturls['class']]['headers_spaces'][$this->apcms->config['spacescl'][$actclass->tablespace]['namemodel']];
                     
@@ -303,6 +305,7 @@ class AdminController extends Controller {
         if($this->paramsrender['REND_acces_read']===false) {
             $view = '/admin/acces';
         }
+        //$modelAD->dbCriteria->with = array('lines_alias','uclass.properties');
         $this->paramsrender['REND_model'] = $modelAD;
         $this->render($view, $this->paramsrender);
     }
