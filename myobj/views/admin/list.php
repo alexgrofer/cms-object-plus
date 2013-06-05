@@ -44,7 +44,11 @@ else {
     elseif($REND_order_by_param) {
         $filterprop = $REND_order_by_param;
     }
-    $REND_model->dbCriteria->order = implode(',',$filterprop);
+    $filterprop_new_alias_table = array();
+    foreach($filterprop as $strorder) {
+        $filterprop_new_alias_table[] = $REND_model->tableAlias.'.'.$strorder;
+    }
+    $REND_model->dbCriteria->order = implode(',',$filterprop_new_alias_table);
 }
 
 $modelCRITERIA = $REND_model->dbCriteria;
