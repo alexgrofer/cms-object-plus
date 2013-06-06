@@ -171,13 +171,13 @@ printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_exc
 <a  class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
 <?php
 if($this->dicturls['action']=='' && (count($selectorsids) || count($selectorsids_excluded))) {
-    echo ' | ---------- <input class="btn btn-danger" name="checkdelete" type="submit" value="delete">';
+    echo ' | ---------- <input onclick="return confirm(\'remove selected objects\')" class="btn btn-danger" name="checkdelete" type="submit" value="delete">';
 }
 if($this->dicturls['action']!='') {
     if($arrchecked) {
         echo '<div><code class="headermen">before saved: '.implode(',',$arrchecked).'</code></div>';
     }
-    $html = '<code class="headermen cgreen">action: <b>'.$this->dicturls['action'].'</b></code> <input class="btn btn-mini btn-danger" type="submit" name="saveaction" value="save" />';
+    $html = '<code class="headermen cgreen">action: <b>'.$this->dicturls['action'].'</b></code> <input onclick="return confirm(\'save ?\')" class="btn btn-mini btn-danger" type="submit" name="saveaction" value="save" />';
     echo $html;
 }
 ?>
