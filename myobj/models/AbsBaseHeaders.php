@@ -175,18 +175,16 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
             array('{class}'=>$this->uclass_id, '{idlink}'=>$this->id,'{nametable}'=>$this->getNameLinksModel())));
         }
-        $CRITERIA = new CDbCriteria();
         $objclass = \uClasses::getclass($class);
         //проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
         //сделать путь для сообщений cms-ки, будут ли работать yii
         //throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
             //array('{class}'=>get_class($this), '{property}'=>$name)));
         $idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');
-        $CRITERIA->addInCondition('id', $idsheaders);
-        $CRITERIA->compare('uclass_id',$objclass->id);
         $nameModelHeader = UCms::getInstance()->config['spacescl'][$objclass->tablespace]['namemodel'];
         $objmodel = new $nameModelHeader();
-        $objmodel->setDbCriteria($CRITERIA);
+        $objmodel->dbCriteria->addInCondition($objmodel->tableAlias.'.id', $idsheaders);
+        $objmodel->dbCriteria->compare($objmodel->tableAlias.'.uclass_id',$objclass->id);
         
         return $objmodel;
     }
