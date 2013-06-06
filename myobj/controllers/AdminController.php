@@ -305,7 +305,6 @@ class AdminController extends Controller {
         if($this->paramsrender['REND_acces_read']===false) {
             $view = '/admin/acces';
         }
-        //$modelAD->dbCriteria->with = array('lines_alias','uclass.properties');
         $this->paramsrender['REND_model'] = $modelAD;
         $this->render($view, $this->paramsrender);
     }

@@ -85,7 +85,6 @@ function arrvaluesmodel($listobjects, $multinames) {
     return $arrv;
 }
 function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array(),$paramslist,$params_extra) {
-    $modelCRITERIA = new \CDbCriteria();
     switch($nameaction) {
         case 'addclass':
             $thisclass = \uClasses::getclass($this_id);
@@ -140,8 +139,8 @@ if(strpos(implode('',array_keys($_GET)),'goin_')!==false) {
 $tamplate = array(
         'action'=>' class="active"',
         'nextleft'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&laquo;</a></li>',
-        'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&larr; Назад</a></li>',
-        'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">Вперед &rarr;</a></li>',
+        'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&larr; пїЅпїЅпїЅпїЅпїЅ</a></li>',
+        'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">пїЅпїЅпїЅпїЅпїЅпїЅ &rarr;</a></li>',
         'nextright'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&raquo;</a></li>',
         'elem'=>'<li%s><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">%s</a></li>',
         'pagination' => '
