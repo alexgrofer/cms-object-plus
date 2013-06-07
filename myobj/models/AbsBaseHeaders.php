@@ -79,8 +79,12 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();
-            
+
             foreach($array['order'] as $arpropelem) {
+                if(!isset($properties[$arpropelem[0]])) {
+                    throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
+                        array('{prop}'=>$arpropelem[0], '{class}'=>$this->uclass->codename)));
+                }
                 $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id);
                 $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
                 $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
@@ -185,7 +189,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $objmodel = new $nameModelHeader();
         $objmodel->dbCriteria->addInCondition($objmodel->tableAlias.'.id', $idsheaders);
         $objmodel->dbCriteria->compare($objmodel->tableAlias.'.uclass_id',$objclass->id);
-        
+        $objmodel->uclass_id = $objclass->id;
         return $objmodel;
     }
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
