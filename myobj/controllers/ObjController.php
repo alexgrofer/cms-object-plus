@@ -7,28 +7,21 @@ class ObjController extends Controller {
     public function run($actionID) {
         $this->apcms = UCms::getInstance($this);
         $paramslisturl = array_slice((explode('/',$this->actionParams['r']) + array('','','','','','','')),2);
-        $lastindnav = $actionID;
-        foreach($paramslisturl as $name) {
-            //last name index obj
-            if($name) $lastindnav = $name;
-        }
         Yii::app()->params['LANGi18n']=$this->apcms->config['language_def'];
+        $index = $this->apcms->config['objindexname'];
+
         if(in_array($paramslisturl[0], $this->apcms->config['languages'])) {
             Yii::app()->params['LANGi18n']=$paramslisturl[0];
+            if($paramslisturl[1]) $index = $paramslisturl[1];
         }
-        // -- example
-        //config['language_def'] = ru
-        //set params['LANGi18n'] = en
-        //create - protected/messages/ru/app.php //or magazine.php
-        //code - return array('город'=>'city')
-        //echo user view or template - Yii::t('app', 'город'); //or magazine
-        
-        Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
-        if(!$lastindnav || in_array($lastindnav,$this->apcms->config['languages'])) {
-            $lastindnav = $this->apcms->config['objindexname'];
+        elseif($paramslisturl[0]) {
+            $index = $paramslisturl[0];
         }
-        $findparamname = ((int)$lastindnav)?'id':'vp2';
-        $objnav = uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $lastindnav, 'bp1' => true));
+        //насколько важно менять общий язык серды?
+        //Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
+
+        $findparamname = (preg_match('/\D/', $index))?'vp2':'id';
+        $objnav = uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $index, 'bp1' => true));
         
         if($objnav) {
             //если нет объекта шаблона привязанного к этому объекту навигации
