@@ -192,6 +192,61 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $objmodel->uclass_id = $objclass->id;
         return $objmodel;
     }
+
+    public function find($condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::find($condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function findAll($condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::findAll($condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function findByPk($pk,$condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::findByPk($pk,$condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function findAllByPk($pk,$condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::findAllByPk($pk,$condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function findByAttributes($attributes,$condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::findByAttributes($attributes,$condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function findAllByAttributes($attributes,$condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::findAllByAttributes($attributes,$condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function count($condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::count($condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function countByAttributes($attributes,$condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::countByAttributes($attributes,$condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
+    public function exists($condition='',$params=array()) {
+        $DbCriteria_tmp = $this->getDbCriteria();
+        $result = parent::exists($condition,$params);
+        $this->setDbCriteria($DbCriteria_tmp);
+        return $result;
+    }
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
     public function afterSave() {
         if(parent::afterSave()!==false) {
