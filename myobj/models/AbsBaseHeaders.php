@@ -57,29 +57,60 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $this->_allproperties;
     }
+    public function setuiparam($array) {
+        if(array_key_exists('condition',$array)) {
+            $textsql = '';
+            $i = 1;
+            foreach($array['condition'] as $cond) {
+                $typecond = (count($cond)<4)?'AND':$cond[3];
+                if($i == count($array['condition'])) $typecond = '';
+                $textsql .= $this->tableAlias.'.'.$cond[0].' '.$cond[1].' '.$cond[2].' '.$typecond;
+                $i++;
+            }
+            $this->dbCriteria->condition .= ' AND '.$textsql;
+        }
+        if(array_key_exists('order',$array) && count($array['order'])) {
+            $textsql = '';
+            $i=1;
+            foreach($array['order'] as $arpropelem) {
+                $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
+                $textsql .= $this->tableAlias.'.'.$arpropelem[0].' '.$typf.((count($array['order'])!=$i)?',':'');
+                $i++;
+            }
+            $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
+        }
+        return $this;
+    }
     public function setuiprop($array) {
         // $array=array('condition'=>array(array('p1','<=','23', 'AND'), array('p2','IN(','1,2,3)', 'OR')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
         $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
-        $i = 1;
         if(array_key_exists('condition',$array)) {
             $textsql = '';
+            $i=1;
             foreach($array['condition'] as $cond) {
-                if(count($array['condition'])==3) $cond[3] = 'AND';
-                if($i==count($array['condition'])) $cond[3] = '';
+                $typecond = (count($cond)<4)?'AND':$cond[3];
+                if($i == count($array['condition'])) $typecond = '';
                 if(!isset($properties[$cond[0]])) {
                     throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
                     array('{prop}'=>$cond[0], '{class}'=>$this->uclass->codename)));
                 }
-                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property_alias.codename='".$cond[0]."') ".$cond[3]." ";
+                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property_alias.codename='".$cond[0]."') ".$typecond." ";
                 $i++;
             }
-            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$textsql);
+
+            $text_cond_prop = '';
+            if(isset($this->dbCriteria->with['lines']) && isset($this->dbCriteria->with['lines']['condition'])) {
+                $text_cond_prop = $this->dbCriteria->with['lines']['condition'];
+            }
+            $text_cond_prop = $textsql;
+
+            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop);
             $this->dbCriteria->with['uclass.properties'] = array();
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();
-
+            $textsql = '';
             foreach($array['order'] as $arpropelem) {
                 if(!isset($properties[$arpropelem[0]])) {
                     throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
@@ -88,8 +119,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                 $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id);
                 $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
                 $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
-                $this->dbCriteria->order .= (($this->dbCriteria->order)?',':'').'(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
+                $textsql .= '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
             }
+            $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
         }
         return $this;
     }
@@ -192,7 +224,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $objmodel->uclass_id = $objclass->id;
         return $objmodel;
     }
-
+    /*
+     * Из за цепочек последовательностей запросов необходимо сохранять DbCriteria после вызовов select методов
+     */
     public function find($condition='',$params=array()) {
         $DbCriteria_tmp = $this->getDbCriteria();
         $result = parent::find($condition,$params);
