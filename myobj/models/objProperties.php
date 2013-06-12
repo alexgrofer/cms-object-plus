@@ -28,7 +28,7 @@ class objProperties extends AbsModel
             array('name, description, udefault', 'length', 'max'=>255),
             
             array('codename', 'length', 'max'=>30),
-            array('codename', 'unique'),
+            array('codename', 'unique', 'attributeName'=>'codename', 'className'=>get_class($this),'caseSensitive' =>'false'),
             array('minfield, maxfield', 'length', 'max'=>4),
             
             array('description, minfield, maxfield, setcsv', 'default', 'value'=>''),

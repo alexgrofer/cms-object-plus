@@ -25,7 +25,7 @@ class uClasses extends AbsModel
             array('name,  codename', 'required'),
             array('name', 'length', 'max'=>255),
             array('codename', 'length', 'max'=>30),
-            array('codename', 'unique'),
+            array('codename', 'unique', 'attributeName'=>'codename', 'className'=>get_class($this),'caseSensitive' =>'false'),
             array('tablespace', 'default', 'value'=>1),
             array('description', 'default', 'value'=>''),
             array('tablespace', 'numerical'),

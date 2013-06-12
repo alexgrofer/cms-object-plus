@@ -86,12 +86,7 @@ class FormModel extends CActiveRecordBehavior {
         }
         $dinamicForm->rules = $rulesall;
         $dinamicForm->attributeLabels = $model->attributeLabels();
-        //error unicue
-        foreach($dinamicForm->rules as $key => $arrrule) {
-            if($arrrule[1]=='unique') {
-                unset($dinamicForm->rules[$key]);
-            }
-        }
+
         //start prop
         if(method_exists(get_class($model),'get_properties')) {
         $arrconfcms = UCms::getInstance()->config;
