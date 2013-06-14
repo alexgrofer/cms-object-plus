@@ -41,7 +41,11 @@ class UCms {
         
     }
     private function __construct($currentcontroller=null, $conf=null) {
-        $this->config = require(dirname(__FILE__).($conf ?: '/config/main.php'));
+        $name_config = '/config/main.php';
+        if(YII_DEBUG) {
+            $name_config = '/config/main_debug.php';
+        }
+        $this->config = require(dirname(__FILE__).($conf ?: $name_config));
         $this->_controller = $currentcontroller;
     }
     
