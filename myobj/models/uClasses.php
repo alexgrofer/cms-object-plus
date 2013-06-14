@@ -37,7 +37,9 @@ class uClasses extends AbsModel
 	}
 	//именно перед удалением beforeDelete - удалить объекты класса Перед его удалением, иначе невозможно будет узнать параметры класса при их удалении
     public function beforeDelete() {
-        //delete our objects
+        //запрет на удаление отдельных объектов системы
+        if(array_search($this->codename, UCms::getInstance()->config['controlui']['none_del']['classes'])!==false) return false;
+        
         foreach($this->objects()->findAll() as $obj) {
             $obj->delete();
         }

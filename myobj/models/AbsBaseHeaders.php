@@ -304,6 +304,12 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
     }
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
     function beforeDelete() {
+        //запрет на удаление отдельных объектов системы
+        if(isset(UCms::getInstance()->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
+            foreach(UCms::getInstance()->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
+                if($this->$key==$val) return false;
+            }
+        }
         //del lines
         if($this->isitlines == true && count($this->lines)) {
             $this->UserRelated->links_edit('clear','lines'); //очистить ссылки на строки в дочерней тиблице

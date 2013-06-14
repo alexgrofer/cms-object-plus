@@ -12,6 +12,7 @@ require(dirname(__FILE__).'/objects.php');
 require(dirname(__FILE__).'/models.php');
 require(dirname(__FILE__).'/UI.php');
 require(dirname(__FILE__).'/menu.php');
+require(dirname(__FILE__).'/none_del.php');
 
 return array(
     'controlui' => array(
@@ -21,6 +22,7 @@ return array(
         ),
         'ui' => $ui,
         'menu' => $menu,
+        'none_del' => $none_del,
     ),
     'spacescl' => $set_spaces,
     'TYPES_MYFIELDS_CHOICES' => array(

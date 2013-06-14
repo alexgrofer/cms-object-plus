@@ -97,5 +97,11 @@ class objProperties extends AbsModel
             )
         );
     }
+    public function beforeDelete() {
+        //запрет на удаление отдельных объектов системы
+        if(array_search($this->codename, UCms::getInstance()->config['controlui']['none_del']['prop'])!==false) return false;
+
+        return parent::beforeDelete();
+    }
 }
 
