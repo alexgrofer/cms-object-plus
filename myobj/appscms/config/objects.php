@@ -1,24 +1,6 @@
 ﻿<?php
+
 $objects = array(
-    //codename class
-    'myObjHeaders' => array(
-        'default' => array(
-            'cols' => array('id'=>'id','name'=>'name'),
-            'groups_read' => null,
-            'groups_write' => null,
-        ),
-        //headers links example news
-        'news' => array(
-            'cols' => array('id'=>'id','name'=>'name'),
-            'cols_props' => array('text_news'=>'text_news','annotation_news'=>'annotation_news'),
-            'order_by' => array('id desc'),
-        ),
-        'news_section' => array(
-            'cols' => array('id'=>'id','name'=>'name'),
-            'cols_props' => array('codename_news_section'=>'codename_news_section'),
-            'order_by' => array('id desc'),
-        ),
-    ), //cols
     'systemObjHeaders' => array(
         'default' => array(
             'cols' => array('id'=>'id','name'=>'name'),
@@ -67,7 +49,7 @@ $objects = array(
 );
 
 $set_spaces = array(
-    '1' => array('namemodel'=>'myObjHeaders','namelinksmodel'=>'linksObjectsAllMy'),
     '2' => array('namemodel'=>'systemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'),
-    '3' => array('namemodel'=>'storedepObjHeaders','namelinksmodel'=>null),
 );
+require(dirname(__FILE__).'/user/objects.php');
+$objects = array_merge($objects,$objects_user);
