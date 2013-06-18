@@ -4,18 +4,21 @@ Yii::import('application.modules.myobj.appscms.api.utils',true);
 class ObjController extends Controller {
     public $apcms;
     public $layout=false;
+    public $dicturls = array();
     public function run($actionID) {
         $this->apcms = UCms::getInstance($this);
-        $paramslisturl = array_slice((explode('/',$this->actionParams['r']) + array('','','','','','','')),2);
+        $this->dicturls['paramslist'] = array_slice((explode('/',$this->actionParams['r']) + array('','','','','','','')),2);
+        $this->dicturls['all'] = '/'.$this->actionParams['r'];
+
         Yii::app()->params['LANGi18n']=$this->apcms->config['language_def'];
         $index = $this->apcms->config['objindexname'];
 
-        if(in_array($paramslisturl[0], $this->apcms->config['languages'])) {
-            Yii::app()->params['LANGi18n']=$paramslisturl[0];
-            if($paramslisturl[1]) $index = $paramslisturl[1];
+        if(in_array($this->dicturls['paramslist'][0], $this->apcms->config['languages'])) {
+            Yii::app()->params['LANGi18n']=$this->dicturls['paramslist'][0];
+            if($this->dicturls['paramslist'][1]) $index = $this->dicturls['paramslist'][1];
         }
-        elseif($paramslisturl[0]) {
-            $index = $paramslisturl[0];
+        elseif($this->dicturls['paramslist'][0]) {
+            $index = $this->dicturls['paramslist'][0];
         }
         //насколько важно менять общий язык серды?
         //Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
