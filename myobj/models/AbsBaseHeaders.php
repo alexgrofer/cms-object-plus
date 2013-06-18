@@ -105,8 +105,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             }
             $text_cond_prop = $textsql;
 
-            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop);
+            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop,'together'=>true);
             $this->dbCriteria->with['uclass.properties'] = array();
+            //группировка необходима из за того что в поиске по свойствам может задваиваться колличество найденных заголовков если удалось найти значения в нескольких свойствах по одному заголовку
+            $this->dbCriteria->group='t.id';
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();
@@ -116,7 +118,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                     throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
                         array('{prop}'=>$arpropelem[0], '{class}'=>$this->uclass->codename)));
                 }
-                $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id);
+                $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id,'together'=>true);
                 $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
                 $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
                 $textsql .= '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
