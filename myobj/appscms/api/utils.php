@@ -155,7 +155,7 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 </script>
 ');
 */
-function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flagpro,$tamplate='',$countleft=5) {
+function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flagpro,$tamplate,$countleft=5) {
     $countlinks = (int)(ceil($countlinks / (float)($count_elems)));
     $linksp = ''; $linkspt = '';
     $finc = $indexpage % $count_pages;
