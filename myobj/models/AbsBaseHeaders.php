@@ -107,8 +107,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
             $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop,'together'=>true);
             $this->dbCriteria->with['uclass.properties'] = array();
-            //группировка необходима из за того что в поиске по свойствам может задваиваться колличество найденных заголовков если удалось найти значения в нескольких свойствах по одному заголовку
-            $this->dbCriteria->group='t.id';
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $this->dbCriteria->with['lines_alias'] = array();
@@ -124,6 +122,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                 $textsql .= '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
             }
             $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
+            //необходимо при пагинации что бы не создавались одинаковые элементы
+            $this->dbCriteria->addCondition('lines_order.id IS NOT NULL');
+            $this->dbCriteria->group .= ' lines_order.id';
         }
         return $this;
     }
