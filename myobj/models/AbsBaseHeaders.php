@@ -22,14 +22,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $arr_relationsdef;
     }
-    //SELF table links
-    /*
-    add new relation
-    public function relations() {
-        $arr_relation = parent::relations();
-        $arr_relation['newrel'] = array rel
-    }
-    */
     //user
     private $_is_force_prop = false;
     public function set_force_prop($flag=false) {
@@ -57,32 +49,11 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $this->_allproperties;
     }
-    public function setuiparam($array) {
-        if(array_key_exists('condition',$array)) {
-            $textsql = '';
-            $i = 1;
-            foreach($array['condition'] as $cond) {
-                $typecond = (count($cond)<4)?'AND':$cond[3];
-                if($i == count($array['condition'])) $typecond = '';
-                $textsql .= $this->tableAlias.'.'.$cond[0].' '.$cond[1].' '.$cond[2].' '.$typecond;
-                $i++;
-            }
-            $this->dbCriteria->condition .= ' AND '.$textsql;
-        }
-        if(array_key_exists('order',$array) && count($array['order'])) {
-            $textsql = '';
-            $i=1;
-            foreach($array['order'] as $arpropelem) {
-                $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
-                $textsql .= $this->tableAlias.'.'.$arpropelem[0].' '.$typf.((count($array['order'])!=$i)?',':'');
-                $i++;
-            }
-            $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
-        }
-        return $this;
-    }
-    public function setuiprop($array) {
+    public function setuiprop($array,$save_dbCriteria=null) {
         // $array=array('condition'=>array(array('p1','<=','23', 'AND'), array('p2','IN(','1,2,3)', 'OR')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
+        if($save_dbCriteria===null) {
+            $save_dbCriteria = $this->dbCriteria;
+        }
         $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
         if(array_key_exists('condition',$array)) {
@@ -126,6 +97,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             $this->dbCriteria->addCondition('lines_order.id IS NOT NULL');
             $this->dbCriteria->group .= ' lines_order.id';
         }
+        $this->setDbCriteria($save_dbCriteria);
         return $this;
     }
     private $_prev_save_prop = array();
@@ -227,63 +199,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         $objmodel->uclass_id = $objclass->id;
         return $objmodel;
     }
-    /*
-     * Из за цепочек последовательностей запросов необходимо сохранять DbCriteria после вызовов select методов
-     */
-    public function find($condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::find($condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function findAll($condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::findAll($condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function findByPk($pk,$condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::findByPk($pk,$condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function findAllByPk($pk,$condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::findAllByPk($pk,$condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function findByAttributes($attributes,$condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::findByAttributes($attributes,$condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function findAllByAttributes($attributes,$condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::findAllByAttributes($attributes,$condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function count($condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::count($condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function countByAttributes($attributes,$condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::countByAttributes($attributes,$condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
-    public function exists($condition='',$params=array()) {
-        $DbCriteria_tmp = $this->getDbCriteria();
-        $result = parent::exists($condition,$params);
-        $this->setDbCriteria($DbCriteria_tmp);
-        return $result;
-    }
+
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
     public function afterSave() {
         if(parent::afterSave()!==false) {

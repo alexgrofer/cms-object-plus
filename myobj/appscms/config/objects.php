@@ -1,11 +1,9 @@
 ﻿<?php
-
 $objects = array(
     'systemObjHeaders' => array(
         'default' => array(
             'cols' => array('id'=>'id','name'=>'name'),
-            'groups_read' => null,
-            'groups_write' => null,
+            'order_by_def' => array('id desc'),
         ),
         $classes_system['handle'] => array(
             'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view'),
@@ -17,8 +15,8 @@ $objects = array(
             'cols' => null,
             'edit' => array('name', 'sort', array('vp2','codename'),array('vp1','top'),array('bp1','visible')),
             'controller' => 'admin/nav_sys.php',
-            'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-            'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+            'groups_read' => null,
+            'groups_write' => null,
         ),
         $classes_system['group'] => array(
             'cols' => array('id'=>'id','name'=>'name','vp1'=>'outside identifier','vp2'=>'codename',),
@@ -31,7 +29,6 @@ $objects = array(
             'edit' => array('name', array('vp1','patch_template'), array('content','description')),
             'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
             'groups_write' => null,
-            'order_by' => array(array('id', 'desc')),
         ),
         $classes_system['view'] => array(
             'cols' => array('id'=>'id','name'=>'name view'),

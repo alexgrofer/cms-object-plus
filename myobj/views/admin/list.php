@@ -31,30 +31,28 @@ if(array_key_exists('serach_param',$_POST)) {
     }
 
 }
-
-if(array_key_exists('order_by_prop',$_POST) && $_POST['order_by_prop']!='-') {
-    $filterprop = explode('---',$_POST['order_by_prop']);
-    $REND_model->setuiprop(array('order'=>array($filterprop)));
+//sort
+if(isset($_POST['order_by']) && $_POST['order_by']!='0') {
+    $order_array = $_POST['order_by'];
 }
-else {
-    $filterprop = array();
-    if(array_key_exists('order_by_param',$_POST) && $_POST['order_by_param']!='-') {
-        $filterprop = array(explode('---',$_POST['order_by_param']));
-    }
-    elseif($REND_order_by_param) {
-        $filterprop = $REND_order_by_param;
-    }
-    $filterprop_new_alias_table = array();
-    foreach($filterprop as $strorder) {
-        $filterprop_new_alias_table[] = $REND_model->tableAlias.'.'.$strorder;
-    }
-    $REND_model->dbCriteria->order = implode(',',$filterprop_new_alias_table);
+elseif($REND_order_by_def) {
+    $order_array = str_replace(' ', '---',$REND_order_by_def[0]);
 }
 
-$modelCRITERIA = $REND_model->dbCriteria;
-
-
-$COUNT_P = $REND_model->count();
+if(isset($order_array)) {
+    $name_order_explode = explode('---',$order_array);
+    if(($pos_prop = strpos($name_order_explode[0],'__prop'))!==false) {
+        $REND_model->setuiprop(array('order' => array(array(substr($name_order_explode[0],0,$pos_prop),$name_order_explode[1]))));
+    }
+    else {
+        $REND_model->setuiparam(array('order' =>array(array($name_order_explode[0],$name_order_explode[1]))));
+    }
+    unset($name_order_explode,$pos_prop);
+}
+unset($order_array);
+//sort
+$REND_model_criteria_save = $REND_model->getDbCriteria();
+$COUNT_P = $REND_model->count($REND_model_criteria_save);
 
 $arrchecked = $REND_selectedarr;
 
@@ -129,12 +127,12 @@ if(array_key_exists('selectorsids',$_POST) && $_POST['selectorsids']!='') $selec
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-    $modelCRITERIA->offset = $COUNTVIEWELEMS * $idpage;
-    $modelCRITERIA->limit = $COUNTVIEWELEMS;
+    $REND_model->setuiparam(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$REND_model_criteria_save);
+    //сохранить данные по обновленной critaria
+    $REND_model_criteria_save = $REND_model->getDbCriteria();
 }
-$REND_model->setDbCriteria($modelCRITERIA);
 
-$listall = $REND_model->findAll();
+$listall = $REND_model->findAll($REND_model_criteria_save);
 
 if(array_key_exists('selectorsids_excluded',$_POST) && $_POST['selectorsids_excluded']!='') {
     $selectorsids_excluded = explode(',',$_POST['selectorsids_excluded']);
@@ -188,45 +186,13 @@ if(count($selectorsids) || count($selectorsids_excluded)) {
     if(count($selectorsids_excluded)) $html .= sprintf($htmlspan, 'backgroundred', 'unselected in: ['.implode(',',$selectorsids_excluded).']');
     echo '<div><code class="headermen cred">'.$html.'</code></div>';
 }
-?>
-<div>
-
-<?php
-
-
 $select_params_model = $REND_find;
-$order_by_array = array('-'=>'-');
-foreach($select_params_model as $key => $value) {
-    $order_by_array[$key] = $value;
-    $order_by_array[$key.'---desc'] = $value.'-desc';
-
-}
-
-if($REND_objclass!==null && count($REND_objclass->properties)) {
-$list_prop = CHtml::listData($REND_objclass->properties, 'codename', 'name');
-foreach($list_prop as $key_name_prop => $name_prop) {
-    $select_params_model[$key_name_prop.'__prop'] = $name_prop.'__prop';
-}
-//prop order
-foreach($list_prop as $key => $value) {
-    $order_by_array[$key] = $value;
-    $order_by_array[$key.'---desc'] = $value.'-desc';
-
-}
-//exit;
-}
-
-
-
-$select_order_by_param = CHtml::dropDownList('order_by_param', ((array_key_exists('order_by_param',$_POST) && $_POST['order_by_param'])?$_POST['order_by_param']:''),$order_by_array);
-
 ?>
-<style>
-.finderlisttop {padding:5px 0}
-.finderlisttop p {margin:0}
-</style>
 <div>
-<div class="finderlisttop">
+
+<div class="row-fluid">
+<div class="span10">
+
 
 <?php
 $n_p=0;
@@ -248,6 +214,23 @@ while(isset($_POST['serach_param']) && $n_p <= max(array_keys($_POST['serach_par
 unset($select_array);
 ?>
 <input class="btn"  type="submit" value="find">
+
+</div>
+<div class="span2">
+<?php
+//sort
+if(count($REND_order_by)) {
+$select_order_by = array('0'=>'');
+foreach($REND_order_by as $value) {
+    $select_order_by[$value.'---asc'] = $value;
+    $select_order_by[$value.'---desc'] = $value.'-desc';
+}
+
+echo CHtml::dropDownList('order_by', ((isset($_POST['order_by']) && isset($_POST['order_by']))?$_POST['order_by']:''),$select_order_by);
+echo '<input class="btn"  type="submit" value="sort">';
+}
+//sort
+?>
 </div>
 </div>
 <?php

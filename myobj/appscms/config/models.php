@@ -2,33 +2,20 @@
 $models = array(
     'classes' => array(
         'namemodel' => 'uClasses',
-		//дополнительные настройки
         'edit' => null, //все
-		//'witch' => array('relattest', 'relattest.relattest2'), task Доделать возможность получить методом
-        //task сделать возможность искать по свойствам в одном меню, и по реляциям вопрос как искать так relattest2.name или relattest.relattest2.name
-        //с relattest2.name проще искать в таблице
-		//'find' => array('id'=>'id', 'prop_test'=>'prep_test', 'relattest.name' => 'relattest.name', 'relattest.relattest2.name'=>'relattest.relattest2.name'),
-		//task возможность добавить в сортировка реляции какие имена использовать читать выше
-        //'sort' => array('id', 'prop_test', 'relattest.name', 'relattest.relattest2.name'),
-		'addcontroller' => '', //task проверить
+        //'witch' => array('relattest', 'relattest.relattest2'), task сделать возможность
+        'addcontroller' => '', //task проверить
         'relation' => array('properties', 'classes' => 'association'),
-        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',
-        //'relattest2.id'=>'name123' //task проверить после создания метод который вытаскивает без запросов  добавить relattest.relattest2.name
-        ),
-        'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-        'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-        'order_by' => array('id DESC'), //проверить возможность relattest.relattest2.name ASC, причем добавить в массив
+        'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
+        'order_by_def' => array('id desc')
     ),
     'properties' => array(
         'namemodel' => 'objProperties',
         'edit' => null,
         'relation' => array('classes'),
-        'selfobjrelationElements' => array('classes'=>array('test123',)),
-        //'selfobjrelationElements' => array('classes'=>array('namecol','namecol2')),
+        'selfobjrelationElements' => array('classes'=>array('test',)), //сделать описание task
         'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
         'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-        'groups_write' => null,
-        'order_by' => array('id DESC'),
     ),
     //alias
     'uclass' => 'classes',

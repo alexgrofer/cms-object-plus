@@ -14,7 +14,8 @@ class AdminController extends Controller {
             'REND_thisparamsui'=>null,
             'REND_thispropsui'=>null,
             'REND_selectedarr'=>array(),
-            'REND_order_by_param'=>null,
+            'REND_order_by_def'=>array(),
+            'REND_order_by'=>array(),
             'REND_editform'=>null,
             'REND_objclass'=>null,
             'REND_confmodel'=>null,
@@ -147,8 +148,12 @@ class AdminController extends Controller {
                     $this->setVarRender('REND_thispropsui',$settui[$findelem]['cols_props']);
                 }
                 
+                if(array_key_exists('order_by_def',$settui[$findelem])) {
+                    $this->setVarRender('REND_order_by_def',$settui[$findelem]['order_by_def']);
+                }
+
                 if(array_key_exists('order_by',$settui[$findelem])) {
-                    $this->setVarRender('REND_order_by_param',$settui[$findelem]['order_by']);
+                    $this->setVarRender('REND_order_by',$settui[$findelem]['order_by']);
                 }
                 
                 if(array_key_exists('edit', $settui[$findelem]) && count($settui[$findelem]['edit'])) {
