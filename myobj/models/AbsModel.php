@@ -22,7 +22,7 @@ abstract class AbsModel extends CActiveRecord
                 $textsql .= $this->tableAlias.'.'.$cond[0].' '.$cond[1].' '.$cond[2].' '.$typecond;
                 $i++;
             }
-            $this->dbCriteria->condition .= ' AND '.$textsql;
+            $save_dbCriteria->condition .= ' AND '.$textsql;
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
             $textsql = '';
@@ -32,9 +32,10 @@ abstract class AbsModel extends CActiveRecord
                 $textsql .= $this->tableAlias.'.'.$arpropelem[0].' '.$typf.((count($array['order'])!=$i)?',':'');
                 $i++;
             }
-            $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
+            $save_dbCriteria->order = ($save_dbCriteria->order?',':'').$textsql;
         }
         if(array_key_exists('limit',$array) && count($array['limit'])) {
+            $save_dbCriteria->group = $this->tableAlias.'.id';
             $save_dbCriteria->limit = $array['limit']['limit'];
             $save_dbCriteria->offset = $array['limit']['offset'];;
         }

@@ -71,31 +71,31 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             }
 
             $text_cond_prop = '';
-            if(isset($this->dbCriteria->with['lines']) && isset($this->dbCriteria->with['lines']['condition'])) {
+            if(isset($save_dbCriteria->with['lines']) && isset($save_dbCriteria->with['lines']['condition'])) {
                 $text_cond_prop = $this->dbCriteria->with['lines']['condition'];
             }
             $text_cond_prop = $textsql;
 
-            $this->dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop,'together'=>true);
-            $this->dbCriteria->with['uclass.properties'] = array();
+            $save_dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop,'together'=>true);
+            $save_dbCriteria->with['uclass.properties'] = array();
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
-            $this->dbCriteria->with['lines_alias'] = array();
+            $save_dbCriteria->order = '';
+            $save_dbCriteria->with['lines_alias'] = array();
             $textsql = '';
             foreach($array['order'] as $arpropelem) {
                 if(!isset($properties[$arpropelem[0]])) {
                     throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
                         array('{prop}'=>$arpropelem[0], '{class}'=>$this->uclass->codename)));
                 }
-                $this->dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id,'together'=>true);
+                $save_dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id,'together'=>true);
                 $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
                 $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
                 $textsql .= '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
             }
-            $this->dbCriteria->order .= ($this->dbCriteria->order?',':'').$textsql;
+            $save_dbCriteria->order .= ($save_dbCriteria->order?',':'').$textsql;
             //необходимо при пагинации что бы не создавались одинаковые элементы
-            $this->dbCriteria->addCondition('lines_order.id IS NOT NULL');
-            $this->dbCriteria->group .= ' lines_order.id';
+            $save_dbCriteria->addCondition('lines_order.id IS NOT NULL');
         }
         $this->setDbCriteria($save_dbCriteria);
         return $this;

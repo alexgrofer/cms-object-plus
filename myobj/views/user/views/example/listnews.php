@@ -14,7 +14,7 @@ $get_criteria = $objClass_news_objects->getDbCriteria();
 //найти объекты новостей по свойству "text_news" в котором встречается слово "alex"
 $objClass_news_objects->setuiprop(array('condition'=>array(array('text_news','LIKE',"'%a%'",'or'),array('annotation_news','LIKE',"'%a%'"))),$get_criteria);
 //И параметр "name" модели должен включать слово "news"
-//$objClass_news_objects->setuiparam(array('condition'=>array(array('name','LIKE',"'%news%'"))));
+$objClass_news_objects->setuiparam(array('condition'=>array(array('name','LIKE',"'%f%'"))),$get_criteria);//проверить только с ним task
 //показать общее колличество найденных объектов
 
 $COUNT_P = $objClass_news_objects->count();
@@ -22,18 +22,20 @@ echo 'count = '.$COUNT_P;
 echo '<hr/>';
 
 //отсортировать по свойству параметру id (для работы с параметрами лучше использовать dbCriteria)
-$objClass_news_objects->setuiparam(array('order'=>array(array('name','asc'))),$get_criteria);
+$objClass_news_objects->setuiparam(array('order'=>array(array('name','asc'))),$get_criteria); //работает
 //двойная сортировка о свойству и параметру не работает, в приоретете параметр!!
 
 //отсортировать по свойству text_news (для работы со свойствами лучше использовать метод setuiprop)
 $objClass_news_objects->setuiprop(array('order'=>array(array('text_news','desc'))),$get_criteria); //так же может учавствовать вместе с condition и select
+//1)Найти что мне мешает показать нужные элементы
+
 
 
 //использовать метод set_force_prop(true); для того что бы ограничить колличество запросов при поиске строк свойств (так как в выводе будут присутствовать свойства)
 $objClass_news_objects->set_force_prop(true);
 
 // go PAGE
-$COUNTVIEWELEMS = 32;
+$COUNTVIEWELEMS = 31;
 $COUNTVIEWPAGES = 10;
 $idpage = 0;
 if(strpos(implode('',array_keys($_GET)),'goin_')!==false) {
