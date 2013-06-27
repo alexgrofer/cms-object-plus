@@ -2,31 +2,34 @@
 .pagination input {display:none}
 </style>
 <?php
+//коммент task
+$REND_model_criteria_save = $REND_model->getDbCriteria();
 if(array_key_exists('serach_param',$_POST)) {
-    $array_search_rop = array();
+    $array_search = array();
     foreach($_POST['serach_param'] as $key => $value) {
         if($value!='') {
             $tableAlias = '';
             $valueSearchElem = $_POST['filter_param'][$key];
-            $typecond = (array_key_exists('serach_cond',$_POST) && isset($_POST['serach_cond'][$key]) && $_POST['serach_cond'][$key])?'OR':'AND';
+            $typecond = (array_key_exists('serach_cond',$_POST) && isset($_POST['serach_cond'][$key]))?'OR':'AND';
             //если параметр модели указан без псевдонима таблицы
             if(strpos($valueSearchElem,'.')===false) {
                 $tableAlias = $REND_model->tableAlias.'.';
             }
-            //для свойств
+            //для свойств true
             if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
                 $valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-                $array_search_rop[] = array($valueSearchElem,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
-                continue;
+                $array_search[] = array($valueSearchElem,true,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
             }
-
-            $REND_model->dbCriteria->addCondition(($tableAlias.$valueSearchElem.' '.$_POST['serach_condition'][$key]).' :serach_condition_'.$key,$typecond);
-            $REND_model->dbCriteria->params[':serach_condition_'.$key] = $_POST['serach_param'][$key];
+            //для обычных параметров модели false
+            else {
+                $array_search[] = array($valueSearchElem,false,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
+            }
         }
     }
-    //поиск по свойствам объекта сделать несколько
-    if(count($array_search_rop)) {
-        $REND_model = $REND_model->setuiprop(array('condition' => $array_search_rop));
+    //поиск по параметрам модели
+    if(count($array_search)) {
+        $array_search[count($array_search)-1][4] = ''; //удалить ненужный and или or в конце
+        $REND_model = $REND_model->setuiprop(array('condition' => $array_search),$REND_model_criteria_save);
         unset($array_search);
     }
 
@@ -42,16 +45,15 @@ elseif($REND_order_by_def) {
 if(isset($order_array)) {
     $name_order_explode = explode('---',$order_array);
     if(($pos_prop = strpos($name_order_explode[0],'__prop'))!==false) {
-        $REND_model->setuiprop(array('order' => array(array(substr($name_order_explode[0],0,$pos_prop),$name_order_explode[1]))));
+        $REND_model->setuiprop(array('order' => array(array(substr($name_order_explode[0],0,$pos_prop),$name_order_explode[1],true))),$REND_model_criteria_save);
     }
     else {
-        $REND_model->setuiparam(array('order' =>array(array($name_order_explode[0],$name_order_explode[1]))));
+        $REND_model->setuiprop(array('order' =>array(array($name_order_explode[0],$name_order_explode[1],false))),$REND_model_criteria_save);
     }
     unset($name_order_explode,$pos_prop);
 }
 unset($order_array);
 //sort
-$REND_model_criteria_save = $REND_model->getDbCriteria();
 $COUNT_P = $REND_model->count($REND_model_criteria_save);
 
 $arrchecked = $REND_selectedarr;
@@ -127,9 +129,7 @@ if(array_key_exists('selectorsids',$_POST) && $_POST['selectorsids']!='') $selec
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-    $REND_model->setuiparam(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$REND_model_criteria_save);
-    //сохранить данные по обновленной critaria
-    $REND_model_criteria_save = $REND_model->getDbCriteria();
+    $REND_model->setuiprop(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$REND_model_criteria_save);
 }
 
 $listall = $REND_model->findAll($REND_model_criteria_save);
@@ -186,7 +186,10 @@ if(count($selectorsids) || count($selectorsids_excluded)) {
     if(count($selectorsids_excluded)) $html .= sprintf($htmlspan, 'backgroundred', 'unselected in: ['.implode(',',$selectorsids_excluded).']');
     echo '<div><code class="headermen cred">'.$html.'</code></div>';
 }
-$select_params_model = $REND_find;
+$select_params_model = array();
+foreach($REND_find as $val) {
+    $select_params_model[$val] = $val;
+}
 ?>
 <div>
 

@@ -3,7 +3,7 @@
 //получить все объекты класса раздела "news_section" новостей
 $objClass_news_section = uClasses::getclass('news_section')->objects();
 //найти объекты по свойству "codename_news_section" = "business"
-$objClass_news_section->setuiprop(array('condition'=>array(array('codename_news_section','=',"'business'"))));
+$objClass_news_section->setuiprop(array('condition'=>array(array('codename_news_section',true,'=',"'business'",''))));
 //вытащить экземпляр искомого объекта
 $objClass_news_section_objectBusiness = $objClass_news_section->find(); //если будет несколько использовать
 //получить все привязанные объекты класса news
@@ -12,9 +12,9 @@ $objClass_news_objects = $objClass_news_section_objectBusiness->getobjlinks('new
 //важный фактор для того что бы не потерять условия нужно использовать перед каждым вызовом find, findAll, Count - если это необходимо
 $get_criteria = $objClass_news_objects->getDbCriteria();
 //найти объекты новостей по свойству "text_news" в котором встречается слово "alex"
-$objClass_news_objects->setuiprop(array('condition'=>array(array('text_news','LIKE',"'%a%'",'or'),array('annotation_news','LIKE',"'%a%'"))),$get_criteria);
+$objClass_news_objects->setuiprop(array('condition'=>array(array('text_news',true,'LIKE',"'%a%'",'or'),array('annotation_news',true,'LIKE',"'%a%'"))),$get_criteria);
 //И параметр "name" модели должен включать слово "news"
-$objClass_news_objects->setuiparam(array('condition'=>array(array('name','LIKE',"'%f%'"))),$get_criteria);//проверить только с ним task
+$objClass_news_objects->setuiprop(array('condition'=>array(array('name',false,'LIKE',"'%f%'",''))),$get_criteria);//проверить только с ним task
 //показать общее колличество найденных объектов
 
 $COUNT_P = $objClass_news_objects->count();
@@ -22,11 +22,11 @@ echo 'count = '.$COUNT_P;
 echo '<hr/>';
 
 //отсортировать по свойству параметру id (для работы с параметрами лучше использовать dbCriteria)
-$objClass_news_objects->setuiparam(array('order'=>array(array('name','asc'))),$get_criteria); //работает
+$objClass_news_objects->setuiprop(array('order'=>array(array('name','asc',false))),$get_criteria); //работает
 //двойная сортировка о свойству и параметру не работает, в приоретете параметр!!
 
 //отсортировать по свойству text_news (для работы со свойствами лучше использовать метод setuiprop)
-$objClass_news_objects->setuiprop(array('order'=>array(array('text_news','desc'))),$get_criteria); //так же может учавствовать вместе с condition и select
+$objClass_news_objects->setuiprop(array('order'=>array(array('text_news','desc',true))),$get_criteria); //так же может учавствовать вместе с condition и select
 //1)Найти что мне мешает показать нужные элементы
 
 
@@ -50,7 +50,7 @@ elseif(array_key_exists('idpage',$_POST)) $idpage = $_POST['idpage'];
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-    $objClass_news_objects->setuiparam(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$get_criteria);
+    $objClass_news_objects->setuiprop(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$get_criteria);
 }
 // to PAGE
 

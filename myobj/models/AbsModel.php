@@ -9,30 +9,72 @@ abstract class AbsModel extends CActiveRecord
         }
         return parent::model($className);
     }
-    public function setuiparam($array,$save_dbCriteria=null) {
+
+    private $_conditStart=array();
+    public function setuiprop($array,$save_dbCriteria=null,$isclear=false) {
+        // $array=array('condition'=>array(array('p1','<=','23', 'AND'), array('p2', true, 'IN(','1,2,3)', 'OR')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
         if($save_dbCriteria===null) {
             $save_dbCriteria = $this->dbCriteria;
         }
-        if(array_key_exists('condition',$array)) {
-            $textsql = '';
-            $i = 1;
-            foreach($array['condition'] as $cond) {
-                $typecond = (count($cond)<4)?'AND':$cond[3];
-                if($i == count($array['condition'])) $typecond = '';
-                $textsql .= $this->tableAlias.'.'.$cond[0].' '.$cond[1].' '.$cond[2].' '.$typecond;
-                $i++;
+        // олько новые условия - сетреть все предыдущие условия
+        if($isclear && count($this->_conditStart)) {
+            foreach(count($this->_conditStart) as $str_cond) {
+                $save_dbCriteria->condition = str_replace($str_cond,'',$save_dbCriteria->condition);
             }
-            $save_dbCriteria->condition .= ' AND '.$textsql;
+        }
+        $properties = $this->getallprop();
+        $arrconfcms = UCms::getInstance()->config;
+        if(array_key_exists('condition',$array)) {
+            $propYes = false;
+            foreach($array['condition'] as $cond) {
+                $typecond = (count($cond)<5)?'AND':$cond[4];
+                //prop
+                $isand = ((!count($this->_conditStart))?' AND ':'');
+                if($cond[1]==true) {
+                    $propYes = true;
+                    if(!isset($properties[$cond[0]])) {
+                        throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
+                            array('{prop}'=>$cond[0], '{class}'=>$this->uclass->codename)));
+                    }
+                    $critStr = $isand."(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[2]." ".$cond[3]." AND property_alias.codename='".$cond[0]."') ".$typecond." ";
+                }
+                //param
+                else {
+                    $critStr = $isand.$this->tableAlias.'.'.$cond[0].'  '.$cond[2].'  '.$cond[3].'  '.$typecond.' ';
+                }
+                $save_dbCriteria->condition .= $critStr;
+                $this->_conditStart[] = $critStr;
+            }
+            if($propYes!='') {
+                $save_dbCriteria->with['lines'] = array('with' => 'property_alias', 'together'=>true);
+                $save_dbCriteria->with['uclass.properties'] = array();
+            }
         }
         if(array_key_exists('order',$array) && count($array['order'])) {
-            $textsql = '';
-            $i=1;
-            foreach($array['order'] as $arpropelem) {
-                $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
-                $textsql .= $this->tableAlias.'.'.$arpropelem[0].' '.$typf.((count($array['order'])!=$i)?',':'');
-                $i++;
+            //если свойство в массив добавляется 3 элемент true
+            $elem_order = $array['order'][0];
+            $isprop = ((count($elem_order)==3 && $elem_order[2]==true)?true:false);
+            $typf = (count($elem_order)>=2)?$elem_order[1]:'asc';
+
+            if($isprop) { //is prop
+                $save_dbCriteria->with['lines_alias'] = array();
+                if(!isset($properties[$elem_order[0]])) {
+                    throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
+                        array('{prop}'=>$elem_order[0], '{class}'=>$this->uclass->codename)));
+                }
+                $save_dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$elem_order[0]]->id,'together'=>true);
+
+                $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$elem_order[0]]->myfield];
+                $textsql = '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
+                $save_dbCriteria->order = $textsql;
+                //необходимо при пагинации что бы не создавались одинаковые элементы
+                $save_dbCriteria->addCondition('lines_order.id IS NOT NULL');
             }
-            $save_dbCriteria->order = ($save_dbCriteria->order?',':'').$textsql;
+            //is param
+            else {
+                $textsql = $this->tableAlias.'.'.$elem_order[0].' '.$typf;
+                $save_dbCriteria->order = $textsql;
+            }
         }
         if(array_key_exists('limit',$array) && count($array['limit'])) {
             $save_dbCriteria->group = $this->tableAlias.'.id';

@@ -49,57 +49,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $this->_allproperties;
     }
-    public function setuiprop($array,$save_dbCriteria=null) {
-        // $array=array('condition'=>array(array('p1','<=','23', 'AND'), array('p2','IN(','1,2,3)', 'OR')),'select'=>array('*' | ['p1','p2','p3']),'order'=>array(array('p1','desc')[,array('p1')]?))
-        if($save_dbCriteria===null) {
-            $save_dbCriteria = $this->dbCriteria;
-        }
-        $properties = $this->getallprop();
-        $arrconfcms = UCms::getInstance()->config;
-        if(array_key_exists('condition',$array)) {
-            $textsql = '';
-            $i=1;
-            foreach($array['condition'] as $cond) {
-                $typecond = (count($cond)<4)?'AND':$cond[3];
-                if($i == count($array['condition'])) $typecond = '';
-                if(!isset($properties[$cond[0]])) {
-                    throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
-                    array('{prop}'=>$cond[0], '{class}'=>$this->uclass->codename)));
-                }
-                $textsql .= "(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[1]." ".$cond[2]." AND property_alias.codename='".$cond[0]."') ".$typecond." ";
-                $i++;
-            }
-
-            $text_cond_prop = '';
-            if(isset($save_dbCriteria->with['lines']) && isset($save_dbCriteria->with['lines']['condition'])) {
-                $text_cond_prop = $this->dbCriteria->with['lines']['condition'];
-            }
-            $text_cond_prop = $textsql;
-
-            $save_dbCriteria->with['lines'] = array('with' => 'property_alias', 'condition'=>$text_cond_prop,'together'=>true);
-            $save_dbCriteria->with['uclass.properties'] = array();
-        }
-        if(array_key_exists('order',$array) && count($array['order'])) {
-            $save_dbCriteria->order = '';
-            $save_dbCriteria->with['lines_alias'] = array();
-            $textsql = '';
-            foreach($array['order'] as $arpropelem) {
-                if(!isset($properties[$arpropelem[0]])) {
-                    throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
-                        array('{prop}'=>$arpropelem[0], '{class}'=>$this->uclass->codename)));
-                }
-                $save_dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$arpropelem[0]]->id,'together'=>true);
-                $typf = (count($arpropelem)==2)?$arpropelem[1]:'asc';
-                $typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$arpropelem[0]]->myfield];
-                $textsql .= '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
-            }
-            $save_dbCriteria->order .= ($save_dbCriteria->order?',':'').$textsql;
-            //необходимо при пагинации что бы не создавались одинаковые элементы
-            $save_dbCriteria->addCondition('lines_order.id IS NOT NULL');
-        }
-        $this->setDbCriteria($save_dbCriteria);
-        return $this;
-    }
     private $_prev_save_prop = array();
 	//метод позволяет установить новое свойство для объекта
     public function set_properties($name, $value) {
