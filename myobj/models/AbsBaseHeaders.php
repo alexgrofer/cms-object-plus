@@ -23,6 +23,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         return $arr_relationsdef;
     }
     //user
+    protected $_isHeaderModel=true;
     private $_is_force_prop = false;
     public function set_force_prop($flag=false) {
         if($flag) {

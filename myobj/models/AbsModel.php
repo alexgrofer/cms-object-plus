@@ -1,6 +1,7 @@
 <?php
 abstract class AbsModel extends CActiveRecord
 {
+    protected $_isHeaderModel=false;
     public static function model($className=null)
     {
         if($className===null) {
@@ -22,14 +23,15 @@ abstract class AbsModel extends CActiveRecord
                 $save_dbCriteria->condition = str_replace($str_cond,'',$save_dbCriteria->condition);
             }
         }
-        $properties = $this->getallprop();
+        //для обычных моделей свойтва не трубуются
+        if($this->_isHeaderModel) $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
         if(array_key_exists('condition',$array)) {
             $propYes = false;
             foreach($array['condition'] as $cond) {
                 $typecond = (count($cond)<5)?'AND':$cond[4];
                 //prop
-                $isand = ((!count($this->_conditStart))?' AND ':'');
+                $isand = ((!count($this->_conditStart) && $save_dbCriteria->condition)?' AND ':'');
                 if($cond[1]==true) {
                     $propYes = true;
                     if(!isset($properties[$cond[0]])) {
