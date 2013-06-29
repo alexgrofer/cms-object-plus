@@ -11,18 +11,20 @@ if(array_key_exists('serach_param',$_POST)) {
             $tableAlias = '';
             $valueSearchElem = $_POST['filter_param'][$key];
             $typecond = (array_key_exists('serach_cond',$_POST) && isset($_POST['serach_cond'][$key]))?'OR':'AND';
-            //если параметр модели указан без псевдонима таблицы
+            $serach_hooks_left = (array_key_exists('serach_hooks_left',$_POST) && isset($_POST['serach_hooks_left'][$key]))?'( ':'';
+            $serach_hooks_right = (array_key_exists('serach_hooks_right',$_POST) && isset($_POST['serach_hooks_right'][$key]))?' )':'';
+            //если параметр модели указан без псевдонима таблицы берем по умолчанию первичный
             if(strpos($valueSearchElem,'.')===false) {
                 $tableAlias = $REND_model->tableAlias.'.';
             }
             //для свойств true
             if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
                 $valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-                $array_search[] = array($valueSearchElem,true,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
+                $array_search[] = array($serach_hooks_left.$valueSearchElem,true,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'".$serach_hooks_right,$typecond);
             }
             //для обычных параметров модели false
             else {
-                $array_search[] = array($valueSearchElem,false,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'",$typecond);
+                $array_search[] = array($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem,false,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'".$serach_hooks_right,$typecond);
             }
         }
     }
@@ -204,12 +206,17 @@ $n_p++;
 if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim($_POST['serach_param'][$n_p])=='') || (isset($_POST['serach_param']) && !isset($_POST['serach_param'][$n_p])) && $n_p != max(array_keys($_POST['serach_param']))+1) {
     continue;
 }
-echo '<p> <input type="checkbox" /> <span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
+?>
+<p>
+<input name="serach_hooks_left[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_hooks_left']) && isset($_POST['serach_hooks_left'][$n_p]))?'checked="checked"':'');?> />
+<?php
+echo '<span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
 ?>
 <input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
 <input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
-<input type="checkbox" /> <span>)</span> <input name="serach_cond[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> /> OR
+<input name="serach_hooks_right[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_hooks_right']) && isset($_POST['serach_hooks_right'][$n_p]))?'checked="checked"':'');?> />
+<span>)</span> |----------| <input name="serach_cond[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> /> OR
 </p>
 <?php
 }

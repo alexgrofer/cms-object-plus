@@ -42,7 +42,7 @@ abstract class AbsModel extends CActiveRecord
                 }
                 //param
                 else {
-                    $critStr = $isand.$this->tableAlias.'.'.$cond[0].'  '.$cond[2].'  '.$cond[3].'  '.$typecond.' ';
+                    $critStr = $cond[0].'  '.$cond[2].'  '.$cond[3].'  '.$typecond.' ';
                 }
                 $save_dbCriteria->condition .= $critStr;
                 $this->_conditStart[] = $critStr;
@@ -74,7 +74,7 @@ abstract class AbsModel extends CActiveRecord
             }
             //is param
             else {
-                $textsql = $this->tableAlias.'.'.$elem_order[0].' '.$typf;
+                $textsql = $elem_order[0].' '.$typf;
                 $save_dbCriteria->order = $textsql;
             }
         }
