@@ -22,9 +22,9 @@ class FormModel extends CActiveRecordBehavior {
         $model = $this->getOwner();
         $confform = array('elements' => array());
         $dinamicForm = new EmptyForm();
+        $rulesall = $model->rules();
         if(method_exists($model,'ElementsForm')) {
             $confform['elements'] = $model->ElementsForm();
-            $rulesall = $model->rules();
         }
         else {
             if(!method_exists($model,'rules') || (method_exists($model,'rules') && !count($model->rules()))) {
