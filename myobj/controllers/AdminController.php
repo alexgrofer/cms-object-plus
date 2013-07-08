@@ -248,7 +248,13 @@ class AdminController extends Controller {
                             	$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,'id'));
                             }
                             else {
-                            	$modelAD->dbCriteria->addCondition($relation_model[$namemodelself][2].' = '.$objrelated->primaryKey);
+                                if($type_relation_self  == CActiveRecord::BELONGS_TO) {
+                                    $addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
+                                }
+                                else {
+                                    $addCondition = $relation_model[$namemodelself][2].' = '.$objrelated->primaryKey;
+                                }
+                                $modelAD->dbCriteria->addCondition($addCondition);
                             }
                         }
                         if($this->paramsrender['REND_relation'] && array_key_exists($namemodelself,$this->paramsrender['REND_relation'])) {

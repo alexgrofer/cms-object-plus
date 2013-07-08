@@ -1,6 +1,10 @@
 <?php
 abstract class AbsModel extends CActiveRecord
 {
+    public function primaryKey()
+    {
+        return 'id';
+    }
     protected $_isHeaderModel=false;
     public static function model($className=null)
     {
