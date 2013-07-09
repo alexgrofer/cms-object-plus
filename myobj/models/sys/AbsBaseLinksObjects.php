@@ -11,14 +11,9 @@ abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLin
             'links'=>array(self::MANY_MANY, $namestrthisclass,'setcms_'.strtolower($namestrthisclass).'_links(from_self_id, to_self_id)'), // links = models.ManyToManyField("self",blank=True)
         );
     }
-    //task удалить все ссылки на этот объект других классов (у других классов могут быть ссылки на этот объект)
-    function beforeDelete() {
-        //
-        //тут можно удалить только запросом написать запрос
-        //print_r($this);
-        //echo 5;
-        //exit;
 
+    function beforeDelete() {
+        $this->UserRelated->links_edit('clear','links');
         return parent::beforeDelete();
     }
 }
