@@ -50,7 +50,7 @@ if(isset($order_array)) {
         $REND_model->setuiprop(array('order' => array(array(substr($name_order_explode[0],0,$pos_prop),$name_order_explode[1],true))),$REND_model_criteria_save);
     }
     else {
-        $REND_model->setuiprop(array('order' =>array(array($name_order_explode[0],$name_order_explode[1],false))),$REND_model_criteria_save);
+        $REND_model->setuiprop(array('order' =>array(array($REND_model->tableAlias.'.'.$name_order_explode[0],$name_order_explode[1],false))),$REND_model_criteria_save);
     }
     unset($name_order_explode,$pos_prop);
 }
