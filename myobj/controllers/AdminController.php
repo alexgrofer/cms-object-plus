@@ -83,8 +83,9 @@ class AdminController extends Controller {
                     $modelAD->set_force_prop(true);
                     
                     $settui = $this->apcms->config['controlui'][$this->dicturls['class']]['headers_spaces'][$this->apcms->config['spacescl'][$actclass->tablespace]['namemodel']];
-                    
+
                     $findelem = 'default';
+                    if(!isset($settui['default'])) $settui['default'] = array();
                     if(array_key_exists($actclass->codename,$settui)) {
                         $findelem = $actclass->codename;
                     }
