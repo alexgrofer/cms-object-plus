@@ -46,7 +46,7 @@ abstract class AbsModel extends CActiveRecord
                 }
                 //param
                 else {
-                    $critStr = $cond[0].'  '.$cond[2].'  '.$cond[3].'  '.$typecond.' ';
+                    $critStr = ((stripos($save_dbCriteria->condition,'and')!==false || stripos($save_dbCriteria->condition,'or')!==false)?'':' AND ').$cond[0].'  '.$cond[2].'  '.$cond[3].'  '.$typecond.' ';
                 }
                 $save_dbCriteria->condition .= $critStr;
                 $this->_conditStart[] = $critStr;
