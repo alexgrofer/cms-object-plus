@@ -207,17 +207,17 @@ if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim
     continue;
 }
 ?>
-<p>
-<input name="serach_hooks_left[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_hooks_left']) && isset($_POST['serach_hooks_left'][$n_p]))?'checked="checked"':'');?> />
+<div class="form-inline">
+<input name="serach_hooks_left[<?php echo $n_p?>]" id="<?php echo $n_p?>_leftcl" type="checkbox" <?php echo ((isset($_POST['serach_hooks_left']) && isset($_POST['serach_hooks_left'][$n_p]))?'checked="checked"':'');?> />
 <?php
-echo '<span>(</span> '.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
-?>
+echo '<label for="'.$n_p.'_leftcl">(</label>&nbsp;'.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
+?>&nbsp;
 <input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
-<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
-<input name="serach_hooks_right[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_hooks_right']) && isset($_POST['serach_hooks_right'][$n_p]))?'checked="checked"':'');?> />
-<span>)</span> |----------| <input name="serach_cond[<?php echo $n_p?>]" type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> /> OR
-</p>
+&nbsp;<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
+<input name="serach_hooks_right[<?php echo $n_p?>]" id="<?php echo $n_p?>_rightcl"  type="checkbox" <?php echo ((isset($_POST['serach_hooks_right']) && isset($_POST['serach_hooks_right'][$n_p]))?'checked="checked"':'');?> />
+    <label for="<?php echo $n_p?>_rightcl">)&nbsp;</label>|----------|&nbsp;<input name="serach_cond[<?php echo $n_p?>]" id="<?php echo $n_p?>_orlab"  type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> />&nbsp;<label for="<?php echo $n_p?>_orlab">OR</label>
+</div>
 <?php
 }
 while(isset($_POST['serach_param']) && $n_p <= max(array_keys($_POST['serach_param'])));

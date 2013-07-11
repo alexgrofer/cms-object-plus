@@ -18,11 +18,7 @@ $urladm = Yii::app()->createUrl('myobj/admin');
 </head>
 <style>
 form .row {padding:0;margin-left:0}
-input, select {height: auto !important; vertical-align:top !important;}
-.cgreen {color: green}
-.cred {color: red}
-.errorMessage {color: red}
-.padding5px {padding: 5px !important}
+input, select {height: auto !important; }
 </style>
 <body>
 <div style="padding: 10px">
