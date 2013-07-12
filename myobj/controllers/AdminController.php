@@ -250,7 +250,10 @@ class AdminController extends Controller {
                             }
                             else {
                                 if($type_relation_self  == CActiveRecord::BELONGS_TO) {
-                                    $addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
+                                    if($objrelself) {
+                                        $addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
+                                    }
+                                    else $addCondition = '1=0';
                                 }
                                 else {
                                     $addCondition = $relation_model[$namemodelself][2].' = '.$objrelated->primaryKey;

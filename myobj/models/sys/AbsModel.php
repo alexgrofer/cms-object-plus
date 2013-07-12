@@ -111,9 +111,26 @@ abstract class AbsModel extends CActiveRecord
     public function addSelfObjects($model,$elems,$fk=Null) {
         $relations = $this->relations();
         $type = 'add';
-        if(($relations[$model][0]!=CActiveRecord::MANY_MANY)) {
+        if(isset($relations[$model][0]) && ($relations[$model][0]!=CActiveRecord::MANY_MANY)) {
             $type='set';
             $elems = is_array($elems)?$elems[0]:$elems;
+        }
+        else {
+            //
+            $objmodel = $model::model()->findByPk($elems[0]);
+            $relbjmodel_relat = $objmodel->relations();
+            if(isset($relbjmodel_relat[$fk])) {
+                $relbjmodel_relat_res = $relbjmodel_relat[$fk];
+                if($relbjmodel_relat_res[0]==CActiveRecord::BELONGS_TO) {
+                    $objmodel->$relbjmodel_relat_res[2] = $this->primaryKey;
+                    if(!$objmodel->save()) {
+                        print_r($objmodel->getErrors());
+                        throw new CException(Yii::t('cms','error model '.serialize($objmodel->getErrors())));//task
+                    }
+                    return true;
+                }
+
+            }
         }
         return $this->UserRelated->links_edit($type,$model,$elems,$fk);
     }

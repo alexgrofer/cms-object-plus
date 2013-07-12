@@ -46,7 +46,7 @@ if(count($_POST) && $form->validate()) {
     $REND_model->save();
 
     if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
-        $REND_model->addSelfObjects($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]));
+        $REND_model->addSelfObjects($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$this->dicturls['paramslist'][1]);
     }
 
 
