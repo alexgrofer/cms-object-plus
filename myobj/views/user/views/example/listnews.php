@@ -2,12 +2,17 @@
 <?php
 //получить все объекты класса раздела "news_section" новостей
 $objClass_news_section = uClasses::getclass('news_section')->objects();
+if(!$objClass_news_section) {
+    echo 'error: none objects class news_section';return;
+}
 //найти объекты по свойству "codename_news_section" = "business"
 $objClass_news_section->setuiprop(array('condition'=>array(array('codename_news_section',true,'=',"'business'",''))));
 //вытащить экземпляр искомого объекта
 $objClass_news_section_objectBusiness = $objClass_news_section->find(); //если будет несколько использовать
 //получить все привязанные объекты класса news
-
+if(!$objClass_news_section_objectBusiness) {
+    echo 'error: none objects news_section';return;
+}
 $objClass_news_objects = $objClass_news_section_objectBusiness->getobjlinks('news');
 //важный фактор для того что бы не потерять условия нужно использовать перед каждым вызовом find, findAll, Count - если это необходимо
 $get_criteria = $objClass_news_objects->getDbCriteria();
