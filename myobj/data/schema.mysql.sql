@@ -251,3 +251,16 @@ INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`,`userpasport_id`) VAL
 INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1BF-461A-B1FE-3182B24D2812');
 -- (One to M) User -> Groups
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
+
+-- Stotage files
+CREATE TABLE `setcms_filesstorage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(60) NOT NULL  DEFAULT '',
+  `descr` varchar(255) NOT NULL DEFAULT '',
+  `url` varchar(255) NOT NULL, -- /doun/doc.zip or http://site.ru/image.jpg
+  `sizeof` varchar(10) NOT NULL DEFAULT '',
+  `w_img` varchar(10) NOT NULL DEFAULT '',
+  `h_img` varchar(10) NOT NULL DEFAULT '',
+  `sort` smallint(5) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+);

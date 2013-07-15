@@ -4,5 +4,7 @@ $menu = array(
     1 => array('users', 'user','/index.php?r=myobj/admin/objects/models/user',1,0), //'type'=>'model',
     2 => array('groups', 'group','/index.php?r=myobj/admin/objects/models/group',2,1),
     3 => array('userpasport', 'userpasport','/index.php?r=myobj/admin/objects/models/userpasport',3,1),
+    //storege file
+    10000 => array('storage files', 'storagef','/index.php?r=myobj/admin/objects/models/storagef',3,0),
 );
 require(dirname(__FILE__).'/user/menu.php');

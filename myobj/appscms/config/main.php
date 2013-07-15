@@ -8,13 +8,17 @@ $classes_system = array(
     'params'=>'param_sys',
 );
 
+$arrayClassesFilesStorageProc = array(
+    'classFilesStorageDefault' => 'Default',
+);
+
 require(dirname(__FILE__).'/objects.php');
 require(dirname(__FILE__).'/models.php');
 require(dirname(__FILE__).'/UI.php');
 require(dirname(__FILE__).'/menu.php');
 require(dirname(__FILE__).'/none_del.php');
 
-return array(
+$main = array(
     'controlui' => array(
         'objects' => array( //columns header type model, controller inside myobj/controllers/cms
             'headers_spaces' => $objects,
@@ -53,6 +57,8 @@ return array(
         'email'=>'text',
         'bool'=>'checkbox',
     ),
+    'homeDirStoreFile' => 'media/upload/storefile',
+	'ClassesFilesStorageProc'=> $arrayClassesFilesStorageProc,
     'rulesvalidatedef' => array( //Valid values include 'string', 'integer', 'float', 'array', 'date', 'time' and 'datetime'.
         'str' => '
 type
@@ -72,5 +78,6 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'bdcms_pref' => 'setcms_',
 'objindexname' => 'index',
 );
-//u_randomname=>0
-//u_patch=>/
+require(dirname(__FILE__).'/user/main.php');
+$main = array_merge($main,$main_user);
+return $main;
