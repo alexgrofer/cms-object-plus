@@ -5,7 +5,7 @@ abstract class AbsModel extends CActiveRecord
     {
         return 'id';
     }
-    protected $_isHeaderModel=false;
+    public $isHeaderModel=false;
     public static function model($className=null)
     {
         if($className===null) {
@@ -28,7 +28,7 @@ abstract class AbsModel extends CActiveRecord
             }
         }
         //для обычных моделей свойтва не трубуются
-        if($this->_isHeaderModel) $properties = $this->getallprop();
+        if($this->isHeaderModel) $properties = $this->getallprop();
         $arrconfcms = UCms::getInstance()->config;
         if(array_key_exists('condition',$array)) {
             $propYes = false;

@@ -320,13 +320,45 @@ class AdminController extends Controller {
             
             //utils delete, cvs
             if($this->dicturls['action']=='' && count($selectorsids_post)) {
+                $modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->primaryKey(), $selectorsids_post);
+
                 if(array_key_exists('checkdelete',$_POST)) {
-                    $modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.id', $selectorsids_post);
                     $objects = $modelAD->findAll();
                     foreach($objects as $obj) {
                         $obj->delete();
                     }
                     $this->redirect(Yii::app()->request->url);
+                }
+                elseif(array_key_exists('importcsv',$_POST)) {
+                    Yii::import('ext.ECSVExport');
+                    $namefile = '';
+                    if($modelAD->isHeaderModel) {
+                        $modelAD->set_force_prop(true);
+                        $namefile = 'class-'.$actclass->codename;
+                    }
+                    else {
+                        $namefile = 'model-'.get_class($modelAD);
+                    }
+                    $objects = $modelAD->findAll();
+                    $most_array_all = array();
+                    foreach($objects as $obj) {
+                        $array_insert = $obj->attributes;
+                        $prop_array = array();
+                        if($modelAD->isHeaderModel) {
+                            $prop_array = $obj->get_properties();
+                            foreach($prop_array as $key => $val) {
+                                $prop_array[$key.'__prop'] = $val;
+                                unset($prop_array[$key]);
+                            }
+                        }
+                        $most_array_all[] = array_merge($array_insert,$prop_array);
+                    }
+                    $csv = new ECSVExport($most_array_all);
+                    $content = $csv->toCSV();
+
+                    $namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time());
+                    Yii::app()->getRequest()->sendFile($namefile, $content, "text/csv", false);
+                    Yii::app()->end();
                 }
             }
         }

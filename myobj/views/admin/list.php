@@ -172,6 +172,7 @@ printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_exc
 <?php
 if($this->dicturls['action']=='' && (count($selectorsids) || count($selectorsids_excluded))) {
     echo ' | ---------- <input onclick="return confirm(\'remove selected objects\')" class="btn btn-danger" name="checkdelete" type="submit" value="delete">';
+    echo ' | ---------- <input onclick="return confirm(\'import CSV selected objects\')" class="btn btn-danger" name="importcsv" type="submit" value="CSV">';
 }
 if($this->dicturls['action']!='') {
     if($arrchecked) {
