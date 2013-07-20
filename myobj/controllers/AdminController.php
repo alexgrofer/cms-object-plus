@@ -26,6 +26,13 @@ class AdminController extends Controller {
             'REND_find'=>null,
             'REND_selfobjrelationElements'=>null,
         );
+    public function redirect($url,$terminate=true,$statusCode=302) {
+        if(isset($this->actionParams['usercontroller'])) {
+            $url = substr($url,strpos($url,'r=')+2);
+            $url=$this->createUrl('/'.$url,array('usercontroller'=>'usernav'));
+        }
+        parent::redirect($url,$terminate,$statusCode);
+    }
     public function setVarRender($name,$value) {
         $this->paramsrender[$name] = $value;
     }
@@ -139,48 +146,54 @@ class AdminController extends Controller {
                     unset($result);
                 }
                 ///// set setting
-                if(array_key_exists('cols',$settui[$findelem])) {
+                if(array_key_exists('cols',$settui[$findelem]) && $settui[$findelem]['cols']) {
                     $this->setVarRender('REND_thisparamsui',$settui[$findelem]['cols']);
                 }
                 else {
                     $this->setVarRender('REND_thisparamsui',array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
                 }
-                if(array_key_exists('cols_props',$settui[$findelem])) {
+                if(array_key_exists('cols_props',$settui[$findelem]) && $settui[$findelem]['cols_props']) {
                     $this->setVarRender('REND_thispropsui',$settui[$findelem]['cols_props']);
                 }
                 
-                if(array_key_exists('order_by_def',$settui[$findelem])) {
+                if(array_key_exists('order_by_def',$settui[$findelem]) && $settui[$findelem]['order_by_def']) {
                     $this->setVarRender('REND_order_by_def',$settui[$findelem]['order_by_def']);
                 }
 
-                if(array_key_exists('order_by',$settui[$findelem])) {
+                if(array_key_exists('order_by',$settui[$findelem]) && $settui[$findelem]['order_by']) {
                     $this->setVarRender('REND_order_by',$settui[$findelem]['order_by']);
                 }
                 
-                if(array_key_exists('edit', $settui[$findelem]) && count($settui[$findelem]['edit'])) {
+                if(array_key_exists('edit', $settui[$findelem]) && $settui[$findelem]['edit'] && count($settui[$findelem]['edit'])) {
                     $this->setVarRender('REND_editform',$settui[$findelem]['edit']);
                 }
                 
-                if(array_key_exists('relation',$settui[$findelem])) {
+                if(array_key_exists('relation',$settui[$findelem]) && $settui[$findelem]['relation']) {
                     $this->setVarRender('REND_relation',$settui[$findelem]['relation']);
                 }
 
-                $this->setVarRender('REND_find',array_key_exists('find',$settui[$findelem])?$settui[$findelem]['find']:$this->paramsrender['REND_thisparamsui']);
+                $this->setVarRender('REND_find',(array_key_exists('find',$settui[$findelem]) && $settui[$findelem]['find'])?$settui[$findelem]['find']:$this->paramsrender['REND_thisparamsui']);
 
-                if(array_key_exists('witch', $settui[$findelem])) {
+                if(array_key_exists('witch', $settui[$findelem]) && $settui[$findelem]['witch']) {
                     $this->setVarRender('REND_witch',$settui[$findelem]['witch']);
                     $modelAD->dbCriteria->with = $settui[$findelem]['witch'];
                 }
 
-                if(array_key_exists('selfobjrelationElements', $settui[$findelem])) {
+                if(array_key_exists('selfobjrelationElements', $settui[$findelem]) && $settui[$findelem]['selfobjrelationElements']) {
                     $this->setVarRender('REND_selfobjrelationElements',$settui[$findelem]['selfobjrelationElements']);
                 }
-                
-                $namecontroller = (array_key_exists('controller', $settui[$findelem]))?$settui[$findelem]['controller']:null;
-                if($namecontroller!==null) {
-                    require(dirname(__FILE__).'/cms/'.$namecontroller);
+
+                if(isset($settui[$findelem]['controller']) && count($settui[$findelem]['controller'])) {
+                    if(isset($settui[$findelem]['controller']['default']) && $settui[$findelem]['controller']['default']) {
+                        $namecontroller = $settui[$findelem]['controller']['default'];
+                    }
+                    elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui[$findelem]['controller'][$this->actionParams['usercontroller']])) {
+                        $namecontroller = $settui[$findelem]['controller'][$this->actionParams['usercontroller']];
+                    }
+                    if(isset($namecontroller)) require(dirname(__FILE__).'/cms/'.$namecontroller);
                 }
-                unset($findelem,$settui,$namecontroller);
+
+                unset($findelem,$settui);
                 }
                 /////
                 // acces

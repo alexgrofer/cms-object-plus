@@ -14,7 +14,7 @@ $objects = array(
         $classes_system['navigation'] => array(
             'cols' => null,
             'edit' => array('name', 'sort', array('vp2','codename'),array('vp1','top'),array('bp1','visible')),
-            'controller' => 'admin/nav_sys.php',
+            'controller' => array('usernav'=>'admin/nav_sys.php','default'=>''),
             'groups_read' => null,
             'groups_write' => null,
         ),

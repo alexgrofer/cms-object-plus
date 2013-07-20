@@ -4,7 +4,6 @@ $models = array(
         'namemodel' => 'uClasses',
         'edit' => null, //все
         //'witch' => array('relattest', 'relattest.relattest2'), task сделать возможность
-        'addcontroller' => '', //task проверить
         'relation' => array('properties', 'classes' => 'association'),
         'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
         'order_by_def' => array('id desc')

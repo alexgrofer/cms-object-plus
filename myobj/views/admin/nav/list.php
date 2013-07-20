@@ -34,7 +34,7 @@ foreach($listobjsort as $objarr) {
     $objclass = uClasses::getclass(array('navigation_sys','param_sys','controllersnav_sys'));
     $uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$objclass['navigation_sys']->id.'">params</a>';
     $uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['controllersnav_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$this->dicturls['paramslist'][1].'">controller</a>';
-    if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->id.'">template</a>';
+    if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->id.'&usercontroller=usernav">template</a>';
     
     $visibl = ($obj->bp1)?'+':'-';
     
