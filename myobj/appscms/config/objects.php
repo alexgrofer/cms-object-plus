@@ -42,6 +42,12 @@ $objects = array(
             'groups_read' => null,
             'groups_write' => null,
         ),
+        $classes_system['controllersnav'] => array(
+            'cols' => array('id'=>'id','name'=>'name'),
+            'edit' => array('name', array('vp1','patch'), array('content','description')),
+            'groups_read' => null,
+            'groups_write' => null,
+        ),
     ),
 );
 

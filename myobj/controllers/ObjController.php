@@ -25,14 +25,18 @@ class ObjController extends Controller {
 
         $findparamname = (preg_match('/\D/', $index))?'vp2':'id';
         $objnav = uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $index, 'bp1' => true));
-        
+
         if($objnav) {
             //если нет объекта шаблона привязанного к этому объекту навигации
             if(!($templateobj = $objnav->getobjlinks('templates_sys')->find())) {
                 throw new CException(Yii::t('cms','none object template'));
             }
             $this->apcms->setparams['OBJNAV'] = $objnav;
-            $this->render('/user/templates/'.$templateobj->vp1);
+            $conf_site = array();
+            if($namecontroller=$objnav->getobjlinks('controllersnav_sys')->find()) {
+                require(dirname(__FILE__).'/cms/user/'.$namecontroller->vp1);
+            }
+            $this->render('/user/templates/'.$templateobj->vp1,$conf_site);
         }
         else {
             throw new CHttpException(404,'page not is find');

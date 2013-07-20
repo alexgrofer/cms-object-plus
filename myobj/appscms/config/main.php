@@ -6,6 +6,7 @@ $classes_system = array(
     'handle'=>'handle_sys',
     'navigation'=>'navigation_sys',
     'params'=>'param_sys',
+    'controllersnav'=>'controllersnav_sys',
 );
 
 $arrayClassesFilesStorageProc = array(

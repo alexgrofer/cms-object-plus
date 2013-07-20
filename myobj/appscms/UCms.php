@@ -74,7 +74,7 @@ class UCms {
         if($patchview!='') {
             Yii::beginProfile('Loade_handle_v:'.$patchview);
 
-            $render =  $this->_controller->render('/../views/user/views/'.$patchview);
+            $render =  $this->_controller->renderPartial('/../views/user/views/'.$patchview);
             Yii::endProfile('Loade_handle_v:'.$patchview);
             return $render;
             

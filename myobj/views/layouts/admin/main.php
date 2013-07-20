@@ -35,6 +35,7 @@ input, select {height: auto !important; }
     <li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
     <li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
     <li><a href="<?php echo $urladm?>/objects/class/navigation_sys/">nav</a></li>
+    <li><a href="<?php echo $urladm?>/objects/class/controllersnav_sys/">controllers</a></li>
   </ul>
 </div>
     <a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----|

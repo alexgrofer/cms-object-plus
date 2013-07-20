@@ -31,9 +31,9 @@ foreach($listobjsort as $objarr) {
     if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->id.'"><i class="icon-edit"></i></a>';
     if($arrayuirow['links']) $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->id.'">links</a>';
     
-    $objclass = uClasses::getclass(array('navigation_sys','param_sys'));
+    $objclass = uClasses::getclass(array('navigation_sys','param_sys','controllersnav_sys'));
     $uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$objclass['navigation_sys']->id.'">params</a>';
-    
+    $uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['controllersnav_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$this->dicturls['paramslist'][1].'">controller</a>';
     if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->id.'">template</a>';
     
     $visibl = ($obj->bp1)?'+':'-';

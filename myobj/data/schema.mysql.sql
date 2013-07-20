@@ -195,6 +195,7 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
     (4,'handle_sys','handle_sys','',2),
     (5,'navigation_sys','navigation_sys','',2),
     (6,'param_sys','param_sys','',2),
+    (9,'controllersnav_sys','controllersnav_sys','',2),
     -- example
     (7,'news','news','',1),
     (8,'news section','news_section','',1);
@@ -204,6 +205,7 @@ INSERT INTO `setcms_uclasses_association` (`id`,`from_uclasses_id`,`to_uclasses_
     (3,5,3), -- [navigation_sys]<>-----templates_sys
     (4,5,4), -- [navigation_sys]<>-----handle_sys
     (5,5,6), -- [navigation_sys]<>-----param_sys
+    (7,5,9), -- [navigation_sys]<>-----controllersnav_sys
     -- example classes_association
     (6,7,8); -- [news]<>-----news_section
 INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
@@ -221,6 +223,8 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
 (2,1,'guest','',0,'guestsys','guestsys',0),
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
+-- Controller def
+(10,9,'default','default controller',null,'default','',null),
 -- example
 -- navigation - Class (navigation_sys) id = 5
 (4,5,'index','',0,'0','index',1),
@@ -231,7 +235,7 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 -- views - Class (views_sys) id = 2
 (8,2,'example list news','',0,'example/listnews','',0),
 (9,2,'example object news','',0,'example/getobjnews','',0);
--- Object Links (Ссылки для возможности привязок, создаются автоматически при создании объекта если стоит настройка автомотического создания объекта ссылки)
+-- Object Links
 INSERT INTO `setcms_linksobjectsallsystem` (`id`,`idobj`,`uclass_id`) VALUES
 -- example setcms_systemobjheaders links
 (1,1,1),
@@ -242,7 +246,8 @@ INSERT INTO `setcms_linksobjectsallsystem` (`id`,`idobj`,`uclass_id`) VALUES
 (6,6,5),
 (7,7,3),
 (8,8,2),
-(9,9,2);
+(9,9,2),
+(10,10,7);
 
 -- User
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','ivanov');
