@@ -109,7 +109,7 @@ elseif($this->dicturls['class']=='objects') {
     }
 }
 ?>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 <?php
 $selectorsids = array();
 $selectorsids_excluded = array();
@@ -169,6 +169,10 @@ printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_exc
 
 ?>
 <a  class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
+<p>
+<input name="exportcsv" type="file" /><input name="exportcsv_ispk" type="checkbox" />resave_pk создаст с таким id
+<input onclick="return confirm(\'export CSV file\')" class="btn btn-danger" type="submit" value="export" />
+</p>
 <?php
 if($this->dicturls['action']=='' && (count($selectorsids) || count($selectorsids_excluded))) {
     echo ' | ---------- <input onclick="return confirm(\'remove selected objects\')" class="btn btn-danger" name="checkdelete" type="submit" value="delete">';

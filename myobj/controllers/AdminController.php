@@ -361,6 +361,42 @@ class AdminController extends Controller {
                     Yii::app()->end();
                 }
             }
+            if(isset($_FILES['exportcsv']) && $_FILES['exportcsv']['tmp_name']) {
+                $row = 1;
+                $attributes_csv=array();
+                $properties_csv=array();
+                $headers_key_prop_csv=array();
+                $headers_key_attr_csv=array();
+                if (($handle = fopen($_FILES['exportcsv']['tmp_name'], 'r'))!==false) {
+                    while (($data = fgetcsv($handle))!==false) {
+                        if($row==1) {
+                            $headers_key_attr_csv = $data;
+                            foreach($data as $k => $nanecol) {
+                                if($posprop=strpos($nanecol,'__prop')) {
+                                    $headers_key_prop_csv[$k] = substr($nanecol,0,$posprop);
+                                }
+                            }
+                        }
+                        else {
+                            foreach($data as $k => $val) {
+                                if(isset($headers_key_prop_csv[$k])) {
+                                    $properties_csv[$headers_key_prop_csv[$k]] = $val;
+                                }
+                                else {
+                                    if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
+                                    $attributes_csv[$headers_key_attr_csv[$k]] = $val;
+                                }
+                            }
+                            $modelAD->attributes = $attributes_csv;
+                            $modelAD->properties = $properties_csv;
+                            $modelAD->save();
+                        }
+                        $row++;
+                    }
+                    fclose($handle);
+                }
+                $this->redirect(Yii::app()->request->getUrlReferrer());
+            }
         }
         if($this->paramsrender['REND_acces_read']===false) {
             $view = '/admin/acces';

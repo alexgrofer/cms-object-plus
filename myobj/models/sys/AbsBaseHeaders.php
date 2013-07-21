@@ -50,10 +50,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
         }
         return $this->_allproperties;
     }
-    private $_prev_save_prop = array();
+    public $properties = array();
 	//метод позволяет установить новое свойство для объекта
     public function set_properties($name, $value) {
-        $this->_prev_save_prop[$name] = $value;
+        $this->properties[$name] = $value;
     }
     private $_propertiesdict = array();
     public function get_properties($force=false) {
@@ -84,15 +84,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
             $arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
         }
         foreach($classproperties as $objprop) {
-            if(array_key_exists($objprop->codename, $this->_prev_save_prop)!==false) {
+            if(array_key_exists($objprop->codename, $this->properties)!==false) {
                 if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
-                    $arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_prev_save_prop[$objprop->codename];
+                    $arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->properties[$objprop->codename];
                     $arraylinesvalue[$objprop->codename]['objline']->save();
                 }
                 else {
                     $newobjlines = new $namemodellines();
                     $namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
-                    $newobjlines->$namecolumn = $this->_prev_save_prop[$objprop->codename];
+                    $newobjlines->$namecolumn = $this->properties[$objprop->codename];
                     $newobjlines->property_id = $objprop->id;
                     $newobjlines->save();
                     $this->UserRelated->links_edit('add','lines',$newobjlines);
@@ -164,7 +164,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
                 }
             }
             //если были изменены свойства то сохраняем их
-            if(count($this->_prev_save_prop)) {
+            if(count($this->properties)) {
                 $this->_f_prev_save_prop();
             }
             return true;
