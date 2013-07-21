@@ -367,9 +367,11 @@ class AdminController extends Controller {
                 $properties_csv=array();
                 $headers_key_prop_csv=array();
                 $headers_key_attr_csv=array();
+                $count_data = 0;
                 if (($handle = fopen($_FILES['exportcsv']['tmp_name'], 'r'))!==false) {
                     while (($data = fgetcsv($handle))!==false) {
                         if($row==1) {
+                            $count_data = count($data);
                             $headers_key_attr_csv = $data;
                             foreach($data as $k => $nanecol) {
                                 if($posprop=strpos($nanecol,'__prop')) {
@@ -377,19 +379,29 @@ class AdminController extends Controller {
                                 }
                             }
                         }
-                        else {
+                        elseif(count($data)==$count_data) {
                             foreach($data as $k => $val) {
                                 if(isset($headers_key_prop_csv[$k])) {
                                     $properties_csv[$headers_key_prop_csv[$k]] = $val;
                                 }
                                 else {
-                                    if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
+                                    //if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
                                     $attributes_csv[$headers_key_attr_csv[$k]] = $val;
                                 }
                             }
-                            $modelAD->attributes = $attributes_csv;
-                            $modelAD->properties = $properties_csv;
-                            $modelAD->save();
+                            $namemodel= get_class($modelAD);
+                            $newobj = new $namemodel;
+                            $newobj->attributes = $attributes_csv;
+                            if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
+                                $namepk = $modelAD->primaryKey();
+                                $newobj->$namepk = $attributes_csv[$modelAD->primaryKey()];
+                            }
+                            if($newobj->isHeaderModel) {
+                                $newobj->uclass_id = $attributes_csv['uclass_id'];
+                                $newobj->properties = $properties_csv;
+                            }
+                            $newobj->save();
+                            if($newobj->getErrors()) throw new CException(Yii::t('cms',serialize($newobj->getErrors())));
                         }
                         $row++;
                     }
