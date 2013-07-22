@@ -197,17 +197,17 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
     (6,'param_sys','param_sys','',2),
     (9,'controllersnav_sys','controllersnav_sys','',2),
     -- example
-    (7,'news','news','',1),
-    (8,'news section','news_section','',1);
-INSERT INTO `setcms_uclasses_association` (`id`,`from_uclasses_id`,`to_uclasses_id`) VALUES
-    (1,2,1), -- [views_sys]<>-----groups_sys
-    (2,5,2), -- [navigation_sys]<>-----views_sys
-    (3,5,3), -- [navigation_sys]<>-----templates_sys
-    (4,5,4), -- [navigation_sys]<>-----handle_sys
-    (5,5,6), -- [navigation_sys]<>-----param_sys
-    (7,5,9), -- [navigation_sys]<>-----controllersnav_sys
+    (17,'news','news','',1),
+    (18,'news section','news_section','',1);
+INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
+    (2,1), -- [views_sys]<>-----groups_sys
+    (5,2), -- [navigation_sys]<>-----views_sys
+    (5,3), -- [navigation_sys]<>-----templates_sys
+    (5,4), -- [navigation_sys]<>-----handle_sys
+    (5,6), -- [navigation_sys]<>-----param_sys
+    (5,9), -- [navigation_sys]<>-----controllersnav_sys
     -- example classes_association
-    (6,7,8); -- [news]<>-----news_section
+    (17,18); -- [news]<>-----news_section
 INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
     -- example
     (1,'Annotation news','annotation_news','',3,'','',0,'',''),
@@ -215,39 +215,40 @@ INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfiel
     (3,'Codename news section','codename_news_section','',1,'','',0,'','type\ntype=>string');
 INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
     -- example
-    (7,1), -- news -> annotation_news
-    (7,2), -- news -> text_news
-    (8,3); -- news_section -> codename_news_section
+    (17,1), -- news -> annotation_news
+    (17,2), -- news -> text_news
+    (18,3); -- news_section -> codename_news_section
 INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
 -- Class (setcms_uclasses) id = 1
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
 (2,1,'guest','',0,'guestsys','guestsys',0),
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
 -- Controller def
-(10,9,'default','default controller',null,'default','',null),
+(4,9,'default','default controller',null,'default','',null),
 -- example
 -- navigation - Class (navigation_sys) id = 5
-(4,5,'index','',0,'0','index',1),
-(5,5,'news list','',0,'0','news',1),
-(6,5,'news object','',0,'0','news object',1),
+(14,5,'index','',0,'0','index',1),
+(15,5,'news list','',0,'0','news',1),
+(16,5,'news object','',0,'0','news object',1),
 -- templates - Class (templates_sys) id = 3
-(7,3,'example index','',0,'example/index','',0),
+(17,3,'example index','',0,'example/index','',0),
 -- views - Class (views_sys) id = 2
-(8,2,'example list news','',0,'example/listnews','',0),
-(9,2,'example object news','',0,'example/getobjnews','',0);
+(18,2,'example list news','',0,'example/listnews','',0),
+(19,2,'example object news','',0,'example/getobjnews','',0);
 -- Object Links
-INSERT INTO `setcms_linksobjectsallsystem` (`id`,`idobj`,`uclass_id`) VALUES
+INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 -- example setcms_systemobjheaders links
-(1,1,1),
-(2,2,1),
-(3,3,1),
-(4,4,5),
-(5,5,5),
-(6,6,5),
-(7,7,3),
-(8,8,2),
-(9,9,2),
-(10,10,7);
+-- добавить все из setcms_systemobjheaders id, class по порядку
+(1,1),
+(2,1),
+(3,1),
+(4,9),
+(14,5),
+(15,5),
+(16,5),
+(17,3),
+(18,2),
+(19,5);
 
 -- User
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','ivanov');
