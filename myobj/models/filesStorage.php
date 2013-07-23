@@ -2,113 +2,109 @@
 Yii::import('application.modules.myobj.src.procFilesStorage.*');
 class filesStorage extends AbsModel
 {
-	public $title;
-	public $descr;
-	public $url;
-	public $sizeof;
-	public $w_img;
-	public $h_img;
-	public $sort;
-	//build
+    public $namefile;
+    public $descr;
+    public $url;
+    public $w_img;
+    public $h_img;
+    public $sort;
+    public $classprocdownload;
+    //build
     public $user_folder;
-	public $file;
-	public $classProcDownload;
+    public $file;
+    public $force_save;
     public $is_randName;
     public $is_addFile;
-    
+
     public function tableName()
     {
         return 'setcms_'.strtolower(get_class($this));
     }
-	//dynam rules
+    //dynam rules
     public $_rules = array(
-		array('title', 'length', 'max'=>60),
-		array('descr, url', 'length', 'max'=>255),
-		array('sizeof, w_img, h_img', 'length', 'max'=>10),
-		array('descr, sizeof, w_img, h_img', 'default', 'value'=>''),
-		array('sort', 'default', 'value'=>0),
-		//build
-		array('file', 'file', 'safe'=>true), // 'allowEmpty'=>true,
-		array('classProcDownload, user_folder', 'safe'),
+        array('namefile', 'length', 'max'=>60),
+        array('descr, url', 'length', 'max'=>255),
+        array('w_img, h_img', 'length', 'max'=>10),
+        array('descr, w_img, h_img', 'default', 'value'=>''),
+        array('sort', 'default', 'value'=>0),
+        //build
+        array('file', 'file', 'safe'=>true), // 'allowEmpty'=>true,
+        array('classprocdownload, user_folder, force_save', 'safe'),
         array('is_randName', 'boolean'),
         array('is_addFile', 'boolean'),
-	);
-    protected static function getNameClassProcDownload() {
+    );
+    protected function getNameClassProcDownload() {
         if(count($_POST)) {
             $attributes_form = $_POST['EmptyForm'];
-            $nameClassProc = $attributes_form['classProcDownload'];
+            $nameClassProc = $attributes_form['classprocdownload'];
             return $nameClassProc;
         }
-        return '';
+        elseif($this->classprocdownload) {
+            return $this->classprocdownload;
+        }
+        return 'classFilesStorageDefault';
     }
     public function rules()
     {
-        $nameClassProc = static::getNameClassProcDownload();
-        if($nameClassProc) {
-            $this->_rules = $nameClassProc::setRules($this);
-        }
+        $nameClassProc = $this->getNameClassProcDownload();
+        $this->_rules = $nameClassProc::setRules($this);
+
         return $this->_rules;
     }
-	
-	public function attributeLabels() {
+
+    public function attributeLabels() {
         return array(
             'descr' => 'description and alt img',
-			'url' => 'url file',
-			'w_img' => 'weight image',
-			'h_img' => 'height image',
-			'sizeof' => 'size file',
-       );
+            'url' => 'url file',
+            'w_img' => 'weight image',
+            'h_img' => 'height image',
+        );
     }
-	
+
     public function ElementsForm() {
-        return array(
-			'classProcDownload'=>array(
+        $arr_ElementsForm = array(
+            'classprocdownload'=>array(
                 'type'=>'dropdownlist',
                 'items'=>UCms::getInstance()->config['ClassesFilesStorageProc'],
             ),
-			'file'=>array(
+            'file'=>array(
                 'type'=>'CMultiFileUpload', //or file
             ),
-			'is_randName'=>array(
+            'force_save'=>array(
+                'type'=>'checkbox', //or file
+            ),
+            'is_randName'=>array(
                 'type'=>'checkbox',
             ),
             'is_addFile'=>array(
                 'type'=>'checkbox',
             ),
-			'url'=>array(
+            'url'=>array(
                 'type'=>'text',
             ),
-			'descr'=>array(
+            'descr'=>array(
                 'type'=>'textarea',
             ),
             'user_folder'=>array(
                 'type'=>'text',
             ),
         );
+
+        $nameClassProc = $this->getNameClassProcDownload();
+        $arr_ElementsForm = $nameClassProc::editelems($arr_ElementsForm,$this);
+        return $arr_ElementsForm;
     }
     protected function beforeDelete() {
-        if(!parent::beforeDelete()) return false;
-        $this->deleteFiles();
-        return true;
+        $nameClassProc = $this->getNameClassProcDownload();
+        $nameClassProc::befdel($this->url);
+        return parent::beforeDelete();
     }
 
-    public function deleteFiles() {
-        $dirhome = Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']).DIRECTORY_SEPARATOR;
-        $files = json_decode($this->url);
-        if(!is_array($files)) $files = array($this->url);
-        foreach($files as $urlelem) {
-            $FilesPath=$dirhome.$urlelem;
-            if(is_file($FilesPath)) unlink($FilesPath);
+    protected function beforeSave() {
+        if(parent::beforeSave()!==false) {
+            $nameClassProc = $this->getNameClassProcDownload();
+            return $nameClassProc::procFile($this);
         }
+        else return parent::beforeSave();
     }
-
-	public function afterSave() {
-        if(parent::afterSave()!==false) {
-            $nameClassProc = static::getNameClassProcDownload();
-            /* var @file CUploadedFile*/
-            $files = CUploadedFile::getInstancesByName('EmptyForm[file]'); //or not Multiple getInstanceByName
-            return $nameClassProc::procFile($files,$this);
-		}
-	}
 }
-

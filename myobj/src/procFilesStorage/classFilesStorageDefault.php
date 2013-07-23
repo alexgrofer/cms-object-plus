@@ -1,126 +1,108 @@
 <?php
 class classFilesStorageDefault
 {
-    CONST URL_HOME = 'filescms';
-	public static function setRules(filesStorage $model) {
+    CONST URL_HOME = false; // config['homeDirStoreFile']
+    public static function setRules(filesStorage $model) {
         $files = CUploadedFile::getInstancesByName('EmptyForm[file]');
-        if(count($files)>1) {
-            $model->_rules[] = array('title','required');
-        }
-        elseif(count($files)==0) {
-            $model->_rules[] = array('title','required');
+        if(count($files)==0) {
             $model->_rules[] = array('url','required');
         }
-		foreach($model->_rules as $key => $elem) {
-			if($elem[0]=='file') {
+        foreach($model->_rules as $key => $elem) {
+            if($elem[0]=='file') {
                 $model->_rules[$key] = array('file', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true); //'types' => 'zip, rar',
-				break;
-			}
-		}
+                break;
+            }
+        }
         return $model->_rules;
-	}
+    }
     protected static function randName() {
         $varStr = 'qwertyuiopasdfghjklzxcvbnm1234567890';
         return substr(str_shuffle($varStr.$varStr),-22);
     }
-    public static function deleteFiles(filesStorage $model) {
+    public static function deleteFiles($url_files) {
         $dirhome = Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']).DIRECTORY_SEPARATOR;
-        foreach(json_decode($model->url) as $urlelem) {
+        $files = json_decode($url_files);
+        foreach($files as $urlelem) {
             $FilesPath=$dirhome.$urlelem;
             if(is_file($FilesPath)) unlink($FilesPath);
         }
     }
-    public static function procFile($files,filesStorage $model) {
-        //action file
-        /*
-         * удалить старый файл (и миниатюры если имеются)
-         * --название рандом
-         * .zip
-         * сделать миниатюры
-         */
-        //удалить старые файлы
+    public static function befdel($url_files) {
+        static::deleteFiles($url_files);
+    }
+    public function editelems($arr_ElementsForm,filesStorage $model) {
+        if(count(json_decode($model->url))>1) $arr_ElementsForm['is_addFile']['checked'] = 'checked';
+        return $arr_ElementsForm;
+    }
+    public static function procFile(filesStorage $model) {
+        /* var @file CUploadedFile*/
+        $files = CUploadedFile::getInstancesByName('EmptyForm[file]'); //or not Multiple getInstanceByName
 
-
-
-
-        $dirhome = Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']).DIRECTORY_SEPARATOR.(static::URL_HOME).DIRECTORY_SEPARATOR;
+        $dirhome = (static::URL_HOME)? static::URL_HOME : Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']);
+        $dirhome .= ((substr($dirhome,-1)==DIRECTORY_SEPARATOR)?'':DIRECTORY_SEPARATOR);
         $model->user_folder = trim($model->user_folder);
-        $url_dir = static::URL_HOME.'/';
+        $url_dir = '';
         if($model->user_folder) {
-            $url_dir .= $model->user_folder.((substr($model->user_folder,-1)=='/')?'':'/');
+            $url_dir = $model->user_folder.((substr($model->user_folder,-1)=='/')?'':'/');
             $dirhome .= $model->user_folder.((substr($model->user_folder,-1)==DIRECTORY_SEPARATOR)?'':DIRECTORY_SEPARATOR);
         }
 
-        //rename
-        if(!count(json_decode($model->url)) && !$files && trim($model->title)!='' && !$model->isNewRecord && ($model->url && !json_decode($model->url))) {
-            $name = $model->title;
-            if($model->is_randName) {
-                $name = static::randName().(substr(strrchr($files[0]->name,'.'),0));
-                $model->title = $name;
-            }
-            rename(Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']).DIRECTORY_SEPARATOR.$model->url, $dirhome.$name);
-            $model->url = $url_dir.$name;
-            $model->updateByPk($model->id,$model->attributes);
-            return true;
-        }
-
-        if(!$model->isNewRecord && !$model->is_addFile && !count(json_decode($model->url))) {
-            $model->deleteFiles();
-        }
-        //action AbsModel
-        /*
-         *
-         */
-        if(count($files)==1) {
-            $name = $files[0]->name;
-            if($model->is_randName) {
-                $name = static::randName().(substr(strrchr($files[0]->name,'.'),0));
-            }
-
-            $model->title = $name;
-
-            if($model->is_addFile || count(json_decode($model->url))) {
-                if(count(json_decode($model->url))) {
-                    $decode_url = json_decode($model->url);
-                    $decode_url[] = $url_dir.$name;
-                    $model->url = json_encode($decode_url);
+        $decode_url = ($model->url)?json_decode($model->url):array();
+        //rename or delete obj files
+        if(!$model->isNewRecord && !count($files) && $_POST['EmptyForm']['url']!=$model->old_attributes['url']) {
+            $url = $_POST['EmptyForm']['url'];
+            $decode_url_old = json_decode($model->old_attributes['url']);
+            $i=0;
+            $isdel=0;
+            foreach($decode_url as $urlfile) {
+                $newname = $urlfile;
+                if($model->is_randName) {
+                    $newname = static::randName().(substr(strrchr($newname,'.'),0));
                 }
-                else $model->url = $url_dir.$name;
 
-                $model->sizeof += $files[0]->size;
+                if(trim($decode_url[$i])=='') {
+                    $isdel=1;
+                    unset($decode_url[$i]);
+                }
+                elseif($decode_url_old[$i]!=$decode_url[$i] && !in_array($decode_url[$i], $decode_url_old)) {
+                    rename($dirhome.$decode_url_old[$i], $dirhome.$newname);
+                }
+                elseif(in_array($decode_url[$i], $decode_url_old)) {
+                    //add names если бедет массив имен перемешать нужным образом при перемешивании urls
+                }
+                $i++;
             }
-            else {
-                $model->url = $url_dir.$name;
-                $model->sizeof = $files[0]->size;
+
+            if($isdel) {
+                $array_diff = array_diff($decode_url_old,$decode_url);
+                static::deleteFiles(json_encode($array_diff));
+                $decode_url = array_values($decode_url);
             }
-
-
-            $files[0]->saveAs($dirhome.$name);
         }
-        else {
-            $names_url = array();
-            $sumsize = 0;
+        //add files
+        elseif(count($files)) {
+            if(!$model->isNewRecord && !$_POST['EmptyForm']['is_addFile'] && $model->url)    {
+                static::deleteFiles($model->url);
+                $decode_url = array();
+            }
 
             foreach($files as $file) {
                 $name = $file->name;
                 if($model->is_randName) {
                     $name = static::randName().(substr(strrchr($file->name,'.'),0));
                 }
-                $names_url[] = $url_dir.$name;
-                $sumsize += $file->size;
+                $decode_url[] = $url_dir.$name;
+                if(!$_POST['EmptyForm']['force_save']) {
+                    if(file_exists($dirhome.$name)) {
+                        $model->addError('file', 'file exists '.$name);
+                        throw new CException(Yii::t('cms',serialize($model->getErrors()))); //task normal error form
+                    }
+                }
                 $file->saveAs($dirhome.$name);
             }
-            if($model->is_addFile || count(json_decode($model->url))) {
-                $decode_url = (count(json_decode($model->url)))?json_decode($model->url):array($model->url);
-                $names_url = array_merge($names_url, $decode_url);
-                $model->sizeof += $sumsize;
-            }
-            else {
-                $model->sizeof = $sumsize;
-            }
-            $model->url = json_encode($names_url);
         }
 
+        $model->url = ($decode_url)?json_encode($decode_url):'';
         $model->updateByPk($model->id,$model->attributes);
         return true;
     }

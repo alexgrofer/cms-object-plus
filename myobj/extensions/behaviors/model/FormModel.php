@@ -73,6 +73,7 @@ class FormModel extends CActiveRecordBehavior {
                 }
             }
             $dinamicForm->$key = $model->$namemodelprop;
+            $model->old_attributes[$key] = $model->$namemodelprop;
             if(array_key_exists('EmptyForm',$POSTORGET)) {
                 if(array_key_exists($key,$POSTORGET['EmptyForm'])) {
                     $dinamicForm->$key = $POSTORGET['EmptyForm'][$key];

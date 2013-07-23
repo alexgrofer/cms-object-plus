@@ -6,6 +6,7 @@ abstract class AbsModel extends CActiveRecord
         return 'id';
     }
     public $isHeaderModel=false;
+    public $old_attributes=array();
     public static function model($className=null)
     {
         if($className===null) {
