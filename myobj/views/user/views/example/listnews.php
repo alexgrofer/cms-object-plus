@@ -1,3 +1,9 @@
+<?php
+$this->pageTitle='list news';
+$this->breadcrumbs=array(
+    'list news',
+);
+?>
 <h4>list news</h4>
 <?php
 //получить все объекты класса раздела "news_section" новостей
