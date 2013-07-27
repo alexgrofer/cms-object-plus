@@ -320,9 +320,10 @@ class AdminController extends Controller {
             
             //utils delete, cvs
             if($this->dicturls['action']=='' && count($selectorsids_post)) {
-                $modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->primaryKey(), $selectorsids_post);
+                $linkAnFuncSetCritModel = function() use($modelAD,$selectorsids_post) {$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->primaryKey(), $selectorsids_post);};
 
                 if(array_key_exists('checkdelete',$_POST)) {
+                    $linkAnFuncSetCritModel();
                     $objects = $modelAD->findAll();
                     foreach($objects as $obj) {
                         $obj->delete();
@@ -330,6 +331,7 @@ class AdminController extends Controller {
                     $this->redirect(Yii::app()->request->url);
                 }
                 elseif(array_key_exists('importcsv',$_POST)) {
+                    $linkAnFuncSetCritModel();
                     Yii::import('ext.ECSVExport');
                     $namefile = '';
                     if($modelAD->isHeaderModel) {
