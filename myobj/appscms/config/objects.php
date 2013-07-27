@@ -12,8 +12,8 @@ $objects = array(
             'groups_write' => null,
         ),
         $classes_system['navigation'] => array(
-            'cols' => null,
-            'edit' => array('name', 'sort', array('vp2','codename'),array('vp1','top'),array('bp1','visible')),
+            'cols' => array('id'=>'id','vp1'=>'top','name'=>'name','vp2'=>'codename','bp1'=>'visible','sort'=>'sort'),
+            'edit' => array('name', 'sort', array('vp2','codename'),array('content','description'),array('vp1','top'),array('bp1','visible')),
             'controller' => array('usernav'=>'admin/nav_sys.php','default'=>''),
             'groups_read' => null,
             'groups_write' => null,
