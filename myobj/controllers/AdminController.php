@@ -356,10 +356,14 @@ class AdminController extends Controller {
 						$most_array_all[] = array_merge($array_insert,$prop_array);
 					}
 					$csv = new ECSVExport($most_array_all);
-					$content = $csv->toCSV();
 
-					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time());
-					Yii::app()->getRequest()->sendFile($namefile, $content, "text/csv", false);
+					$content = $csv->toCSV();
+					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time());//.'csv';
+					$typefile = 'text/csv';
+					$this->layout=false;
+					$view = '/sys/sendfile';
+					$paramsrender = array('namefile'=>$namefile,'content'=>$content,'typefile'=>$typefile,'terminate'=>false);
+					$this->renderPartial($view,$paramsrender);
 					Yii::app()->end();
 				}
 			}
@@ -412,11 +416,10 @@ class AdminController extends Controller {
 				$this->redirect(Yii::app()->request->getUrlReferrer());
 			}
 		}
-		if($this->paramsrender['REND_acces_read']===false) {
+		if(isset($this->paramsrender['REND_acces_read']) && $this->paramsrender['REND_acces_read']===false) {
 			$view = '/admin/acces';
 		}
 		$this->paramsrender['REND_model'] = $modelAD;
 		$this->render($view, $this->paramsrender);
 	}
 }
-?>
