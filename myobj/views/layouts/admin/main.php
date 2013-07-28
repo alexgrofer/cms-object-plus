@@ -14,7 +14,7 @@ $urladm = Yii::app()->createUrl('myobj/admin');
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
+	<meta charset='utf-8'>
 </head>
 <style>
 form .row {padding:0;margin-left:0}
@@ -24,23 +24,23 @@ input, select {height: auto !important; }
 <div style="padding: 10px">
 <?php if(!Yii::app()->user->isGuest) {?>
 <div class="well">
-    <a href="<?php echo $urladm?>/objects/models/classes/">classes</a> | 
-    <a href="<?php echo $urladm?>/objects/models/properties/">properties</a> |-----| 
+	<a href="<?php echo $urladm?>/objects/models/classes/">classes</a> |
+	<a href="<?php echo $urladm?>/objects/models/properties/">properties</a> |-----|
 <div class="btn-group">
   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-    mvc
-    <span class="caret"></span>
+	mvc
+	<span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-    <li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
-    <li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
-    <li><a href="<?php echo $urladm?>/objects/class/navigation_sys/&usercontroller=usernav">nav</a></li>
-    <li><a href="<?php echo $urladm?>/objects/class/controllersnav_sys/">controllers</a></li>
+	<li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
+	<li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
+	<li><a href="<?php echo $urladm?>/objects/class/navigation_sys/&usercontroller=usernav">nav</a></li>
+	<li><a href="<?php echo $urladm?>/objects/class/controllersnav_sys/">controllers</a></li>
   </ul>
 </div>
-    <a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----|
-    <?php echo $this->getMenuhtml(); ?>
-    <a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
+	<a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----|
+	<?php echo $this->getMenuhtml(); ?>
+	<a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
 </div>
 <?php echo $this->getMenuhtmlSub(); ?>
 <?php
