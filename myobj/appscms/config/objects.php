@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $objects = array(
 	'systemObjHeaders' => array(
 		'default' => array(

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 Yii::import('application.modules.myobj.appscms.UCms');
 Yii::import('application.modules.myobj.appscms.api.utils',true);
 

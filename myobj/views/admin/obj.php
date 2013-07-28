@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if(!$REND_acces_write) {
 	//должно делаться в контроллере - или добавить мини контроллер ?
 	echo '<p class="alert">not acces edit</p>';

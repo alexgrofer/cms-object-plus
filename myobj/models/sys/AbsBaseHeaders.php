@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(models.Model):
 {
 	public function tableName()

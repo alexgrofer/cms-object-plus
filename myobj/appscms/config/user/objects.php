@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $objects_user = array(
 	//codename class
