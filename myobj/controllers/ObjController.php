@@ -36,8 +36,8 @@ class ObjController extends Controller {
 			if($namecontroller=$objnav->getobjlinks('controllersnav_sys')->find()) {
 				require(dirname(__FILE__).'/cms/user/'.$namecontroller->vp1);
 			}
-			$this->layout='/user/templates/'.$templateobj->vp1;
-			$this->render('/user/templates/'.$templateobj->vp1.'_content',$conf_site);
+			$this->layout='/cms/templates/'.$templateobj->vp1;
+			$this->render('/cms/templates/'.$templateobj->vp1.'_content',$conf_site);
 		}
 		else {
 			throw new CHttpException(404,'page not is find');

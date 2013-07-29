@@ -87,7 +87,7 @@ foreach($currenthandles as $handle) {
 }
 $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
 
-$contenttmpl=file_get_contents(dirname(__FILE__).'/../../user/templates/'.$templates[0]->vp1.'_content'.'.php');
+$contenttmpl=file_get_contents(dirname(__FILE__).'/../../cms/templates/'.$templates[0]->vp1.'_content'.'.php');
 
 $arraypregtmp = array();
 preg_match_all("~apcms->handle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);

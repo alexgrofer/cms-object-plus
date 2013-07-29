@@ -28,7 +28,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 //опять же перенести все в контроллер, или создать отдельный контроллер еси нужно и присоеденить к текущему контроллеру возможно присоединять контроллеры?
 if(in_array($this->param_contr['current_class_name'],array('templates_sys','views_sys'))) {
 	$namefilderfile = ($this->param_contr['current_class_name']=='templates_sys')?'templates':'views';
-	$namefile = dirname(__FILE__).'/../user/'.$namefilderfile.'/'.$REND_model->vp1.'.php';
+	$namefile = dirname(__FILE__).'/../cms/'.$namefilderfile.'/'.$REND_model->vp1.'.php';
 	if(file_exists($namefile)) {
 		$contenttext=file_get_contents($namefile);
 	}
