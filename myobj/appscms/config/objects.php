@@ -48,6 +48,12 @@ $objects = array(
 			'groups_read' => null,
 			'groups_write' => null,
 		),
+		$classes_system['db_dump'] => array(
+			'cols' => array('id'=>'id','name'=>'name'),
+			'edit' => array('name', array('vp1','patch')),
+			'groups_read' => null,
+			'groups_write' => null,
+		),
 	),
 );
 

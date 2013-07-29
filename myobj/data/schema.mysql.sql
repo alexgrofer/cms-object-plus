@@ -196,6 +196,7 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(5,'navigation_sys','navigation_sys','',2),
 	(6,'param_sys','param_sys','',2),
 	(9,'controllersnav_sys','controllersnav_sys','',2),
+	(10,'db_dump_sys','db_dump_sys','',2),
 	-- example
 	(17,'news','news','',1),
 	(18,'news section','news_section','',1);

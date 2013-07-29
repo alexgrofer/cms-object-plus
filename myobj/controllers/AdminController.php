@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 Yii::import('application.modules.myobj.appscms.UCms');
 Yii::import('application.modules.myobj.appscms.api.utils',true);
 
@@ -391,7 +391,7 @@ class AdminController extends Controller {
 									$properties_csv[$headers_key_prop_csv[$k]] = $val;
 								}
 								else {
-									//if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
+									if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
 									$attributes_csv[$headers_key_attr_csv[$k]] = $val;
 								}
 							}

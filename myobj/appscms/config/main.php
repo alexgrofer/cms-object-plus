@@ -7,6 +7,7 @@ $classes_system = array(
 	'navigation'=>'navigation_sys',
 	'params'=>'param_sys',
 	'controllersnav'=>'controllersnav_sys',
+	'db_dump'=>'db_dump_sys',
 );
 
 $arrayClassesFilesStorageProc = array(
@@ -71,6 +72,7 @@ type=>datetime
 datetimeFormat=>yyyy-MM-dd hh:mm:ss
 ',
 	),
+'path_db_dump_files' => 'dbdump',
 'classes_system' => $classes_system,
 'language_def' => 'en',
 'languages' => array('ru', 'en', 'th', 'vi', 'de'),
