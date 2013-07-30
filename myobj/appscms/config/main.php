@@ -14,6 +14,29 @@ $arrayClassesFilesStorageProc = array(
 	'classFilesStorageDefault' => 'Default',
 );
 
+$tables_db_dump = array(
+	//files Default
+	'setcms_filesstorage',
+	//links
+	'setcms_linksobjectsallmy',
+	'setcms_linksobjectsallmy_links',
+	'setcms_linksobjectsallsystem',
+	'setcms_linksobjectsallsystem_links',
+	//my obj
+	'setcms_myobjheaders',
+	'setcms_myobjlines',
+	'setcms_myobjheaders_lines',
+	//sys obj
+	'setcms_systemobjheaders',
+	'setcms_systemobjlines',
+	'setcms_systemobjheaders_lines',
+	//classes
+	'setcms_uclasses',
+	'setcms_objproperties',
+	'setcms_uclasses_association',
+	'setcms_uclasses_objproperties',
+);
+
 require(dirname(__FILE__).'/objects.php');
 require(dirname(__FILE__).'/models.php');
 require(dirname(__FILE__).'/UI.php');
@@ -73,6 +96,7 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 ',
 	),
 'path_db_dump_files' => 'dbdump',
+'path_db_dump_tables' => $tables_db_dump,
 'classes_system' => $classes_system,
 'language_def' => 'en',
 'languages' => array('ru', 'en', 'th', 'vi', 'de'),

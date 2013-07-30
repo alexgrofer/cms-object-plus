@@ -5,10 +5,12 @@ $array_menu_conf = $config['menu'];
 
 foreach($array_menu_conf as $nameMenu => $arrConf) {
 	$namemodel = $arrConf[1];
-	$url = $arrConf[1];
-	$confarray = (strpos($url,'/ui/')===false)?$config['objects']['models']:$config['ui'];
+	$confarray = (strpos($namemodel,'ui--')===false)?$config['objects']['models']:$config['ui'];
+	if(strpos($namemodel,'class--')) {
+		$confarray = false;
+	}
 
-	if((array_key_exists('groups_read', $confarray[$namemodel]) && !(array_intersect(Yii::app()->user->groupsident, $confarray[$namemodel]['groups_read']))))  {
+	if(isset($confarray[$namemodel]) && array_key_exists('groups_read', $confarray[$namemodel]) && !(array_intersect(Yii::app()->user->groupsident, $confarray[$namemodel]['groups_read'])))  {
 		unset($array_menu_conf[$nameMenu]);
 	}
 }
