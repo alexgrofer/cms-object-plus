@@ -89,23 +89,15 @@ class AdminController extends Controller {
 					//вытащить одним запросом вместе со свойствами
 					$modelAD->set_force_prop(true);
 
-					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['headers_spaces'][$this->apcms->config['spacescl'][$actclass->tablespace]['namemodel']];
-
-					$findelem = 'default';
-					if(!isset($settui['default'])) $settui['default'] = array();
-					if(array_key_exists($actclass->codename,$settui)) {
-						$findelem = $actclass->codename;
-					}
-					$this->setVarRender('REND_confmodel',$settui[$findelem]);
+					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
+					$this->setVarRender('REND_confmodel',$settui);
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//если не равно пост и есть relationobjonly=название модели
 					//сделать для теста а потом уже тут полностью поправить
 					$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
-					$findelem = $this->dicturls['paramslist'][1];
 					//alias model
 					if(is_string($params_modelget)) {
-						$findelem = $params_modelget;
 						$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$params_modelget];
 
 					}
@@ -126,74 +118,73 @@ class AdminController extends Controller {
 				}
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
 					$settui = $this->apcms->config['controlui']['ui'];
-					$findelem = $this->dicturls['paramslist'][1];
 				}
 
 				if(isset($settui)) {
 				/// acces
-				if(array_key_exists('groups_read',$settui[$findelem]) && $settui[$findelem]['groups_read']) {
-					$result = array_intersect(Yii::app()->user->groupsident, $settui[$findelem]['groups_read']);
+				if(array_key_exists('groups_read',$settui) && $settui['groups_read']) {
+					$result = array_intersect(Yii::app()->user->groupsident, $settui['groups_read']);
 					if(count($result)==0) {
 						$this->setVarRender('REND_acces_read',false);
 					}
 					unset($result);
 				}
-				if(array_key_exists('groups_write',$settui[$findelem]) && $settui[$findelem]['groups_write']) {
-					$result = array_intersect(Yii::app()->user->groupsident, $settui[$findelem]['groups_write']);
+				if(array_key_exists('groups_write',$settui) && $settui['groups_write']) {
+					$result = array_intersect(Yii::app()->user->groupsident, $settui['groups_write']);
 					if(count($result)==0) {
 						$this->setVarRender('REND_acces_write',false);
 					}
 					unset($result);
 				}
 				///// set setting
-				if(array_key_exists('cols',$settui[$findelem]) && $settui[$findelem]['cols']) {
-					$this->setVarRender('REND_thisparamsui',$settui[$findelem]['cols']);
+				if(array_key_exists('cols',$settui) && $settui['cols']) {
+					$this->setVarRender('REND_thisparamsui',$settui['cols']);
 				}
 				else {
 					$this->setVarRender('REND_thisparamsui',array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
 				}
-				if(array_key_exists('cols_props',$settui[$findelem]) && $settui[$findelem]['cols_props']) {
-					$this->setVarRender('REND_thispropsui',$settui[$findelem]['cols_props']);
+				if(array_key_exists('cols_props',$settui) && $settui['cols_props']) {
+					$this->setVarRender('REND_thispropsui',$settui['cols_props']);
 				}
 
-				if(array_key_exists('order_by_def',$settui[$findelem]) && $settui[$findelem]['order_by_def']) {
-					$this->setVarRender('REND_order_by_def',$settui[$findelem]['order_by_def']);
+				if(array_key_exists('order_by_def',$settui) && $settui['order_by_def']) {
+					$this->setVarRender('REND_order_by_def',$settui['order_by_def']);
 				}
 
-				if(array_key_exists('order_by',$settui[$findelem]) && $settui[$findelem]['order_by']) {
-					$this->setVarRender('REND_order_by',$settui[$findelem]['order_by']);
+				if(array_key_exists('order_by',$settui) && $settui['order_by']) {
+					$this->setVarRender('REND_order_by',$settui['order_by']);
 				}
 
-				if(array_key_exists('edit', $settui[$findelem]) && $settui[$findelem]['edit'] && count($settui[$findelem]['edit'])) {
-					$this->setVarRender('REND_editform',$settui[$findelem]['edit']);
+				if(array_key_exists('edit', $settui) && $settui['edit'] && count($settui['edit'])) {
+					$this->setVarRender('REND_editform',$settui['edit']);
 				}
 
-				if(array_key_exists('relation',$settui[$findelem]) && $settui[$findelem]['relation']) {
-					$this->setVarRender('REND_relation',$settui[$findelem]['relation']);
+				if(array_key_exists('relation',$settui) && $settui['relation']) {
+					$this->setVarRender('REND_relation',$settui['relation']);
 				}
 
-				$this->setVarRender('REND_find',(array_key_exists('find',$settui[$findelem]) && $settui[$findelem]['find'])?$settui[$findelem]['find']:$this->paramsrender['REND_thisparamsui']);
+				$this->setVarRender('REND_find',(array_key_exists('find',$settui) && $settui['find'])?$settui['find']:$this->paramsrender['REND_thisparamsui']);
 
-				if(array_key_exists('witch', $settui[$findelem]) && $settui[$findelem]['witch']) {
-					$this->setVarRender('REND_witch',$settui[$findelem]['witch']);
-					$modelAD->dbCriteria->with = $settui[$findelem]['witch'];
+				if(array_key_exists('witch', $settui) && $settui['witch']) {
+					$this->setVarRender('REND_witch',$settui['witch']);
+					$modelAD->dbCriteria->with = $settui['witch'];
 				}
 
-				if(array_key_exists('selfobjrelationElements', $settui[$findelem]) && $settui[$findelem]['selfobjrelationElements']) {
-					$this->setVarRender('REND_selfobjrelationElements',$settui[$findelem]['selfobjrelationElements']);
+				if(array_key_exists('selfobjrelationElements', $settui) && $settui['selfobjrelationElements']) {
+					$this->setVarRender('REND_selfobjrelationElements',$settui['selfobjrelationElements']);
 				}
 
-				if(isset($settui[$findelem]['controller']) && count($settui[$findelem]['controller'])) {
-					if(isset($settui[$findelem]['controller']['default']) && $settui[$findelem]['controller']['default']) {
-						$namecontroller = $settui[$findelem]['controller']['default'];
+				if(isset($settui['controller']) && count($settui['controller'])) {
+					if(isset($settui['controller']['default']) && $settui['controller']['default']) {
+						$namecontroller = $settui['controller']['default'];
 					}
-					elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui[$findelem]['controller'][$this->actionParams['usercontroller']])) {
-						$namecontroller = $settui[$findelem]['controller'][$this->actionParams['usercontroller']];
+					elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
+						$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
 					}
 					if(isset($namecontroller)) require(dirname(__FILE__).'/cms/'.$namecontroller);
 				}
 
-				unset($findelem,$settui);
+				unset($settui);
 				}
 				/////
 				// acces
