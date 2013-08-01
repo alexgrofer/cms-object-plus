@@ -9,15 +9,18 @@ CREATE TABLE `setcms_uclasses` (
   -- (Django) association = models.ManyToManyField("self",blank=True)
   PRIMARY KEY (`id`),
   UNIQUE KEY `codename` (`codename`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE uclasses_association
 CREATE TABLE `setcms_uclasses_association` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_uclasses_id` int(11) NOT NULL,
   `to_uclasses_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `from_uclasses_id` (`from_uclasses_id`,`to_uclasses_id`)
-);
+  UNIQUE KEY `from_uclasses_id` (`from_uclasses_id`,`to_uclasses_id`),
+  KEY `to_uclasses_id` (`to_uclasses_id`),
+  CONSTRAINT `setcms_uclasses_association_ibfk_to_uclasses_id` FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `setcms_uclasses_association_ibfk_from_uclasses_id` FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- objproperties
 CREATE TABLE `setcms_objproperties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,7 +35,7 @@ CREATE TABLE `setcms_objproperties` (
   `setcsv` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `codename` (`codename`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- uclasses (Django models.ManyToManyField) objproperties (relation)
 CREATE TABLE `setcms_uclasses_objproperties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,7 +43,7 @@ CREATE TABLE `setcms_uclasses_objproperties` (
   `to_objproperties_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_uclasses_id` (`from_uclasses_id`,`to_objproperties_id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- system objects
 -- system_obj_headers
 CREATE TABLE `setcms_systemobjheaders` (
@@ -57,7 +60,7 @@ CREATE TABLE `setcms_systemobjheaders` (
   -- (Django) lines = models.ManyToManyField(systemObjLines,blank=True)
   -- end
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- setcms_myobj_lines
 CREATE TABLE `setcms_systemobjlines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -67,16 +70,21 @@ CREATE TABLE `setcms_systemobjlines` (
   `updatetimefield` datetime DEFAULT NULL,
   `upintegerfield` int(11) DEFAULT NULL,
   `upfloatfield` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  CONSTRAINT `setcms_systemobjlines_ibfk_property_id` FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- systemobjheaders (Django models.ManyToManyField) systemobjlines (relation)
 CREATE TABLE `setcms_systemobjheaders_lines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_headers_id` int(11) NOT NULL,
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`)
-);
+  UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
+  KEY `to_lines_id` (`to_lines_id`),
+  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end system objects
 
 -- -------------------------------------------------- my objects
@@ -92,8 +100,10 @@ CREATE TABLE `setcms_myobjheaders` (
   `bpublic` tinyint(1) NOT NULL,
   -- (Django) lines = models.ManyToManyField(myObjLines,blank=True)
   -- end
-  PRIMARY KEY (`id`)
-);
+  PRIMARY KEY (`id`),
+  KEY `uclass_id` (`uclass_id`),
+  CONSTRAINT `setcms_myobjheaders_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- setcms_myobj_lines
 CREATE TABLE `setcms_myobjlines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -103,16 +113,21 @@ CREATE TABLE `setcms_myobjlines` (
   `updatetimefield` datetime DEFAULT NULL,
   `upintegerfield` int(11) DEFAULT NULL,
   `upfloatfield` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  CONSTRAINT `setcms_myobjlines_ibfk_property_id` FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- myobjheaders (Django models.ManyToManyField) myobjlines (relation)
 CREATE TABLE `setcms_myobjheaders_lines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_headers_id` int(11) NOT NULL,
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`)
-);
+  UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
+  KEY `to_lines_id` (`to_lines_id`),
+  CONSTRAINT `setcms_myobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `setcms_myobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end my objects
 
 -- -------------------------------------------------- links my
@@ -122,16 +137,21 @@ CREATE TABLE `setcms_linksobjectsallmy` (
   `idobj` int(11) NOT NULL,
   `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
   -- (Django) links = models.ManyToManyField("self",blank=True)
-  PRIMARY KEY (`id`)
-);
+  PRIMARY KEY (`id`),
+  KEY `uclass_id` (`uclass_id`),
+  CONSTRAINT `setcms_linksobjectsallmy_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
 CREATE TABLE `setcms_linksobjectsallmy_links` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_self_id` int(11) NOT NULL,
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`)
-);
+  UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
+  KEY `to_self_id` (`to_self_id`),
+  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallmy
 -- -------------------------------------------------- ens links all my
 
@@ -142,16 +162,21 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
   `idobj` int(11) NOT NULL,
   `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
   -- (Django) links = models.ManyToManyField("self",blank=True)
-  PRIMARY KEY (`id`)
-);
+  PRIMARY KEY (`id`),
+  KEY `uclass_id` (`uclass_id`),
+  CONSTRAINT `setcms_linksobjectsallsystem_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
 CREATE TABLE `setcms_linksobjectsallsystem_links` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_self_id` int(11) NOT NULL,
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`)
-);
+  UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
+  KEY `to_self_id` (`to_self_id`),
+  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallsystem
 -- -------------------------------------------------- ens links all system
 
@@ -163,21 +188,21 @@ CREATE TABLE `setcms_user` (
   `email` VARCHAR(255) NOT NULL,
   `userpasport_id` int(11) NULL,
 PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_ugroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `guid` VARCHAR(36) NOT NULL,
 PRIMARY KEY (`id`) 
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `setcms_user_ugroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`group_id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_userpasport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -270,4 +295,4 @@ CREATE TABLE `setcms_filesstorage` (
   `sort` smallint(5) NOT NULL DEFAULT 0,
   `classprocdownload` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
