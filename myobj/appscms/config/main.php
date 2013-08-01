@@ -46,7 +46,7 @@ require(dirname(__FILE__).'/none_del.php');
 $main = array(
 	'controlui' => array(
 		'objects' => array( //columns header type model, controller inside myobj/controllers/cms
-			'headers_spaces' => $objects,
+			'conf_ui_classes' => $objects,
 			'models' => $models,
 		),
 		'ui' => $ui,

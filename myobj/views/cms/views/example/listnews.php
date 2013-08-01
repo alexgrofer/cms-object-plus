@@ -19,11 +19,11 @@ $objClass_news_section_objectBusiness = $objClass_news_section->find(); //есл
 if(!$objClass_news_section_objectBusiness) {
 	echo 'error: none objects news_section';return;
 }
-$objClass_news_objects = $objClass_news_section_objectBusiness->getobjlinks('news');
+$objClass_news_objects = $objClass_news_section_objectBusiness->getobjlinks('news_example');
 //важный фактор для того что бы не потерять условия нужно использовать перед каждым вызовом find, findAll, Count - если это необходимо
 $get_criteria = $objClass_news_objects->getDbCriteria();
 //найти объекты новостей по свойству "text_news" в котором встречается слово "alex"
-$objClass_news_objects->setuiprop(array('condition'=>array(array('text_news',true,'LIKE',"'%a%'",'or'),array('annotation_news',true,'LIKE',"'%a%'"))),$get_criteria);
+$objClass_news_objects->setuiprop(array('condition'=>array(array('text_news_example',true,'LIKE',"'%a%'",'or'),array('annotation_news_example',true,'LIKE',"'%a%'"))),$get_criteria);
 //И параметр "name" модели должен включать слово "news"
 //для обычных колонок модели необходимо задавать псевдонимы таблиц при поиске
 $objClass_news_objects->setuiprop(array('condition'=>array(array($objClass_news_objects->tableAlias.'.'.'name',false,'LIKE',"'%f%'",''))),$get_criteria);//проверить только с ним task
@@ -41,7 +41,7 @@ $objClass_news_objects->setuiprop(array('order'=>array(array($objClass_news_obje
 
 
 //отсортировать по свойству text_news (для работы со свойствами лучше использовать метод setuiprop)
-$objClass_news_objects->setuiprop(array('order'=>array(array('text_news','desc',true))),$get_criteria); //так же может учавствовать вместе с condition и select
+$objClass_news_objects->setuiprop(array('order'=>array(array('text_news_example','desc',true))),$get_criteria); //так же может учавствовать вместе с condition и select
 //1)Найти что мне мешает показать нужные элементы
 
 
@@ -75,7 +75,7 @@ echo '<table border="1"><tr><td>id</td><td>name</td><td>annotation_news</td><td>
 $v = 1;
 foreach($array_objClass_news_objects as $obj) {
 	$properties = $obj->get_properties();
-	echo '<tr><td>'.$v.'--'.$obj->id.'</td><td>'.$obj->name.'</td><td>'.$properties['annotation_news'].'</td><td>'.$properties['text_news'].'</td></tr>';
+	echo '<tr><td>'.$v.'--'.$obj->id.'</td><td>'.$obj->name.'</td><td>'.$properties['annotation_news_example'].'</td><td>'.$properties['text_news_example'].'</td></tr>';
 	$v++;
 }
 echo '</table>';

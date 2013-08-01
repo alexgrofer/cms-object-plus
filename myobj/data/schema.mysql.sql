@@ -198,8 +198,8 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(9,'controllersnav_sys','controllersnav_sys','',2),
 	(10,'db_dump_sys','db_dump_sys','',2),
 	-- example
-	(17,'news','news','',1),
-	(18,'news section','news_section','',1);
+	(17,'news example','news_example','',1),
+	(18,'news section example','news_section_example','',1);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
 	(2,1), -- [views_sys]<>-----groups_sys
 	(5,2), -- [navigation_sys]<>-----views_sys
@@ -208,17 +208,17 @@ INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) 
 	(5,6), -- [navigation_sys]<>-----param_sys
 	(5,9), -- [navigation_sys]<>-----controllersnav_sys
 	-- example classes_association
-	(17,18); -- [news]<>-----news_section
+	(17,18); -- [news_example]<>-----news_section_example
 INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
 	-- example
-	(1,'Annotation news','annotation_news','',3,'','',0,'',''),
-	(2,'Text news','text_news','',3,'','',0,'',''),
-	(3,'Codename news section','codename_news_section','',1,'','',0,'','type\ntype=>string');
+	(1,'Annotation news example','annotation_news_example','',3,'','',0,'',''),
+	(2,'Text news example','text_news_example','',3,'','',0,'',''),
+	(3,'Codename news section example','codename_news_section_example','',1,'','',0,'','type\ntype=>string');
 INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 	-- example
-	(17,1), -- news -> annotation_news
-	(17,2), -- news -> text_news
-	(18,3); -- news_section -> codename_news_section
+	(17,1), -- news_example -> annotation_news_example
+	(17,2), -- news_example -> text_news_example
+	(18,3); -- news_example -> codename_news_section_example
 INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
 -- Class (setcms_uclasses) id = 1
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
@@ -229,8 +229,8 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 -- example
 -- navigation - Class (navigation_sys) id = 5
 (14,5,'index','',0,'0','index',1),
-(15,5,'news list','',0,'0','news',1),
-(16,5,'news object','',0,'0','news object',1),
+(15,5,'example news list','',0,'0','news_list_example',1),
+(16,5,'example news object','',0,'0','news_object_example',1),
 -- templates - Class (templates_sys) id = 3
 (17,3,'example index','',0,'example/index','',0),
 -- views - Class (views_sys) id = 2
