@@ -17,7 +17,6 @@ CREATE TABLE `setcms_uclasses_association` (
   `to_uclasses_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_uclasses_id` (`from_uclasses_id`,`to_uclasses_id`),
-  KEY `to_uclasses_id` (`to_uclasses_id`),
   CONSTRAINT `setcms_uclasses_association_ibfk_to_uclasses_id` FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `setcms_uclasses_association_ibfk_from_uclasses_id` FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -81,7 +80,6 @@ CREATE TABLE `setcms_systemobjheaders_lines` (
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
-  KEY `to_lines_id` (`to_lines_id`),
   CONSTRAINT `setcms_systemobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `setcms_systemobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -124,7 +122,6 @@ CREATE TABLE `setcms_myobjheaders_lines` (
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
-  KEY `to_lines_id` (`to_lines_id`),
   CONSTRAINT `setcms_myobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `setcms_myobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -138,7 +135,7 @@ CREATE TABLE `setcms_linksobjectsallmy` (
   `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
   -- (Django) links = models.ManyToManyField("self",blank=True)
   PRIMARY KEY (`id`),
-  KEY `uclass_id` (`uclass_id`),
+  UNIQUE KEY `idobj` (`idobj`,`uclass_id`),
   CONSTRAINT `setcms_linksobjectsallmy_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
@@ -148,7 +145,6 @@ CREATE TABLE `setcms_linksobjectsallmy_links` (
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
-  KEY `to_self_id` (`to_self_id`),
   CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -163,7 +159,7 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
   `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
   -- (Django) links = models.ManyToManyField("self",blank=True)
   PRIMARY KEY (`id`),
-  KEY `uclass_id` (`uclass_id`),
+  UNIQUE KEY `idobj` (`idobj`,`uclass_id`),
   CONSTRAINT `setcms_linksobjectsallsystem_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
@@ -173,7 +169,6 @@ CREATE TABLE `setcms_linksobjectsallsystem_links` (
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
-  KEY `to_self_id` (`to_self_id`),
   CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
