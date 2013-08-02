@@ -105,6 +105,20 @@ class AdminController extends Controller {
 					$NAMEMODEL_get = $params_modelget['namemodel'];
 
 					$modelAD =  $NAMEMODEL_get::model();
+					//permission show classes
+					if(get_class($modelAD)=='uClasses') {
+						$show_none_permission_classes = array();
+						foreach($this->apcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'] as $key =>$class_conf) {
+							if(
+								isset($class_conf['groups_read']) &&
+								$class_conf['groups_read'] &&
+								!count(array_intersect(Yii::app()->user->groupsident,$class_conf['groups_read']))
+							) {
+								$show_none_permission_classes[] = $key;
+							}
+						}
+						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
+					}
 					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['models'];
 
 					//view links class obj

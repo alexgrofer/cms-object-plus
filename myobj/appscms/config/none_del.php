@@ -2,7 +2,14 @@
 //запрет на удаление определенных классов и объектов, свойств
 $none_del = array(
 	'classes' => array(
-		'groups_sys', 'templates_sys', 'views_sys', 'handle_sys', 'navigation_sys', 'param_sys',
+		'groups_sys',
+		'templates_sys',
+		'views_sys',
+		'handle_sys',
+		'navigation_sys',
+		'param_sys',
+		'controllersnav_sys',
+		'db_dump_sys',
 	),
 	'objects' => array(
 		'groups_sys' => array(
