@@ -20,10 +20,24 @@ $models = array(
 	'uclass' => 'classes',
 
 	//USER
-	'user' => array('namemodel' => 'User', 'relation' => array('group','userpasport'), 'cols' => array('id'=>'id','login'=>'user name'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-	'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
-	'group' => array('namemodel' => 'Ugroup', 'relation' => false, 'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'), 'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')),
-	'userpasport' => array('namemodel' => 'UserPasport', 'relation' => false, 'cols' => array('id'=>'id','firstname'=>'first name','lastname'=>'last name')),
+	'user' => array(
+		'namemodel' => 'User',
+		'relation' => array('group','userpasport'),
+		'cols' => array('id'=>'id','login'=>'user name'),
+		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')
+	),
+	'group' => array(
+		'namemodel' => 'Ugroup',
+		'relation' => false,
+		'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'),
+		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')
+	),
+	'userpasport' => array(
+		'namemodel' => 'UserPasport',
+		'relation' => false,
+		'cols' => array('id'=>'id','firstname'=>'first name','lastname'=>'last name')
+	),
 	//storage files
 	'storagef' => array(
 		'namemodel' => 'filesStorage',
