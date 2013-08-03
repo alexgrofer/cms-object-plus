@@ -119,7 +119,7 @@ class AdminController extends Controller {
 						}
 						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
 					}
-					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['models'];
+					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
@@ -131,7 +131,7 @@ class AdminController extends Controller {
 					}
 				}
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
-					$settui = $this->apcms->config['controlui']['ui'];
+					$settui = $this->apcms->config['controlui']['ui'][$this->dicturls['paramslist'][1]];
 				}
 
 				if(isset($settui)) {
@@ -154,7 +154,7 @@ class AdminController extends Controller {
 				if(array_key_exists('cols',$settui) && $settui['cols']) {
 					$this->setVarRender('REND_thisparamsui',$settui['cols']);
 				}
-				else {
+				elseif($modelAD) {
 					$this->setVarRender('REND_thisparamsui',array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
 				}
 				if(array_key_exists('cols_props',$settui) && $settui['cols_props']) {
@@ -188,7 +188,7 @@ class AdminController extends Controller {
 					$this->setVarRender('REND_selfobjrelationElements',$settui['selfobjrelationElements']);
 				}
 
-				if(isset($settui['controller']) && count($settui['controller'])) {
+				if(isset($settui['controller']) && is_array($settui['controller'])) {
 					if(isset($settui['controller']['default']) && $settui['controller']['default']) {
 						$namecontroller = $settui['controller']['default'];
 					}
