@@ -380,6 +380,10 @@ class AdminController extends Controller {
 				$headers_key_attr_csv=array();
 				$count_data = 0;
 				if (($handle = fopen($_FILES['exportcsv']['tmp_name'], 'r'))!==false) {
+					$transaction=Yii::app()->db->beginTransaction();
+					///transaction
+					try {
+
 					while (($data = fgetcsv($handle))!==false) {
 						if($row==1) {
 							$count_data = count($data);
@@ -416,6 +420,15 @@ class AdminController extends Controller {
 						}
 						$row++;
 					}
+
+					///transaction
+					}
+					catch(Exception $e) {
+						$transaction->rollBack();
+						throw $e;
+					}
+					$transaction->commit();
+
 					fclose($handle);
 				}
 				$this->redirect(Yii::app()->request->getUrlReferrer());
