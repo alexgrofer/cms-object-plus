@@ -40,7 +40,29 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 //задача такова что мы для нового элемента тоже можем установить параметры
 $form = $REND_model->UserFormModel->initform($_POST,$REND_editform,$REND_addElem);
 $form->attributes = array('enctype' => 'multipart/form-data');
-echo $form;
+//IF just
+
+//echo $form;
+
+//ELSE difficult
+$form->activeForm = array(
+	'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
+);
+echo $form->renderBegin();
+
+foreach($form->getElements() as $element) {
+	echo $element->render();
+}
+
+
+echo '<p>'.CHtml::submitButton('save').'</p>';
+
+
+echo $form->renderEnd();
+//END
 
 if(count($_POST) && $form->validate()) {
 	$REND_model->save();
