@@ -45,5 +45,9 @@ $models = array(
 		'order_by' => array('id DESC'),
 	),
 );
-require(dirname(__FILE__).'/user/models.php');
-$models = array_merge($models,$models_user);
+
+Yii::app()->params['api_conf_models'] = $models;
+
+apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','models_*',true);
+$models = Yii::app()->params['api_conf_models'];
+unset(Yii::app()->params['api_conf_models']);

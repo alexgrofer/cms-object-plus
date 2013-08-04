@@ -57,5 +57,11 @@ $objects = array(
  */
 $set_spaces['1'] = array('namemodel'=>'myObjHeaders','namelinksmodel'=>'linksObjectsAllMy'); //пользовательские классы
 $set_spaces['2'] = array('namemodel'=>'systemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'); //системные классы
-require(dirname(__FILE__).'/user/objects.php');
-$objects = array_merge($objects,$objects_user);
+
+Yii::app()->params['api_conf_objects'] = $objects;
+Yii::app()->params['api_conf_spaces'] = $set_spaces;
+
+apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','objects_*',true);
+$objects = Yii::app()->params['api_conf_objects'];
+$set_spaces = Yii::app()->params['api_conf_spaces'];
+unset(Yii::app()->params['api_conf_objects']);

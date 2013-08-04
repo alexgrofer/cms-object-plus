@@ -1,8 +1,5 @@
 <?php
-
-$objects_user = array(
-	//codename class
-	//headers links example news
+$objects = array(
 	'news_example' => array(
 		'cols' => array('id'=>'id','name'=>'name'),
 		'cols_props' => array('text_news_example'=>'text_news_example','annotation_news_example'=>'annotation_news_example'), //колонки-свойства объектов
@@ -15,9 +12,7 @@ $objects_user = array(
 		'cols_props' => array('codename_news_section_example'=>'codename_news_section_example'),
 	),
 );
-/*
- * namemodel -название модели таблицы в которой лежат объекты
- * namelinksmodel - (модель для ссылок) если в классе будут предусмотренны ссылки на другие объекты,
- * если null ссылки для объектов этого табличного пространства не предусмотренны
- */
-$set_spaces['1'] = array('namemodel'=>'myObjHeaders','namelinksmodel'=>'linksObjectsAllMy');
+Yii::app()->params['api_conf_objects'] =  array_merge(Yii::app()->params['api_conf_objects'],$objects);
+
+//$set_spaces['30'] = array('namemodel'=>'exampleObjHeaders','namelinksmodel'=>'linksExampleObjHeaders');
+//Yii::app()->params['api_conf_spaces'] =  array_merge(Yii::app()->params['api_conf_spaces'],$set_spaces);

@@ -1,5 +1,5 @@
 <?php
-$models_user = array(
+$models = array(
 	//STORE
 	'depcat' => array(
 		'namemodel' => 'DepCatCategory',
@@ -16,3 +16,4 @@ $models_user = array(
 		'controller' => 'admin/dep_store/graphic_sale.php',
 	),
 );
+Yii::app()->params['api_conf_models'] =  array_merge(Yii::app()->params['api_conf_models'],$models);
