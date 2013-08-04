@@ -1,4 +1,5 @@
 <?php
+//sys
 $menu = array(
 	//alias | namemodel | unicueurl | id | parent | sort
 	array('users', 'user','/index.php?r=myobj/admin/objects/models/user',1,0,0), //'type'=>'model',
@@ -9,4 +10,9 @@ $menu = array(
 	//db damps
 	array('DB Damps', 'class--db_dump_sys','/index.php?r=myobj/admin/objects/class/db_dump_sys/&usercontroller=userdbdamp',3,0,0),
 );
-require(dirname(__FILE__).'/user/menu.php');
+
+
+Yii::app()->params['api_conf_menu'] = $menu;
+apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','menu_*',true);
+$menu = Yii::app()->params['api_conf_menu'];
+unset(Yii::app()->params['api_conf_menu']);
