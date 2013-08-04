@@ -3,9 +3,10 @@ $cs = Yii::app()->getClientScript();
 $cs->coreScriptPosition=CClientScript::POS_HEAD; //load into tag
 $assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.myobj.assets'));
 $cs->registerCoreScript('jquery');
+$cs->registerCoreScript('jquery.ui');
 
-//$cs->registerScriptFile($assetsFolder.'/js/admin.main.js',CClientScript::POS_END);
-//$cs->registerCssFile($assetsFolder.'/css/admin.main.css');
+$cs->registerScriptFile($assetsFolder.'/js/main.js',CClientScript::POS_END);
+$cs->registerCssFile($assetsFolder.'/css/main.css');
 $cs->registerScriptFile($assetsFolder.'/bootstrap/js/bootstrap.min.js');
 $cs->registerCssFile($assetsFolder.'/bootstrap/css/bootstrap.min.css');
 
