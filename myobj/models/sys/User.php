@@ -21,7 +21,7 @@ class User extends AbsModel
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>128),
 			array('email', 'email'),
-			array('login, email', 'unique', 'className'=>get_class($this),'caseSensitive' =>'false'),
+			array('login, email', 'unique',  'on'=>'insert', 'className'=>get_class($this),'caseSensitive' =>'false'),
 		);
 	}
 	protected function beforeSave() {
