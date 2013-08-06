@@ -65,3 +65,4 @@ apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','o
 $objects = Yii::app()->params['api_conf_objects'];
 $set_spaces = Yii::app()->params['api_conf_spaces'];
 unset(Yii::app()->params['api_conf_objects']);
+return array($objects,$set_spaces);

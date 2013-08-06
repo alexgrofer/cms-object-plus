@@ -40,10 +40,10 @@ class AdminController extends Controller {
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
 	public function getMenuhtml() {
-		return $this->renderPartial('/admin/myui');
+		return $this->renderPartial('/sys/myui');
 	}
 	public function getMenuhtmlSub() {
-		return $this->renderPartial('/admin/myui_sub');
+		return $this->renderPartial('/sys/myui_sub');
 	}
 	public function run($actionID) {
 		$this->apcms = UCms::getInstance($this);
@@ -57,7 +57,7 @@ class AdminController extends Controller {
 		}
 		if($noneadmin) {
 			$this->layout = '/layouts/admin/main';
-			$this->render('/admin/user/autorize');
+			$this->render('/sys/user/autorize');
 			Yii::app()->end();
 		}
 		//init urls
@@ -72,7 +72,7 @@ class AdminController extends Controller {
 		$this->dicturls['actionid'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+2)]:'';
 
 		//VARS
-		$view = ($this->dicturls['action']=='edit')?'/admin/obj':'/admin/list';
+		$view = ($this->dicturls['action']=='edit')?'/sys/obj':'/sys/list';
 		$modelAD = null;
 		$params_extra_action_job = array();
 		switch($this->dicturls['class']) { //switch url
@@ -435,7 +435,7 @@ class AdminController extends Controller {
 			}
 		}
 		if(isset($this->paramsrender['REND_acces_read']) && $this->paramsrender['REND_acces_read']===false) {
-			$view = '/admin/acces';
+			$view = '/sys/acces';
 		}
 		$this->paramsrender['REND_model'] = $modelAD;
 		$this->render($view, $this->paramsrender);

@@ -218,11 +218,14 @@ function GUID()
 
 	return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 }
-function importRecursName($alias,$mask='*',$forceInclude=false) {
+function importRecursName($alias,$mask=false,$forceInclude=false,$isreturn=false) {
 	$path=\Yii::getPathOfAlias($alias);
 	$path_find=$path.DIRECTORY_SEPARATOR.$mask;
-	foreach (glob($path_find) as $filename) {
-		$normal_name = substr($filename,strrpos($filename, '/'));
-		\Yii::import($alias.substr($normal_name,0,strrpos($normal_name,'.')),$forceInclude);
+	$func = function($normal_name) use($forceInclude) {\Yii::import($normal_name,$forceInclude);};
+	$array = ($mask)?glob($path_find):array($alias);
+	foreach ($array as $filename) {
+		$normal_name = substr($filename,0,strrpos($filename, '.'));
+		if($isreturn) return require($filename);
+		$func($normal_name);
 	}
 }

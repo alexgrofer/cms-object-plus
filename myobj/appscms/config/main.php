@@ -37,11 +37,11 @@ $tables_db_dump = array(
 	'setcms_uclasses_objproperties',
 );
 
-require(dirname(__FILE__).'/objects.php');
-require(dirname(__FILE__).'/models.php');
-require(dirname(__FILE__).'/UI.php');
-require(dirname(__FILE__).'/menu.php');
-require(dirname(__FILE__).'/none_del.php');
+list($objects,$set_spaces) = require(dirname(__FILE__).'/objects.php');
+$models = apicms\utils\importRecursName('application.modules.myobj.appscms.config','models.php',true,true);
+$ui = apicms\utils\importRecursName('application.modules.myobj.appscms.config','UI.php',true,true);
+$menu = apicms\utils\importRecursName('application.modules.myobj.appscms.config','menu.php',true,true);
+$none_del = apicms\utils\importRecursName('application.modules.myobj.appscms.config','none_del.php',true,true);
 
 $main = array(
 	'controlui' => array(
