@@ -1,7 +1,7 @@
 <?php
-if($this->dicturls['action']=='edittempl') $view = '/admin/nav/uihandle';
+if($this->dicturls['action']=='edittempl') $view = '/sys/nav/uihandle';
 elseif($this->dicturls['action']!='edit') {
-	$view = '/admin/nav/list';
+	$view = '/sys/nav/list';
 }
 $idindexpage = false;
 $idelemspush = array();
