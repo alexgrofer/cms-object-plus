@@ -13,6 +13,12 @@ class MyobjModule extends CWebModule
 			'myobj.models.sys.*',
 			'myobj.components.*',
 		));
+		yii::app()->setComponents(array(
+			'appcms'=>array(
+				'class' =>'application.modules.myobj.components.cms.AppCMS',
+				'testprop'=>'test'
+			)
+		));
 	}
 
 	public function beforeControllerAction($controller, $action)
