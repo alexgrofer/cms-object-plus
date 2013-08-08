@@ -7,8 +7,8 @@ class ObjController extends Controller {
 	public $dicturls = array();
 	public function run($actionID) {
 		$this->apcms = UCms::getInstance($this);
-		$this->dicturls['paramslist'] = array_slice((explode('/',$this->actionParams['r']) + array('','','','','','','')),2);
-		$this->dicturls['all'] = '/'.$this->actionParams['r'];
+		$this->dicturls['paramslist'] = array_slice((explode('/',Yii::app()->request->getParam('r')) + array('','','','','','','')),2);
+		$this->dicturls['all'] = '/'.Yii::app()->request->getParam('r');
 
 		Yii::app()->params['LANGi18n']=$this->apcms->config['language_def'];
 		$index = $this->apcms->config['objindexname'];
@@ -31,7 +31,8 @@ class ObjController extends Controller {
 			if(!($templateobj = $objnav->getobjlinks('templates_sys')->find())) {
 				throw new CException(Yii::t('cms','none object template'));
 			}
-			$this->apcms->setparams['OBJNAV'] = $objnav;
+			Yii::app()->params['OBJNAV'] = $objnav;
+			Yii::app()->params['OBJPARENT_CONTROLLER'] = $this;
 			$conf_site = array();
 			if($namecontroller=$objnav->getobjlinks('controllersnav_sys')->find()) {
 				require(dirname(__FILE__).'/cms/user/'.$namecontroller->vp1);

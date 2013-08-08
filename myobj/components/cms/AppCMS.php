@@ -15,13 +15,6 @@ class AppCMS extends CComponent {
 		//
 	}
 	//общие методы помошники для системы
-	public function getparams() {
-		if(!count($this->_paramsgetnav)) {
-			Yii::import('application.modules.myobj.appscms.api.utils',true);
-			$this->_paramsgetnav = apicms\utils\uiparamnav($this->setparams['OBJNAV']->content);
-		}
-		return $this->_paramsgetnav;
-	}
 	public function geturlpage($name='',$addelem='',$params=array()) {
 		$parse = array_slice(explode('/', $this->_controller->actionParams['r']),1);
 		//last search array_keys($parse,$name)
@@ -37,12 +30,12 @@ class AppCMS extends CComponent {
 		}
 		return false;
 	}
-
+	
 	private $_thisnavhandles = null;
 	public function handle($name, $id) {
 		if($this->_thisnavhandles==null) {
 			$this->_thisnavhandles = array();
-			$handles = $this->setparams['OBJNAV']->getobjlinks('handle_sys')->findAll();
+			$handles = Yii::app()->params['OBJNAV']->getobjlinks('handle_sys')->findAll();
 			$idsview = array();
 			foreach($handles as $handle) {
 				$idsview[] = $handle->vp1; //vp1 = idview , sort = handletmplid
@@ -63,7 +56,7 @@ class AppCMS extends CComponent {
 		if($patchview!='') {
 			Yii::beginProfile('Loade_handle_v:'.$patchview);
 
-			$render =  $this->_controller->renderPartial('/../views/cms/views/'.$patchview);
+			$render =  Yii::app()->params['OBJPARENT_CONTROLLER']->renderPartial('/../views/cms/views/'.$patchview);
 			Yii::endProfile('Loade_handle_v:'.$patchview);
 			return $render;
 

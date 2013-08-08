@@ -61,7 +61,7 @@ class AdminController extends Controller {
 			Yii::app()->end();
 		}
 		//init urls
-		$paramslisturl = explode('/',$this->actionParams['r']);
+		$paramslisturl = explode('/',Yii::app()->request->getParam('r'));
 		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
 		$this->dicturls['admin'] = $this->createUrl($paramslisturl[1].'/');
 		$this->dicturls['class'] = $paramslisturl[2];

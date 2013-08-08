@@ -1,34 +1,6 @@
 <?php
 namespace apicms\utils;
 
-function uiparamnav($cont,$name=false,$value=false) {
-	$cont = (count($cont))?explode('||||',$cont):array();
-	$newtest = ($name===false)?array():'';
-	$notline=false;
-	foreach($cont as $line) {
-		if(trim($line)=='') continue;
-		list($namep,$valuep) = explode('==>>',$line);
-		if(trim($namep)==$name) {
-			if($value===false) {
-				return $valuep;
-			}
-			$notline=true;
-			$valuep = $value;
-		}
-		if($value=='' && $notline==true) continue;
-		if($name===false) {
-			$newtest[$namep] = $valuep;
-		}
-		else {
-			$newtest .= $namep.'==>>'.$valuep.'||||';
-		}
-	}
-	if($notline==false && $name!==false) {
-		$newtest .= $name.'==>>'.$value.'||||';
-	}
-	return $newtest;
-}
-
 function URender($idtmplhandl,$listtshihandles) {
 	if(!array_key_exists($idtmplhandl, $listtshihandles)) {
 		return '';
