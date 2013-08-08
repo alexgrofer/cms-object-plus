@@ -1,6 +1,6 @@
 <?php
 //запрет на удаление определенных классов и объектов, свойств
-$none_del = array(
+$nonedel = array(
 	'classes' => array(
 		'groups_sys',
 		'templates_sys',
@@ -20,3 +20,10 @@ $none_del = array(
 	),
 	'prop' => array(),
 );
+
+Yii::app()->params['api_conf_nonedel'] = $nonedel;
+
+apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','nonedel_*',true);
+$nonedel = Yii::app()->params['api_conf_nonedel'];
+unset(Yii::app()->params['api_conf_nonedel']);
+return $nonedel;

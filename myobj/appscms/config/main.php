@@ -41,7 +41,7 @@ list($objects,$set_spaces) = require(dirname(__FILE__).'/objects.php');
 $models = apicms\utils\importRecursName('application.modules.myobj.appscms.config','models.php',true,true);
 $ui = apicms\utils\importRecursName('application.modules.myobj.appscms.config','UI.php',true,true);
 $menu = apicms\utils\importRecursName('application.modules.myobj.appscms.config','menu.php',true,true);
-$none_del = apicms\utils\importRecursName('application.modules.myobj.appscms.config','none_del.php',true,true);
+$none_del = apicms\utils\importRecursName('application.modules.myobj.appscms.config','nonedel.php',true,true);
 
 $main = array(
 	'controlui' => array(
@@ -82,8 +82,6 @@ $main = array(
 		'email'=>'text',
 		'bool'=>'checkbox',
 	),
-	'homeDirStoreFile' => 'media/upload/storefile',
-	'ClassesFilesStorageProc'=> $arrayClassesFilesStorageProc,
 	'rulesvalidatedef' => array( //Valid values include 'string', 'integer', 'float', 'array', 'date', 'time' and 'datetime'.
 		'str' => '
 type
@@ -105,6 +103,9 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'bdcms_pref' => 'setcms_',
 'objindexname' => 'index',
 );
-require(dirname(__FILE__).'/user/main.php');
-$main = array_merge($main,$main_user);
+Yii::app()->params['api_conf_main'] = $main;
+//возможно дополнение конфигурации $main дополнительными параметрами
+apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','main_*',true);
+$main = Yii::app()->params['api_conf_main'];
+unset(Yii::app()->params['api_conf_main']);
 return $main;
