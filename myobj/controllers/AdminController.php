@@ -46,7 +46,6 @@ class AdminController extends Controller {
 		return $this->renderPartial('/sys/myui_sub');
 	}
 	public function run($actionID) {
-		$this->apcms = UCms::getInstance($this);
 		//login
 		$noneadmin = true;
 		if(!Yii::app()->user->isGuest) {
@@ -81,7 +80,7 @@ class AdminController extends Controller {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
 					$this->setVarRender('REND_objclass',$actclass);
 						$this->param_contr['current_class_name'] = $actclass->codename;
-						$this->param_contr['current_class_conf_array'] = $this->apcms->config['spacescl'][$actclass->tablespace];
+						$this->param_contr['current_class_conf_array'] = Yii::app()->appcms->config['spacescl'][$actclass->tablespace];
 					if(!(int)$this->dicturls['paramslist'][1]) {
 						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->id));
 					}
@@ -89,16 +88,16 @@ class AdminController extends Controller {
 					//вытащить одним запросом вместе со свойствами
 					$modelAD->set_force_prop(true);
 
-					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
+					$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
 					$this->setVarRender('REND_confmodel',$settui);
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//если не равно пост и есть relationobjonly=название модели
 					//сделать для теста а потом уже тут полностью поправить
-					$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
+					$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
 					//alias model
 					if(is_string($params_modelget)) {
-						$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$params_modelget];
+						$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$params_modelget];
 
 					}
 					$this->setVarRender('REND_confmodel',$params_modelget);
@@ -108,7 +107,7 @@ class AdminController extends Controller {
 					//permission show classes
 					if(get_class($modelAD)=='uClasses') {
 						$show_none_permission_classes = array();
-						foreach($this->apcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'] as $key =>$class_conf) {
+						foreach(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'] as $key =>$class_conf) {
 							if(
 								isset($class_conf['groups_read']) &&
 								$class_conf['groups_read'] &&
@@ -119,19 +118,19 @@ class AdminController extends Controller {
 						}
 						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
 					}
-					$settui = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
+					$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
 						$actclass = $modelAD->findByPk($this->dicturls['paramslist'][2]);
 							$this->param_contr['current_class_name'] = $actclass->codename;
-							$this->param_contr['current_class_conf_array'] = $this->apcms->config['spacescl'][$actclass->tablespace];
+							$this->param_contr['current_class_conf_array'] = Yii::app()->appcms->config['spacescl'][$actclass->tablespace];
 						$objctsassociation = $actclass->association;
 						$modelAD->dbCriteria->addInCondition('id', apicms\utils\arrvaluesmodel($objctsassociation,'id'));
 					}
 				}
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
-					$settui = $this->apcms->config['controlui']['ui'][$this->dicturls['paramslist'][1]];
+					$settui = Yii::app()->appcms->config['controlui']['ui'][$this->dicturls['paramslist'][1]];
 				}
 
 				if(isset($settui)) {
@@ -221,7 +220,7 @@ class AdminController extends Controller {
 					case 'lenksobjedit':
 						$association_class = uClasses::getclass($this->dicturls['paramslist'][6]);
 							$this->param_contr['current_class_ass_name'] = $association_class->codename;
-							$this->param_contr['current_class_ass_conf_array'] = $this->apcms->config['spacescl'][$association_class->tablespace]['namemodel'];
+							$this->param_contr['current_class_ass_conf_array'] = Yii::app()->appcms->config['spacescl'][$association_class->tablespace]['namemodel'];
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1]);
 						if($getlinks) {
 							$this->paramsrender['REND_selectedarr'] = apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
@@ -234,11 +233,11 @@ class AdminController extends Controller {
 						$subnamemodel = $this->dicturls['paramslist'][7];
 						$namemodelself = $this->dicturls['paramslist'][1];
 						//selectedarr
-						$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$subnamemodel];
+						$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$subnamemodel];
 						//is alias
 						if(!is_array($params_modelget)) {
 							$namealias = $params_modelget;
-							$params_modelget = $this->apcms->config['controlui'][$this->dicturls['class']]['models'][$namealias];unset($namealias);
+							$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$namealias];unset($namealias);
 						}
 						$NAMEMODEL_get = $params_modelget['namemodel'];
 						$relation_model = $NAMEMODEL_get::model()->relations();
@@ -252,13 +251,13 @@ class AdminController extends Controller {
 							if($this->dicturls['paramslist'][1]=='classes') {
 							//classes filter is NameLinksModel equally
 							$ids_spaces_equal = array();
-							foreach($this->apcms->config['spacescl'] as $key => $value) {
-								if($value['namelinksmodel']==$this->apcms->config['spacescl'][$objrelated->tablespace]['namelinksmodel']) $ids_spaces_equal[] = $key;
+							foreach(Yii::app()->appcms->config['spacescl'] as $key => $value) {
+								if($value['namelinksmodel']==Yii::app()->appcms->config['spacescl'][$objrelated->tablespace]['namelinksmodel']) $ids_spaces_equal[] = $key;
 							}
 							$modelAD->dbCriteria->addInCondition('tablespace', $ids_spaces_equal);
 							}
 							$this->param_contr['current_class_name'] = $objrelated->codename;
-							$this->param_contr['current_class_conf_array'] = $this->apcms->config['spacescl'][$objrelated->tablespace];
+							$this->param_contr['current_class_conf_array'] = Yii::app()->appcms->config['spacescl'][$objrelated->tablespace];
 						}
 
 						if($this->dicturls['action'] == 'relationobjonly') {

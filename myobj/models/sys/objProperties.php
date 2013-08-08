@@ -42,7 +42,7 @@ class objProperties extends AbsModel
 	public function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			if(trim($this->setcsv)=='') {
-				$arrconfcms = UCms::getInstance()->config;
+				$arrconfcms = Yii::app()->appcms->config;
 				if(array_key_exists($arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield],$arrconfcms['rulesvalidatedef'])) {
 					$valdefsetcsv = $arrconfcms['rulesvalidatedef'][$arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield]];
 					$this->setcsv = $valdefsetcsv;
@@ -53,7 +53,7 @@ class objProperties extends AbsModel
 		else return parent::beforeSave();
 	}
 	public function getTYPES_MYFIELDSOptions() {
-		return UCms::getInstance()->config['TYPES_MYFIELDS_CHOICES'];
+		return Yii::app()->appcms->config['TYPES_MYFIELDS_CHOICES'];
 	}
 	public function attributeLabels() {
 		return array(
@@ -99,7 +99,7 @@ class objProperties extends AbsModel
 	}
 	public function beforeDelete() {
 		//запрет на удаление отдельных объектов системы
-		if(array_search($this->codename, UCms::getInstance()->config['controlui']['none_del']['prop'])!==false) return false;
+		if(array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['prop'])!==false) return false;
 
 		return parent::beforeDelete();
 	}

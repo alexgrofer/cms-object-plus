@@ -38,7 +38,7 @@ class uClasses extends AbsModel
 	//именно перед удалением beforeDelete - удалить объекты класса Перед его удалением, иначе невозможно будет узнать параметры класса при их удалении
 	public function beforeDelete() {
 		//запрет на удаление отдельных объектов системы
-		if(array_search($this->codename, UCms::getInstance()->config['controlui']['none_del']['classes'])!==false) return false;
+		if(array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes'])!==false) return false;
 
 		foreach($this->objects()->findAll() as $obj) {
 			$obj->delete();
@@ -51,7 +51,7 @@ class uClasses extends AbsModel
 	}
 	public function getTSPACESOptions(){
 		$oprion = array();
-		foreach(UCms::getInstance()->config['spacescl'] as $key => $value) {
+		foreach(Yii::app()->appcms->config['spacescl'] as $key => $value) {
 			$oprion[$key] = $value['namemodel'];
 		}
 		return $oprion;
@@ -91,7 +91,7 @@ class uClasses extends AbsModel
 	}
 	//comment doc
 	public function objects() { //namesvprop left join props lines
-		$NameClassHeader = UCms::getInstance()->config['spacescl'][$this->tablespace]['namemodel'];
+		$NameClassHeader = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
 		$modelheaders = new $NameClassHeader();
 		$modelheaders->dbCriteria->compare('uclass_id',$this->id);
 		$modelheaders->dbCriteria->select = array('t.*');

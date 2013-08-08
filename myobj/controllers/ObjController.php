@@ -6,14 +6,13 @@ class ObjController extends Controller {
 	public $layout=false;
 	public $dicturls = array();
 	public function run($actionID) {
-		$this->apcms = UCms::getInstance($this);
 		$this->dicturls['paramslist'] = array_slice((explode('/',Yii::app()->request->getParam('r')) + array('','','','','','','')),2);
 		$this->dicturls['all'] = '/'.Yii::app()->request->getParam('r');
 
-		Yii::app()->params['LANGi18n']=$this->apcms->config['language_def'];
-		$index = $this->apcms->config['objindexname'];
+		Yii::app()->params['LANGi18n']=Yii::app()->appcms->config['language_def'];
+		$index = Yii::app()->appcms->config['objindexname'];
 
-		if(in_array($this->dicturls['paramslist'][0], $this->apcms->config['languages'])) {
+		if(in_array($this->dicturls['paramslist'][0], Yii::app()->appcms->config['languages'])) {
 			Yii::app()->params['LANGi18n']=$this->dicturls['paramslist'][0];
 			if($this->dicturls['paramslist'][1]) $index = $this->dicturls['paramslist'][1];
 		}

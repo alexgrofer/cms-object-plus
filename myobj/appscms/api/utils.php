@@ -107,11 +107,11 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
 		case 'relationobj':
 			$typerelat = $paramslist[5];
 			$fk = $paramslist[4];
-			$params_modelget = \UCms::getInstance()->config['controlui']['objects']['models'][$paramslist[7]];
+			$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$paramslist[7]];
 			//is alias
 			if(!is_array($params_modelget)) {
 				$namealias = $params_modelget;
-				$params_modelget = \UCms::getInstance()->config['controlui']['objects']['models'][$namealias];unset($namealias);
+				$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$namealias];unset($namealias);
 			}
 			$NAMEMODEL_get = $params_modelget['namemodel'];
 			$obj = $NAMEMODEL_get::model()->findByPk($this_id);

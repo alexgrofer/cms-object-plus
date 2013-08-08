@@ -1,6 +1,6 @@
 <?php
 //Set Permission
-$config = UCms::getInstance()->config['controlui'];
+$config = Yii::app()->appcms->config['controlui'];
 $array_menu_conf = $config['menu'];
 
 foreach($array_menu_conf as $nameMenu => $arrConf) {

@@ -90,7 +90,7 @@ class FormModel extends CActiveRecordBehavior {
 
 		//start prop
 		if(method_exists(get_class($model),'get_properties')) {
-		$arrconfcms = UCms::getInstance()->config;
+		$arrconfcms = Yii::app()->appcms->config;
 		$currentproperties = $model->get_properties();
 		foreach($model->uclass->properties as $prop) {
 			$nameelem = $prop->codename.'prop_';

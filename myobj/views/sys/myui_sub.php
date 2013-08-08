@@ -1,5 +1,5 @@
 <?php
-$config = UCms::getInstance()->config['controlui'];
+$config = Yii::app()->appcms->config['controlui'];
 $array_menu_conf = $config['menu'];
 $currentidmenu = false;
 foreach($array_menu_conf as $key => $arrMenu) {

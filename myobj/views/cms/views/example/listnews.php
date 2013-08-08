@@ -1,4 +1,5 @@
 <?php
+echo Yii::app()->appcms->testprop;
 $this->pageTitle='list news';
 $this->breadcrumbs=array(
 	'list news',

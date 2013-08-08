@@ -6,7 +6,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return 'setcms_'.strtolower(get_class($this));
 	}
 	protected function getNameLinksModel() {
-		return UCms::getInstance()->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
+		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
 	}
 	protected $isitlines = true; // is true lines this object model
 	public $flagAutoAddedLinks = true; // creade links from create object
@@ -58,7 +58,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	private $_propertiesdict = array();
 	public function get_properties($force=false) {
 		if(!count($this->_propertiesdict) || $force==true) {
-			$arrconfcms = UCms::getInstance()->config;
+			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
 			foreach($this->lines_alias as $objline) {
@@ -78,7 +78,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		$classproperties = $this->uclass->properties;
 		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
 		$arraylinesvalue = array();
-		$arrconfcms = UCms::getInstance()->config;
+		$arrconfcms = Yii::app()->appcms->config;
 		foreach($this->lines_alias as $objline) {
 			$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
@@ -142,7 +142,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		//throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
 			//array('{class}'=>get_class($this), '{property}'=>$name)));
 		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');
-		$nameModelHeader = UCms::getInstance()->config['spacescl'][$objclass->tablespace]['namemodel'];
+		$nameModelHeader = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
 		$objmodel = new $nameModelHeader();
 		$objmodel->dbCriteria->addInCondition($objmodel->tableAlias.'.id', $idsheaders);
 		$objmodel->dbCriteria->compare($objmodel->tableAlias.'.uclass_id',$objclass->id);
@@ -174,8 +174,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
 	function beforeDelete() {
 		//запрет на удаление отдельных объектов системы
-		if(isset(UCms::getInstance()->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
-			foreach(UCms::getInstance()->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
+		if(isset(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
+			foreach(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
 				if($this->$key==$val) return false;
 			}
 		}

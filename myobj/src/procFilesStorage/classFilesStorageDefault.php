@@ -20,7 +20,7 @@ class classFilesStorageDefault
 		return substr(str_shuffle($varStr.$varStr),-22);
 	}
 	public static function deleteFiles($url_files) {
-		$dirhome = Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']).DIRECTORY_SEPARATOR;
+		$dirhome = Yii::getPathOfAlias('webroot.'.Yii::app()->appcms->config['homeDirStoreFile']).DIRECTORY_SEPARATOR;
 		$files = json_decode($url_files);
 		foreach($files as $urlelem) {
 			$FilesPath=$dirhome.$urlelem;
@@ -38,7 +38,7 @@ class classFilesStorageDefault
 		/* var @file CUploadedFile*/
 		$files = CUploadedFile::getInstancesByName('EmptyForm[file]'); //or not Multiple getInstanceByName
 
-		$dirhome = (static::URL_HOME)? static::URL_HOME : Yii::getPathOfAlias('webroot.'.UCms::getInstance()->config['homeDirStoreFile']);
+		$dirhome = (static::URL_HOME)? static::URL_HOME : Yii::getPathOfAlias('webroot.'.Yii::app()->appcms->config['homeDirStoreFile']);
 		$dirhome .= ((substr($dirhome,-1)==DIRECTORY_SEPARATOR)?'':DIRECTORY_SEPARATOR);
 		$model->user_folder = trim($model->user_folder);
 		$url_dir = '';

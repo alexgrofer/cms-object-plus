@@ -7,12 +7,18 @@ class AppCMS extends CComponent {
 	public function getTestprop() {
 		return $this->testprop;
 	}
+	private $config;
+	public function getConfig() {
+		return $this->config;
+	}
 	public function init() {
 		//при инициализации компонента в модуле
 		//исходя из настроек что то сделать проинсталлировать модули и т.д
 		//if(YII_DEBUG) {
 			//$name_config = '/config/main_debug.php';
 		//
+		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
+		$this->config = apicms\utils\importRecursName('application.modules.myobj.appscms.config',$name_file_config,true,true);
 	}
 	//общие методы помошники для системы
 	public function geturlpage($name='',$addelem='',$params=array()) {
@@ -30,7 +36,7 @@ class AppCMS extends CComponent {
 		}
 		return false;
 	}
-	
+
 	private $_thisnavhandles = null;
 	public function handle($name, $id) {
 		if($this->_thisnavhandles==null) {

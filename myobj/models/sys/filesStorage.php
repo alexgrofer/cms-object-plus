@@ -65,7 +65,7 @@ class filesStorage extends AbsModel
 		$arr_ElementsForm = array(
 			'classprocdownload'=>array(
 				'type'=>'dropdownlist',
-				'items'=>UCms::getInstance()->config['ClassesFilesStorageProc'],
+				'items'=>Yii::app()->appcms->config['ClassesFilesStorageProc'],
 			),
 			'file'=>array(
 				'type'=>'CMultiFileUpload', //or file

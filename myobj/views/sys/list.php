@@ -113,8 +113,8 @@ elseif($this->dicturls['class']=='objects') {
 <?php
 $selectorsids = array();
 $selectorsids_excluded = array();
-$COUNTVIEWELEMS = $this->apcms->config['countelements'];
-$COUNTVIEWPAGES = $this->apcms->config['countpage'];
+$COUNTVIEWELEMS = Yii::app()->appcms->config['countelements'];
+$COUNTVIEWPAGES = Yii::app()->appcms->config['countpage'];
 $idpage = 0;
 if(strpos(implode('',array_keys($_POST)),'goin_')!==false) {
 	foreach($_POST as $key => $value) {
@@ -271,12 +271,12 @@ if(isset($rel_arr_vis)) {
 			$nameparammodel = $this->dicturls['paramslist'][1];
 			if($this->dicturls['paramslist'][0]=='class') {
 				$objclass = uClasses::getclass($this->dicturls['paramslist'][1]);
-				$nameparammodel = $this->apcms->config['spacescl'][$objclass->tablespace]['namemodel'];
+				$nameparammodel = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
 			}
 			$typerelat = ($val[0]==$REND_model::MANY_MANY || $val[0]==$REND_model::HAS_MANY)?'add':'set';
 			$name_current_model = $namerelat;
 			$namemodel_alias = array_search($namerelat,$rel_arr_vis);
-			if(array_key_exists($namemodel_alias, $this->apcms->config['controlui'][$this->dicturls['class']]['models'])) {
+			if(array_key_exists($namemodel_alias, Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'])) {
 				$name_current_model = $namemodel_alias;
 			}
 			$print_link = ' | <a href="'.$urladmclass.'/objects/models/'.$name_current_model.'/action/%s/IDELEMENT/'.$typerelat.'/models/'.$nameparammodel.'">%s</a>';
