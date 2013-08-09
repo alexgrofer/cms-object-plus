@@ -95,10 +95,10 @@ abstract class AbsModel extends CActiveRecord
 	{
 		return array(
 			'UserRelated'=>array(
-				'class'=>'ext.yii-model-related.RelatedBehavior',
+				'class'=>'CmsRelatedBehavior',
 			),
 			'UserFormModel'=>array(
-				'class'=>'application.modules.myobj.extensions.behaviors.model.FormModel',
+				'class'=>'CmsFormModelBehavior',
 			),
 		);
 	}

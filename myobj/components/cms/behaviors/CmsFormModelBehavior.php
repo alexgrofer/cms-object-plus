@@ -16,7 +16,7 @@ class EmptyForm extends CFormModel {
 	}
 }
 
-class FormModel extends CActiveRecordBehavior {
+class CmsFormModelBehavior extends CActiveRecordBehavior {
 	private $revelem = array();
 	public function initform($POSTORGET, $params_f=array(), $arbitrary_elements=array()) {
 		$model = $this->getOwner();

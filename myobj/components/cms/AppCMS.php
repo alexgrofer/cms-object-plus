@@ -12,13 +12,10 @@ class AppCMS extends CComponent {
 		return $this->config;
 	}
 	public function init() {
-		//при инициализации компонента в модуле
-		//исходя из настроек что то сделать проинсталлировать модули и т.д
-		//if(YII_DEBUG) {
-			//$name_config = '/config/main_debug.php';
-		//
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
 		$this->config = apicms\utils\importRecursName('application.modules.myobj.appscms.config',$name_file_config,true,true);
+
+		Yii::import('application.modules.myobj.components.cms.behaviors.*');
 	}
 	//общие методы помошники для системы
 	public function geturlpage($name='',$addelem='',$params=array()) {
