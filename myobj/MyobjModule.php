@@ -10,7 +10,6 @@ class MyobjModule extends CWebModule
 		// import the module-level models and components
 		$this->setImport(array(
 			'myobj.models.*',
-			'myobj.models.sys.*',
 			'myobj.components.*',
 		));
 		yii::app()->setComponents(array(

@@ -12,10 +12,16 @@ class AppCMS extends CComponent {
 		return $this->config;
 	}
 	public function init() {
+		//import
+		Yii::import('application.modules.myobj.models.sys.*');
+		Yii::import('application.modules.myobj.components.cms.behaviors.*');
+		//set components
+		$components = apicms\utils\importRecursName('application.modules.myobj.appscms.config','components.php',true,true);
+		yii::app()->setComponents($components);
+
+		//buils main cms config
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
 		$this->config = apicms\utils\importRecursName('application.modules.myobj.appscms.config',$name_file_config,true,true);
-
-		Yii::import('application.modules.myobj.components.cms.behaviors.*');
 	}
 	//общие методы помошники для системы
 	public function geturlpage($name='',$addelem='',$params=array()) {
