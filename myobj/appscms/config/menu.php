@@ -1,14 +1,29 @@
 <?php
 //sys
 $menu = array(
-	//alias | namemodel | unicueurl | id | parent | sort
-	array('users', 'user','/index.php?r=myobj/admin/objects/models/user',1,0,0), //'type'=>'model',
-	array('groups', 'group','/index.php?r=myobj/admin/objects/models/group',2,1,0),
-	array('userpasport', 'userpasport','/index.php?r=myobj/admin/objects/models/userpasport',3,1,0),
-	//storege file
-	array('storage files', 'storagef','/index.php?r=myobj/admin/objects/models/storagef',3,0,0),
-	//db damps
-	array('DB Damps', 'class--db_dump_sys','/index.php?r=myobj/admin/objects/class/db_dump_sys/&usercontroller=userdbdamp',3,0,0),
+	'classes'=>array('label'=>'classes', 'url'=>array('admin/objects/models/classes')),
+	'properties'=>array('label'=>'properties', 'url'=>array('admin/objects/models/properties')),
+	'mvc'=>array(
+		'label'=>'mvc','items'=>array(
+			'templates'=>array('label'=>'templates','url'=>'admin/objects/class/templates_sys/'),
+			'views'=>array('label'=>'views','url'=>'admin/objects/class/views_sys/'),
+			'nav'=>array('label'=>'nav','url'=>'admin/objects/class/navigation_sys/&usercontroller=usernav'),
+			'controllers'=>array('label'=>'controllers','url'=>'admin/objects/class/controllersnav_sys/'),
+		),
+	),
+	'groups'=>array('label'=>'groups', 'url'=>'admin/objects/class/groups_sys/'),
+	'ui'=>array(
+		'label'=>'UI','items'=>array(
+			'user'=>array(
+					'label'=>'user','items'=>array(
+						'users'=>array('label'=>'users','url'=>'admin/objects/models/user'),
+						'group'=>array('label'=>'group','url'=>'admin/objects/models/group'),
+						'userpasport'=>array('label'=>'userpasport','url'=>'admin/objects/models/userpasport'),
+					),
+			),
+		),
+	),
+	'logout'=>array('label'=>'logout ('.Yii::app()->user->name.')', 'url'=>'admin/logout/'),
 );
 
 

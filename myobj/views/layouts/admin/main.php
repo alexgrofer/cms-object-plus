@@ -23,28 +23,13 @@ input, select {height: auto !important; }
 </style>
 <body>
 <div style="padding: 10px">
-<?php if(!Yii::app()->user->isGuest) {?>
-<div class="well">
-	<a href="<?php echo $urladm?>/objects/models/classes/">classes</a> |
-	<a href="<?php echo $urladm?>/objects/models/properties/">properties</a> |-----|
-<div class="btn-group">
-  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-	mvc
-	<span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu">
-	<li><a href="<?php echo $urladm?>/objects/class/templates_sys/">templates</a></li>
-	<li><a href="<?php echo $urladm?>/objects/class/views_sys/">views</a></li>
-	<li><a href="<?php echo $urladm?>/objects/class/navigation_sys/&usercontroller=usernav">nav</a></li>
-	<li><a href="<?php echo $urladm?>/objects/class/controllersnav_sys/">controllers</a></li>
-  </ul>
-</div>
-	<a href="<?php echo $urladm?>/objects/class/groups_sys/">groups</a> |-----|
-	<?php echo $this->getMenuhtml(); ?>
-	<a href="<?php echo $urladm?>/logout/">logout (<?php echo Yii::app()->user->name;?>)</a>
-</div>
-<?php echo $this->getMenuhtmlSub(); ?>
-<?php
+<?php if(!Yii::app()->user->isGuest) {
+
+$this->widget('zii.widgets.CMenu',array(
+	'items'=>yii::app()->appcms->config['controlui']['menu'],
+));
+
+
 $this->renderClip('header');
 }?>
 <?php echo $content; ?>
