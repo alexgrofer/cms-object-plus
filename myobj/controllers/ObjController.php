@@ -1,6 +1,5 @@
 <?php
-Yii::import('application.modules.myobj.appscms.UCms');
-Yii::import('application.modules.myobj.appscms.api.utils',true);
+Yii::app()->appcms->init();
 class ObjController extends Controller {
 	public $apcms;
 	public $layout=false;

@@ -11,10 +11,12 @@ class AppCMS extends CComponent {
 	public function getConfig() {
 		return $this->config;
 	}
-	public function init() {
+	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.create
 		//import
 		Yii::import('application.modules.myobj.models.sys.*');
 		Yii::import('application.modules.myobj.components.cms.behaviors.*');
+		//import include
+		Yii::import('application.modules.myobj.appscms.api.utils',true);
 		//set components
 		$components = apicms\utils\importRecursName('application.modules.myobj.appscms.config','components.php',true,true);
 		yii::app()->setComponents($components);

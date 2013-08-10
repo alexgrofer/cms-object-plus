@@ -1,7 +1,5 @@
 <?php
-Yii::import('application.modules.myobj.appscms.UCms');
-Yii::import('application.modules.myobj.appscms.api.utils',true);
-
+Yii::app()->appcms->init();
 class AdminController extends Controller {
 	public $layout='/layouts/admin/column1';
 	public $apcms;
