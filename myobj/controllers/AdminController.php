@@ -37,9 +37,6 @@ class AdminController extends Controller {
 	public function getUrlBeforeAction() {
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
-	public function getMenuhtml() {
-		return $this->renderPartial('/sys/myui');
-	}
 	public function getMenuhtmlSub() {
 		return $this->renderPartial('/sys/myui_sub');
 	}
