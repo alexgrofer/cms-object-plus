@@ -20,22 +20,32 @@ $urladm = Yii::app()->createUrl('myobj/admin');
 <style>
 form .row {padding:0;margin-left:0}
 input, select {height: auto !important; }
+.padding_10 {padding:10px}
 </style>
 <body>
-<div style="padding: 10px">
-<?php if(!Yii::app()->user->isGuest) {
+<div class="padding_10">
+<?php if(!Yii::app()->user->isGuest) { ?>
 
-$this->widget('zii.widgets.CMenu',array(
-	'items'=>yii::app()->appcms->config['controlui']['menu'],
-));
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<div class="nav-collapse collapse navbar-responsive-collapse">
+					<?php
+					$this->widget('zii.widgets.CMenu',array(
+						'id'=>'myMenu',
+						'htmlOptions'=>array('class'=>'nav'),
+						'items'=>yii::app()->appcms->config['controlui']['menu'],
+					));
+					?>
+				</div><!-- /.nav-collapse -->
+			</div>
+		</div><!-- /navbar-inner -->
+	</div><!-- /navbar -->
 
-
+<?php
 $this->renderClip('header');
 }?>
 <?php echo $content; ?>
 </div>
-<script>
-
-</script>
 </body>
 </html>
