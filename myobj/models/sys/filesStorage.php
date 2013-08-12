@@ -1,5 +1,5 @@
 <?php
-Yii::import('application.modules.myobj.src.procFilesStorage.*');
+Yii::app()->storeFiles->init();
 class filesStorage extends AbsModel
 {
 	public $namefile;

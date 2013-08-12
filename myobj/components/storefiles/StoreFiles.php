@@ -10,6 +10,7 @@ class StoreFiles extends CComponent {
 	public function init() {
 		//import
 		Yii::import('application.modules.myobj.components.storefiles.classes.*');
+		Yii::import('application.modules.myobj.components.storefiles.classes.procFilesStorage.*');
 	}
 	/**
 	 * Получает массив объектов @link filesStorage с массивом файлов класса CFileStor

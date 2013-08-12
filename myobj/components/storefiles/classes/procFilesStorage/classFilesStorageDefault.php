@@ -1,12 +1,12 @@
 <?php
 class classFilesStorageDefault
 {
-	CONST URL_HOME = false; // config['homeDirStoreFile']
+	CONST URL_HOME = null;
 	public static function setRules(filesStorage $model) {
-		$files = CUploadedFile::getInstancesByName('EmptyForm[file]');
+		/* $files = CUploadedFile::getInstancesByName('EmptyForm[file]');
 		if(count($files)==0) {
 			$model->_rules[] = array('url','required');
-		}
+		} */
 		foreach($model->_rules as $key => $elem) {
 			if($elem[0]=='file') {
 				$model->_rules[$key] = array('file', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true); //'types' => 'zip, rar',

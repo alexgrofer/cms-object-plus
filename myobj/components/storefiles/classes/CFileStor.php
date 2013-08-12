@@ -1,4 +1,5 @@
 <?php
+//http://www.yiiframework.com/extension/image/
 class CFileStor {
 	/**
 	 * @var StoreFiles родительский объект который редактируем
@@ -35,15 +36,24 @@ class CFileStor {
 	public function getName() {
 
 	}
+	/**
+	 * Переименовывает файл
+	 */
 	public function setName() {
 
 	}
 	public function getUrl() {
 
 	}
+	/**
+	 * Пересохраняет данные $_objStore
+	 */
 	public function save() {
 
 	}
+	/**
+	 * Удалить из объекта $_objStore и сам файл
+	 */
 	public function del() {
 
 	}
