@@ -9,33 +9,29 @@ class StoreFiles extends CComponent {
 	}
 	public function init() {
 		//import
-		Yii::import('application.modules.myobj.components.storefiles.classes.*');
-		Yii::import('application.modules.myobj.components.storefiles.classes.procFilesStorage.*');
+		Yii::import('application.modules.myobj.models.modul_storefile.*');
+		Yii::import('application.modules.myobj.components.storefiles.procFilesStorage.*');
 	}
+
 	/**
-	 * Получает массив объектов @link filesStorage с массивом файлов класса CFileStor
-	 * @param array $ids массив ключей для поиска объектов
+	 * Получает объект типа AbsBaseStoreFiles
+	 * @param string $plugin названия плагина
 	 * @param string $model название модели в которой хранятся файлы
-	 * @return array массив объектов CFilesStor
+	 * @return Abs типа
 	 */
-	public function getobj($ids,$model) {
-
+	public function instanceObj($plugin) {
+		$modelName = $plugin::namemodel();
+		$storefileobj = $modelName::model() - //а у него уже должны быть все необходимые методы для редактирования удаления и создания нового
+		$storefileobj->plugin = $plugin;//и дополняет необходимым и рапаметрами из плагина
 	}
-	/**
-	 * Добавляет и сохраняет новый файл к объекту
-	 * @param array $ids массив ключей для поиска объектов
-	 * @param string $name название файла
-	 * @param string $title описание файла
-	 * @return CFilesStor объект файла
-	 */
-	public function addobj($ids,$name,$title) {
 
-	}
 	/**
-	 * Удаляет объекты @link CFilesStor, включая сами файлы
-	 * @param array $ids массив ключей для поиска объектов
+	 * Получает массив объектов @link AbsBaseStoreFiles модели плагина $plugin
+	 * @param array или массив ключей для поиска или
+	 * @param string $plugin название класса плагина
+	 * @return массив найденных файлов
 	 */
-	public function delobj($ids,$model) {
-
+	public function getObj($keys,$plugin) {
+		AbsBaseStoreFiles
 	}
 }
