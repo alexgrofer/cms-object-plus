@@ -1,9 +1,9 @@
 <?php
 $main_user = array(
-	'homeDirStoreFile' => 'media/upload/storefile',
+	'homeDirStoreFile' => 'media/upload/storefile', //папка для загрузок исполюзуется в дефолтовом плагине, или может использоваться в любом другом
 	'ClassesFilesStorageProc' => array(
-		'classFilesStorageDefault'=>'Default',
-		'classFilesStorageTest' => 'Test',
+		'PluginFilesStorageDefault'=>'Default',
+		'PluginFilesStorageExtra' => 'Extra', //дополнительный плагин, например для загрузки изображений
 	),
 );
 

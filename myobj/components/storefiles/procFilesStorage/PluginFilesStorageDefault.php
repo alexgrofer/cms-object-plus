@@ -1,7 +1,22 @@
 <?php
-class classFilesStorageDefault
+/*
+ * планиг отвечает за всю работу c данными по сути любой сущьности, т.е вся логика создание файла на сервере или вне его
+ * в интерфейсе должны быть заданы методы которые могут быть вызванны из компонента CStoreFiles
+ */
+
+/*
+ * погружаем класс для работы со списками файлов - свойственнен только для этого плагина
+ */
+Yii::import('application.modules.myobj.models.modul_storefile.filesStorage');
+class PluginFilesStorageDefault implements InterfaceFilesStorage
 {
 	CONST URL_HOME = null;
+	//Обязательные методы
+	public static function newobj($params) {}
+	public static function get($params) {}
+	public static function editobj($params) {}
+	public static function delobj($params) {}
+	//Остальные пользовательские методы
 	public static function setRules(filesStorage $model) {
 		/* $files = CUploadedFile::getInstancesByName('EmptyForm[file]');
 		if(count($files)==0) {
