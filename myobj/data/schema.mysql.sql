@@ -248,28 +248,34 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (4,9,'default','default controller',null,'default','',null),
 -- example
 -- navigation - Class (navigation_sys) id = 5
-(14,5,'index','',0,'0','index',1),
 (15,5,'example news list','',0,'0','news_list_example',1),
 (16,5,'example news object','',0,'0','news_object_example',1),
+(17,5,'example news edit object','',0,'0','news_edit_object_example',1),
 -- templates - Class (templates_sys) id = 3
-(17,3,'example index','',0,'example/index','',0),
+(18,3,'example index','',0,'example/index','',0),
 -- views - Class (views_sys) id = 2
-(18,2,'example list news','',0,'example/listnews','',0),
-(19,2,'example object news','',0,'example/getobjnews','',0);
+(19,2,'example list news','',0,'example/listnews','',0),
+(20,2,'example object news','',0,'example/getobjnews','',0),
+(21,2,'example edit object news','',0,'example/editobjnews','',0);
 -- Object Links
 INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 -- example setcms_systemobjheaders links
--- добавить все из setcms_systemobjheaders id, class по порядку
 (1,1),
 (2,1),
 (3,1),
+-- Controller def
 (4,9),
-(14,5),
+-- example
+-- navigation - Class (navigation_sys) id = 5
 (15,5),
 (16,5),
-(17,3),
-(18,2),
-(19,5);
+(17,5),
+-- templates - Class (templates_sys) id = 3
+(18,3),
+-- views - Class (views_sys) id = 2
+(19,2),
+(20,2),
+(21,2);
 
 -- User
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','ivanov');

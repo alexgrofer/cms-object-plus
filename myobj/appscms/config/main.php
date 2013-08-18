@@ -101,7 +101,7 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'countelements' => 10,
 'countpage' => 10,
 'bdcms_pref' => 'setcms_',
-'objindexname' => 'index',
+'objindexname' => 'news_list_example', //example news list
 );
 Yii::app()->params['api_conf_main'] = $main;
 //возможно дополнение конфигурации $main дополнительными параметрами
