@@ -90,7 +90,7 @@ $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
 $contenttmpl=file_get_contents(dirname(__FILE__).'/../../cms/templates/'.$templates[0]->vp1.'_content'.'.php');
 
 $arraypregtmp = array();
-preg_match_all("~apcms->handle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);
+preg_match_all("~appcms->handle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);
 if(count($arraypregtmp)) {
 echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
 foreach($arraypregtmp[1] as $key => $namehand) {
