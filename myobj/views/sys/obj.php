@@ -33,7 +33,7 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 		$contenttext=file_get_contents($namefile);
 	}
 	$snamefile = 'edit_file_template';
-	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'type'=>'textarea');
+	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'elem'=>array('type'=>'textarea'));
 }
 
 

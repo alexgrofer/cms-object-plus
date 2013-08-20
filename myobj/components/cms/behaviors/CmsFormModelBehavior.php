@@ -123,8 +123,14 @@ class CmsFormModelBehavior extends CActiveRecordBehavior {
 		//добавить возможность добавлять массив rule - сделать
 		foreach($arbitrary_elements as $AElement) {
 			$dinamicForm->$AElement['name'] = isset($AElement['def_value'])?$AElement['def_value']:'';
-			$confform['elements'][$AElement['name']] = array('type' => isset($AElement['type'])?$AElement['type']:'text');
-			$dinamicForm->rules[] = array($AElement['name'], 'safe');
+			if(isset($AElement['elem'])) {
+				$confform['elements'][$AElement['name']] = $AElement['elem'];
+			}
+			else {
+				throw new CException(Yii::t('cms','None elem html form "{nameelem}" ',
+					array('{nameelem}'=>$AElement['name'])));
+			}
+			//$dinamicForm->rules[] = array($AElement['name'], 'safe');
 			//array rules
 			//set lamda function
 		}
