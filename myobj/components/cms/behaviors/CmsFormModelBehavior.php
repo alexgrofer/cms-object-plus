@@ -18,7 +18,7 @@ class EmptyForm extends CFormModel {
 
 class CmsFormModelBehavior extends CActiveRecordBehavior {
 	private $revelem = array();
-	public function initform($POSTORGET, $params_f=array(), $arbitrary_elements=array()) {
+	public function initform($POSTORGET, $params_f=array(), $arbitrary_elements=array(), $addRules=array()) {
 		$model = $this->getOwner();
 		$confform = array('elements' => array());
 		$dinamicForm = new EmptyForm();
@@ -34,32 +34,6 @@ class CmsFormModelBehavior extends CActiveRecordBehavior {
 			$confform['elements'] = array_fill_keys(array_keys($model->attributes), array('type'=>'text'));
 		}
 
-		$oldelements = $confform['elements'];
-		if(count($params_f)) {
-			$arrnewelem = array();
-			foreach($confform['elements'] as $key => $elemf) {
-				if(in_array($key, $params_f)) {
-					$arrnewelem[$key] = $confform['elements'][$key];
-				}
-			}
-
-			if(count($arrnewelem)) {
-				$confform['elements'] = $arrnewelem;
-			}
-
-			foreach($params_f as $newparam) {
-				if(is_array($newparam)) {
-					$confform['elements'][$newparam[1]] = $oldelements[$newparam[0]];
-					unset($confform['elements'][$newparam[0]]);
-					foreach($rulesall as $key => $rule) {
-						if(strpos($rule[0],$newparam[0])!==false) {
-							$this->revelem[$newparam[1]] = $newparam[0];
-							$rulesall[$key][0] = preg_replace('/(^|\,|\s)'.$newparam[0].'/','$1'.$newparam[1],$rule[0]);
-						}
-					}
-				}
-			}
-		}
 		$confform['buttons'] = array('send'=>array('type'=>'submit',));
 
 		foreach($confform['elements'] as $key => $value) {
@@ -86,7 +60,13 @@ class CmsFormModelBehavior extends CActiveRecordBehavior {
 			}
 		}
 		$dinamicForm->rules = $rulesall;
+		if(count($addRules)) {
+			$dinamicForm->rules = array_merge($dinamicForm->rules,$addRules);
+		}
 		$dinamicForm->attributeLabels = $model->attributeLabels();
+		if($params_f) {
+			$dinamicForm->attributeLabels = array_merge($dinamicForm->attributeLabels,$params_f);
+		}
 
 		//start prop
 		if(method_exists(get_class($model),'get_properties')) {
