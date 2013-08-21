@@ -217,7 +217,7 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(6,'param_sys','param_sys','',2),
 	(9,'controllersnav_sys','controllersnav_sys','',2),
 	(10,'db_dump_sys','db_dump_sys','',2),
-	-- example
+	-- modul_example_news
 	(17,'news example','news_example','',1),
 	(18,'news section example','news_section_example','',1);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
@@ -227,15 +227,15 @@ INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) 
 	(5,4), -- [navigation_sys]<>-----handle_sys
 	(5,6), -- [navigation_sys]<>-----param_sys
 	(5,9), -- [navigation_sys]<>-----controllersnav_sys
-	-- example classes_association
+	-- modul_example_news classes_association
 	(17,18); -- [news_example]<>-----news_section_example
 INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
-	-- example
+	-- modul_example_news
 	(1,'Annotation news example','annotation_news_example','',3,'','',0,'',''),
 	(2,'Text news example','text_news_example','',3,'','',0,'',''),
 	(3,'images list obj news example','images_list_obj_news_example','',3,'','',0,'','');
 INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
-	-- example
+	-- modul_example_news
 	(17,1), -- news_example -> annotation_news_example
 	(17,2), -- news_example -> text_news_example
 	(17,3); -- news_example -> text_news_example
@@ -246,13 +246,13 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
 -- Controller def
 (4,9,'default','default controller',null,'default','',null),
--- example
+-- modul_example_news
 -- navigation - Class (navigation_sys) id = 5
 (15,5,'example news list','',0,'0','news_list_example',1),
 (16,5,'example news object','',0,'0','news_object_example',1),
 (17,5,'example news edit object','',0,'0','news_edit_object_example',1),
 -- templates - Class (templates_sys) id = 3
-(18,3,'example index','',0,'modul_news_example/index','',0),
+(18,3,'example news index','',0,'modul_news_example/index','',0),
 -- views - Class (views_sys) id = 2
 (19,2,'example list news','',0,'modul_news_example/listnews','',0),
 (20,2,'example object news','',0,'modul_news_example/getobjnews','',0),
@@ -265,6 +265,7 @@ INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 (3,1),
 -- Controller def
 (4,9),
+-- example news
 -- navigation - Class (navigation_sys) id = 5
 (15,5),
 (16,5),
