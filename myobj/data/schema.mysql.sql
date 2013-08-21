@@ -233,12 +233,12 @@ INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfiel
 	-- example
 	(1,'Annotation news example','annotation_news_example','',3,'','',0,'',''),
 	(2,'Text news example','text_news_example','',3,'','',0,'',''),
-	(3,'Codename news section example','codename_news_section_example','',1,'','',0,'','type\ntype=>string');
+	(3,'images list obj news example','images_list_obj_news_example','',3,'','',0,'','');
 INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 	-- example
 	(17,1), -- news_example -> annotation_news_example
 	(17,2), -- news_example -> text_news_example
-	(18,3); -- news_example -> codename_news_section_example
+	(17,3); -- news_example -> text_news_example
 INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
 -- Class (setcms_uclasses) id = 1
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
@@ -252,11 +252,11 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (16,5,'example news object','',0,'0','news_object_example',1),
 (17,5,'example news edit object','',0,'0','news_edit_object_example',1),
 -- templates - Class (templates_sys) id = 3
-(18,3,'example index','',0,'example/index','',0),
+(18,3,'example index','',0,'modul_news_example/index','',0),
 -- views - Class (views_sys) id = 2
-(19,2,'example list news','',0,'example/listnews','',0),
-(20,2,'example object news','',0,'example/getobjnews','',0),
-(21,2,'example edit object news','',0,'example/editobjnews','',0);
+(19,2,'example list news','',0,'modul_news_example/listnews','',0),
+(20,2,'example object news','',0,'modul_news_example/getobjnews','',0),
+(21,2,'example edit object news','',0,'modul_news_example/editobjnews','',0);
 -- Object Links
 INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 -- example setcms_systemobjheaders links
@@ -265,7 +265,6 @@ INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 (3,1),
 -- Controller def
 (4,9),
--- example
 -- navigation - Class (navigation_sys) id = 5
 (15,5),
 (16,5),
