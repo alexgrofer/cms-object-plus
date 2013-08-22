@@ -1,5 +1,5 @@
 <?php
-class СStoreFiles extends CComponent {
+class CStoreFiles extends CComponent {
 	private $test8;
 	public function  setTest8($val) {
 		$this->test8 = $val;
@@ -10,6 +10,7 @@ class СStoreFiles extends CComponent {
 	public function init() {
 		//import
 		Yii::import('application.modules.myobj.components.storefiles.procFilesStorage.*');
+		Yii::import('application.modules.myobj.models.modul_storefile.*');
 	}
 
 	public function newobj($nameClassPlugin,$params) {

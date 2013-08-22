@@ -1,5 +1,4 @@
 <?php
-Yii::app()->storeFiles->init();
 class filesStorage extends AbsModel
 {
 	public $namefile;

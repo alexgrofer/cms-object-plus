@@ -1,5 +1,4 @@
 <?php
-Yii::app()->appcms->init();
 class AdminController extends Controller {
 	public $layout='/layouts/admin/column1';
 	public $apcms;

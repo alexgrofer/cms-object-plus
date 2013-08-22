@@ -1,5 +1,4 @@
 <?php
-Yii::app()->appcms->init();
 class ObjController extends Controller {
 	public $apcms;
 	public $layout=false;

@@ -24,6 +24,10 @@ class AppCMS extends CComponent {
 		//buils main cms config
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
 		$this->config = apicms\utils\importRecursName('application.modules.myobj.appscms.config',$name_file_config,true,true);
+
+		//init preload components
+		$preload_components = apicms\utils\importRecursName('application.modules.myobj.appscms.config','preload.php',true,true);
+		foreach($preload_components as $nameComponent) yii::app()->$nameComponent->init();
 	}
 	//общие методы помошники для системы
 	public function geturlpage($name='',$addelem='',$params=array()) {
