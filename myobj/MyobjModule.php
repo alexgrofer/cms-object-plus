@@ -18,6 +18,7 @@ class MyobjModule extends CWebModule
 				'testprop'=>'test'
 			)
 		));
+		yii::app()->appcms->init();
 	}
 
 	public function beforeControllerAction($controller, $action)
