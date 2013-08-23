@@ -70,7 +70,6 @@ CREATE TABLE `setcms_systemobjlines` (
   `upintegerfield` int(11) DEFAULT NULL,
   `upfloatfield` double DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `property_id` (`property_id`),
   CONSTRAINT `setcms_systemobjlines_ibfk_property_id` FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- systemobjheaders (Django models.ManyToManyField) systemobjlines (relation)
@@ -99,7 +98,6 @@ CREATE TABLE `setcms_myobjheaders` (
   -- (Django) lines = models.ManyToManyField(myObjLines,blank=True)
   -- end
   PRIMARY KEY (`id`),
-  KEY `uclass_id` (`uclass_id`),
   CONSTRAINT `setcms_myobjheaders_ibfk_uclass_id` FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- setcms_myobj_lines
@@ -112,7 +110,6 @@ CREATE TABLE `setcms_myobjlines` (
   `upintegerfield` int(11) DEFAULT NULL,
   `upfloatfield` double DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `property_id` (`property_id`),
   CONSTRAINT `setcms_myobjlines_ibfk_property_id` FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- myobjheaders (Django models.ManyToManyField) myobjlines (relation)
