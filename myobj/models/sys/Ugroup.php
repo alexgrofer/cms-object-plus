@@ -8,6 +8,12 @@ class Ugroup extends AbsModel
 	{
 		return 'setcms_'.strtolower(get_class($this));
 	}
+	public function relations()
+	{
+		return array(
+			'users'=>array(self::MANY_MANY, 'User', 'setcms_user_ugroup(user_id,group_id)'),
+		);
+	}
 	public function rules() {
 		return array(
 			array('name', 'required'),

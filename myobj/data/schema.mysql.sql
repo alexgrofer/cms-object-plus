@@ -178,7 +178,6 @@ CREATE TABLE `setcms_user` (
   `login` VARCHAR(255) NOT NULL,
   `password` VARCHAR(32) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `userpasport_id` int(11) NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -200,6 +199,7 @@ CREATE TABLE `setcms_userpasport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
+  `user_id` int(11) NULL,
   PRIMARY KEY (`id`)
 );
 -- -------------------------------------------------- end User
@@ -275,8 +275,8 @@ INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 (21,2);
 
 -- User
-INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','ivanov');
-INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`,`userpasport_id`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com',1);
+INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
+INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','ivanov',1);
 -- Groups
 INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1BF-461A-B1FE-3182B24D2812');
 -- (One to M) User -> Groups

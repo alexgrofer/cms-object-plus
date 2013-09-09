@@ -86,15 +86,6 @@ function arrvaluesmodel($listobjects, $multinames) {
 }
 function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array(),$paramslist,$params_extra) {
 	switch($nameaction) {
-		case 'addclass':
-			$thisclass = \uClasses::getclass($this_id);
-			if(count($listset)) {
-				$thisclass->UserRelated->links_edit('add','properties',$listset);
-			}
-			if(count($listsetexcluded)) {
-				$thisclass->UserRelated->links_edit('remove','properties',$listsetexcluded);
-			}
-			break;
 		case 'lenksobjedit':
 			$ObjHeader = \uClasses::getclass($paramslist[6])->objects()->findByPk($this_id);
 			if(count($listset)) {
@@ -105,24 +96,19 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
 			}
 			break;
 		case 'relationobj':
-			$typerelat = $paramslist[5];
-			$fk = $paramslist[4];
-			$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$paramslist[7]];
-			//is alias
-			if(!is_array($params_modelget)) {
-				$namealias = $params_modelget;
-				$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$namealias];unset($namealias);
-			}
-			$NAMEMODEL_get = $params_modelget['namemodel'];
-			$obj = $NAMEMODEL_get::model()->findByPk($this_id);
-			if(count($listset)) {
-				if($typerelat=='set') $listset = $listset[0];
-				$obj->UserRelated->links_edit($typerelat,$params_extra['name_model'],$listset,$fk);
-			}
+		case 'relationobjonly';
+			$params_modelget = \apicms\utils\normalAliasModel($paramslist[1]);
+
+			$NAMEMODEL_get = \apicms\utils\normalAliasModel($params_modelget['relation'][$paramslist[7]][0]);
+
+			$obj = $NAMEMODEL_get['namemodel']::model()->findByPk($this_id);
+
 			if(count($listsetexcluded)) {
-				if($typerelat!='set') {
-					$obj->UserRelated->links_edit('remove',$params_extra['name_model'],$listsetexcluded,$fk);
-				}
+				$obj->UserRelated->links_edit('remove',$params_modelget['relation'][$paramslist[7]][1],$listsetexcluded);
+			}
+
+			if(count($listset)) {
+				$obj->UserRelated->links_edit('add',$params_modelget['relation'][$paramslist[7]][1],$listset);
 			}
 	}
 }
@@ -228,4 +214,9 @@ function importRecursName($alias,$mask=false,$forceInclude=false,$isreturn=false
 		if($isreturn) return require($filename);
 		$func($normal_name);
 	}
+}
+
+function normalAliasModel($namemodel) {
+	$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$namemodel];
+	return $params_modelget;
 }

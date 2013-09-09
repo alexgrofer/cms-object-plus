@@ -8,6 +8,7 @@ abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(mode
 	public $updatefield; //models.DateField(blank=True,null=True)
 	public $upintegerfield; //models.IntegerField(blank=True,null=True)
 	public $upfloatfield; //models.FloatField(blank=True,null=True)
+	public $property_id;
 
 	public function relations()
 	{

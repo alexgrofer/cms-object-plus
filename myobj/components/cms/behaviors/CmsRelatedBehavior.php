@@ -1,78 +1,71 @@
 <?php
 class CmsRelatedBehavior extends CActiveRecordBehavior
 {
-	public function links_edit($type, $name_releated_param, $arrobjects=Null, $fk=Null) { //$arrobjects = array(objmodel,objmodel) OR array(1,2,3,6,56,...) OR (int)2433
-		$model = $this->getOwner();
-		//print_r($model);exit;
-		$objRelation = $model->getMetaData()->relations[$name_releated_param];
-		$relation = $model->relations();
-		$TYPE_relation = $relation[$name_releated_param][0];
-		$className = $objRelation->className;
-		if($TYPE_relation == CActiveRecord::MANY_MANY) {
-			unset($relation);
-			$arrDataM = preg_split('/[,()]/', $objRelation->foreignKey);
-			$namemmtable = trim($arrDataM[0]);
-			$mmname_this_key = trim($arrDataM[1]);
-			$mmname_to_key = trim($arrDataM[2]);
+	public function links_edit($type, $namerelation, array $idsObj=array(), $addparam=null) {
+		$thisObj = $this->getOwner();
+		$thisTable = $thisObj->tableName();
+		$thisObjNamePrimaryKey = $thisObj->primaryKey();
+		$thisObjPrimaryKeyVal = $thisObj->primaryKey;
+		$thisRelations = $thisObj->relations();
+		$thisRelation = $thisRelations[$namerelation];
+		$typeThisRelation = $thisRelation[0];
+		$nameModelThisRelation = $thisRelation[1];
+		$nameLinkPrimaryKeyThisRelation = $thisRelation[2];
+		$objModelThisRelation = $nameModelThisRelation::model();
+		$nameTableThisRelation = $objModelThisRelation->tableName();
+		$namePrimaryKeyThisRelation = $objModelThisRelation->primaryKey();
 
-			$PKslink_past = array();
-			if(is_array($arrobjects) && count($arrobjects)) {
-				foreach($arrobjects as $objrel) {
-					$PKslink_past[] = (is_object($objrel))?$objrel->primaryKey:$objrel;
-				}
-			}
-			else {
-				$PKslink_past[] = (is_object($arrobjects))?$arrobjects->primaryKey:$arrobjects;
-			}
-		}
-		elseif($TYPE_relation == CActiveRecord::HAS_MANY) {
-			$namemmtable = $className::model()->tableSchema->name;
+		if($typeThisRelation==CActiveRecord::MANY_MANY) {
+			$arrDataM = preg_split('/[,()]/', $thisRelation[2]);
+			$mtmNameTable = trim($arrDataM[0]);
+			$mtmFromPrimaryKey = trim($arrDataM[1]);
+			$mtmToPrimaryKey = trim($arrDataM[2]);
 		}
 
 		$command = Yii::app()->db->createCommand();
 		$transaction=Yii::app()->db->beginTransaction();
 		try {
 		switch($type) {
-			case 'set':
-				$valuepk = ($arrobjects==Null) ? Null : ((is_object($arrobjects))?$arrobjects->primaryKey:$arrobjects);
-				$command->update($model->tableName(), array($objRelation->foreignKey => $valuepk,),
-					$model->tableSchema->primaryKey.'=:'.$model->tableSchema->primaryKey, array(':'.$model->tableSchema->primaryKey=>$model->primaryKey));
-				break;
-			//is CActiveRecord::MANY_MANY OR HAS_MANY
 			case 'add':
-
-					if($TYPE_relation == CActiveRecord::MANY_MANY) {
-						foreach($PKslink_past as $PKobj) {
-							$command->insert($namemmtable, array_merge(array($mmname_this_key=>$model->primaryKey,$mmname_to_key=>$PKobj),((is_array($fk))?$fk:array())));
-						}
+				if($typeThisRelation == CActiveRecord::MANY_MANY) {
+					foreach($idsObj as $id) {
+						$command->insert($mtmNameTable, array_merge(array($mtmFromPrimaryKey=>$thisObjPrimaryKeyVal, $mtmToPrimaryKey=>$id),((is_array($addparam))?$addparam:array())));
 					}
-					elseif($TYPE_relation == CActiveRecord::HAS_MANY) {
-						$command->update($namemmtable, array($objRelation->foreignKey => $fk), array('in', $className::model()->tableSchema->primaryKey, $arrobjects));
-					}
-
-				break;
-			case 'edit':
-				foreach($PKslink_past as $PKobj) {
-					$command->update($namemmtable, $fk, array('and', $mmname_this_key.'='.$model->primaryKey, $mmname_to_key.'='.$PKobj));
 				}
-				break;
+				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
+					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => $thisObjPrimaryKeyVal), array('in', $namePrimaryKeyThisRelation, $idsObj));
+				}
+				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => $idsObj[0]), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+				}
+			break;
+			case 'edit':
+				foreach($idsObj as $id) {
+					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$id));
+				}
+			break;
 			case 'select':
-				if(!$model->isNewRecord) {
-					return $command->select($fk)->from($namemmtable)->where(array('and', $mmname_this_key.'='.$model->primaryKey, $mmname_to_key.'='.$arrobjects))->queryRow();
+				if(!$thisObj->isNewRecord) {
+					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$idsObj))->queryRow();
 				}
 				return false;
-				break;
+			break;
 			case 'remove':
-				if($TYPE_relation == CActiveRecord::MANY_MANY) {
-					$command->delete($namemmtable,array('and', $mmname_this_key.'='.$model->primaryKey, array('in', $mmname_to_key, $PKslink_past)));
+				if($typeThisRelation == CActiveRecord::MANY_MANY) {
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
 				}
-				elseif($TYPE_relation == CActiveRecord::HAS_MANY) {
-					$command->update($namemmtable, array($objRelation->foreignKey => null), array('in', $className::model()->tableSchema->primaryKey, $arrobjects));
+				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
+					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => null), array('in', $namePrimaryKeyThisRelation, $idsObj));
 				}
-				break;
+				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => null), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+				}
+			break;
 			case 'clear':
-				$command->delete($namemmtable,array('or', $mmname_this_key.'='.$model->primaryKey, $mmname_to_key.'='.$model->primaryKey));
-				break;
+				if($typeThisRelation == CActiveRecord::MANY_MANY) {
+					$command->delete($mtmNameTable,$mtmFromPrimaryKey.'='.$thisObjNamePrimaryKey);
+				}
+			break;
 
 		}
 			$transaction->commit();

@@ -68,7 +68,13 @@ if(count($_POST) && $form->validate()) {
 	$REND_model->save();
 
 	if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
-		$REND_model->addSelfObjects($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$this->dicturls['paramslist'][1]);
+		$params_modelget = apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
+		$nameRelatConfModel = $params_modelget['relation'][$this->dicturls['paramslist'][8]][0];
+		$nameRelatThis = $params_modelget['relation'][$this->dicturls['paramslist'][8]][1];
+		$params_modelgetRelat = apicms\utils\normalAliasModel($nameRelatConfModel);
+
+		$objrelated = $params_modelgetRelat['namemodel']::model()->findByPk($this->dicturls['paramslist'][6]);
+		$objrelated->links_edit('add', $nameRelatThis, array($REND_model->primaryKey));
 	}
 
 

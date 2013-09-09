@@ -12,8 +12,8 @@ class User extends AbsModel
 	public function relations()
 	{
 		return array(
-			'userpasport'=>array(self::BELONGS_TO, 'UserPasport', 'userpasport_id'), // test
-			'group'=>array(self::MANY_MANY, 'Ugroup', 'setcms_user_ugroup(user_id, group_id)'),
+			'userpasport'=>array(self::HAS_ONE, 'UserPasport', 'user_id'), // test
+			'groups'=>array(self::MANY_MANY, 'Ugroup', 'setcms_user_ugroup(user_id, group_id)'),
 		);
 	}
 	public function rules() {

@@ -81,19 +81,15 @@ class AdminController extends Controller {
 					$modelAD = $actclass->objects();
 					//вытащить одним запросом вместе со свойствами
 					$modelAD->set_force_prop(true);
-
-					$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
+					$settui = array();
+					if(isset(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename])) {
+						$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
+					}
 					$this->setVarRender('REND_confmodel',$settui);
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
-					//если не равно пост и есть relationobjonly=название модели
-					//сделать для теста а потом уже тут полностью поправить
-					$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
 					//alias model
-					if(is_string($params_modelget)) {
-						$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$params_modelget];
-
-					}
+					$params_modelget = apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
 					$this->setVarRender('REND_confmodel',$params_modelget);
 					$NAMEMODEL_get = $params_modelget['namemodel'];
 
@@ -112,7 +108,7 @@ class AdminController extends Controller {
 						}
 						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
 					}
-					$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$this->dicturls['paramslist'][1]];
+					$settui = $params_modelget;
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
@@ -225,22 +221,26 @@ class AdminController extends Controller {
 						//найти в реляции название столбца по которому бдет поиск и установить ктитерию
 						//объект пока не делаем
 						$subnamemodel = $this->dicturls['paramslist'][7];
-						$namemodelself = $this->dicturls['paramslist'][1];
+						$namemodelthis = $this->dicturls['paramslist'][1];
 						//selectedarr
-						$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$subnamemodel];
-						//is alias
-						if(!is_array($params_modelget)) {
-							$namealias = $params_modelget;
-							$params_modelget = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'][$namealias];unset($namealias);
-						}
+						$params_modelget = apicms\utils\normalAliasModel($namemodelthis);
+
 						$NAMEMODEL_get = $params_modelget['namemodel'];
 						$relation_model = $NAMEMODEL_get::model()->relations();
-						$objrelated = $NAMEMODEL_get::model()->findByPk($this->dicturls['actionid']);
-						//возможно что ссылка на медель в реляции может называться по другому но в следствии того что в списке настроек моделей уже есть настройка для нее
-						if(isset($params_modelget['relation'][$namemodelself])) {
-							$namemodelself = $params_modelget['relation'][$namemodelself];
-						}
-						$objrelself = $objrelated->$namemodelself;
+
+						$namemodelself = $this->dicturls['paramslist'][7];
+
+
+
+						$namemodelrelationtop = $params_modelget['relation'][$namemodelself][0];
+						$params_modelgettop = apicms\utils\normalAliasModel($namemodelrelationtop);
+						$objrelated = $params_modelgettop['namemodel']::model()->findByPk($this->dicturls['actionid']);
+
+						$objectsRelTop = $objrelated->$params_modelget['relation'][$namemodelself][1];
+
+
+
+						$objrelself = $objectsRelTop;
 						if($subnamemodel=='classes') {
 							if($this->dicturls['paramslist'][1]=='classes') {
 							//classes filter is NameLinksModel equally
@@ -256,20 +256,26 @@ class AdminController extends Controller {
 
 						if($this->dicturls['action'] == 'relationobjonly') {
 							$type_relation_self = $relation_model[$namemodelself][0];
-							if($type_relation_self  == CActiveRecord::MANY_MANY) {
-								$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,'id'));
+							if(!$objrelself) {
+								$addCondition = '1=0'; //просто не показываем ни одного объекта так как не ожной связки
+								$modelAD->dbCriteria->addCondition($addCondition);
 							}
 							else {
-								if($type_relation_self  == CActiveRecord::BELONGS_TO) {
-									if($objrelself) {
-										$addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
-									}
-									else $addCondition = '1=0';
+								if($type_relation_self  == CActiveRecord::MANY_MANY) {
+									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,'id'));
 								}
 								else {
-									$addCondition = $relation_model[$namemodelself][2].' = '.$objrelated->primaryKey;
+									if($type_relation_self  == CActiveRecord::BELONGS_TO) {
+										$addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
+									}
+									elseif($type_relation_self  == CActiveRecord::HAS_ONE) {
+										$addCondition = $modelAD->primaryKey().' = '.$objrelated->$relation_model[$namemodelself][2];
+									}
+									elseif($type_relation_self  == CActiveRecord::HAS_MANY) {
+										$addCondition = $relation_model[$namemodelself][2].' = '.$objrelated->primaryKey;
+									}
+									$modelAD->dbCriteria->addCondition($addCondition);
 								}
-								$modelAD->dbCriteria->addCondition($addCondition);
 							}
 						}
 						if($this->paramsrender['REND_relation'] && array_key_exists($namemodelself,$this->paramsrender['REND_relation'])) {

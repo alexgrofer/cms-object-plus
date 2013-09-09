@@ -4,39 +4,36 @@ $models = array(
 		'namemodel' => 'uClasses',
 		'edit' => null,
 		//'witch' => array('relattest', 'relattest.relattest2'), @todo сделать возможность witch
-		'relation' => array('properties', 'classes' => 'association'),
+		'relation' => array('properties'=>array('properties','classes'), 'association'=>array('classes','association')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
 		'order_by_def' => array('id desc')
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
 		'edit' => null,
-		'relation' => array('classes'),
+		'relation' => array('classes'=>array('classes','properties')),
 		'selfobjrelationElements' => array('classes'=>array('test',)), //сделать описание task
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
-	//alias
-	'uclass' => 'classes',
-
 	//USER
 	'user' => array(
 		'namemodel' => 'User',
-		'relation' => array('group','userpasport'),
+		'relation' => array('groups'=>array('group','users'),'userpasport'=>array('userpasport','user')),
 		'cols' => array('id'=>'id','login'=>'user name'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')
+		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	'group' => array(
 		'namemodel' => 'Ugroup',
-		'relation' => false,
+		'relation' => array('users'=>array('user','groups')), // реляция => [название модели B, реляция в которой обратная ссылка модели B]
 		'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'),
-		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812')
+		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	'userpasport' => array(
 		'namemodel' => 'UserPasport',
-		'relation' => false,
-		'cols' => array('id'=>'id','firstname'=>'first name','lastname'=>'last name')
+		'relation' => array('user'=>array('user','userpasport')),
+		'cols' => array('id'=>'id','lastname'=>'last name','firstname'=>'first name', 'user_id'=>'user_id'),
 	),
 	//storage files
 	'storagef' => array(

@@ -262,29 +262,21 @@ $relations_links_model = '';
 $relconfsetting = $REND_confmodel;
 
 if($relconfsetting && array_key_exists('relation', $relconfsetting)) {
-	$rel_arr_vis = $relconfsetting['relation'];
-}
-
-if(isset($rel_arr_vis)) {
+$rel_arr_vis = $relconfsetting['relation'];
+print_r($relconfsetting);
+if(count($rel_arr_vis)) {
 	foreach($REND_model->relations() as $namerelat => $val) {
-		if(in_array($namerelat, $rel_arr_vis)) {
-			$nameparammodel = $this->dicturls['paramslist'][1];
-			if($this->dicturls['paramslist'][0]=='class') {
-				$objclass = uClasses::getclass($this->dicturls['paramslist'][1]);
-				$nameparammodel = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
-			}
-			$typerelat = ($val[0]==$REND_model::MANY_MANY || $val[0]==$REND_model::HAS_MANY)?'add':'set';
-			$name_current_model = $namerelat;
-			$namemodel_alias = array_search($namerelat,$rel_arr_vis);
-			if(array_key_exists($namemodel_alias, Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['models'])) {
-				$name_current_model = $namemodel_alias;
-			}
-			$print_link = ' | <a href="'.$urladmclass.'/objects/models/'.$name_current_model.'/action/%s/IDELEMENT/'.$typerelat.'/models/'.$nameparammodel.'">%s</a>';
+		if($keyfindname = array_search($namerelat,array_keys($rel_arr_vis)) !== false) {
+			$namemodelconf = $rel_arr_vis[$namerelat];
+
+			$print_link = ' | <a href="'.$urladmclass.'/objects/models/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/models/'.$namemodelconf[1].'">%s</a>';
 			$relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
 			if($REND_model::HAS_MANY) $relations_links_model .= sprintf($print_link,'relationobjonly','<');
 			unset($print_link);
 		}
 	}
+}
+
 }
 
 

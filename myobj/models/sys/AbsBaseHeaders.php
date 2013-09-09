@@ -1,6 +1,7 @@
 <?php
 abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(models.Model):
 {
+	public $uclass_id;
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
@@ -95,7 +96,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 					$newobjlines->$namecolumn = $this->properties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
 					$newobjlines->save();
-					$this->UserRelated->links_edit('add','lines',$newobjlines);
+					$this->UserRelated->links_edit('add','lines',array($newobjlines->primaryKey));
 				}
 			}
 		}
@@ -128,7 +129,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
 		}
 
-		$objectcurrentlink->UserRelated->links_edit($type,'links',$linksobjects);
+		$objectcurrentlink->UserRelated->links_edit($type,'links',apicms\utils\arrvaluesmodel($linksobjects,'id'));
 	}
 	public function getobjlinks($class) {
 		$objectcurrentlink = $this->_getobjectlink();
