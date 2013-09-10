@@ -18,7 +18,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
 		//убрать из цикла
 		$SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
-		$REND_addElem[]=array('name'=>$namer.$nameps_mtm, 'def_value'=>$SelectArr[$namer]);
+		$REND_addElem[]=array('name'=>$namer.$nameps_mtm, 'def_value'=>$SelectArr[$namer], 'elem'=>array('type'=>'text'));
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
 

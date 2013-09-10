@@ -44,12 +44,6 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$id));
 				}
 			break;
-			case 'select':
-				if(!$thisObj->isNewRecord) {
-					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$idsObj))->queryRow();
-				}
-				return false;
-			break;
 			case 'remove':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
 					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
@@ -68,12 +62,17 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 
 		}
-			$transaction->commit();
-				}
+		$transaction->commit();
+
+		}
 		catch(Exception $e) {
 			$transaction->rollBack();
 			throw $e;
 		}
-	return true;
+		if($type=='select') {
+			if(!$thisObj->isNewRecord) {
+				return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$idsObj[0]))->queryRow();
+			} return null;
+		}
 	}
 }
