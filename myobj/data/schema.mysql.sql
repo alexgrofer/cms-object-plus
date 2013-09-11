@@ -179,21 +179,24 @@ CREATE TABLE `setcms_user` (
   `login` VARCHAR(255) NOT NULL,
   `password` VARCHAR(32) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_ugroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `guid` VARCHAR(36) NOT NULL,
-PRIMARY KEY (`id`) 
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `setcms_user_ugroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY (`user_id`,`group_id`)
+  UNIQUE KEY (`user_id`,`group_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`group_id`) REFERENCES `setcms_ugroup` (`id`) ON DELETE CASCADE
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_userpasport` (
@@ -201,7 +204,8 @@ CREATE TABLE `setcms_userpasport` (
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `user_id` int(11) NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
 );
 -- -------------------------------------------------- end User
 -- assotiation
