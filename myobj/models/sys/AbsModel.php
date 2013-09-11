@@ -108,4 +108,9 @@ abstract class AbsModel extends CActiveRecord
 	public function setMTMcol($model,$array_elems,$array_value) {
 		return $this->UserRelated->links_edit('edit',$model,$array_elems,$array_value);
 	}
+	public function clearMTMLink($nameRelation, $isDELETE_CASCADE) { //использовать только для MTM, для HAS_MANY нет смысла так как поля не удаляются а апдейтятся
+		if($isDELETE_CASCADE==false) {
+			$this->UserRelated->links_edit('clear',$nameRelation);
+		}
+	}
 }

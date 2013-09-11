@@ -182,7 +182,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		//del lines
 		if($this->isitlines == true && count($this->lines)) {
-			$this->UserRelated->links_edit('clear','lines'); //очистить ссылки на строки в дочерней тиблице
+			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']); //очистить ссылки на строки в дочерней тиблице
 			//удалить строки этого объекта
 			//в таблице строк объекта мы ничего не знаем о объекте так как работаем через настраиваемую таблицу строк, ключа объекта в ней нет, поэтому возможет только подобный метод удаления
 			$idslines = apicms\utils\arrvaluesmodel($this->lines, 'id');
@@ -194,7 +194,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		$objectcurrentlink = $this->_getobjectlink();
 		if($objectcurrentlink) {
 			if(count($objectcurrentlink->links)) {
-				$objectcurrentlink->UserRelated->links_edit('clear','links'); //очистить ссылки на *ссылки в дочерней тиблице
+				$objectcurrentlink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']); //очистить ссылки на *ссылки в дочерней тиблице
 			}
 			$objectcurrentlink->delete(); //удалить ссылку
 		}

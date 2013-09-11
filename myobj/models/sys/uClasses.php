@@ -44,9 +44,9 @@ class uClasses extends AbsModel
 			$obj->delete();
 		}
 		//очистить ссылки его свойств
-		$this->UserRelated->links_edit('clear','properties');
+		$this->clearMTMLink('properties', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		//очистить ссылки асоциации с другими классами
-		$this->UserRelated->links_edit('clear','association');
+		$this->clearMTMLink('association', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		return parent::beforeDelete();
 	}
 	public function getTSPACESOptions(){

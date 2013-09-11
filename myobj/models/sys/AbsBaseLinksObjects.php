@@ -13,7 +13,7 @@ abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLin
 	}
 
 	function beforeDelete() {
-		$this->UserRelated->links_edit('clear','links');
+		$this->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		return parent::beforeDelete();
 	}
 }

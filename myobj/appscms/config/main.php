@@ -82,6 +82,7 @@ $main = array(
 		'email'=>'text',
 		'bool'=>'checkbox',
 	),
+	'sys_db_type_InnoDB'=>true, //в случае true не будет делать лишний запрос для удаления ссылок MTM при работе с AbsModel::clearMTMLink
 	'rulesvalidatedef' => array( //Valid values include 'string', 'integer', 'float', 'array', 'date', 'time' and 'datetime'.
 		'str' => '
 type

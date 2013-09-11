@@ -17,8 +17,8 @@ CREATE TABLE `setcms_uclasses_association` (
   `to_uclasses_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_uclasses_id` (`from_uclasses_id`,`to_uclasses_id`),
-  CONSTRAINT `setcms_uclasses_association_ibfk_to_uclasses_id` FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `setcms_uclasses_association_ibfk_from_uclasses_id` FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `setcms_uclasses_association_ibfk_to_uclasses_id` FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `setcms_uclasses_association_ibfk_from_uclasses_id` FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- objproperties
 CREATE TABLE `setcms_objproperties` (
@@ -79,8 +79,8 @@ CREATE TABLE `setcms_systemobjheaders_lines` (
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
-  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `setcms_systemobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end system objects
 
@@ -119,8 +119,8 @@ CREATE TABLE `setcms_myobjheaders_lines` (
   `to_lines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_headers_id` (`from_headers_id`,`to_lines_id`),
-  CONSTRAINT `setcms_myobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `setcms_myobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `setcms_myobjheaders_lines_ibfk_from_headers_id` FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `setcms_myobjheaders_lines_ibfk_to_lines_id` FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end my objects
 
@@ -142,8 +142,8 @@ CREATE TABLE `setcms_linksobjectsallmy_links` (
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
-  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `setcms_linksobjectsallmy_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallmy
 -- -------------------------------------------------- ens links all my
@@ -166,8 +166,8 @@ CREATE TABLE `setcms_linksobjectsallsystem_links` (
   `to_self_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `from_self_id` (`from_self_id`,`to_self_id`),
-  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_to_self_id` FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `setcms_linksobjectsallsystem_links_ibfk_from_self_id` FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallsystem
 -- -------------------------------------------------- ens links all system
