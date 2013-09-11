@@ -6,7 +6,8 @@ $models = array(
 		//'witch' => array('relattest', 'relattest.relattest2'), @todo сделать возможность witch
 		'relation' => array('properties'=>array('properties','classes'), 'association'=>array('classes','association')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
-		'order_by_def' => array('id desc')
+		'order_by_def' => array('id desc'),
+		'selfobjrelationElements' => array('properties'=>array('test',)), //сделать описание task
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
