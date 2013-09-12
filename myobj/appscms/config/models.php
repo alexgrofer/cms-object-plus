@@ -42,6 +42,11 @@ $models = array(
 		'edit' => null,
 		'order_by' => array('id DESC'),
 	),
+	//example models
+	'testtablehm' => array(
+		'namemodel' => 'TestTableHM',
+		'relation' => array('myobjheader'=>array('news_example','test_relat_objcts'))
+	),
 );
 
 Yii::app()->params['api_conf_models'] = $models;

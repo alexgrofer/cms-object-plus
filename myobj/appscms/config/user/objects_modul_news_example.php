@@ -6,6 +6,9 @@ $objects = array(
 		'find' => array('id', 'text_news_example__prop'), //разрешенные для поиска
 		'order_by' => array('id','name', 'text_news_example__prop', 'annotation_news_example__prop'), //сортирова в меню
 		'order_by_def' => array('annotation_news_example__prop desc'),
+		//relation
+		'namemodel' => 'myObjHeaders',
+		'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
 	),
 	'news_section_example' => array(
 		'cols' => array('id'=>'id','name'=>'name'),

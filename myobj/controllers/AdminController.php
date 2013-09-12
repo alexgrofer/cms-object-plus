@@ -67,7 +67,6 @@ class AdminController extends Controller {
 		//VARS
 		$view = ($this->dicturls['action']=='edit')?'/sys/obj':'/sys/list';
 		$modelAD = null;
-		$params_extra_action_job = array();
 		switch($this->dicturls['class']) { //switch url
 			case 'objects':
 				if($this->dicturls['paramslist'][0]=='class') {
@@ -228,15 +227,16 @@ class AdminController extends Controller {
 						$NAMEMODEL_get = $params_modelget['namemodel'];
 						$relation_model = $NAMEMODEL_get::model()->relations();
 
-						$namemodelself = $this->dicturls['paramslist'][7];
+						$nameConfModelSelf = $this->dicturls['paramslist'][7];
 
 
 
-						$namemodelrelationtop = $params_modelget['relation'][$namemodelself][0];
+						$namemodelrelationtop = $params_modelget['relation'][$nameConfModelSelf][0];
 						$params_modelgettop = apicms\utils\normalAliasModel($namemodelrelationtop);
 						$objrelated = $params_modelgettop['namemodel']::model()->findByPk($this->dicturls['actionid']);
 
-						$objectsRelTop = $objrelated->$params_modelget['relation'][$namemodelself][1];
+						$nameRelatModelSelf = $params_modelget['relation'][$nameConfModelSelf][1];
+						$objectsRelTop = $objrelated->$nameRelatModelSelf;
 
 
 
@@ -255,33 +255,25 @@ class AdminController extends Controller {
 						}
 
 						if($this->dicturls['action'] == 'relationobjonly') {
-							$type_relation_self = $relation_model[$namemodelself][0];
+							$type_relation_self = $relation_model[$nameConfModelSelf][0];
 							if(!$objrelself) {
 								$addCondition = '1=0'; //просто не показываем ни одного объекта так как не ожной связки
 								$modelAD->dbCriteria->addCondition($addCondition);
 							}
 							else {
 								if($type_relation_self  == CActiveRecord::MANY_MANY) {
-									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,'id'));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
 								}
-								else {
-									if($type_relation_self  == CActiveRecord::BELONGS_TO) {
-										$addCondition = $objrelself->tableAlias.'.'.$objrelself->primaryKey().' = '.$objrelself->getPrimaryKey();
-									}
-									elseif($type_relation_self  == CActiveRecord::HAS_ONE) {
-										$addCondition = $modelAD->primaryKey().' = '.$objrelated->$relation_model[$namemodelself][2];
-									}
-									elseif($type_relation_self  == CActiveRecord::HAS_MANY) {
-										$addCondition = $relation_model[$namemodelself][2].' = '.$objrelated->primaryKey;
-									}
-									$modelAD->dbCriteria->addCondition($addCondition);
+								elseif($type_relation_self==CActiveRecord::HAS_ONE || $type_relation_self==CActiveRecord::HAS_MANY) {
+									//тут переделать причем равняять на USER in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))
+									//показываем
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
+								}
+								elseif($type_relation_self  == CActiveRecord::BELONGS_TO) {
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$relation_model[$nameConfModelSelf][2], apicms\utils\arrvaluesmodel($objrelself,$relation_model[$nameConfModelSelf][2]));
 								}
 							}
 						}
-						if($this->paramsrender['REND_relation'] && array_key_exists($namemodelself,$this->paramsrender['REND_relation'])) {
-							$namemodelself = $this->paramsrender['REND_relation'][$namemodelself];
-						}
-						$params_extra_action_job['name_model'] = $namemodelself;
 
 						if($objrelself) {
 							if(is_array($objrelself)) {
@@ -291,8 +283,6 @@ class AdminController extends Controller {
 								$this->paramsrender['REND_selectedarr'] = array($objrelself->id);
 							}
 						}
-
-						unset($namemodelself);
 						break;
 					case 'remove':
 						if($this->paramsrender['REND_acces_write']==false) $this->redirect($this->getUrlBeforeAction());
@@ -317,7 +307,7 @@ class AdminController extends Controller {
 			$selectorsids_excluded = (array_key_exists('selectorsids_excluded',$_POST) && trim($_POST['selectorsids_excluded'])!='')?explode(',',$_POST['selectorsids_excluded']):array();
 
 			if(array_key_exists('saveaction',$_POST)) {
-				apicms\utils\action_job($this->dicturls['action'],$this->dicturls['actionid'],$selectorsids_post, $selectorsids_excluded, $this->dicturls['paramslist'],$params_extra_action_job);
+				apicms\utils\action_job($this->dicturls['action'],$this->dicturls['actionid'],$selectorsids_post, $selectorsids_excluded, $this->dicturls['paramslist']);
 
 				$this->redirect(Yii::app()->request->url);
 			}

@@ -6,6 +6,14 @@ class myObjHeaders extends AbsBaseHeaders
 	public $sort; //models.IntegerField(blank=True,null=True,default=0)
 	public $bpublic; //models.BooleanField(blank=True) --
 	//table links
+	public function relations()
+	{
+		$relations = parent::relations();
+		$thisRelations = array(
+			'test_relat_objcts'=>array(self::HAS_MANY, 'TestTableHM', 'obj_id'), // test
+		);
+		return array_merge($relations, $thisRelations);
+	}
 
 	public function rules()
 	{

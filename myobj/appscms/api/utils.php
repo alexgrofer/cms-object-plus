@@ -70,21 +70,15 @@ function URender($idtmplhandl,$listtshihandles) {
 	}
 	else '';
 }
-function arrvaluesmodel($listobjects, $multinames) {
+function arrvaluesmodel($listobjects, $namekey) {
+	if(!is_array($listobjects)) $listobjects = array($listobjects);
 	$arrv = array();
 	foreach($listobjects as $object) {
-		if(is_array($multinames)) {
-			$arrvsav = array();
-			foreach($multinames as $name) {
-				$arrvsav[] = $object->$name;
-			}
-			$arrv[] = $arrvsav;
-		}
-		else $arrv[] = $object->$multinames;
+		$arrv[] = $object->$namekey;
 	}
 	return $arrv;
 }
-function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array(),$paramslist,$params_extra) {
+function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array(),$paramslist) {
 	switch($nameaction) {
 		case 'lenksobjedit':
 			$ObjHeader = \uClasses::getclass($paramslist[6])->objects()->findByPk($this_id);
@@ -217,6 +211,6 @@ function importRecursName($alias,$mask=false,$forceInclude=false,$isreturn=false
 }
 
 function normalAliasModel($namemodel) {
-	$params_modelget = \Yii::app()->appcms->config['controlui']['objects']['models'][$namemodel];
+	$params_modelget = \Yii::app()->appcms->config['controlui']['objects'][isset(\Yii::app()->appcms->config['controlui']['objects']['models'][$namemodel])?'models':'conf_ui_classes'][$namemodel];
 	return $params_modelget;
 }
