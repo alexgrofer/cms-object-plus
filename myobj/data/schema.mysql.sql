@@ -235,12 +235,14 @@ INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfiel
 	-- modul_example_news
 	(1,'Annotation news example','annotation_news_example','',3,'','',0,'',''),
 	(2,'Text news example','text_news_example','',3,'','',0,'',''),
-	(3,'images list obj news example','images_list_obj_news_example','',3,'','',0,'','');
+	(3,'images list obj news example','images_list_obj_news_example','',3,'','',0,'',''),
+	(4,'codename news section example','codename_news_section_example','',3,'','',0,'','');
 INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 	-- modul_example_news
 	(17,1), -- news_example -> annotation_news_example
 	(17,2), -- news_example -> text_news_example
-	(17,3); -- news_example -> text_news_example
+	(17,3), -- news_example -> images_list_obj_news_example
+	(18,4); -- news_example -> codename_news_section_example
 INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
 -- Class (setcms_uclasses) id = 1
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
