@@ -11,7 +11,7 @@ class Ugroup extends AbsModel
 	public function relations()
 	{
 		return array(
-			'users'=>array(self::MANY_MANY, 'User', 'setcms_user_ugroup(user_id,group_id)'),
+			'users'=>array(self::MANY_MANY, 'User', 'setcms_user_ugroup(group_id,user_id)'),
 		);
 	}
 	public function rules() {
