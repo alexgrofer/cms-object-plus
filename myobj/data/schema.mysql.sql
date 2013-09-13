@@ -1,150 +1,144 @@
 -- uclasses system
 CREATE TABLE `setcms_uclasses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `codename` varchar(30) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `tablespace` smallint(5) unsigned NOT NULL,
-  -- (Django) properties = models.ManyToManyField(objProperties,blank=True)
-  -- (Django) association = models.ManyToManyField("self",blank=True)
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`codename`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`codename` varchar(30) NOT NULL,
+	`description` varchar(255) NOT NULL,
+	`tablespace` smallint(5) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`codename`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE uclasses_association
 CREATE TABLE `setcms_uclasses_association` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_uclasses_id` int(11) NOT NULL,
-  `to_uclasses_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_uclasses_id`,`to_uclasses_id`),
-  FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_uclasses_id` int(11) NOT NULL,
+	`to_uclasses_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_uclasses_id`,`to_uclasses_id`),
+	FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- objproperties
 CREATE TABLE `setcms_objproperties` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `codename` varchar(30) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `myfield` smallint(5) unsigned NOT NULL, -- types field
-  `minfield` varchar(4) NOT NULL,
-  `maxfield` varchar(4) NOT NULL,
-  `required` tinyint(1) NOT NULL,
-  `udefault` varchar(255) NOT NULL,
-  `setcsv` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`codename`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`codename` varchar(30) NOT NULL,
+	`description` varchar(255) NOT NULL,
+	`myfield` smallint(5) unsigned NOT NULL, -- types field
+	`minfield` varchar(4) NOT NULL,
+	`maxfield` varchar(4) NOT NULL,
+	`required` tinyint(1) NOT NULL,
+	`udefault` varchar(255) NOT NULL,
+	`setcsv` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`codename`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- uclasses (Django models.ManyToManyField) objproperties (relation)
+-- uclasses objproperties (relation)
 CREATE TABLE `setcms_uclasses_objproperties` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_uclasses_id` int(11) NOT NULL,
-  `to_objproperties_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_uclasses_id` int(11) NOT NULL,
+	`to_objproperties_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- system objects
 -- system_obj_headers
 CREATE TABLE `setcms_systemobjheaders` (
-   -- required
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
-  -- more options
-  `name` varchar(255) NOT NULL,
-  `content` longtext NOT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `vp1` varchar(255) NULL,
-  `vp2` varchar(255) NULL,
-  `bp1` tinyint(1) NULL,
-  -- (Django) lines = models.ManyToManyField(systemObjLines,blank=True)
-  -- end
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`uclass_id` int(11) NOT NULL,
+	-- more options
+	`name` varchar(255) NOT NULL,
+	`content` longtext NOT NULL,
+	`sort` int(11) DEFAULT NULL,
+	`vp1` varchar(255) NULL,
+	`vp2` varchar(255) NULL,
+	`bp1` tinyint(1) NULL,
+	-- end
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- setcms_myobj_lines
 CREATE TABLE `setcms_systemobjlines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `property_id` int(11) NOT NULL, -- models.ForeignKey(objProperties)
-  `uptextfield` longtext NOT NULL,
-  `upcharfield` varchar(255) NOT NULL,
-  `updatetimefield` datetime DEFAULT NULL,
-  `upintegerfield` int(11) DEFAULT NULL,
-  `upfloatfield` double DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`property_id` int(11) NOT NULL, -- models.ForeignKey(objProperties)
+	`uptextfield` longtext NOT NULL,
+	`upcharfield` varchar(255) NOT NULL,
+	`updatetimefield` datetime DEFAULT NULL,
+	`upintegerfield` int(11) DEFAULT NULL,
+	`upfloatfield` double DEFAULT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- systemobjheaders (Django models.ManyToManyField) systemobjlines (relation)
+-- systemobjheaders systemobjlines (relation)
 CREATE TABLE `setcms_systemobjheaders_lines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_headers_id` int(11) NOT NULL,
-  `to_lines_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_headers_id`,`to_lines_id`),
-  FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON DELETE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_headers_id` int(11) NOT NULL,
+	`to_lines_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_headers_id`,`to_lines_id`),
+	FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_systemobjlines` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end system objects
 
 -- -------------------------------------------------- my objects
 -- my_obj_headers
 CREATE TABLE `setcms_myobjheaders` (
-   -- required
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uclass_id` int(11) NOT NULL,
-  -- more options
-  `name` varchar(255) NOT NULL,
-  `content` longtext NOT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `bpublic` tinyint(1) NOT NULL,
-  -- (Django) lines = models.ManyToManyField(myObjLines,blank=True)
-  -- end
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+	-- required
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`uclass_id` int(11) NOT NULL,
+	-- more options
+	`name` varchar(255) NOT NULL,
+	`content` longtext NOT NULL,
+	`sort` int(11) DEFAULT NULL,
+	`bpublic` tinyint(1) NOT NULL,
+	-- end
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- setcms_myobj_lines
 CREATE TABLE `setcms_myobjlines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `property_id` int(11) NOT NULL,
-  `uptextfield` longtext NOT NULL,
-  `upcharfield` varchar(255) NOT NULL,
-  `updatetimefield` datetime DEFAULT NULL,
-  `upintegerfield` int(11) DEFAULT NULL,
-  `upfloatfield` double DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`property_id` int(11) NOT NULL,
+	`uptextfield` longtext NOT NULL,
+	`upcharfield` varchar(255) NOT NULL,
+	`updatetimefield` datetime DEFAULT NULL,
+	`upintegerfield` int(11) DEFAULT NULL,
+	`upfloatfield` double DEFAULT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- myobjheaders (Django models.ManyToManyField) myobjlines (relation)
+-- myobjheaders myobjlines (relation)
 CREATE TABLE `setcms_myobjheaders_lines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_headers_id` int(11) NOT NULL,
-  `to_lines_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_headers_id`,`to_lines_id`),
-  FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON DELETE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_headers_id` int(11) NOT NULL,
+	`to_lines_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_headers_id`,`to_lines_id`),
+	FOREIGN KEY (`from_headers_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`to_lines_id`) REFERENCES `setcms_myobjlines` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end my objects
 
 -- -------------------------------------------------- links my
 -- linksobjectsallmy
 CREATE TABLE `setcms_linksobjectsallmy` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `idobj` int(11) NOT NULL,
-  `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
-  -- (Django) links = models.ManyToManyField("self",blank=True)
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`idobj`,`uclass_id`),
-  FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`idobj` int(11) NOT NULL,
+	`uclass_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`idobj`,`uclass_id`),
+	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
 CREATE TABLE `setcms_linksobjectsallmy_links` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_self_id` int(11) NOT NULL,
-  `to_self_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_self_id`,`to_self_id`),
-  FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_self_id` int(11) NOT NULL,
+	`to_self_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_self_id`,`to_self_id`),
+	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallmy
 -- -------------------------------------------------- ens links all my
@@ -152,61 +146,59 @@ CREATE TABLE `setcms_linksobjectsallmy_links` (
 -- -------------------------------------------------- links system
 -- linksobjectsallsystem
 CREATE TABLE `setcms_linksobjectsallsystem` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `idobj` int(11) NOT NULL,
-  `uclass_id` int(11) NOT NULL, -- models.ForeignKey(uClasses)
-  -- (Django) links = models.ManyToManyField("self",blank=True)
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`idobj`,`uclass_id`),
-  FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`idobj` int(11) NOT NULL,
+	`uclass_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`idobj`,`uclass_id`),
+	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- (SELF) TABLE linksobjectssystem_links
 CREATE TABLE `setcms_linksobjectsallsystem_links` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_self_id` int(11) NOT NULL,
-  `to_self_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`from_self_id`,`to_self_id`),
-  FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`from_self_id` int(11) NOT NULL,
+	`to_self_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`from_self_id`,`to_self_id`),
+	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOR RELATION linksobjectsallsystem
 -- -------------------------------------------------- ens links all system
 
 -- User
 CREATE TABLE `setcms_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(32) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`login` VARCHAR(255) NOT NULL,
+	`password` VARCHAR(32) NOT NULL,
+	`email` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_ugroup` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `guid` VARCHAR(36) NOT NULL,
-  PRIMARY KEY (`id`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`guid` VARCHAR(36) NOT NULL,
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `setcms_user_ugroup` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `group_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`user_id`,`group_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`group_id`) REFERENCES `setcms_ugroup` (`id`) ON DELETE CASCADE
-
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`user_id` int(11) NOT NULL,
+	`group_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`user_id`,`group_id`),
+	FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`group_id`) REFERENCES `setcms_ugroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_userpasport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(255) NOT NULL,
-  `lastname` varchar(255) NOT NULL,
-  `user_id` int(11) NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
-);
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`firstname` varchar(255) NOT NULL,
+	`lastname` varchar(255) NOT NULL,
+	`user_id` int(11) NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 -- -------------------------------------------------- end User
 -- assotiation
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
@@ -291,9 +283,9 @@ INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
 
 -- для объектов также возможно цеплять таблицы, пример с HAS_MANY
 CREATE TABLE `setcms_testtablehm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `text` varchar(255) NOT NULL,
-  `obj_id` int(11) NULL,
-  PRIMARY KEY (`id`),
-  KEY (`obj_id`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`text` varchar(255) NOT NULL,
+	`obj_id` int(11) NULL,
+	PRIMARY KEY (`id`),
+	KEY (`obj_id`)
 );
