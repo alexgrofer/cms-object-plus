@@ -14,7 +14,7 @@ class UserIdentity extends CUserIdentity {
 			$this->_id=$record->id;
 			// WORK groupsident CMS SYSTEM GROUPS array USER
 			$groupsident = array();
-			foreach($record->group as $objgroup) {
+			foreach($record->groups as $objgroup) {
 				$groupsident[] = $objgroup->guid; // id group - admincms, Vp1 = 1 - value of the group user
 			}
 			$this->setState('groupsident', $groupsident);
