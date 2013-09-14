@@ -3,7 +3,7 @@
  * Class EnumerationPluginFilesStorage
  * типы плагинов
  */
-class EnumerationPluginFilesStorage
+class EnumerationPluginStoreFile
 {
-	//
+	const DEF = 'DefaultPluginStoreFile';
 }

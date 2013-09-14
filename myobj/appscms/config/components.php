@@ -1,7 +1,10 @@
 <?php
 //основные системные компоненты
 $components = array(
-
+	'storeFile'=>array(
+		'class' =>'application.modules.myobj.components.storefile.CCStoreFile',
+		'test8'=>'texttest'
+	),
 );
 
 Yii::app()->params['api_conf_components'] = $components;
