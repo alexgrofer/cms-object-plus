@@ -1,5 +1,5 @@
 <?php
-class FileAppCMS {
+class CStoreFile {
 	/** @var null объект */
 	private $_namePlugin=null;
 	public function getNamePlugin() {

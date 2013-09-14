@@ -9,7 +9,8 @@ class CCStoreFile extends CComponent {
 	}
 	public function init() {
 		//import
-		Yii::import('application.modules.myobj.components.storefiles.procFilesStorage.*');
+		Yii::import('application.modules.myobj.components.storefile.src.*');
+		Yii::import('application.modules.myobj.components.storefile.src.plugins.*');
 	}
 
 	/**
@@ -18,8 +19,25 @@ class CCStoreFile extends CComponent {
 	 * @param array $arrIdObj список объектов
 	 * @return mixed возвращает объект или список объектов класса FileStoreCms
 	 */
-	public function obj($nameClassPlugin,array $arrIdObj=null) {
-		return $nameClassPlugin::init($arrIdObj);
+	public function obj($nameClassPlugin=null,array $arrIdObj=null) {
+		if(is_array($nameClassPlugin) || is_int($arrIdObj) || $arrIdObj===null) {
+			$nameClassPlugin = 'DefaultPluginStoreFile';
+			$arrIdObj = $nameClassPlugin;
+		}
+		if($arrIdObj) {
+			if(is_int($arrIdObj)) {
+				$arrIdObj = array($arrIdObj);
+			}
+			$objectsDB = $nameClassPlugin::nameModel->findinkey($arrIdObj);
+			$objectsArrayStoreFile = array();
+			foreach($objectsDB as $obj) {
+				$objectsArrayStoreFile[] = CStoreFile::init($nameClassPlugin,$obj);
+			}
+			return $objectsArrayStoreFile;
+		}
+		else {
+			return CStoreFile::init($nameClassPlugin,null);
+		}
 	}
 
 	/**
@@ -29,6 +47,7 @@ class CCStoreFile extends CComponent {
 	 * @param array $arrObj список объектов
 	 */
 	public function delobj($nameClassPlugin,array $arrIdObj) {
-		return $nameClassPlugin::delobj($arrIdObj);
+		// примерно таким же образом как self::obj()
+		CStoreFile::del($arrIdObj);
 	}
 }

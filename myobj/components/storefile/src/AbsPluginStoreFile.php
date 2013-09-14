@@ -1,5 +1,5 @@
 <?php
-class PluginFilesStorageExtra implements InterfaceFilesStorage
+class AbsPluginStoreFile
 {
 	public static function newobj($params) {}
 	public static function get($params) {}

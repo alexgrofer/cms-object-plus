@@ -2,16 +2,25 @@
 .pagination input {display:none}
 </style>
 <?php
-//1) Создать новый объект изображения (один объект - одно изображение)
-$newfile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF);
+//1) Создать новый объект изображения (один объект - одно изображение) это обертка над типов множественных файлов
+/*
+$newfile = yii::app()->storeFile->obj();
 // $newfile->name = 'newfile'; //может быть не указан (берет из названия файла загрузки)
 // $newfile->title = 'file num 1'; //может быть не указан (не обязателен)
 $newfile->file = '/tmp/patch'; //обязателен если это новый объект
 $newfile->save(); //сохраняет файл и делает запить в базу данных $newfile->id - id новго объекта
+*/
 //1.1) редактирование
-//подобным образом можно редактировать изображения $file = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF,34 или array(34,35));
+//подобным образом можно редактировать изображения $file = yii::app()->storeFile->obj(array(34,35) или 5 или userPlugin,34);
 
-//2 тип когда в одном объекте хранится много файлов
+//2 тип когда в одном объекте хранится много файлов - это тип является стандартным
+$initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
+// ->name('name',0); по умолчанию элемент "0" если новый, или если существует "3"
+$initFile->name('name');
+$initFile->title('title');
+$initFile->file('/tmp/patch');
+$initFile->save(); //сохранить все элементы
+
 
 //коммент task
 $REND_model_criteria_save = $REND_model->getDbCriteria();
