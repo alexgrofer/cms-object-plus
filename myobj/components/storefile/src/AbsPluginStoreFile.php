@@ -1,8 +1,16 @@
 <?php
 class AbsPluginStoreFile
 {
-	public static function newobj($params) {}
-	public static function get($params) {}
-	public static function editobj($params) {}
-	public static function delobj($params) {}
+	protected static $nameClassFile='CStoreFile';
+	/**
+	 * Возвращает объекты типа файла
+	 * @param $arrIdObj
+	 */
+	public static function factoryInit($arrIdObj) {
+		$classFile =  static::$nameClassFile;
+		if($arrIdObj==null) {
+			return $classFile::init(__CLASS__, null);
+		}
+		//вернуть массив
+	}
 }

@@ -11,7 +11,7 @@ $newfile->file = '/tmp/patch'; //обязателен если это новый
 $newfile->save(); //сохраняет файл и делает запить в базу данных $newfile->id - id новго объекта
 */
 //1.1) редактирование
-//подобным образом можно редактировать изображения $file = yii::app()->storeFile->obj(array(34,35) или 5 или userPlugin,34);
+//подобным образом можно редактировать изображения $file = yii::app()->storeFile->obj(array(34,35) или array(15));
 
 //2 тип когда в одном объекте хранится много файлов - это тип является стандартным
 $initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
@@ -20,7 +20,11 @@ $initFile->name('name');
 $initFile->title('title');
 $initFile->file('/tmp/patch');
 $initFile->save(); //сохранить все элементы
-
+exit;
+//если существует есть возможность отсортировать
+//$initFile->title(2,8); //новая сортировка, ключ элемента
+//$initFile->title(5,7);
+//$initFile->save();
 
 //коммент task
 $REND_model_criteria_save = $REND_model->getDbCriteria();

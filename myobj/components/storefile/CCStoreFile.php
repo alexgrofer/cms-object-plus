@@ -17,26 +17,16 @@ class CCStoreFile extends CComponent {
 	 * Инициализирует объекты с необходимым плагином для работы
 	 * @param string $nameClassPlugin название класса плагина
 	 * @param array $arrIdObj список объектов
-	 * @return mixed возвращает объект или список объектов класса FileStoreCms
+	 * @return mixed возвращает объект или список(array) объектов класса FileStoreCms
 	 */
 	public function obj($nameClassPlugin=null,array $arrIdObj=null) {
-		if(is_array($nameClassPlugin) || is_int($arrIdObj) || $arrIdObj===null) {
-			$nameClassPlugin = 'DefaultPluginStoreFile';
-			$arrIdObj = $nameClassPlugin;
-		}
+		if(is_array($nameClassPlugin))  $arrIdObj = $nameClassPlugin;
+		if($nameClassPlugin===null || is_array($nameClassPlugin)) $nameClassPlugin = 'DefaultPluginStoreFile';
 		if($arrIdObj) {
-			if(is_int($arrIdObj)) {
-				$arrIdObj = array($arrIdObj);
-			}
-			$objectsDB = $nameClassPlugin::nameModel->findinkey($arrIdObj);
-			$objectsArrayStoreFile = array();
-			foreach($objectsDB as $obj) {
-				$objectsArrayStoreFile[] = CStoreFile::init($nameClassPlugin,$obj);
-			}
-			return $objectsArrayStoreFile;
+			return $nameClassPlugin::factoryInit($arrIdObj);
 		}
 		else {
-			return CStoreFile::init($nameClassPlugin,null);
+			return $nameClassPlugin::factoryInit(null);
 		}
 	}
 
@@ -47,7 +37,6 @@ class CCStoreFile extends CComponent {
 	 * @param array $arrObj список объектов
 	 */
 	public function delobj($nameClassPlugin,array $arrIdObj) {
-		// примерно таким же образом как self::obj()
-		CStoreFile::del($arrIdObj);
+		$nameClassPlugin::delete($arrIdObj);
 	}
 }
