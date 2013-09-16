@@ -16,9 +16,9 @@ $newfile->save(); //сохраняет файл и делает запить в 
 //2 тип когда в одном объекте хранится много файлов - это тип является стандартным
 $initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
 // ->name('name',0); по умолчанию элемент "0" если новый, или если существует "3"
-$initFile->name('name');
-$initFile->title('title');
-$initFile->file('/tmp/patch');
+$initFile->name = 'name';
+$initFile->title = 'title';
+$initFile->file = '/tmp/patch';
 $initFile->save(); //сохранить все элементы
 exit;
 //если существует есть возможность отсортировать
