@@ -2,9 +2,11 @@
 class AbsCStoreFile extends CComponent {
 	/** @var null объект */
 	private $_id;
-	private $_arrayNameTitleUrl=array();
+	private $_arrayNameTitlePath=array();
 	private $_namePlugin;
-	private $_tmpPathFiles;
+	private $_tmpFiles;
+	private $_tmpEx_s;
+	private $_tmpRand_s;
 	public static function init($nameClassPlugin, $objAR) {
 		return new self($nameClassPlugin, $objAR);
 	}
@@ -19,10 +21,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_name($name,$key=0) {
-		$this->_arrayNameTitleUrl[$key]['name'] = $name;
+		$this->_arrayNameTitlePath[$key]['name'] = $name;
 	}
 	public function get_name($key) {
-		$this->_arrayNameTitleUrl[$key]['name'];
+		$this->_arrayNameTitlePath[$key]['name'];
 	}
 	public function setName($name) {
 		$this->set_name($name,0);
@@ -32,10 +34,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_title($title,$key=0) {
-		$this->_arrayNameTitleUrl[$key]['title'] = $title;
+		$this->_arrayNameTitlePath[$key]['title'] = $title;
 	}
 	public function get_title($key) {
-		$this->_arrayNameTitleUrl[$key]['title'];
+		$this->_arrayNameTitlePath[$key]['title'];
 	}
 	public function setTitle($title) {
 		$this->set_title($title,0);
@@ -44,24 +46,24 @@ class AbsCStoreFile extends CComponent {
 		return $this->get_title(0);
 	}
 
-	public function set_url($url,$key=0) {
-		$this->_arrayNameTitleUrl[$key]['url'] = $url;
+	public function set_path($path,$key=0) {
+		$this->_arrayNameTitlePath[$key]['path'] = $path;
 	}
-	public function get_url($key) {
-		$this->_arrayNameTitleUrl[$key]['url'];
+	public function get_path($key) {
+		$this->_arrayNameTitlePath[$key]['path'];
 	}
-	public function setUrl($url) {
-		$this->set_url($url,0);
+	public function setPath($path) {
+		$this->set_path($path,0);
 	}
-	public function getUrl() {
-		return $this->get_url(0);
+	public function getPath() {
+		return $this->get_path(0);
 	}
 
 	public function set_sort($sort,$key=0) {
-		$this->_arrayNameTitleUrl[$key]['sort'] = $sort;
+		$this->_arrayNameTitlePath[$key]['sort'] = $sort;
 	}
 	public function get_sort($key) {
-		$this->_arrayNameTitleUrl[$key]['sort'];
+		$this->_arrayNameTitlePath[$key]['sort'];
 	}
 	public function setSort($sort) {
 		$this->set_sort($sort,0);
@@ -71,16 +73,42 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_file($path,$key=0) {
-		$this->_tmpPathFiles[$key] = $path;
+		$this->_tmpFiles[$key] = $path;
 	}
 	public function get_file($key) {
-		$this->_tmpPathFiles[$key];
+		$this->_tmpFiles[$key];
 	}
 	public function setFile($path) {
 		$this->set_file($path,0);
 	}
 	public function getFile() {
 		return $this->get_file(0);
+	}
+
+	public function set_ex($path,$key=0) {
+		$this->_tmpEx_s[$key] = $path;
+	}
+	public function get_ex($key) {
+		$this->_tmpEx_s[$key];
+	}
+	public function setEx($path) {
+		$this->set_ex($path,0);
+	}
+	public function getEx() {
+		return $this->get_ex(0);
+	}
+
+	public function set_rand($path,$key=0) {
+		$this->_tmpRand_s[$key] = $path;
+	}
+	public function get_rand($key) {
+		$this->_tmpRand_s[$key];
+	}
+	public function setRand($path) {
+		$this->set_rand($path,0);
+	}
+	public function getRand() {
+		return $this->get_rand(0);
 	}
 
 	/**
@@ -98,7 +126,7 @@ class AbsCStoreFile extends CComponent {
 	 * @param integer $key по умолчанию 0 для нового элемента
 	 */
 	public function del($key) {
-		unset($this->_arrayNameTitleUrl[$key]);
+		unset($this->_arrayNameTitlePath[$key]);
 		$this->save();
 	}
 }
