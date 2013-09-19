@@ -14,12 +14,14 @@ $newfile->save(); //сохраняет файл и делает запить в 
 //подобным образом можно редактировать изображения $file = yii::app()->storeFile->obj(array(34,35) или array(15));
 
 //2 тип когда в одном объекте хранится много файлов - это тип является стандартным
+/* @var CStoreFile $initFile */
 $initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
 // ->name('name',0); по умолчанию элемент "0" если новый, или если существует "3"
 $initFile->name = 'name';
 $initFile->title = 'title';
 $initFile->file = '/tmp/patch';
 $initFile->save(); //сохранить все элементы
+echo $initFile->test;
 exit;
 //если существует есть возможность отсортировать
 //$initFile->title(2,8); //новая сортировка, ключ элемента

@@ -3,18 +3,15 @@ class AbsCStoreFile extends CComponent {
 	/** @var null объект */
 	private $_id;
 	private $_arrayNameTitlePath=array();
-	private $_namePlugin;
+	private $_objPlugin;
 	private $_tmpFiles;
 	private $_tmpEx_s;
 	private $_tmpRand_s;
-	public static function init($nameClassPlugin, $objAR) {
-		return new self($nameClassPlugin, $objAR);
-	}
 	public function getNamePlugin() {
-		return $this->_namePlugin;
+		return get_class($this->_objPlugin);
 	}
-	private function __construct($nameClassPlugin, $objAR) {
-		$this->_namePlugin = $nameClassPlugin;
+	public function __construct($objPlugin, $objAR) {
+		$this->_objPlugin = $objPlugin;
 	}
 	public function  getId() {
 		return $this->_id;

@@ -3,14 +3,25 @@ class AbsPluginStoreFile
 {
 	protected static $nameClassFile='CStoreFile';
 	/**
+	 * @var Некоторые дополнительные параметры для поведения
+	 */
+	protected $_params;
+	public function __construct($params=array()) {
+		$this->_params = $params;
+	}
+
+	/**
 	 * Возвращает объекты типа файла
 	 * @param $arrIdObj
 	 */
-	public static function factoryInit($arrIdObj) {
-		$classFile =  static::$nameClassFile;
+	public function factoryInit($arrIdObj) {
+		$nameClassFile =  static::$nameClassFile;
 		if($arrIdObj==null) {
-			return $classFile::init(__CLASS__, null);
+			return new $nameClassFile($this, null);
 		}
-		//вернуть массив
+		elseif(count($arrIdObj)) {
+			//вернуть массив
+		}
+		return null;
 	}
 }
