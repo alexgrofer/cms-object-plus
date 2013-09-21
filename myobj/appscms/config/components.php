@@ -5,6 +5,9 @@ $components = array(
 		'class' =>'application.modules.myobj.components.storefile.CCStoreFile',
 		'test8'=>'texttest'
 	),
+	'file'=>array(
+		'class' =>'ext.ist-yii-cfile.CFile',
+	),
 );
 
 Yii::app()->params['api_conf_components'] = $components;

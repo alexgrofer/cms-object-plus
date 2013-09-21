@@ -14,7 +14,7 @@ $addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'
 $addrules = array();
 $addrules[] = array('image','file', 'types'=>'jpg, png');
 $form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annotation_news_exampleprop_'=>'annotation prop','image'=>'файлы'),$addelem,$addrules);
-
+echo '<div style="border:1px solid red">';
 /*
  *
  */
@@ -29,6 +29,15 @@ $initFile = yii::app()->storeFile->obj(); //берет стандартный п
 //$initFile->save(); //сохранить все элементы
 //echo $initFile->test;
 
+//попробудем просто сохранить файл с момощью библиотеки
+//получить объект файла
+
+/* @var CFile $uploaded */
+$uploaded = Yii::app()->file->set('EmptyForm[image]');
+//echo $uploaded->getMimeType();
+//echo $uploaded->copy('sdfsdf');
+echo $uploaded->getBasename();
+echo '</div>';
 
 
 if(count($_POST) && $form->validate()) {
