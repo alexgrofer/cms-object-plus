@@ -10,50 +10,25 @@
 //$model_obj = uClasses::getclass('news_example')->objects()->findbypk($this->dicturls['paramslist'][1]); //найти
 $model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
 $addelem = array();
-$addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'file'));
+$addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'CMultiFileUpload'));
 $addrules = array();
-$addrules[] = array('image','file', 'types'=>'jpg, png');
+$addrules[] = array('image', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true); //task добавить в плагин
 $form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annotation_news_exampleprop_'=>'annotation prop','image'=>'файлы'),$addelem,$addrules);
-echo '<div style="border:1px solid red">';
-/*
- *
- */
-//$initFile->title(2,8); //новая сортировка, ключ элемента
-//$file = yii::app()->storeFile->obj(array(34,35) или array(15));
-/* @var CStoreFile $initFile */
-$initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
-// ->name('name',0); по умолчанию элемент "0" если новый, или если существует "3"
-//$initFile->name = 'name';
-//$initFile->title = 'title';
-//$initFile->file = '/tmp/patch';
-//$initFile->save(); //сохранить все элементы
-//echo $initFile->test;
-
-//попробудем просто сохранить файл с момощью библиотеки
-//получить объект файла
-
-/* @var CFile $uploaded */
-$uploaded = Yii::app()->file->set('EmptyForm[image]');
-//echo $uploaded->getMimeType();
-//echo $uploaded->copy('sdfsdf');
-echo $uploaded->getBasename();
-echo '</div>';
-
 
 if(count($_POST) && $form->validate()) {
-	//$model_obj->save();
+/*
+ * создать новый объект и добавить к нему фотки 12,14 добавить фотографии
+ * загружаем файлы если объект не создался удаляем эти файлы в исключении
+ */
+	$model_obj->save();
+	//сохраним файлы
+	$initFile = yii::app()->storeFile->obj();
+	$initFile->file = 'EmptyForm[image][0]';
+	$initFile->save();
+	//добавим эти файлы id в модель task все далаем тут или в модели?
 	Yii::app()->user->setFlash('savemodel','save model OK');
 	//$this->redirect(Yii::app()->request->url);
 }
-
-// end controller
-
-/*
- * создать новый объект добавить фотографии
- * редактировать объект добавить фотографии
- * удалить отдельные фото
- * отсортировать фото
- */
 
 
 if(Yii::app()->user->hasFlash('savemodel')) {

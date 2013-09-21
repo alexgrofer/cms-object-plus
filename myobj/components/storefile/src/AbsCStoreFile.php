@@ -73,7 +73,7 @@ class AbsCStoreFile extends CComponent {
 		$this->_tmpFiles[$key] = $path;
 	}
 	public function get_file($key) {
-		$this->_tmpFiles[$key];
+		return $this->_tmpFiles[$key];
 	}
 	public function setFile($path) {
 		$this->set_file($path,0);
@@ -116,6 +116,11 @@ class AbsCStoreFile extends CComponent {
 		//сохранить файл если он изменялся - делает плагин
 		//переписать базу - делает плагин
 		//если исключение удалить файл - делает плагин
+		/* @var CFile $objCFile */
+		foreach($this->_tmpFiles as $path) {
+			$objCFile = Yii::app()->file->set($path);
+			$objCFile->copy($objCFile->basename);
+		}
 	}
 
 	/**
