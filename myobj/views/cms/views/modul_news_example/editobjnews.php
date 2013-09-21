@@ -30,6 +30,7 @@ if(count($_POST) && $form->validate()) {
 	$initFile->setFolderAll('news'); //установить главную папку для загрузки
 
 	$initFile->file = 'EmptyForm[image][0]';
+	$initFile->path = $model_obj->id; //логическая папка файлов новости
 	$initFile->save();
 	//добавим эти файлы id в модель task все далаем тут или в модели?
 	Yii::app()->user->setFlash('savemodel','save model OK');

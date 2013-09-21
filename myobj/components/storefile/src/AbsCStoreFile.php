@@ -1,11 +1,10 @@
 <?php
 class AbsCStoreFile extends CComponent {
-	/** @var integer сохраненный id объекта в базе данных */
 	private $_id;
 	/**
 	 * @var array массив в который сохраняются все данные
 	 */
-	private $_arrayNameTitlePath=array();
+	private $_arrayConfObj=array();
 	/**
 	 * @var DefaultPluginStoreFile объект плагина настройки
 	 */
@@ -30,16 +29,17 @@ class AbsCStoreFile extends CComponent {
 	}
 	public function __construct($objPlugin, $objAR) {
 		$this->_objPlugin = $objPlugin;
+		//собрать переменную $this_arrayConfObj если есть $objAR
 	}
 	public function  getId() {
 		return $this->_id;
 	}
 
 	public function set_name($name,$key=0) {
-		$this->_arrayNameTitlePath[$key]['name'] = $name;
+		$this->_arrayConfObj[$key]['name'] = $name;
 	}
 	public function get_name($key) {
-		$this->_arrayNameTitlePath[$key]['name'];
+		$this->_arrayConfObj[$key]['name'];
 	}
 	public function setName($name) {
 		$this->set_name($name,0);
@@ -49,10 +49,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_title($title,$key=0) {
-		$this->_arrayNameTitlePath[$key]['title'] = $title;
+		$this->_arrayConfObj[$key]['title'] = $title;
 	}
 	public function get_title($key) {
-		$this->_arrayNameTitlePath[$key]['title'];
+		$this->_arrayConfObj[$key]['title'];
 	}
 	public function setTitle($title) {
 		$this->set_title($title,0);
@@ -62,10 +62,11 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_path($path,$key=0) {
-		$this->_arrayNameTitlePath[$key]['path'] = $path;
+		//не отрубить в конце слеш
+		$this->_arrayConfObj[$key]['path'] = $path;
 	}
 	public function get_path($key) {
-		$this->_arrayNameTitlePath[$key]['path'];
+		($this->_arrayConfObj[$key]['path'])?$this->_arrayConfObj[$key]['path'].DIRECTORY_SEPARATOR:'';
 	}
 	public function setPath($path) {
 		$this->set_path($path,0);
@@ -75,10 +76,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_sort($sort,$key=0) {
-		$this->_arrayNameTitlePath[$key]['sort'] = $sort;
+		$this->_arrayConfObj[$key]['sort'] = $sort;
 	}
 	public function get_sort($key) {
-		$this->_arrayNameTitlePath[$key]['sort'];
+		$this->_arrayConfObj[$key]['sort'];
 	}
 	public function setSort($sort) {
 		$this->set_sort($sort,0);
@@ -136,10 +137,10 @@ class AbsCStoreFile extends CComponent {
 		//если исключение удалить файл - делает плагин
 		/* @var CFile $objCFile */
 		$objPlugin = $this->_objPlugin;
-		foreach($this->_tmpFiles as $path) {
+		foreach($this->_tmpFiles as $k => $path) {
 			$objCFile = Yii::app()->file->set($path);
-			$folderAll = $this->getFolderAll();
-			$objCFile->copy(($objPlugin::PATH_LOAD).DIRECTORY_SEPARATOR.$folderAll.$objCFile->basename);
+			$confFolder = ($objPlugin::PATH_LOAD).DIRECTORY_SEPARATOR.$this->getFolderAll().$this->get_path($k);
+			$objCFile->copy($confFolder.$objCFile->basename);
 		}
 	}
 
@@ -148,7 +149,7 @@ class AbsCStoreFile extends CComponent {
 	 * @param integer $key по умолчанию 0 для нового элемента
 	 */
 	public function del($key) {
-		unset($this->_arrayNameTitlePath[$key]);
+		unset($this->_arrayConfObj[$key]);
 		$this->save();
 	}
 }
