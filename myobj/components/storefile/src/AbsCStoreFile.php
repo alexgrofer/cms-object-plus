@@ -1,12 +1,30 @@
 <?php
 class AbsCStoreFile extends CComponent {
-	/** @var null объект */
+	/** @var integer сохраненный id объекта в базе данных */
 	private $_id;
+	/**
+	 * @var array массив в который сохраняются все данные
+	 */
 	private $_arrayNameTitlePath=array();
+	/**
+	 * @var DefaultPluginStoreFile объект плагина настройки
+	 */
 	private $_objPlugin;
 	private $_tmpFiles;
 	private $_tmpEx_s;
 	private $_tmpRand_s;
+	/**
+	 * @var string папка сохранения для всех новых объектов
+	 */
+	private $_folderAll;
+
+	public function setFolderAll($folder) {
+		$this->_folderAll = $folder;
+	}
+	public function getFolderAll() {
+		return ($this->_folderAll)?$this->_folderAll.DIRECTORY_SEPARATOR:'';
+	}
+
 	public function getNamePlugin() {
 		return get_class($this->_objPlugin);
 	}
@@ -117,9 +135,11 @@ class AbsCStoreFile extends CComponent {
 		//переписать базу - делает плагин
 		//если исключение удалить файл - делает плагин
 		/* @var CFile $objCFile */
+		$objPlugin = $this->_objPlugin;
 		foreach($this->_tmpFiles as $path) {
 			$objCFile = Yii::app()->file->set($path);
-			$objCFile->copy($objCFile->basename);
+			$folderAll = $this->getFolderAll();
+			$objCFile->copy(($objPlugin::PATH_LOAD).DIRECTORY_SEPARATOR.$folderAll.$objCFile->basename);
 		}
 	}
 

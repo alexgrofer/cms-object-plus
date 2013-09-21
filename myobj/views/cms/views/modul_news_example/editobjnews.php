@@ -7,8 +7,8 @@
  *
  */
 
-//$model_obj = uClasses::getclass('news_example')->objects()->findbypk($this->dicturls['paramslist'][1]); //найти
-$model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
+$model_obj = uClasses::getclass('news_example')->objects()->findbypk(3); //найти
+//$model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
 $addelem = array();
 $addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'CMultiFileUpload'));
 $addrules = array();
@@ -17,12 +17,18 @@ $form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annota
 
 if(count($_POST) && $form->validate()) {
 /*
- * создать новый объект и добавить к нему фотки 12,14 добавить фотографии
- * загружаем файлы если объект не создался удаляем эти файлы в исключении
+ * -создать новый объект и добавить к нему фотки 12,14 добавить фотографии
+ * -загружаем файлы если объект не создался удаляем эти файлы в исключении
+ * в каком месте производить эти действия ??
+ * -показать загруженные файлы
+ * -возможность удаления файла
  */
 	$model_obj->save();
 	//сохраним файлы
+	/* @var CStoreFile $initFile */
 	$initFile = yii::app()->storeFile->obj();
+	$initFile->setFolderAll('news'); //установить главную папку для загрузки
+
 	$initFile->file = 'EmptyForm[image][0]';
 	$initFile->save();
 	//добавим эти файлы id в модель task все далаем тут или в модели?
