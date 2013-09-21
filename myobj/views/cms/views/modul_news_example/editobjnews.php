@@ -1,21 +1,40 @@
 <?php
 /*
- * start controller - в реальной работе контроллер вынести или использовать контроллер по умолчанию
+ * start controller - в реальной работе контроллер вынести в отдельное представление
+ * и при событии $obj->save() - сохранить изобрадения переданные в псевдосвойстве
+ * а если пользователь удаляет или редактирует фотографии значит делаем доп input параметры которые будут говорить что сделал пользователь
+ * если удаляет - то в некотором параметре будет указано что он удаленн, возможно уже не к модели это будет относится, ну в модели саом собой убрать
+ *
  */
 
-$model_obj = uClasses::getclass('news_example')->objects()->findbypk($this->dicturls['paramslist'][1]); //найти
-//$model = uClasses::getclass('news_example')->initobject(); //создать новый
+//$model_obj = uClasses::getclass('news_example')->objects()->findbypk($this->dicturls['paramslist'][1]); //найти
+$model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
 $addelem = array();
 $addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'file'));
 $addrules = array();
 $addrules[] = array('image','file', 'types'=>'jpg, png');
 $form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annotation_news_exampleprop_'=>'annotation prop','image'=>'файлы'),$addelem,$addrules);
 
+/*
+ *
+ */
+//$initFile->title(2,8); //новая сортировка, ключ элемента
+//$file = yii::app()->storeFile->obj(array(34,35) или array(15));
+/* @var CStoreFile $initFile */
+$initFile = yii::app()->storeFile->obj(); //берет стандартный плагин
+// ->name('name',0); по умолчанию элемент "0" если новый, или если существует "3"
+//$initFile->name = 'name';
+//$initFile->title = 'title';
+//$initFile->file = '/tmp/patch';
+//$initFile->save(); //сохранить все элементы
+//echo $initFile->test;
+
+
 
 if(count($_POST) && $form->validate()) {
-	$model_obj->save();
+	//$model_obj->save();
 	Yii::app()->user->setFlash('savemodel','save model OK');
-	$this->redirect(Yii::app()->request->url);
+	//$this->redirect(Yii::app()->request->url);
 }
 
 // end controller
