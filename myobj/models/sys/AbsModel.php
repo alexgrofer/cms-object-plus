@@ -100,6 +100,9 @@ abstract class AbsModel extends CActiveRecord
 			'UserFormModel'=>array(
 				'class'=>'CmsFormModelBehavior',
 			),
+			'UseFileStore'=>array(
+				'class'=>'FileStoreARBehavior',
+			),
 		);
 	}
 	public function getMTMcol($model,$pkelem,$exp_select) {
