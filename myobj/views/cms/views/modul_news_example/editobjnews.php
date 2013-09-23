@@ -28,8 +28,10 @@ if(count($_POST) && $form->validate()) {
 	/* @var CStoreFile $initFile */
 	$initFile = yii::app()->storeFile->obj();
 	$initFile->setFolderAll('news'); //установить главную папку для загрузки
+	$initFile->isRandAll = true;
 
-	$initFile->file = 'EmptyForm[image][0]';
+
+	$initFile->fileAll = 'EmptyForm[image]';
 	$initFile->path = $model_obj->id; //логическая папка файлов новости
 	$initFile->save();
 	//добавим эти файлы id в модель task все далаем тут или в модели?

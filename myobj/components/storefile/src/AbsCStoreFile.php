@@ -1,45 +1,59 @@
 <?php
-class AbsCStoreFile extends CComponent {
+abstract class AbsCStoreFile extends CComponent {
 	private $_id;
 	/**
-	 * @var array массив в который сохраняются все данные
-	 */
-	private $_arrayConfObj=array();
-	/**
-	 * @var DefaultPluginStoreFile объект плагина настройки
+	 * @var DefaultPluginStoreFile объект плагина
 	 */
 	private $_objPlugin;
-	private $_tmpFiles;
-	private $_tmpEx_s;
-	private $_tmpRand_s;
-	/**
-	 * @var string папка сохранения для всех новых объектов
-	 */
-	private $_folderAll;
-
-	public function setFolderAll($folder) {
-		$this->_folderAll = $folder;
-	}
-	public function getFolderAll() {
-		return ($this->_folderAll)?$this->_folderAll.DIRECTORY_SEPARATOR:'';
-	}
-
 	public function getNamePlugin() {
 		return get_class($this->_objPlugin);
 	}
-	public function __construct($objPlugin, $objAR) {
-		$this->_objPlugin = $objPlugin;
-		//собрать переменную $this_arrayConfObj если есть $objAR
-	}
+	abstract public static function create($conf);
 	public function  getId() {
 		return $this->_id;
 	}
 
+	private $_oldRealArrayConfObj=array();
+	private $_realArrayConfObj=array();
+
+	private $_tmpArrayConfObj=array();
+
+	protected function _getDefParam($name,$key) {
+		return (isset($this->_realArrayConfObj[$key]) && isset($this->_realArrayConfObj[$key][$name]))?
+			$this->_realArrayConfObj[$key][$name]
+			:
+			null;
+	}
+	protected function _setDefParam($name,$key,$val) {
+		$this->_realArrayConfObj[$key][$name] = $val;
+	}
+
+	//custom methods
+	/**
+	 * @var string папка сохранения для всех новых объектов
+	 */
+	private $_folderAll;
+	public function setFolderAll($folder) {
+		$this->_folderAll = $folder;
+	}
+	public function getFolderAll() {
+		return ($this->_folderAll)?$this->_folderAll:'';
+	}
+
+	private $_isRandAll;
+	public function setIsRandAll($bool) {
+		$this->_isRandAll = $bool;
+	}
+	public function getIsRandAll() {
+		return $this->_isRandAll;
+	}
+	//end custom methods
+
 	public function set_name($name,$key=0) {
-		$this->_arrayConfObj[$key]['name'] = $name;
+		$this->_setDefParam('name',$key,$name);
 	}
 	public function get_name($key) {
-		$this->_arrayConfObj[$key]['name'];
+		return $this->_getDefParam('name',$key);
 	}
 	public function setName($name) {
 		$this->set_name($name,0);
@@ -49,10 +63,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_title($title,$key=0) {
-		$this->_arrayConfObj[$key]['title'] = $title;
+		$this->_setDefParam('title',$key,$title);
 	}
 	public function get_title($key) {
-		$this->_arrayConfObj[$key]['title'];
+		return $this->_getDefParam('title',$key);
 	}
 	public function setTitle($title) {
 		$this->set_title($title,0);
@@ -62,11 +76,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_path($path,$key=0) {
-		//не отрубить в конце слеш
-		$this->_arrayConfObj[$key]['path'] = $path;
+		$this->_setDefParam('path',$key,$path);
 	}
 	public function get_path($key) {
-		($this->_arrayConfObj[$key]['path'])?$this->_arrayConfObj[$key]['path'].DIRECTORY_SEPARATOR:'';
+		return $this->_getDefParam('path',$key);
 	}
 	public function setPath($path) {
 		$this->set_path($path,0);
@@ -76,10 +89,10 @@ class AbsCStoreFile extends CComponent {
 	}
 
 	public function set_sort($sort,$key=0) {
-		$this->_arrayConfObj[$key]['sort'] = $sort;
+		$this->_setDefParam('sort',$key,$sort);
 	}
 	public function get_sort($key) {
-		$this->_arrayConfObj[$key]['sort'];
+		return $this->_getDefParam('sort',$key);
 	}
 	public function setSort($sort) {
 		$this->set_sort($sort,0);
@@ -88,11 +101,24 @@ class AbsCStoreFile extends CComponent {
 		return $this->get_sort(0);
 	}
 
+	public function set_ex($ex,$key=0) {
+		$this->_setDefParam('ex',$key,$ex);
+	}
+	public function get_ex($key) {
+		return $this->_getDefParam('ex',$key);
+	}
+	public function setEx($path) {
+		$this->set_ex($path,0);
+	}
+	public function getEx() {
+		return $this->get_ex(0);
+	}
+	//not real
 	public function set_file($path,$key=0) {
-		$this->_tmpFiles[$key] = $path;
+		$this->_tmpArrayConfObj[$key]['file'] = $path;
 	}
 	public function get_file($key) {
-		return $this->_tmpFiles[$key];
+		return $this->_tmpArrayConfObj[$key]['file'];
 	}
 	public function setFile($path) {
 		$this->set_file($path,0);
@@ -101,55 +127,38 @@ class AbsCStoreFile extends CComponent {
 		return $this->get_file(0);
 	}
 
-	public function set_ex($path,$key=0) {
-		$this->_tmpEx_s[$key] = $path;
+	public function set_isRand($bool,$key=0) {
+		$this->_tmpArrayConfObj[$key]['rand'] = $bool;
 	}
-	public function get_ex($key) {
-		$this->_tmpEx_s[$key];
+	public function get_isRand($key) {
+		$this->_tmpArrayConfObj[$key]['rand'];
 	}
-	public function setEx($path) {
-		$this->set_ex($path,0);
+	public function setIsRand($bool) {
+		$this->set_isRand($bool,0);
 	}
-	public function getEx() {
-		return $this->get_ex(0);
+	public function getIsRand() {
+		return $this->get_isRand(0);
 	}
-
-	public function set_rand($path,$key=0) {
-		$this->_tmpRand_s[$key] = $path;
-	}
-	public function get_rand($key) {
-		$this->_tmpRand_s[$key];
-	}
-	public function setRand($path) {
-		$this->set_rand($path,0);
-	}
-	public function getRand() {
-		return $this->get_rand(0);
-	}
+	//end not real
 
 	/**
-	 * @param $name имя файла
 	 * Сохранить файл в базе и на сервере (может работать через сокет если это описано в плагине)
 	 */
 	public function save() {
+		//переписать объекты из базы данных если изменялся - делает плагин
 		//сохранить файл если он изменялся - делает плагин
-		//переписать базу - делает плагин
 		//если исключение удалить файл - делает плагин
 		/* @var CFile $objCFile */
 		$objPlugin = $this->_objPlugin;
-		foreach($this->_tmpFiles as $k => $path) {
-			$objCFile = Yii::app()->file->set($path);
-			$confFolder = ($objPlugin::PATH_LOAD).DIRECTORY_SEPARATOR.$this->getFolderAll().$this->get_path($k);
-			$objCFile->copy($confFolder.$objCFile->basename);
-		}
+		$objPlugin->save($this);
 	}
 
 	/**
 	 * Удалить файл и изменить объект
-	 * @param integer $key по умолчанию 0 для нового элемента
+	 * @param integer $key
 	 */
 	public function del($key) {
-		unset($this->_arrayConfObj[$key]);
-		$this->save();
+		$objPlugin = $this->_objPlugin;
+		$objPlugin->del($key);
 	}
 }

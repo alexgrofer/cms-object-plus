@@ -1,9 +1,9 @@
 <?php
-class AbsPluginStoreFile
+abstract class AbsPluginStoreFile
 {
-	protected static $nameClassFile='CStoreFile';
+	protected static $nameClassFile='';
 	/**
-	 * @var Некоторые дополнительные параметры для поведения
+	 * @var Некоторые дополнительные параметры для поведения плагина (будет кропать картинки определенным способом)
 	 */
 	protected $_params;
 	public function __construct($params=array()) {
@@ -11,17 +11,19 @@ class AbsPluginStoreFile
 	}
 
 	/**
-	 * Возвращает объекты типа файла
+	 * Возвращает объект-ы типа StoreFile
 	 * @param $arrIdObj
 	 */
 	public function factoryInit($arrIdObj) {
-		$nameClassFile =  static::$nameClassFile;
-		if($arrIdObj==null) {
-			return new $nameClassFile($this, null);
+		if(!$arrIdObj) {
+			return $this->createObjStoreFile();
 		}
 		elseif(count($arrIdObj)) {
-			//вернуть массив
+			$arrayObjStoreFile = array();
+			foreach($arrIdObj as $idObj) {
+				$arrayObjStoreFile[] = $this->createObjStoreFile($idObj);
+			}
+			return $arrayObjStoreFile;
 		}
-		return null;
 	}
 }
