@@ -12,6 +12,7 @@ class CCStoreFile extends CComponent {
 		Yii::import('application.modules.myobj.components.storefile.src.*');
 		Yii::import('application.modules.myobj.components.storefile.src.plugins.*');
 		Yii::import('application.modules.myobj.components.storefile.behaviors.*');
+		Yii::import('application.modules.myobj.models.modul_storefile.*');
 	}
 
 	/**

@@ -1,7 +1,11 @@
 <?php
 abstract class AbsPluginStoreFile
 {
+	/**
+	 * @var string Название класса файла
+	 */
 	protected static $nameClassFile='';
+
 	/**
 	 * @var Некоторые дополнительные параметры для поведения плагина (будет кропать картинки определенным способом)
 	 */
@@ -11,19 +15,9 @@ abstract class AbsPluginStoreFile
 	}
 
 	/**
-	 * Возвращает объект-ы типа StoreFile
-	 * @param $arrIdObj
+	 * Фабрика объектов файлов
+	 * @param null $arrIdObj
+	 * @return mixed
 	 */
-	public function factoryInit($arrIdObj) {
-		if(!$arrIdObj) {
-			return $this->createObjStoreFile();
-		}
-		elseif(count($arrIdObj)) {
-			$arrayObjStoreFile = array();
-			foreach($arrIdObj as $idObj) {
-				$arrayObjStoreFile[] = $this->createObjStoreFile($idObj);
-			}
-			return $arrayObjStoreFile;
-		}
-	}
+	abstract public function factoryInit($arrIdObj=null);
 }

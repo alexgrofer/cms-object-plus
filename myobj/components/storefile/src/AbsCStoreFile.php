@@ -5,10 +5,12 @@ abstract class AbsCStoreFile extends CComponent {
 	 * @var DefaultPluginStoreFile объект плагина
 	 */
 	private $_objPlugin;
+
+	abstract public static function create($arrConf);
+
 	public function getNamePlugin() {
 		return get_class($this->_objPlugin);
 	}
-	abstract public static function create($conf);
 	public function  getId() {
 		return $this->_id;
 	}
