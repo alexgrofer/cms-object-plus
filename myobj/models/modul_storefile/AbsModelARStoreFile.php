@@ -18,9 +18,13 @@ class AbsModelARStoreFile extends AbsModel
 	public $is_addFile;
 	//conf
 	/**
-	 * @var string Название класса плагина для обработки
+	 * @var DefaultPluginStoreFile Название класса плагина для обработки
 	 */
-	protected $pluginLoader;
+	public $pluginLoader;
+	/**
+	 * @var array Конфигурация плагина
+	 */
+	public $pluginConstructLoaderParamsConf;
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
@@ -64,16 +68,21 @@ class AbsModelARStoreFile extends AbsModel
 		);
 	}
 	protected function beforeDelete() {
+		parent::beforeDelete();
 		//build
-		return parent::beforeDelete();
+		$objClassPlugin = $this->pluginLoader($this->pluginLoaderParamsConf);
+		$file = $objClassPlugin->buildStoreFile($this);
+		$file->del();
+
+		return true;
 	}
 
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			//build
-			/*
-			 * создать если новый или найти если старый объект CStoreFile
-			 */
+			$objClassPlugin = $this->pluginLoader($this->pluginLoaderParamsConf);
+			$file = $objClassPlugin->buildStoreFile($this);
+			$file->save();
 			return true;
 		}
 		else return parent::beforeSave();

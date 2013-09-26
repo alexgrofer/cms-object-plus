@@ -159,7 +159,7 @@ abstract class AbsCStoreFile extends CComponent {
 	 * Удалить файл и изменить объект
 	 * @param integer $key
 	 */
-	public function del($key) {
+	public function del($key=null) {
 		$objPlugin = $this->_objPlugin;
 		$objPlugin->del($key);
 	}
