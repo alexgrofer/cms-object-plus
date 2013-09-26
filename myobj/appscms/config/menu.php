@@ -20,7 +20,7 @@ $menu = array(
 						'userpasport'=>array('label'=>'userpasport','url'=>array('admin/objects/models/userpasport')),
 					),
 			),
-			'storage files'=>array('label'=>'storage files','url'=>array('admin/objects/models/storagef')),
+			'storage files'=>array('label'=>'storage files','url'=>array('admin/objects/models/storefile')),
 			'db damps'=>array('label'=>'db damps','url'=>array('admin/objects/class/db_dump_sys','usercontroller'=>'userdbdamp')),
 		),
 	),

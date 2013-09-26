@@ -1,76 +1,56 @@
 <?php
-class filesStorage extends AbsModel
+class AbsModelARStoreFile extends AbsModel
 {
-	public $namefile;
-	public $descr;
-	public $url;
-	public $w_img;
-	public $h_img;
-	public $sort;
-	public $classprocdownload;
-	//build
-	public $user_folder;
+	/**
+	 * @var string Хранит сериализованный массив c ключами
+	 * обязательные:
+	 * path => 'folder1/folder2', - папка может быть пустым
+	 * name => 'file.pdf', - название файла
+	 * sort => '0', - сортировка
+	 * и любые другие:
+	 *
+	 */
 	public $file;
+	//build
+	public $file_ui;
 	public $force_save;
 	public $is_randName;
 	public $is_addFile;
+	//conf
 
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
 	}
-	//dynam rules
-	public $_rules = array(
-		array('namefile', 'length', 'max'=>60),
-		array('descr, url', 'length', 'max'=>255),
-		array('w_img, h_img', 'length', 'max'=>10),
-		array('descr, w_img, h_img', 'default', 'value'=>''),
-		array('sort', 'default', 'value'=>0),
-		//build
-		array('file', 'file', 'safe'=>true), // 'allowEmpty'=>true,
-		array('classprocdownload, user_folder, force_save', 'safe'),
-		array('is_randName', 'boolean'),
-		array('is_addFile', 'boolean'),
-	);
-	protected function getNameClassProcDownload() {
-		if(count($_POST)) {
-			$attributes_form = $_POST['EmptyForm'];
-			$nameClassProc = $attributes_form['classprocdownload'];
-			return $nameClassProc;
-		}
-		elseif($this->classprocdownload) {
-			return $this->classprocdownload;
-		}
-		return 'classFilesStorageDefault';
-	}
+
 	public function rules()
 	{
-		$nameClassProc = $this->getNameClassProcDownload();
-		$this->_rules = $nameClassProc::setRules($this);
+		return array(
+			array('file', 'required'),
+			//build
 
-		return $this->_rules;
+		);
 	}
 
 	public function attributeLabels() {
 		return array(
-			'descr' => 'description and alt img',
-			'url' => 'url file',
-			'w_img' => 'weight image',
-			'h_img' => 'height image',
+			//переводы?
 		);
 	}
 
 	public function ElementsForm() {
-		$arr_ElementsForm = array(
-			'classprocdownload'=>array(
-				'type'=>'dropdownlist',
-				'items'=>Yii::app()->appcms->config['ClassesFilesStorageProc'],
-			),
+		return array(
+			//сделать класс CArraySerializeElemAR, посмотреть как сделан CMultiFileUpload и где лежит, сделать возможность редактировать сериализованный одноммерный массив
 			'file'=>array(
-				'type'=>'CMultiFileUpload', //or file
+				'type'=>'text',
+			),
+			//build
+			//может резать файлы при необходимости? архивировать?
+			'file_ui'=>array(
+				'type'=>'CMultiFileUpload',
 			),
 			'force_save'=>array(
-				'type'=>'checkbox', //or file
+				'type'=>'checkbox',
 			),
 			'is_randName'=>array(
 				'type'=>'checkbox',
@@ -78,31 +58,17 @@ class filesStorage extends AbsModel
 			'is_addFile'=>array(
 				'type'=>'checkbox',
 			),
-			'url'=>array(
-				'type'=>'text',
-			),
-			'descr'=>array(
-				'type'=>'textarea',
-			),
-			'user_folder'=>array(
-				'type'=>'text',
-			),
 		);
-
-		$nameClassProc = $this->getNameClassProcDownload();
-		$arr_ElementsForm = $nameClassProc::editelems($arr_ElementsForm,$this);
-		return $arr_ElementsForm;
 	}
 	protected function beforeDelete() {
-		$nameClassProc = $this->getNameClassProcDownload();
-		$nameClassProc::befdel($this->url);
+		//build
 		return parent::beforeDelete();
 	}
 
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
-			$nameClassProc = $this->getNameClassProcDownload();
-			return $nameClassProc::procFile($this);
+			//build
+			return true;
 		}
 		else return parent::beforeSave();
 	}

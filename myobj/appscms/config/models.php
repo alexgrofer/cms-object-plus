@@ -37,9 +37,8 @@ $models = array(
 		'cols' => array('id'=>'id','lastname'=>'last name','firstname'=>'first name', 'user_id'=>'user_id'),
 	),
 	//storage files
-	'storagef' => array(
-		'namemodel' => 'filesStorage',
-		'edit' => null,
+	'storefile' => array(
+		'namemodel' => 'ModelARStoreFile',
 		'order_by' => array('id DESC'),
 	),
 	//example models
