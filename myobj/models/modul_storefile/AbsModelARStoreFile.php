@@ -17,7 +17,10 @@ class AbsModelARStoreFile extends AbsModel
 	public $is_randName;
 	public $is_addFile;
 	//conf
-
+	/**
+	 * @var string Название класса плагина для обработки
+	 */
+	protected $pluginLoader;
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
@@ -68,6 +71,9 @@ class AbsModelARStoreFile extends AbsModel
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			//build
+			/*
+			 * создать если новый или найти если старый объект CStoreFile
+			 */
 			return true;
 		}
 		else return parent::beforeSave();
