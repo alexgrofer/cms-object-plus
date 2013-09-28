@@ -7,8 +7,7 @@ final class DefaultPluginStoreFile extends AbsPluginStoreFile implements IPlugin
 	public function buildStoreFile($ARObj) {
 		//создать объект файла
 		$classStoreFile = self::NAME_CLASS_FILE;
-		$objStoreFile = new $classStoreFile($this); //необходимо всегда передавать объект плагина
-		//некоторые нужные манипуляции с объектом файла
+		$objStoreFile = new $classStoreFile($this,$ARObj);
 		return $objStoreFile;
 	}
 
@@ -29,13 +28,12 @@ final class DefaultPluginStoreFile extends AbsPluginStoreFile implements IPlugin
 			return $arrayObjStoreFile;
 		}
 	}
-	public function save($ARObj) {
-		print_r($ARObj);
-		echo 5;
+	public function save($objFile,$ARObj) {
+		echo 'у нас есть и объект файла и ar объект теперь нужно сохранить в базу данных';
 		//и как тут сохранять ?
 		exit;
 	}
-	public function del($ARObj) {
+	public function del($objFile,$ARObj) {
 
 	}
 }

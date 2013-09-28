@@ -4,8 +4,9 @@ abstract class AbsCStoreFile extends CComponent {
 	 * @var DefaultPluginStoreFile объект плагина
 	 */
 	private $_objPlugin;
-	public function __construct($objPlugin) {
+	public function __construct($objPlugin,$arObj) {
 		$this->_objPlugin = $objPlugin;
+		$this->_objAr = $arObj;
 	}
 	private $_id;
 
@@ -142,23 +143,4 @@ abstract class AbsCStoreFile extends CComponent {
 		return $this->get_isRand(0);
 	}
 	//end not real
-
-	/**
-	 * Сохранить файл в базе и на сервере (может работать через сокет если это описано в плагине)
-	 */
-	public function save() {
-		//переписать объекты из базы данных если изменялся - делает плагин
-		//сохранить файл если он изменялся - делает плагин
-		//если исключение удалить файл - делает плагин
-		/* @var CFile $objCFile */
-		$this->_objPlugin->save($this);
-	}
-
-	/**
-	 * Удалить файл и изменить объект
-	 * @param integer $key
-	 */
-	public function del($key=null) {
-		$this->_objPlugin->del($this,$key);
-	}
 }

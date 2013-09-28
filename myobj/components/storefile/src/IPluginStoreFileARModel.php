@@ -6,6 +6,4 @@
 interface IPluginStoreFileARModel
 {
 	public function buildStoreFile($ARObj);
-	public function save($ARObj);
-	public function del($ARObj);
 }
