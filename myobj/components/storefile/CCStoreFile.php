@@ -24,7 +24,7 @@ class CCStoreFile extends CComponent {
 	public function obj($nameClassPlugin=null,array $arrIdObj=null) {
 		if(is_array($nameClassPlugin))  $arrIdObj = $nameClassPlugin;
 		if($nameClassPlugin===null || is_array($nameClassPlugin)) $nameClassPlugin = 'DefaultPluginStoreFile';
-		$params = array(); //дополнительные параметры если это необходимо (например резать изображения другим способом)
+		$params = array('isSelfEdit'=>false); //дополнительные параметры если это необходимо (например резать изображения другим способом)
 		$objPlugin = new $nameClassPlugin($params);
 		if($arrIdObj) {
 			return $objPlugin->factoryInit($arrIdObj);

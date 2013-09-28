@@ -15,6 +15,7 @@ final class DefaultPluginStoreFile extends AbsPluginStoreFile implements IPlugin
 	public function factoryInit($arrIdObj=null) {
 		$nameClassARModel = $this->_params['ar_model_store_file'];
 		$objModelStoreFile = $nameClassARModel::model();
+		$objModelStoreFile->isSelfEdit($this->_params['isSelfEdit']);
 		if(!$arrIdObj) {
 			return $this->buildStoreFile($objModelStoreFile);
 		}
@@ -28,10 +29,13 @@ final class DefaultPluginStoreFile extends AbsPluginStoreFile implements IPlugin
 			return $arrayObjStoreFile;
 		}
 	}
-	public function save() {
-
+	public function save($ARObj) {
+		print_r($ARObj);
+		echo 5;
+		//и как тут сохранять ?
+		exit;
 	}
-	public function del() {
+	public function del($ARObj) {
 
 	}
 }

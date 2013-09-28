@@ -2,6 +2,13 @@
 class AbsModelARStoreFile extends AbsModel
 {
 	/**
+	 * @var bool Уплавление загрузкой из админки, при работе из компонента CCStoreFile эти события не должны выполняться
+	 */
+	public static $adminEdit=true;
+	public function isSelfEdit($bool) {
+		static::$adminEdit = $bool;
+	}
+	/**
 	 * @var string Хранит сериализованный массив c ключами
 	 * обязательные:
 	 * path => 'folder1/folder2', - папка может быть пустым
@@ -68,22 +75,27 @@ class AbsModelARStoreFile extends AbsModel
 	}
 	public function init() {
 		parent::init();
-		$this->objInitPlugin = new $this->namePluginLoader($this->pluginConstructLoaderParamsConf);
+		if(static::$adminEdit) {
+			$this->objInitPlugin = new $this->namePluginLoader($this->pluginConstructLoaderParamsConf);
+		}
 	}
 	protected function beforeDelete() {
 		parent::beforeDelete();
 		//build
-		$file = $this->objInitPlugin->buildStoreFile($this);
-		$file->del();
-
+		if(static::$adminEdit) {
+			$file = $this->objInitPlugin->buildStoreFile($this);
+			$file->del();
+		}
 		return true;
 	}
 
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			//build
-			$file = $this->objInitPlugin->buildStoreFile($this);
-			$file->save();
+			if(static::$adminEdit) {
+				$file = $this->objInitPlugin->buildStoreFile($this);
+				$file->save();
+			}
 			return true;
 		}
 		else return parent::beforeSave();
