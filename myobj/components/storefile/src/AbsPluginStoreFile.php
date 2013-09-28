@@ -20,4 +20,6 @@ abstract class AbsPluginStoreFile
 	 * @return mixed
 	 */
 	abstract public function factoryInit($arrIdObj=null);
+	abstract public function save();
+	abstract public function del();
 }

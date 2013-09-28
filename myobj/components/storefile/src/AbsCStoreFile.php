@@ -1,12 +1,13 @@
 <?php
 abstract class AbsCStoreFile extends CComponent {
-	private $_id;
 	/**
 	 * @var DefaultPluginStoreFile объект плагина
 	 */
 	private $_objPlugin;
-
-	abstract public static function create($arrConf);
+	public function __construct($objPlugin) {
+		$this->_objPlugin = $objPlugin;
+	}
+	private $_id;
 
 	public function getNamePlugin() {
 		return get_class($this->_objPlugin);
@@ -15,7 +16,6 @@ abstract class AbsCStoreFile extends CComponent {
 		return $this->_id;
 	}
 
-	private $_oldRealArrayConfObj=array();
 	private $_realArrayConfObj=array();
 
 	private $_tmpArrayConfObj=array();
@@ -151,8 +151,7 @@ abstract class AbsCStoreFile extends CComponent {
 		//сохранить файл если он изменялся - делает плагин
 		//если исключение удалить файл - делает плагин
 		/* @var CFile $objCFile */
-		$objPlugin = $this->_objPlugin;
-		$objPlugin->save($this);
+		$this->_objPlugin->save($this);
 	}
 
 	/**
