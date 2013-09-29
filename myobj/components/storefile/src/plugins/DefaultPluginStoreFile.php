@@ -8,13 +8,15 @@ final class DefaultPluginStoreFile extends AbsPluginStoreFile implements IPlugin
 		//создать объект файла
 		$classStoreFile = self::NAME_CLASS_FILE;
 		$objStoreFile = new $classStoreFile($this,$ARObj);
+		echo $ARObj->isSelfEdit();
+		echo 'тут нужно собрать объект класса что бы можно было читать его параметры<br/>';
 		return $objStoreFile;
 	}
 
 	public function factoryInit($arrIdObj=null) {
 		$nameClassARModel = $this->_params['ar_model_store_file'];
 		$objModelStoreFile = $nameClassARModel::model();
-		$objModelStoreFile->isSelfEdit($this->_params['isSelfEdit']);
+		$objModelStoreFile->setSelfEdit($this->_params['isSelfEdit']);
 		if(!$arrIdObj) {
 			return $this->buildStoreFile($objModelStoreFile);
 		}

@@ -4,9 +4,12 @@ class AbsModelARStoreFile extends AbsModel
 	/**
 	 * @var bool Уплавление загрузкой из админки, при работе из компонента CCStoreFile эти события не должны выполняться
 	 */
-	public static $adminEdit=true;
-	public function isSelfEdit($bool) {
+	protected static $adminEdit=false;
+	public function setSelfEdit($bool) {
 		static::$adminEdit = $bool;
+	}
+	public function isSelfEdit() {
+		return static::$adminEdit;
 	}
 	/**
 	 * @var string Хранит сериализованный массив c ключами

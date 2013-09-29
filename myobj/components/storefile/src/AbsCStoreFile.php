@@ -3,7 +3,7 @@ abstract class AbsCStoreFile extends CComponent {
 	/**
 	 * @var DefaultPluginStoreFile объект плагина
 	 */
-	private $_objPlugin;
+	protected  $_objPlugin;
 	public function __construct($objPlugin,$arObj) {
 		$this->_objPlugin = $objPlugin;
 		$this->_objAr = $arObj;
@@ -13,7 +13,7 @@ abstract class AbsCStoreFile extends CComponent {
 	public function getNamePlugin() {
 		return get_class($this->_objPlugin);
 	}
-	public function  getId() {
+	public function getId() {
 		return $this->_id;
 	}
 
