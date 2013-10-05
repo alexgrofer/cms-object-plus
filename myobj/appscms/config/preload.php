@@ -1,7 +1,7 @@
 <?php
 //системные компоненты
 $components_preload = array(
-	'storeFiles',
+
 );
 
 Yii::app()->params['api_conf_components_preload'] = $components_preload;
