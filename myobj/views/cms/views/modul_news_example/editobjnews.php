@@ -1,35 +1,43 @@
 <?php
 /*
- * start controller - в реальной работе контроллер вынести или использовать контроллер по умолчанию
+ * start controller - в реальной работе контроллер вынести в отдельное представление
  */
 
-$model_obj = uClasses::getclass('news_example')->objects()->findbypk($this->dicturls['paramslist'][1]); //найти
-//$model = uClasses::getclass('news_example')->initobject(); //создать новый
+$model_obj = uClasses::getclass('news_example')->objects()->findbypk(3); //найти
+//$model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
 $addelem = array();
-$addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'file'));
+$addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'CMultiFileUpload'));
 $addrules = array();
-$addrules[] = array('image','file', 'types'=>'jpg, png');
+$addrules[] = array('image', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true);
 $form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annotation_news_exampleprop_'=>'annotation prop','image'=>'файлы'),$addelem,$addrules);
 
-
 if(count($_POST) && $form->validate()) {
-	$model_obj->save();
-	Yii::app()->user->setFlash('savemodel','save model OK');
-	$this->redirect(Yii::app()->request->url);
-}
-
-// end controller
-
 /*
- * создать новый объект добавить фотографии
- * редактировать объект добавить фотографии
- * удалить отдельные фото
- * отсортировать фото
+ * показать загруженные файлы
+ * загрузка единичего файла если передаю не массив
+ * показать сами файлы виджет ниже формы
  */
+	$model_obj->save();
+	//сохраним файлы если они были добавленны
+	if(isset($_FILES['EmptyForm[image]'])) {
+		/* @var CStoreFile $initFile */
+		$initFile = yii::app()->storeFile->obj();
+		$initFile->setFolderAll('news'); //установить главную папку для загрузки (относительно настройки плагина)
+		$initFile->isRandAll = true; //все файлы будут названны рандомно
+
+		$initFile->fileAll = 'EmptyForm[image]'; //загрузит пачкой все файлы если EmptyForm[image] массив
+		$initFile->path = $model_obj->id; //логическая папка файлов новости $_FILES['EmptyForm[image]'] если это множество файлов
+		$initFile->save();
+		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
+	}
+	Yii::app()->user->setFlash('savemodel','save model OK');
+	//$this->redirect(Yii::app()->request->url);
+}
 
 
 if(Yii::app()->user->hasFlash('savemodel')) {
-	echo Yii::app()->user->getFlash('savemodel');
+	echo Yii::app()->user->getFlash('savemodel').'<br/>';
+	echo Yii::app()->user->getFlash('savefile');
 }
 
 $form->attributes = array('enctype' => 'multipart/form-data');
