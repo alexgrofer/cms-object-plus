@@ -9,7 +9,7 @@ $objects = array(
 	$classes_system['navigation'] => array(
 		'cols' => array('id'=>'id','vp1'=>'top','name'=>'name','vp2'=>'codename','bp1'=>'visible','sort'=>'sort'),
 		'edit' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','bp1'=>'visible'),
-		'controller' => array('usernav'=>'admin/nav_sys.php','default'=>''),
+		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),

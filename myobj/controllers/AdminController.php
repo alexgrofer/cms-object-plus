@@ -183,7 +183,7 @@ class AdminController extends Controller {
 					elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
 						$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
 					}
-					if(isset($namecontroller)) require(dirname(__FILE__).'/cms/'.$namecontroller);
+					if(isset($namecontroller)) require(dirname(__FILE__).'/cms/sys/'.$namecontroller);
 				}
 
 				unset($settui);
