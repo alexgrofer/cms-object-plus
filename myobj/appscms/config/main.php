@@ -10,13 +10,7 @@ $classes_system = array(
 	'db_dump'=>'db_dump_sys',
 );
 
-$arrayClassesFilesStorageProc = array(
-	'classFilesStorageDefault' => 'Default',
-);
-
 $tables_db_dump = array(
-	//files Default
-	'setcms_filesstorage',
 	//links
 	'setcms_linksobjectsallmy',
 	'setcms_linksobjectsallmy_links',

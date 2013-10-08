@@ -36,12 +36,6 @@ $models = array(
 		'relation' => array('user'=>array('user','userpasport')),
 		'cols' => array('id'=>'id','lastname'=>'last name','firstname'=>'first name', 'user_id'=>'user_id'),
 	),
-	//storage files
-	'storagef' => array(
-		'namemodel' => 'filesStorage',
-		'edit' => null,
-		'order_by' => array('id DESC'),
-	),
 	//example models
 	'testtablehm' => array(
 		'namemodel' => 'TestTableHM',
