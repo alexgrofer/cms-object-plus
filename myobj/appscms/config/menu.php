@@ -7,7 +7,7 @@ $menu = array(
 		),
 	),
 	'mvc'=>array(
-		'label'=>'mvc','items'=>array(
+		'label'=>'mvc','url'=>array('#'),'items'=>array(
 			'templates'=>array('label'=>'templates','url'=>array('admin/objects/class/templates_sys')),
 			'views'=>array('label'=>'views','url'=>array('admin/objects/class/views_sys/')),
 			'nav'=>array('label'=>'nav','url'=>array('admin/objects/class/navigation_sys/&usercontroller=usernav')),
@@ -15,7 +15,7 @@ $menu = array(
 		),
 	),
 	'conf'=>array(
-		'label'=>'conf','items'=>array(
+		'label'=>'conf','url'=>array('#'),'items'=>array(
 			'groups_sys'=>array('label'=>'groups sys', 'url'=>array('admin/objects/class/groups_sys/')),
 			'user'=>array(
 				'label'=>'user','url'=>array('admin/objects/models/user'),'items'=>array(

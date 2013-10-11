@@ -45,6 +45,9 @@ class AdminController extends Controller {
     }
 	public function run($actionID) {
 		//login
+        if(defined('YII_DEBUG') && YII_DEBUG){
+            Yii::app()->assetManager->forceCopy = true;
+        }
 		$noneadmin = true;
 		if(!Yii::app()->user->isGuest) {
 			$objectadmingroup = uClasses::getclass('groups_sys')->objects()->findByAttributes(array('vp2' => 'admincms'));
