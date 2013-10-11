@@ -39,6 +39,10 @@ class AdminController extends Controller {
 	public function getMenuhtmlSub() {
 		return $this->renderPartial('/sys/myui_sub');
 	}
+    public function getRoute()
+    {
+        return implode('/',array_slice(explode('/',Yii::app()->request->getParam('r')),1));
+    }
 	public function run($actionID) {
 		//login
 		$noneadmin = true;
@@ -58,7 +62,7 @@ class AdminController extends Controller {
 		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
 		$this->dicturls['admin'] = $this->createUrl($paramslisturl[1].'/');
 		$this->dicturls['class'] = $paramslisturl[2];
-		$this->dicturls['all'] = implode('/',array_slice($paramslisturl,1));
+		$this->dicturls['all'] = $this->getRoute();
 		$this->dicturls['paramslist'] = array_merge(array_slice($paramslisturl,3), array('','','','','','',''));
 		$indexaction = array_search('action',$this->dicturls['paramslist']);
 		$this->dicturls['action'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+1)]:'';
