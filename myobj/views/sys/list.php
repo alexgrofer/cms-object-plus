@@ -263,7 +263,7 @@ $relconfsetting = $REND_confmodel;
 
 if($relconfsetting && array_key_exists('relation', $relconfsetting)) {
 $rel_arr_vis = $relconfsetting['relation'];
-print_r($relconfsetting);
+
 if(count($rel_arr_vis)) {
 	foreach($REND_model->relations() as $namerelat => $val) {
 		if($keyfindname = array_search($namerelat,array_keys($rel_arr_vis)) !== false) {
