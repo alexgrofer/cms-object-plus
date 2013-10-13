@@ -14,8 +14,9 @@ $(function() {
 <style>
 .myMenuSub > li {display: none}
 .myMenuSub .active {display: block}
-.myMenuSub .active .active > a {color: red}
 </style>
+<div class="row-fluid">
+    <div class="span6">
 <div class="horizontal-menu">
 <?php
 $objMenu = $this->widget('zii.widgets.CMenu',array(
@@ -24,6 +25,11 @@ $objMenu = $this->widget('zii.widgets.CMenu',array(
     'items'=>yii::app()->appcms->config['controlui']['menu'],
     'activateParents'=>true,
 ));
+?>
+</div>
+</div>
+<div class="span6">
+<?php
 $arrSubMenu = array();
 foreach($objMenu->items as $keyElem => $arItem) {
     if($arItem['active']) {
@@ -35,11 +41,13 @@ if($arrSubMenu) {
     $this->widget('zii.widgets.CMenu',array(
         'id'=>'myMenuSub',
         'htmlOptions'=>array('class'=>'myMenuSub'),
+        'submenuHtmlOptions'=>array('class'=>'nav nav-pills'),
         'items'=>$arrSubMenu,
         'activateParents'=>true,
     ));
 }
 ?>
+    </div>
 </div>
 <?php
 $this->renderClip('header');
