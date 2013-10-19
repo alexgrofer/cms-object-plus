@@ -54,6 +54,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	public $properties = array();
 	//метод позволяет установить новое свойство для объекта
 	public function set_properties($name, $value) {
+		//этот хук необходим для адекватной обработки rules
+		$nameelem = $name.'prop_';
+		$this->$nameelem = $value;
+
 		$this->properties[$name] = $value;
 	}
 	private $_propertiesdict = array();
@@ -262,7 +266,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	protected function afterValidate() {
 
 		parent::afterValidate();
+
 		if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+		if(!isset($_POST['EmptyForm'])) return;
 		foreach($_POST['EmptyForm'] as $key => $value) {
 			//start prop
 			if(($posptop = strpos($key, 'prop_'))!==false) {
@@ -274,5 +280,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				$this->$key = $value;
 			}
 		}
+
 	}
 }
