@@ -15,20 +15,16 @@ class myObjHeaders extends AbsBaseHeaders
 		return array_merge($relations, $thisRelations);
 	}
 
-	public function rules()
-	{
-		return array(
-			array('name', 'required'),
-			array('name', 'type', 'type'=>'string'),
-			array('sort', 'default', 'value'=>0),
-			array('bpublic', 'boolean'),
-			array('bpublic', 'default', 'value'=>false),
-			array('content', 'safe'),
-		);
-	}
+	public $costRules = array(
+		array('name', 'required'),
+		array('name', 'type', 'type'=>'string'),
+		array('sort', 'default', 'value'=>0),
+		array('bpublic', 'boolean'),
+		array('bpublic', 'default', 'value'=>false),
+	);
 
 	public function ElementsForm() {
-		return array(
+		$elements = array(
 			'name'=>array(
 				'type'=>'text',
 			),
@@ -42,6 +38,7 @@ class myObjHeaders extends AbsBaseHeaders
 				'type'=>'checkbox',
 			)
 		);
+		return array_merge($elements,$this->costElementsForm);
 	}
 }
 
