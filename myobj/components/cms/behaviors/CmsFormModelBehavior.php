@@ -87,26 +87,6 @@ class CmsFormModelBehavior extends CActiveRecordBehavior {
 			//set lamda function
 		}
 		$form = new CForm($confform,$dinamicForm);
-		if(array_key_exists('EmptyForm',$POSTORGET)!==false && $form->validate()) {
-			if(!$model->id && method_exists(get_class($model),'get_properties')) $model->uclass_id = $model->uclass->id;
-			foreach($POSTORGET['EmptyForm'] as $key => $value) {
-				//start prop
-				if(($posptop = strpos($key, 'prop_'))!==false) {
-					$trynameprop = substr($key,0,$posptop);
-					$model->set_properties($trynameprop,$value);
-				}
-				//end prop
-				else {
-					$namemodelprop = $key;
-					if(!property_exists($model, $key) && count($this->revelem) && array_key_exists($key,$this->revelem)) {
-						$namemodelprop = $this->revelem[$key];
-					}
-					if(property_exists($model, $namemodelprop)) {
-						$model->$namemodelprop = $value;
-					}
-				}
-			}
-		}
 		return $form;
 	}
 }
