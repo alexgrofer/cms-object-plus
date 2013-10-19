@@ -252,6 +252,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
 				$this->costElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
+			//запомнить старые значения иногда это требуется
+			foreach($this->attributes as $key => $value) {
+				$this->old_attributes[$key] = $value;
+			}
 		}
 		return $this->costRules;
 	}

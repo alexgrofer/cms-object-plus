@@ -38,27 +38,9 @@ class CmsFormModelBehavior extends CActiveRecordBehavior {
 
 		foreach($confform['elements'] as $key => $value) {
 			$namemodelprop = $key;
-			if(!property_exists($model, $key) && count($this->revelem)) {
-				if(array_key_exists($key,$this->revelem)) {
-					$namemodelprop = $this->revelem[$key];
-				}
-				else {
-					continue;
-				}
-			}
 			$dinamicForm->$key = $model->$namemodelprop;
-			$model->old_attributes[$key] = $model->$namemodelprop;
-			if(array_key_exists('EmptyForm',$POSTORGET)) {
-				if(array_key_exists($key,$POSTORGET['EmptyForm'])) {
-					$dinamicForm->$key = $POSTORGET['EmptyForm'][$key];
-				}
-			}
 		}
-		foreach($model->attributes as $key => $value) {
-			if(!array_key_exists($key,$confform['elements'])) {
-				$dinamicForm->$key = $value;
-			}
-		}
+
 		$dinamicForm->rules = $rulesall;
 		if(count($addRules)) {
 			$dinamicForm->rules = array_merge($dinamicForm->rules,$addRules);
