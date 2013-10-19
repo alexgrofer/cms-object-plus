@@ -201,11 +201,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return parent::beforeDelete();
 	}
 	public $costRules=array();
-	public function __set($name, $value) {
-		if(!property_exists(get_class($this), $name)) {
-			$this->$name = $value;
-		}
-	}
+
 	protected $costElementsForm=array();
 	public function rules() {
 		if(method_exists(get_class($this),'get_properties')) {
@@ -270,6 +266,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				$this->set_properties($trynameprop,$value);
 			}
 			//end prop
+			elseif(property_exists($this, $key)) {
+				$this->$key = $value;
+			}
 		}
 	}
 }
