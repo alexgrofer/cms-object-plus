@@ -261,25 +261,27 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				$this->old_attributes[$key] = $value;
 			}
 		}
-		return $this->costRules;
-	}
-	protected function afterValidate() {
+		//а куда это положить ???
 
-		parent::afterValidate();
+		if(isset($_POST['EmptyForm'])) {
+			foreach($_POST['EmptyForm'] as $key => $value) {
+				//start prop
+				if(($posptop = strpos($key, 'prop_'))!==false) {
+					$trynameprop = substr($key,0,$posptop);
+					$this->set_properties($trynameprop,$value);
+				}
+				//end prop
+				elseif(property_exists($this, $key)) {
+					$this->$key = $value;
+				}
 
-		if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
-		if(!isset($_POST['EmptyForm'])) return;
-		foreach($_POST['EmptyForm'] as $key => $value) {
-			//start prop
-			if(($posptop = strpos($key, 'prop_'))!==false) {
-				$trynameprop = substr($key,0,$posptop);
-				$this->set_properties($trynameprop,$value);
-			}
-			//end prop
-			elseif(property_exists($this, $key)) {
-				$this->$key = $value;
 			}
 		}
-
+		return $this->costRules;
+	}
+	protected function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+		}
 	}
 }
