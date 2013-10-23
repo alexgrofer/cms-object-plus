@@ -223,6 +223,13 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return $this->currentElementsForm;
 	}
 	public function rules() {
+		return $this->currentRules;
+	}
+	public function init() {
+		parent::init();
+		$this->dinamicModel();
+	}
+	protected function dinamicModel() {
 		if($currentproperties = $this->get_properties()) {
 			$arrconfcms = Yii::app()->appcms->config;
 			foreach($this->uclass->properties as $prop) {
@@ -271,7 +278,5 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				$this->currentElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
 		}
-
-		return $this->currentRules;
 	}
 }
