@@ -261,8 +261,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				$this->old_attributes[$key] = $value;
 			}
 		}
-		//а куда это положить ???
 
+		return $this->costRules;
+	}
+	protected function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+		}
+	}
+	protected function beforeValidate() {
 		if(isset($_POST['EmptyForm'])) {
 			foreach($_POST['EmptyForm'] as $key => $value) {
 				//start prop
@@ -277,11 +284,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
 			}
 		}
-		return $this->costRules;
-	}
-	protected function beforeSave() {
-		if(parent::beforeSave()!==false) {
-			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
-		}
+		return parent::beforeValidate();
 	}
 }
