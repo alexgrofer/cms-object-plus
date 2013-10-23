@@ -114,8 +114,11 @@ abstract class AbsModel extends CActiveRecord
 		}
 	}
 
-	public function __set($name, $value) {
-		$this->$name = $value;
-		parent::__set($name, $value);
+	public function init() {
+		parent::init();
+		//запомнить старые значения иногда это требуется
+		foreach($this->attributes as $key => $value) {
+			$this->old_attributes[$key] = $value;
+		}
 	}
 }

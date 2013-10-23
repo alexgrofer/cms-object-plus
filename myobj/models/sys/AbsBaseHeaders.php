@@ -204,13 +204,27 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		return parent::beforeDelete();
 	}
-	public $costRules=array();
 
-	protected $costElementsForm=array();
+	protected function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+		}
+	}
+
+	public function __set($name, $value) {
+		//только если это свойство task
+		$this->$name = $value;
+		parent::__set($name, $value);
+	}
+
+	public $currentRules=array();
+	public $currentElementsForm=array();
+	public function elementsForm() {
+		return $this->currentElementsForm;
+	}
 	public function rules() {
-		if(method_exists(get_class($this),'get_properties')) {
+		if($currentproperties = $this->get_properties()) {
 			$arrconfcms = Yii::app()->appcms->config;
-			$currentproperties = $this->get_properties();
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
 				$this->$nameelem = '';
@@ -221,10 +235,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 					$this->$nameelem = $currentproperties[$prop->codename];
 				}
 
-				if($prop->minfield) $this->costRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
-				if($prop->maxfield) $this->costRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
-				if($prop->required) $this->costRules[] = array($nameelem, 'required');
-				if($prop->udefault) $this->costRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
+				if($prop->minfield) $this->currentRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
+				if($prop->maxfield) $this->currentRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
+				if($prop->required) $this->currentRules[] = array($nameelem, 'required');
+				if($prop->udefault) $this->currentRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
 				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
@@ -242,48 +256,22 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 							}
 						}
 					}
-					$this->costRules[] = $addarrsett;
+					$this->currentRules[] = $addarrsett;
 				}
 				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
 				else {
-					$this->costRules[] = array($nameelem, 'safe');
+					$this->currentRules[] = array($nameelem, 'safe');
 				}
-				if($nametypef=='bool') $this->costRules[] = array($nameelem, 'boolean');
-				if($nametypef=='url') $this->costRules[] = array($nameelem, 'url');
-				if($nametypef=='email') $this->costRules[] = array($nameelem, 'email');
+				if($nametypef=='bool') $this->currentRules[] = array($nameelem, 'boolean');
+				if($nametypef=='url') $this->currentRules[] = array($nameelem, 'url');
+				if($nametypef=='email') $this->currentRules[] = array($nameelem, 'email');
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
 
-				$this->costElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
-			}
-			//запомнить старые значения иногда это требуется
-			foreach($this->attributes as $key => $value) {
-				$this->old_attributes[$key] = $value;
+				$this->currentElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
 		}
 
-		return $this->costRules;
-	}
-	protected function beforeSave() {
-		if(parent::beforeSave()!==false) {
-			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
-		}
-	}
-	protected function beforeValidate() {
-		if(isset($_POST['EmptyForm'])) {
-			foreach($_POST['EmptyForm'] as $key => $value) {
-				//start prop
-				if(($posptop = strpos($key, 'prop_'))!==false) {
-					$trynameprop = substr($key,0,$posptop);
-					$this->set_properties($trynameprop,$value);
-				}
-				//end prop
-				elseif(property_exists($this, $key)) {
-					$this->$key = $value;
-				}
-
-			}
-		}
-		return parent::beforeValidate();
+		return $this->currentRules;
 	}
 }
