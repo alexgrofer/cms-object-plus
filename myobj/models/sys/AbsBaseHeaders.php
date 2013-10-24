@@ -227,7 +227,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	 * @return array типы полей для удобной автогенерирации форм
 	 */
 	public function elementsForm() {
-		return $this->currentElementsForm;
+		return array('elements'=>$this->currentElementsForm);
 	}
 	public function dinamicModel() {
 		//добавляем свойтсва к модели

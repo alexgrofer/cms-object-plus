@@ -36,6 +36,20 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'elem'=>array('type'=>'textarea'));
 }
 
+$REND_model->name='sfsdfs';
+$REND_model->set_properties('teststr','d');
+print_r($REND_model->rules());
+print_r($REND_model->get_properties());
+
+echo (int)$REND_model->validate();
+print_r($REND_model->getErrors());
+print_r($REND_model->elementsForm());
+$form = new CForm($REND_model->elementsForm(), $REND_model);
+$form->attributes = array('enctype' => 'multipart/form-data');
+echo $form;
+CHtml::endForm();
+
+exit;
 
 //задача такова что мы для нового элемента тоже можем установить параметры
 $form = $REND_model->UserFormModel->initform($_POST,$REND_editform,$REND_addElem);
@@ -45,12 +59,7 @@ $form->attributes = array('enctype' => 'multipart/form-data');
 //echo $form;
 
 //ELSE difficult
-$form->activeForm = array(
-	'enableClientValidation'=>true,
-	'clientOptions'=>array(
-		'validateOnSubmit'=>true,
-	),
-);
+
 echo $form->renderBegin();
 
 foreach($form->getElements() as $element) {
