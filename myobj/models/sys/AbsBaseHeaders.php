@@ -271,6 +271,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				if($nametypef=='bool') $this->currentRules[] = array($nameelem, 'boolean');
 				if($nametypef=='url') $this->currentRules[] = array($nameelem, 'url');
 				if($nametypef=='email') $this->currentRules[] = array($nameelem, 'email');
+
+				//добавить в типы полей формы элементы для свойств
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				$this->currentElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
 		}
 	}
