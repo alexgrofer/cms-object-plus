@@ -278,13 +278,14 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			}
 		}
 	}
-
+	public function afterFind() {
+		$this->dinamicModel();
+	}
 	/**
 	 * @return array возврает паравила валидации для модели
 	 */
 	public function rules() {
 		//метод который позволяет собрать модель в момент когда проверяются правила
-		$this->dinamicModel();
 		return $this->currentRules;
 	}
 }
