@@ -211,9 +211,25 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 	}
 
+	/**
+	 * @return bool Проверяет если свойство класса свойством псевдо класса объекта texttestprop_
+	 */
+	protected function isProp($name) {
+		return true;
+	}
 	public function __set($name, $value) {
-		//только если это свойство task
-		$this->$name = $value;
+		if($name=='attributes' && is_array($value) && count($value)) {
+			//заполнить кастомные для свойств
+			//нужно юудет осбободить все элементы которые не являются $this->attributeNames()
+			foreach($value as ) {
+				if() {
+					//и сразу положить в свойство set_properties
+				}
+			}
+		}
+		elseif($this->isProp($name)) { //разрешием добавление если это свойство
+			$this->$name = $value;
+		}
 		parent::__set($name, $value);
 	}
 
