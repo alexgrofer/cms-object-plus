@@ -217,31 +217,36 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		parent::__set($name, $value);
 	}
 
-	public $currentRules=array();
-	public $currentElementsForm=array();
+	/**
+	 * @var array правила валидации свойств модели
+	 */
+	protected  $currentRules=array();
+	protected  $currentElementsForm=array();
+
+	/**
+	 * @return array типы полей для удобной автогенерирации форм
+	 */
 	public function elementsForm() {
 		return $this->currentElementsForm;
 	}
-	public function rules() {
-		$this->setAttribute('d','d');
+	public function dinamicModel() {
+		//добавляем свойтсва к модели
 		if($currentproperties = $this->get_properties()) {
 			$arrconfcms = Yii::app()->appcms->config;
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
-				$this->$nameelem = '';
-				if(array_key_exists('EmptyForm',$_POST) && array_key_exists($nameelem, $_POST['EmptyForm'])) {
-					$this->$nameelem = $_POST['EmptyForm'][$nameelem];
-				}
-				else {
-					$this->$nameelem = $currentproperties[$prop->codename];
-				}
-
+				//инициализируем свойство
+				$this->$nameelem = $currentproperties[$prop->codename];
+				//устанавливаем правила валидации
 				if($prop->minfield) $this->currentRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
 				if($prop->maxfield) $this->currentRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
 				if($prop->required) $this->currentRules[] = array($nameelem, 'required');
 				if($prop->udefault) $this->currentRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				/*
+				 * для некоторый свойство возможна тонкая настройка type=>string
+				 */
 				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
 					$addarrsett = array($nameelem);
 					$parsecvs = str_getcsv($prop->setcsv,"\n");
@@ -266,12 +271,16 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				if($nametypef=='bool') $this->currentRules[] = array($nameelem, 'boolean');
 				if($nametypef=='url') $this->currentRules[] = array($nameelem, 'url');
 				if($nametypef=='email') $this->currentRules[] = array($nameelem, 'email');
-
-				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-
-				$this->currentElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
 		}
+	}
+
+	/**
+	 * @return array возврает паравила валидации для модели
+	 */
+	public function rules() {
+		//метод который позволяет собрать модель в момент когда проверяются правила
+		$this->dinamicModel();
 		return $this->currentRules;
 	}
 }
