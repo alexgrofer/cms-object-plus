@@ -36,44 +36,30 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'elem'=>array('type'=>'textarea'));
 }
 
-$REND_model->name='sfsdfs';
-$REND_model->set_properties('teststr','d');
-print_r($REND_model->rules());
-print_r($REND_model->get_properties());
 
-echo (int)$REND_model->validate();
-print_r($REND_model->getErrors());
-print_r($REND_model->elementsForm());
+
+
+$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
+if($paramsQueryPostModel) {
+	//заполнит модель исходя из параметров (умеет читать свойства и другие типы который будут в дальнейшем)
+	$REND_model->attributesAll = $paramsQueryPostModel;
+}
+
+//
 $form = new CForm($REND_model->elementsForm(), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
-echo $form;
-CHtml::endForm();
-
-exit;
-
-//задача такова что мы для нового элемента тоже можем установить параметры
-$form = $REND_model->UserFormModel->initform($_POST,$REND_editform,$REND_addElem);
-$form->attributes = array('enctype' => 'multipart/form-data');
-//IF just
-
-//echo $form;
-
-//ELSE difficult
-
 echo $form->renderBegin();
 
 foreach($form->getElements() as $element) {
 	echo $element->render();
 }
 
-
 echo '<p>'.CHtml::submitButton('save').'</p>';
-
 
 echo $form->renderEnd();
 //END
 
-if(count($_POST) && $form->validate()) {
+if(false && count($_POST) && $form->validate()) {
 	$REND_model->save();
 
 	if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
