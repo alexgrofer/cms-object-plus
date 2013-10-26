@@ -41,8 +41,10 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
-	//заполнит модель исходя из параметров (умеет читать свойства и другие типы который будут в дальнейшем)
+	//заполнить атрибуты модели
 	$REND_model->attributes = $paramsQueryPostModel;
+	//заполнить свойства модели
+	$REND_model->properties = $paramsQueryPostModel;
 }
 
 //

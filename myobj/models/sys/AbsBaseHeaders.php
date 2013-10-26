@@ -79,7 +79,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		return $this->_propertiesdict;
 	}
-	private function _f_prev_save_prop() {
+	private function _saveProperties() {
 		$classproperties = $this->uclass->properties;
 		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
 		$arraylinesvalue = array();
@@ -170,7 +170,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			}
 			//если были изменены свойства то сохраняем их
 			if(count($this->properties)) {
-				$this->_f_prev_save_prop();
+				$this->_saveProperties();
 			}
 			return true;
 		}
@@ -218,18 +218,20 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return true;
 	}
 	public function __set($name, $value) {
-		if($name=='attributes' && is_array($value) && count($value)) {
-			//заполнить кастомные для свойств
-			//нужно юудет осбободить все элементы которые не являются $this->attributeNames()
-			foreach($value as ) {
-				if() {
-					//и сразу положить в свойство set_properties
+		//properties обработка свойств объекта
+		//если нужно заполнить свойство пачкой к примеру из $_POST['MyModel'], необходимо очистить от названия prop_
+		if($name=='properties' && is_array($value) && count($value)) {
+			foreach($value as $key => $val) {
+				if($pos = strpos($key,'prop_')!==false) {
+					$this->properties[substr($key,0,$pos)] = $val;
 				}
 			}
 		}
-		elseif($this->isProp($name)) { //разрешием добавление если это свойство
-			$this->$name = $value;
+		elseif(!is_array($value)) {
+			//если свойство не существует вызывать исключение task
 		}
+		//end properties
+
 		parent::__set($name, $value);
 	}
 
