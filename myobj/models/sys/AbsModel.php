@@ -29,7 +29,7 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		//для обычных моделей свойтва не трубуются
-		if($this->isHeaderModel) $properties = $this->getallprop();
+		if($this->isHeaderModel) $properties = $this->properties; //task проверить тут были изменения теперь только свойства этого объекта выбираются раньше выбиральсь все
 		$arrconfcms = Yii::app()->appcms->config;
 		if(array_key_exists('condition',$array)) {
 			$propYes = false;

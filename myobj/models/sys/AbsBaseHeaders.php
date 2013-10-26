@@ -25,6 +25,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 	//user
 	public $isHeaderModel=true;
+	/**
+	 * @var bool Не будет дополнительных запросов но будет join, стоит использовать в списках
+	 */
 	private $_is_force_prop = false;
 	public function set_force_prop($flag=false) {
 		if($flag) {
@@ -41,28 +44,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return $this->_is_force_prop;
 	}
 
-	public $setproperties = array();
-	private $_allproperties = array();
-	public function getallprop() {
-		if(!$this->_allproperties) {
-			foreach(objProperties::model()->findAll() as $prop) {
-				$this->_allproperties[$prop->codename] = $prop;
-			}
-		}
-		return $this->_allproperties;
-	}
-	public $properties = array();
-	//метод позволяет установить новое свойство для объекта
-	public function set_properties($name, $value) {
-		//этот хук необходим для адекватной обработки rules
-		$nameelem = $name.'prop_';
-		$this->$nameelem = $value;
-
-		$this->properties[$name] = $value;
-	}
-	private $_propertiesdict = array();
+	private $_tmpProperties = array();
+	private $_propertiesNames = array();
 	public function get_properties($force=false) {
-		if(!count($this->_propertiesdict) || $force==true) {
+		if(!count($this->_tmpProperties) || $force==true) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
@@ -73,11 +58,12 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			if(count($classproperties)) {
 
 				foreach($classproperties as $objprop) {
-					$this->_propertiesdict[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
+					$this->_tmpProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
 				}
 			}
+			$this->_propertiesNames = array_keys($this->_tmpProperties);
 		}
-		return $this->_propertiesdict;
+		return $this->_tmpProperties;
 	}
 	private function _saveProperties() {
 		$classproperties = $this->uclass->properties;
@@ -210,15 +196,38 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
 		}
 	}
-
+	public $properties = array();
 	public function hasProperty($name) {
-		$this->propertyNames = $this->propertyNames();
-		return isset($this->propertyNames[$name]);
+		return in_array($name, $this->_propertiesNames);
 	}
 
 	public function propertyNames() {
-		return array_keys($this->properties);
+		return $this->_propertiesNames;
 	}
+
+	public function __get($name) {
+		if($name=='properties') {
+			if(!count($this->properties)) {
+				$arrconfcms = Yii::app()->appcms->config;
+				$classproperties = $this->uclass->properties;
+				$arraylinesvalue = array();
+				foreach($this->lines_alias as $objline) {
+					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
+					$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
+				}
+				if(count($classproperties)) {
+
+					foreach($classproperties as $objprop) {
+						$this->properties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
+					}
+				}
+			}
+			return $this->properties;
+		}
+		return parent::__get($name);
+	}
+
+
 
 	public function __set($name, $value) {
 		//properties обработка свойств объекта
@@ -235,6 +244,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				//если свойство не существует вызывать исключение task
 				if(($pos = strpos($name,'prop_'))!==false) {
 					$name = substr($name,0,$pos);
+					$this->properties[$name] = $value;
 				}
 				if(!$this->hasProperty($name)) {
 					throw new CException(Yii::t('cms','None prop "{pameprop}" ',
