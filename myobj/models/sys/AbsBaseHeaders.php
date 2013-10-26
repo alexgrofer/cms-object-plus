@@ -211,24 +211,44 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 	}
 
-	/**
-	 * @return bool Проверяет если свойство класса свойством псевдо класса объекта texttestprop_
-	 */
-	protected function isProp($name) {
-		return true;
+	public function hasProperty($name) {
+		$this->propertyNames = $this->propertyNames();
+		return isset($this->propertyNames[$name]);
 	}
+
+	public function propertyNames() {
+		return array_keys($this->properties);
+	}
+
 	public function __set($name, $value) {
 		//properties обработка свойств объекта
 		//если нужно заполнить свойство пачкой к примеру из $_POST['MyModel'], необходимо очистить от названия prop_
-		if($name=='properties' && is_array($value) && count($value)) {
-			foreach($value as $key => $val) {
-				if($pos = strpos($key,'prop_')!==false) {
-					$this->properties[substr($key,0,$pos)] = $val;
+		if($name=='properties') {
+			if(is_array($value) && count($value)) {
+				foreach($value as $key => $val) {
+					if(($pos = strpos($key,'prop_'))!==false) {
+						$this->properties[substr($key,0,$pos)] = $val;
+					}
 				}
 			}
+			elseif(!is_array($value)) {
+				//если свойство не существует вызывать исключение task
+				if(($pos = strpos($name,'prop_'))!==false) {
+					$name = substr($name,0,$pos);
+				}
+				if(!$this->hasProperty($name)) {
+					throw new CException(Yii::t('cms','None prop "{pameprop}" ',
+						array('{pameprop}'=>$name)));
+				}
+			}
+			return true;
 		}
-		elseif(!is_array($value)) {
-			//если свойство не существует вызывать исключение task
+		//еще для relation нужно установить свойство класса если это свойство есть
+		if(($pos = strpos($name,'prop_'))!==false) {
+			$propName = substr($name,0,$pos);
+			if($this->hasProperty($propName)) {
+				$this->$name = $value;
+			}
 		}
 		//end properties
 
