@@ -205,30 +205,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return $this->_propertiesNames;
 	}
 
-	public function __get($name) {
-		if($name=='properties') {
-			if(!count($this->properties)) {
-				$arrconfcms = Yii::app()->appcms->config;
-				$classproperties = $this->uclass->properties;
-				$arraylinesvalue = array();
-				foreach($this->lines_alias as $objline) {
-					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
-					$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
-				}
-				if(count($classproperties)) {
-
-					foreach($classproperties as $objprop) {
-						$this->properties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
-					}
-				}
-			}
-			return $this->properties;
-		}
-		return parent::__get($name);
-	}
-
-
-
 	public function __set($name, $value) {
 		//properties обработка свойств объекта
 		//если нужно заполнить свойство пачкой к примеру из $_POST['MyModel'], необходимо очистить от названия prop_
