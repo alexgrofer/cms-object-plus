@@ -43,8 +43,9 @@ $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model)
 if($paramsQueryPostModel) {
 	//заполнить атрибуты модели
 	$REND_model->attributes = $paramsQueryPostModel;
-	//заполнить свойства модели
-	$REND_model->properties = $paramsQueryPostModel;
+	$dfdf = $REND_model->get_properties();
+	print_r($dfdf);
+	exit;
 }
 
 //

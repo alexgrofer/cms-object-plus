@@ -75,15 +75,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}
 		foreach($classproperties as $objprop) {
-			if(array_key_exists($objprop->codename, $this->properties)!==false) {
+			if(array_key_exists($objprop->codename, $this->_tmpProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
-					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->properties[$objprop->codename];
+					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpProperties[$objprop->codename];
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
 					$newobjlines = new $namemodellines();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
-					$newobjlines->$namecolumn = $this->properties[$objprop->codename];
+					$newobjlines->$namecolumn = $this->_tmpProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
 					$newobjlines->save();
 					$this->UserRelated->links_edit('add','lines',array($newobjlines->primaryKey));
@@ -155,7 +155,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				}
 			}
 			//если были изменены свойства то сохраняем их
-			if(count($this->properties)) {
+			if(count($this->_tmpProperties)) {
 				$this->_saveProperties();
 			}
 			return true;
@@ -196,7 +196,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
 		}
 	}
-	public $properties = array();
+	public $_properties = array();
 	public function hasProperty($name) {
 		return in_array($name, $this->_propertiesNames);
 	}
@@ -204,43 +204,34 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	public function propertyNames() {
 		return $this->_propertiesNames;
 	}
-
+	public function set_properties($name,$value) {
+		if(!$this->hasProperty($name)) {
+			throw new CException(
+				Yii::t('cms','Not find prop {prop}',
+				array('{prop}'=>$name))
+			);
+		}
+		$this->_tmpProperties[$name] = $value;
+		$this->{$name.'prop_'} = $value;
+	}
 	public function __set($name, $value) {
-		//properties обработка свойств объекта
-		//если нужно заполнить свойство пачкой к примеру из $_POST['MyModel'], необходимо очистить от названия prop_
-		if($name=='properties') {
+		if($name=='attributes') {
 			if(is_array($value) && count($value)) {
 				foreach($value as $key => $val) {
 					if(($pos = strpos($key,'prop_'))!==false) {
-						$this->properties[substr($key,0,$pos)] = $val;
+						$this->set_properties(substr($key,0,$pos),$val);
 					}
 				}
 			}
-			elseif(!is_array($value)) {
-				//если свойство не существует вызывать исключение task
-				if(($pos = strpos($name,'prop_'))!==false) {
-					$name = substr($name,0,$pos);
-					$this->properties[$name] = $value;
-				}
-				if(!$this->hasProperty($name)) {
-					throw new CException(Yii::t('cms','None prop "{pameprop}" ',
-						array('{pameprop}'=>$name)));
-				}
-			}
-			return true;
 		}
-		//еще для relation нужно установить свойство класса если это свойство есть
-		if(($pos = strpos($name,'prop_'))!==false) {
+		elseif(($pos = strpos($name,'prop_'))!==false) {
 			$propName = substr($name,0,$pos);
-			if($this->hasProperty($propName)) {
-				$this->$name = $value;
-			}
+			$this->set_properties($propName, $value);
 		}
-		//end properties
+		//можно добавить еще свои типы
 
 		parent::__set($name, $value);
 	}
-
 	/**
 	 * @var array правила валидации свойств модели
 	 */
