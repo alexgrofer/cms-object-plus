@@ -41,18 +41,9 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
-	//заполнить атрибуты модели
 	$REND_model->attributes = $paramsQueryPostModel;
-	$dfdf = $REND_model->get_properties();
-	print_r($dfdf);
-	if(count($_POST) && $REND_model->validate()) {
-		$REND_model->save();
-		echo 'aaa';
-	}
-	else {
-		print_r($REND_model->getErrors());
-	}
-	exit;
+	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
+	$REND_model->validate();
 }
 
 //
@@ -69,7 +60,7 @@ echo '<p>'.CHtml::submitButton('save').'</p>';
 echo $form->renderEnd();
 //END
 
-if(false && count($_POST) && $form->validate()) {
+if(count($_POST) && $form->validate()) {
 	$REND_model->save();
 
 	if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
@@ -83,7 +74,7 @@ if(false && count($_POST) && $form->validate()) {
 	}
 
 
-	foreach($_POST['EmptyForm'] as $key => $val) {
+	foreach($paramsQueryPostModel as $key => $val) {
 		if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
 			$array_edit_post_mtmparam = array();
 			if(($pos = strpos($key,$nameps_mtm)) && array_key_exists(($name_norm = substr($key,0,$pos)),$array_names_v_mtm) && (array_key_exists($name_norm, $array_names_v_mtm) && $array_names_v_mtm[$name_norm]!=$val)) {
