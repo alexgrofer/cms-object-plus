@@ -191,10 +191,12 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return parent::beforeDelete();
 	}
 
-	protected function beforeSave() {
+	public function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+			return true;
 		}
+		else return parent::beforeSave();
 	}
 	public $_properties = array();
 	public function hasProperty($name) {

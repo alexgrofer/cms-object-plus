@@ -45,6 +45,13 @@ if($paramsQueryPostModel) {
 	$REND_model->attributes = $paramsQueryPostModel;
 	$dfdf = $REND_model->get_properties();
 	print_r($dfdf);
+	if(count($_POST) && $REND_model->validate()) {
+		$REND_model->save();
+		echo 'aaa';
+	}
+	else {
+		print_r($REND_model->getErrors());
+	}
 	exit;
 }
 
