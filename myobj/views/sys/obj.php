@@ -20,7 +20,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 		$nameElem = $namer.$nameps_mtm;
 		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
 		$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
-		$REND_model->addCustomRules($nameElem, 'safe');
+		$REND_model->customRules[] = array($nameElem, 'safe');
 
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
@@ -37,7 +37,7 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 
 	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
 	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
-	$REND_model->addCustomRules($snamefile, 'safe');
+	$REND_model->customRules[] = array($snamefile, 'safe');
 }
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
@@ -47,7 +47,7 @@ if($paramsQueryPostModel) {
 	$REND_model->validate();
 }
 
-$form = new CForm(array('elements'=>$REND_model->customElementsForm), $REND_model);
+$form = new CForm(array('elements'=>$REND_model->customElementsForm()), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 

@@ -139,47 +139,30 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
-	private $_customRules=array();
-	/**
-	 * нужно использовать его вместо стандартного rules() если требуется кастомное добавление правил динамически из вне!
-	 * @return array
-	 */
+	public $customRules=array();
 	public function customRules() {
 		return array();
 	}
-	/**
-	 * Добавление правила валидации
-	 * @return array
-	 */
-	public function addCustomRules(array $validateElem) {
-		$this->_customRules[] = $validateElem;
-	}
-
-	/**
-	 * Кастомное добавление rules есди перекрыть этот метод то невозможно повлиять на кастомное добавление правил
-	 * @return array
-	 */
 	public function rules() {
 		$defCustomRules = $this->customRules();
-		return array_merge($defCustomRules, $this->_customRules);
+		return array_merge($defCustomRules, $this->customRules);
 	}
 
-	/**
-	 * Елементы для формы, свойсто изменять динамически можно изменять, удобно использовать в формах
-	 * @var array
-	 */
 	public $customElementsForm=array();
+	public function customElementsForm() {
+		return array();
+	}
+	public function elementsForm() {
+		$defCustomElementsForm = $this->customElementsForm();
+		return array_merge($defCustomElementsForm, $this->customElementsForm);
+	}
 
-	/**
-	 * Альтернативы для свойств
-	 * @var array
-	 */
-	public $customattributeLabels=array();
-
-	/** Если необходимо динамически переименовывать свойства не нужно перегружать этот метод а использовать свойство customattributeLabels
-	 * @return array
-	 */
+	public $customAttributeLabels=array();
+	public function customAttributeLabels() {
+		return array();
+	}
 	public function attributeLabels() {
-		return $this->customattributeLabels;
+		$defCustomAttributeLabels = $this->customAttributeLabels();
+		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 }

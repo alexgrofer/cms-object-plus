@@ -244,10 +244,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				//инициализируем свойство
 				$this->$nameelem = $currentproperties[$prop->codename];
 				//устанавливаем правила валидации
-				if($prop->minfield) $this->addCustomRules(array($nameelem, 'length', 'min'=>$prop->minfield));
-				if($prop->maxfield) $this->addCustomRules(array($nameelem, 'length', 'max'=>$prop->maxfield));
-				if($prop->required) $this->addCustomRules(array($nameelem, 'required'));
-				if($prop->udefault) $this->addCustomRules(array($nameelem, 'default', 'value'=>$prop->udefault));
+				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
+				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
+				if($prop->required) $this->customRules[] = array($nameelem, 'required');
+				if($prop->udefault) $this->customRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
 				/*
@@ -268,15 +268,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 							}
 						}
 					}
-					$this->addCustomRules($addarrsett);
+					$this->customRules[] = $addarrsett;
 				}
 				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
 				else {
-					$this->addCustomRules(array($nameelem, 'safe'));
+					$this->customRules[] = array($nameelem, 'safe');
 				}
-				if($nametypef=='bool') $this->addCustomRules(array($nameelem, 'boolean'));
-				if($nametypef=='url') $this->addCustomRules(array($nameelem, 'url'));
-				if($nametypef=='email') $this->addCustomRules(array($nameelem, 'email'));
+				if($nametypef=='bool') $this->customRules[] = array($nameelem, 'boolean');
+				if($nametypef=='url') $this->customRules[] = array($nameelem, 'url');
+				if($nametypef=='email') $this->customRules[] = array($nameelem, 'email');
 
 				//добавить в типы полей формы элементы для свойств
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
