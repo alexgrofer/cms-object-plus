@@ -121,4 +121,24 @@ abstract class AbsModel extends CActiveRecord
 			$this->old_attributes[$key] = $value;
 		}
 	}
+
+	protected $_validPropElements = array();
+	/**
+	 * Управляемое добавление новых свойств
+	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
+	 * @param $name
+	 * @param $value
+	 */
+	public function addElemClass($name, $value=null) {
+		if(!in_array($name,$this->_validPropElements)) {
+			$this->_validPropElements[] = $name;
+		}
+		self::__set($name, $value);
+	}
+	public function __set($name, $value) {
+		if(in_array($name,$this->_validPropElements)) {
+			$this->$name =  $value;
+		}
+		parent::__set($name, $value);
+	}
 }

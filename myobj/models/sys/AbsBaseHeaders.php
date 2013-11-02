@@ -214,7 +214,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			);
 		}
 		$this->_tmpProperties[$name] = $value;
-		$this->{$name.'prop_'} = $value;
+		$this->addElemClass($name.'prop_', $value);
 	}
 	public function __set($name, $value) {
 		if($name=='attributes') {
