@@ -47,6 +47,7 @@ if($paramsQueryPostModel) {
 	$REND_model->validate();
 }
 
+$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_editform);
 $form = new CForm(array('elements'=>$REND_model->customElementsForm()), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
