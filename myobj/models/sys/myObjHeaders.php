@@ -21,6 +21,7 @@ class myObjHeaders extends AbsBaseHeaders
 		array('sort', 'default', 'value'=>0),
 		array('bpublic', 'boolean'),
 		array('bpublic', 'default', 'value'=>false),
+		array('content', 'safe'),
 	);
 
 	public $customElementsForm = array(
