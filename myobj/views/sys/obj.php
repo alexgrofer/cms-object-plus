@@ -8,8 +8,6 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-//потом убрать переменную в контроллер, название поля не нужно хранить в настройках оно уже и так есть в настройке реляции
-$REND_addElem=array();
 if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
 	$array_names_v_mtm = array();
 	$nameps_mtm = '_col_mtm_model';
@@ -18,11 +16,14 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
 		//убрать из цикла
 		$SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
-		$REND_addElem[]=array('name'=>$namer.$nameps_mtm, 'def_value'=>$SelectArr[$namer], 'elem'=>array('type'=>'text'));
+
+		$nameElem = $namer.$nameps_mtm;
+		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
+		$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
+		$REND_model->addCustomRules($nameElem, 'safe');
+
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
-
-
 }
 //редактирование представлений и шаблонов
 //опять же перенести все в контроллер, или создать отдельный контроллер еси нужно и присоеденить к текущему контроллеру возможно присоединять контроллеры?
@@ -33,11 +34,11 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 		$contenttext=file_get_contents($namefile);
 	}
 	$snamefile = 'edit_file_template';
-	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'elem'=>array('type'=>'textarea'));
+
+	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
+	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
+	$REND_model->addCustomRules($snamefile, 'safe');
 }
-
-
-
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
@@ -46,8 +47,7 @@ if($paramsQueryPostModel) {
 	$REND_model->validate();
 }
 
-//
-$form = new CForm($REND_model->elementsForm(), $REND_model);
+$form = new CForm(array('elements'=>$REND_model->customElementsForm), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 
