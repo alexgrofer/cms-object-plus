@@ -234,10 +234,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
 		parent::__set($name, $value);
 	}
-	/**
-	 * @var array правила валидации свойств модели
-	 */
-	protected  $currentRules=array();
 	protected  $currentElementsForm=array();
 
 	/**
@@ -255,10 +251,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				//инициализируем свойство
 				$this->$nameelem = $currentproperties[$prop->codename];
 				//устанавливаем правила валидации
-				if($prop->minfield) $this->currentRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
-				if($prop->maxfield) $this->currentRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
-				if($prop->required) $this->currentRules[] = array($nameelem, 'required');
-				if($prop->udefault) $this->currentRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
+				if($prop->minfield) $this->addCustomRules(array($nameelem, 'length', 'min'=>$prop->minfield));
+				if($prop->maxfield) $this->addCustomRules(array($nameelem, 'length', 'max'=>$prop->maxfield));
+				if($prop->required) $this->addCustomRules(array($nameelem, 'required'));
+				if($prop->udefault) $this->addCustomRules(array($nameelem, 'default', 'value'=>$prop->udefault));
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
 				/*
@@ -279,15 +275,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 							}
 						}
 					}
-					$this->currentRules[] = $addarrsett;
+					$this->addCustomRules($addarrsett);
 				}
 				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
 				else {
-					$this->currentRules[] = array($nameelem, 'safe');
+					$this->addCustomRules(array($nameelem, 'safe'));
 				}
-				if($nametypef=='bool') $this->currentRules[] = array($nameelem, 'boolean');
-				if($nametypef=='url') $this->currentRules[] = array($nameelem, 'url');
-				if($nametypef=='email') $this->currentRules[] = array($nameelem, 'email');
+				if($nametypef=='bool') $this->addCustomRules(array($nameelem, 'boolean'));
+				if($nametypef=='url') $this->addCustomRules(array($nameelem, 'url'));
+				if($nametypef=='email') $this->addCustomRules(array($nameelem, 'email'));
 
 				//добавить в типы полей формы элементы для свойств
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
@@ -297,12 +293,5 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 	public function afterFind() {
 		$this->dinamicModel();
-	}
-	/**
-	 * @return array возврает паравила валидации для модели
-	 */
-	public function rules() {
-		//метод который позволяет собрать модель в момент когда проверяются правила
-		return $this->currentRules;
 	}
 }
