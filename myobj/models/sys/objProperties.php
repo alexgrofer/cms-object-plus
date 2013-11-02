@@ -21,7 +21,7 @@ class objProperties extends AbsModel
 			'classes'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
 		);
 	}
-	public function rules()
+	public function customRules()
 	{
 		return array(
 			array('name, codename, myfield', 'required'),

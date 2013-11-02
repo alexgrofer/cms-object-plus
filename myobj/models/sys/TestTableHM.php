@@ -14,7 +14,7 @@ class TestTableHM extends AbsModel
 			'myobjheader'=>array(self::BELONGS_TO, 'myObjHeaders', 'obj_id'),
 		);
 	}
-	public function rules() {
+	public function customRules() {
 		return array(
 			array('name', 'required'),
 		);

@@ -7,7 +7,7 @@ class LoginForm extends CFormModel
 
 	private $_identity;
 
-	public function rules()
+	public function customRules()
 	{
 		return array(
 			array('login, password', 'required'),
