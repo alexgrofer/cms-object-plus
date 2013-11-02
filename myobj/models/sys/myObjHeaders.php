@@ -15,14 +15,16 @@ class myObjHeaders extends AbsBaseHeaders
 		return array_merge($relations, $thisRelations);
 	}
 
-	protected $customRules = array(
-		array('name', 'required'),
-		array('name', 'type', 'type'=>'string'),
-		array('sort', 'default', 'value'=>0),
-		array('bpublic', 'boolean'),
-		array('bpublic', 'default', 'value'=>false),
-		array('content', 'safe'),
-	);
+	public function customRules() {
+		return array(
+			array('name', 'required'),
+			array('name', 'type', 'type'=>'string'),
+			array('sort', 'default', 'value'=>0),
+			array('bpublic', 'boolean'),
+			array('bpublic', 'default', 'value'=>false),
+			array('content', 'safe'),
+		);
+	}
 
 	public $customElementsForm = array(
 		'name'=>array(

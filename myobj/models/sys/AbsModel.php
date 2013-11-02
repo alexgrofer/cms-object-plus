@@ -139,17 +139,20 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
+	private $_customRules=array();
 	/**
-	 * @var array правила валидации свойств модели
 	 * нужно использовать его вместо стандартного rules() если требуется кастомное добавление правил динамически из вне!
+	 * @return array
 	 */
-	protected $customRules=array();
+	public function customRules() {
+		return array();
+	}
 	/**
 	 * Добавление правила валидации
 	 * @return array
 	 */
 	public function addCustomRules(array $validateElem) {
-		$this->customRules[] = $validateElem;
+		$this->_customRules[] = $validateElem;
 	}
 
 	/**
@@ -157,8 +160,8 @@ abstract class AbsModel extends CActiveRecord
 	 * @return array
 	 */
 	public function rules() {
-		//метод который позволяет собрать модель в момент когда проверяются правила
-		return $this->customRules;
+		$defCustomRules = $this->customRules();
+		return array_merge($defCustomRules, $this->_customRules);
 	}
 
 	/**
