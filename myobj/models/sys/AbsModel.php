@@ -97,9 +97,6 @@ abstract class AbsModel extends CActiveRecord
 			'UserRelated'=>array(
 				'class'=>'CmsRelatedBehavior',
 			),
-			'UserFormModel'=>array(
-				'class'=>'CmsFormModelBehavior',
-			),
 		);
 	}
 	public function getMTMcol($model,$pkelem,$exp_select) {
