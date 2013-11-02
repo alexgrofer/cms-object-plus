@@ -234,14 +234,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
 		parent::__set($name, $value);
 	}
-	protected  $currentElementsForm=array();
 
-	/**
-	 * @return array типы полей для удобной автогенерирации форм
-	 */
-	public function elementsForm() {
-		return array('elements'=>$this->currentElementsForm);
-	}
 	public function dinamicModel() {
 		//добавляем свойтсва к модели
 		if($currentproperties = $this->get_properties()) {
@@ -287,7 +280,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 
 				//добавить в типы полей формы элементы для свойств
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				$this->currentElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
+				$this->customElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
 			}
 		}
 	}

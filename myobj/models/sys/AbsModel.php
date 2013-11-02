@@ -163,4 +163,23 @@ abstract class AbsModel extends CActiveRecord
 		//метод который позволяет собрать модель в момент когда проверяются правила
 		return $this->customRules;
 	}
+
+	/**
+	 * Елементы для формы, свойсто изменять динамически можно изменять, удобно использовать в формах
+	 * @var array
+	 */
+	public $customElementsForm=array();
+
+	/**
+	 * Альтернативы для свойств
+	 * @var array
+	 */
+	public $customattributeLabels=array();
+
+	/** Если необходимо динамически переименовывать свойства не нужно перегружать этот метод а использовать свойство customattributeLabels
+	 * @return array
+	 */
+	public function attributeLabels() {
+		return $this->customattributeLabels;
+	}
 }

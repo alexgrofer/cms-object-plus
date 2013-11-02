@@ -23,7 +23,7 @@ class myObjHeaders extends AbsBaseHeaders
 		array('bpublic', 'default', 'value'=>false),
 	);
 
-	public $currentElementsForm = array(
+	public $customElementsForm = array(
 		'name'=>array(
 			'type'=>'text',
 		),
