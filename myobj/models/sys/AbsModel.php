@@ -29,7 +29,7 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		//для обычных моделей свойтва не трубуются
-		if($this->isHeaderModel) $properties = $this->getallprop();
+		if($this->isHeaderModel) $properties = $this->get_properties(); //task проверить тут были изменения теперь только свойства этого объекта выбираются раньше выбиральсь все
 		$arrconfcms = Yii::app()->appcms->config;
 		if(array_key_exists('condition',$array)) {
 			$propYes = false;
@@ -97,9 +97,6 @@ abstract class AbsModel extends CActiveRecord
 			'UserRelated'=>array(
 				'class'=>'CmsRelatedBehavior',
 			),
-			'UserFormModel'=>array(
-				'class'=>'CmsFormModelBehavior',
-			),
 		);
 	}
 	public function getMTMcol($model,$pkelem,$exp_select) {
@@ -112,5 +109,60 @@ abstract class AbsModel extends CActiveRecord
 		if($isDELETE_CASCADE==false) {
 			$this->UserRelated->links_edit('clear',$nameRelation);
 		}
+	}
+
+	public function init() {
+		parent::init();
+		//запомнить старые значения иногда это требуется
+		foreach($this->attributes as $key => $value) {
+			$this->old_attributes[$key] = $value;
+		}
+	}
+
+	protected $_validPropElements = array();
+	/**
+	 * Управляемое добавление новых свойств
+	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
+	 * @param $name
+	 * @param $value
+	 */
+	public function addElemClass($name, $value=null) {
+		if(!in_array($name,$this->_validPropElements)) {
+			$this->_validPropElements[] = $name;
+		}
+		self::__set($name, $value);
+	}
+	public function __set($name, $value) {
+		if(in_array($name,$this->_validPropElements)) {
+			$this->$name =  $value;
+		}
+		parent::__set($name, $value);
+	}
+
+	public $customRules=array();
+	public function customRules() {
+		return array();
+	}
+	public function rules() {
+		$defCustomRules = $this->customRules();
+		return array_merge($defCustomRules, $this->customRules);
+	}
+
+	public $customElementsForm=array();
+	public function customElementsForm() {
+		return array();
+	}
+	public function elementsForm() {
+		$defCustomElementsForm = $this->customElementsForm();
+		return array_merge($defCustomElementsForm, $this->customElementsForm);
+	}
+
+	public $customAttributeLabels=array();
+	public function customAttributeLabels() {
+		return array();
+	}
+	public function attributeLabels() {
+		$defCustomAttributeLabels = $this->customAttributeLabels();
+		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 }

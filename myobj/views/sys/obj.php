@@ -8,8 +8,16 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-//потом убрать переменную в контроллер, название поля не нужно хранить в настройках оно уже и так есть в настройке реляции
-$REND_addElem=array();
+$elementsForm = $REND_model->elementsForm();
+if($REND_editForm) {
+	foreach($elementsForm as $nameElem => $nameAlias) {
+		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
+	}
+}
+if($REND_AttributeLabels) {
+	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
+}
+
 if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
 	$array_names_v_mtm = array();
 	$nameps_mtm = '_col_mtm_model';
@@ -18,11 +26,14 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
 		//убрать из цикла
 		$SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
-		$REND_addElem[]=array('name'=>$namer.$nameps_mtm, 'def_value'=>$SelectArr[$namer], 'elem'=>array('type'=>'text'));
+
+		$nameElem = $namer.$nameps_mtm;
+		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
+		$elementsForm[$nameElem] = array('type'=>'text');
+		$REND_model->customRules[] = array($nameElem, 'safe');
+
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
-
-
 }
 //редактирование представлений и шаблонов
 //опять же перенести все в контроллер, или создать отдельный контроллер еси нужно и присоеденить к текущему контроллеру возможно присоединять контроллеры?
@@ -33,33 +44,28 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 		$contenttext=file_get_contents($namefile);
 	}
 	$snamefile = 'edit_file_template';
-	$REND_addElem[] = array('name'=>$snamefile, 'def_value'=>isset($contenttext)?$contenttext:'', 'elem'=>array('type'=>'textarea'));
+
+	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
+	$elementsForm[$snamefile] = array('type'=>'textarea');
+	$REND_model->customRules[] = array($snamefile, 'safe');
 }
 
+$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
+if($paramsQueryPostModel) {
+	$REND_model->attributes = $paramsQueryPostModel;
+	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
+	$REND_model->validate();
+}
 
-//задача такова что мы для нового элемента тоже можем установить параметры
-$form = $REND_model->UserFormModel->initform($_POST,$REND_editform,$REND_addElem);
+$form = new CForm(array('elements'=>$elementsForm), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
-//IF just
-
-//echo $form;
-
-//ELSE difficult
-$form->activeForm = array(
-	'enableClientValidation'=>true,
-	'clientOptions'=>array(
-		'validateOnSubmit'=>true,
-	),
-);
 echo $form->renderBegin();
 
 foreach($form->getElements() as $element) {
 	echo $element->render();
 }
 
-
 echo '<p>'.CHtml::submitButton('save').'</p>';
-
 
 echo $form->renderEnd();
 //END
@@ -78,16 +84,16 @@ if(count($_POST) && $form->validate()) {
 	}
 
 
-	foreach($_POST['EmptyForm'] as $key => $val) {
+	foreach($paramsQueryPostModel as $key => $val) {
 		if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
 			$array_edit_post_mtmparam = array();
 			if(($pos = strpos($key,$nameps_mtm)) && array_key_exists(($name_norm = substr($key,0,$pos)),$array_names_v_mtm) && (array_key_exists($name_norm, $array_names_v_mtm) && $array_names_v_mtm[$name_norm]!=$val)) {
 				$array_edit_post_mtmparam[$name_norm] = trim($val);
 			}
 		}
-		//редактирование файлов
+		//редактирование файлов task так надоли это ?
 		if(isset($namefile) && strpos($key,$snamefile)!==false) {
-			file_put_contents($namefile, $val);
+			//file_put_contents($namefile, $val);
 		}
 
 	}

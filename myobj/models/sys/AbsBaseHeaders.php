@@ -25,6 +25,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 	//user
 	public $isHeaderModel=true;
+	/**
+	 * @var bool Не будет дополнительных запросов но будет join, стоит использовать в списках
+	 */
 	private $_is_force_prop = false;
 	public function set_force_prop($flag=false) {
 		if($flag) {
@@ -41,24 +44,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return $this->_is_force_prop;
 	}
 
-	public $setproperties = array();
-	private $_allproperties = array();
-	public function getallprop() {
-		if(!$this->_allproperties) {
-			foreach(objProperties::model()->findAll() as $prop) {
-				$this->_allproperties[$prop->codename] = $prop;
-			}
-		}
-		return $this->_allproperties;
-	}
-	public $properties = array();
-	//метод позволяет установить новое свойство для объекта
-	public function set_properties($name, $value) {
-		$this->properties[$name] = $value;
-	}
-	private $_propertiesdict = array();
+	private $_tmpProperties = array();
+	private $_propertiesNames = array();
 	public function get_properties($force=false) {
-		if(!count($this->_propertiesdict) || $force==true) {
+		if(!count($this->_tmpProperties) || $force==true) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
@@ -69,13 +58,14 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			if(count($classproperties)) {
 
 				foreach($classproperties as $objprop) {
-					$this->_propertiesdict[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
+					$this->_tmpProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
 				}
 			}
+			$this->_propertiesNames = array_keys($this->_tmpProperties);
 		}
-		return $this->_propertiesdict;
+		return $this->_tmpProperties;
 	}
-	private function _f_prev_save_prop() {
+	private function _saveProperties() {
 		$classproperties = $this->uclass->properties;
 		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
 		$arraylinesvalue = array();
@@ -85,15 +75,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}
 		foreach($classproperties as $objprop) {
-			if(array_key_exists($objprop->codename, $this->properties)!==false) {
+			if(array_key_exists($objprop->codename, $this->_tmpProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
-					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->properties[$objprop->codename];
+					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpProperties[$objprop->codename];
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
 					$newobjlines = new $namemodellines();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
-					$newobjlines->$namecolumn = $this->properties[$objprop->codename];
+					$newobjlines->$namecolumn = $this->_tmpProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
 					$newobjlines->save();
 					$this->UserRelated->links_edit('add','lines',array($newobjlines->primaryKey));
@@ -165,8 +155,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				}
 			}
 			//если были изменены свойства то сохраняем их
-			if(count($this->properties)) {
-				$this->_f_prev_save_prop();
+			if(count($this->_tmpProperties)) {
+				$this->_saveProperties();
 			}
 			return true;
 		}
@@ -199,5 +189,102 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$objectcurrentlink->delete(); //удалить ссылку
 		}
 		return parent::beforeDelete();
+	}
+
+	public function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
+			return true;
+		}
+		else return parent::beforeSave();
+	}
+	public $_properties = array();
+	public function hasProperty($name) {
+		return in_array($name, $this->_propertiesNames);
+	}
+
+	public function propertyNames() {
+		return $this->_propertiesNames;
+	}
+	public function set_properties($name,$value) {
+		if(!$this->hasProperty($name)) {
+			throw new CException(
+				Yii::t('cms','Not find prop {prop}',
+				array('{prop}'=>$name))
+			);
+		}
+		$this->_tmpProperties[$name] = $value;
+		$this->addElemClass($name.'prop_', $value);
+	}
+	public function __set($name, $value) {
+		if($name=='attributes') {
+			if(is_array($value) && count($value)) {
+				foreach($value as $key => $val) {
+					if(($pos = strpos($key,'prop_'))!==false) {
+						$this->set_properties(substr($key,0,$pos),$val);
+					}
+				}
+			}
+		}
+		elseif(($pos = strpos($name,'prop_'))!==false) {
+			$propName = substr($name,0,$pos);
+			$this->set_properties($propName, $value);
+		}
+		//можно добавить еще свои типы
+
+		parent::__set($name, $value);
+	}
+
+	public function dinamicModel() {
+		//добавляем свойтсва к модели
+		if($currentproperties = $this->get_properties()) {
+			$arrconfcms = Yii::app()->appcms->config;
+			foreach($this->uclass->properties as $prop) {
+				$nameelem = $prop->codename.'prop_';
+				//инициализируем свойство
+				$this->$nameelem = $currentproperties[$prop->codename];
+				//устанавливаем правила валидации
+				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
+				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
+				if($prop->required) $this->customRules[] = array($nameelem, 'required');
+				if($prop->udefault) $this->customRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
+
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				/*
+				 * для некоторый свойство возможна тонкая настройка type=>string
+				 */
+				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
+					$addarrsett = array($nameelem);
+					$parsecvs = str_getcsv($prop->setcsv,"\n");
+					foreach($parsecvs as $keyval) {
+						if(trim($keyval)=='') continue;
+						if(strpos($keyval,'us_set')===false) {
+							if(strpos($keyval,'=>')===false) {
+								array_push($addarrsett,$keyval);
+							}
+							else {
+								list($typeval,$val) = explode('=>',trim($keyval));
+								$addarrsett[$typeval] = $val;
+							}
+						}
+					}
+					$this->customRules[] = $addarrsett;
+				}
+				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
+				else {
+					$this->customRules[] = array($nameelem, 'safe');
+				}
+				if($nametypef=='bool') $this->customRules[] = array($nameelem, 'boolean');
+				if($nametypef=='url') $this->customRules[] = array($nameelem, 'url');
+				if($nametypef=='email') $this->customRules[] = array($nameelem, 'email');
+
+				//добавить в типы полей формы элементы для свойств
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				$this->customElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
+			}
+		}
+	}
+	public function afterFind() {
+		$this->dinamicModel();
 	}
 }

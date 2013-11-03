@@ -15,8 +15,7 @@ class myObjHeaders extends AbsBaseHeaders
 		return array_merge($relations, $thisRelations);
 	}
 
-	public function rules()
-	{
+	public function customRules() {
 		return array(
 			array('name', 'required'),
 			array('name', 'type', 'type'=>'string'),
@@ -27,21 +26,19 @@ class myObjHeaders extends AbsBaseHeaders
 		);
 	}
 
-	public function ElementsForm() {
-		return array(
-			'name'=>array(
-				'type'=>'text',
-			),
-			'content'=>array(
-				'type'=>'textarea',
-			),
-			'sort'=>array(
-				'type'=>'text',
-			),
-			'bpublic'=>array(
-				'type'=>'checkbox',
-			)
-		);
-	}
+	public $customElementsForm = array(
+		'name'=>array(
+			'type'=>'text',
+		),
+		'content'=>array(
+			'type'=>'textarea',
+		),
+		'sort'=>array(
+			'type'=>'text',
+		),
+		'bpublic'=>array(
+			'type'=>'checkbox',
+		),
+	);
 }
 

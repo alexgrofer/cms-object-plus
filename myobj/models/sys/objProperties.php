@@ -21,7 +21,7 @@ class objProperties extends AbsModel
 			'classes'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
 		);
 	}
-	public function rules()
+	public function customRules()
 	{
 		return array(
 			array('name, codename, myfield', 'required'),
@@ -55,7 +55,7 @@ class objProperties extends AbsModel
 	public function getTYPES_MYFIELDSOptions() {
 		return Yii::app()->appcms->config['TYPES_MYFIELDS_CHOICES'];
 	}
-	public function attributeLabels() {
+	public function customAttributeLabels() {
 		return array(
 			'name' => 'name',
 			'codename' => 'code name',
@@ -65,7 +65,7 @@ class objProperties extends AbsModel
 			'udefault' => 'default',
 	   );
 	}
-	public function ElementsForm() {
+	public function customElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

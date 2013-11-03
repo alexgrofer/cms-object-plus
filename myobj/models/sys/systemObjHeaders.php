@@ -8,7 +8,7 @@ class systemObjHeaders extends AbsBaseHeaders
 	public $vp2; //models.CharField(max_length=255,blank=True)
 	public $bp1; //models.BooleanField(blank=True) --
 
-	public function rules()
+	public function customRules()
 	{
 		return array(
 			array('name', 'required'),
@@ -19,7 +19,7 @@ class systemObjHeaders extends AbsBaseHeaders
 
 		);
 	}
-	public function ElementsForm() {
+	public function customElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

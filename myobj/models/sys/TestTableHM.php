@@ -14,12 +14,12 @@ class TestTableHM extends AbsModel
 			'myobjheader'=>array(self::BELONGS_TO, 'myObjHeaders', 'obj_id'),
 		);
 	}
-	public function rules() {
+	public function customRules() {
 		return array(
 			array('name', 'required'),
 		);
 	}
-	public function ElementsForm() {
+	public function customElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

@@ -15,12 +15,12 @@ class UserPasport extends AbsModel
 			'user'=>array(self::BELONGS_TO, 'User', 'user_id'),
 		);
 	}
-	public function rules() {
+	public function customRules() {
 		return array(
 			array('firstname, lastname', 'required'),
 		);
 	}
-	public function ElementsForm() {
+	public function customElementsForm() {
 		return array(
 			'firstname'=>array(
 				'type'=>'text',

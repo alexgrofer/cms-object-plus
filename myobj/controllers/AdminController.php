@@ -13,7 +13,8 @@ class AdminController extends Controller {
 			'REND_selectedarr'=>array(),
 			'REND_order_by_def'=>array(),
 			'REND_order_by'=>array(),
-			'REND_editform'=>null,
+			'REND_AttributeLabels'=>null,
+			'REND_editForm'=>null,
 			'REND_objclass'=>null,
 			'REND_confmodel'=>null,
 			'REND_acces_read'=>true,
@@ -46,7 +47,7 @@ class AdminController extends Controller {
 	public function run($actionID) {
 		//login
         if(defined('YII_DEBUG') && YII_DEBUG){
-            Yii::app()->assetManager->forceCopy = true;
+            //Yii::app()->assetManager->forceCopy = true;
         }
 		$noneadmin = true;
 		if(!Yii::app()->user->isGuest) {
@@ -164,8 +165,12 @@ class AdminController extends Controller {
 					$this->setVarRender('REND_order_by',$settui['order_by']);
 				}
 
-				if(array_key_exists('edit', $settui) && $settui['edit'] && count($settui['edit'])) {
-					$this->setVarRender('REND_editform',$settui['edit']);
+				if(array_key_exists('AttributeLabels', $settui) && $settui['AttributeLabels'] && count($settui['AttributeLabels'])) {
+					$this->setVarRender('REND_AttributeLabels',$settui['AttributeLabels']);
+				}
+
+				if(isset($settui['editForm']) && count($settui['editForm'])) {
+					$this->setVarRender('REND_editForm',$settui['editForm']);
 				}
 
 				if(array_key_exists('relation',$settui) && $settui['relation']) {
