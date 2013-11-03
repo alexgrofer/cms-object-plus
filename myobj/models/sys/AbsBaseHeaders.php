@@ -75,6 +75,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}
 		foreach($classproperties as $objprop) {
+			//если не изменял свойство не нужно каждый раз делать запрос
+			if($this->old_properties[$objprop->codename]==$this->_tmpProperties[$objprop->codename]) continue;
 			if(array_key_exists($objprop->codename, $this->_tmpProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
 					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpProperties[$objprop->codename];
@@ -157,6 +159,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			//если были изменены свойства то сохраняем их
 			if(count($this->_tmpProperties)) {
 				$this->_saveProperties();
+				$this->old_properties = $this->get_properties();
 			}
 			return true;
 		}
@@ -284,7 +287,9 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			}
 		}
 	}
+	protected $old_properties=null;
 	public function afterFind() {
+		$this->old_properties = $this->get_properties();
 		$this->dinamicModel();
 	}
 }
