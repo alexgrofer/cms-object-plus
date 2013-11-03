@@ -46,9 +46,10 @@ if($paramsQueryPostModel) {
 	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
 	$REND_model->validate();
 }
-
-$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_editform);
-$form = new CForm(array('elements'=>$REND_model->customElementsForm()), $REND_model);
+if($REND_AttributeLabels) {
+	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
+}
+$form = new CForm(array('elements'=>$REND_model->elementsForm()), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 
