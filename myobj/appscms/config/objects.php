@@ -22,6 +22,7 @@ $objects = array(
 	$classes_system['template'] => array(
 		'cols' => array('id'=>'id','name'=>'name template'),
 		'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
+		'editForm' => array('name','vp1','content'), //в админке видим только поля
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),

@@ -14,6 +14,7 @@ class AdminController extends Controller {
 			'REND_order_by_def'=>array(),
 			'REND_order_by'=>array(),
 			'REND_AttributeLabels'=>null,
+			'REND_editForm'=>null,
 			'REND_objclass'=>null,
 			'REND_confmodel'=>null,
 			'REND_acces_read'=>true,
@@ -166,6 +167,10 @@ class AdminController extends Controller {
 
 				if(array_key_exists('AttributeLabels', $settui) && $settui['AttributeLabels'] && count($settui['AttributeLabels'])) {
 					$this->setVarRender('REND_AttributeLabels',$settui['AttributeLabels']);
+				}
+
+				if(isset($settui['editForm']) && count($settui['editForm'])) {
+					$this->setVarRender('REND_editForm',$settui['editForm']);
 				}
 
 				if(array_key_exists('relation',$settui) && $settui['relation']) {

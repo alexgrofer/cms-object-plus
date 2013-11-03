@@ -8,6 +8,16 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
+$elementsForm = $REND_model->elementsForm();
+if($REND_editForm) {
+	foreach($elementsForm as $nameElem => $nameAlias) {
+		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
+	}
+}
+if($REND_AttributeLabels) {
+	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
+}
+
 if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
 	$array_names_v_mtm = array();
 	$nameps_mtm = '_col_mtm_model';
@@ -19,7 +29,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 
 		$nameElem = $namer.$nameps_mtm;
 		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
-		$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
+		$elementsForm[$nameElem] = array('type'=>'text');
 		$REND_model->customRules[] = array($nameElem, 'safe');
 
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
@@ -36,7 +46,7 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$snamefile = 'edit_file_template';
 
 	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
-	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
+	$elementsForm[$snamefile] = array('type'=>'textarea');
 	$REND_model->customRules[] = array($snamefile, 'safe');
 }
 
@@ -46,10 +56,8 @@ if($paramsQueryPostModel) {
 	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
 	$REND_model->validate();
 }
-if($REND_AttributeLabels) {
-	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
-}
-$form = new CForm(array('elements'=>$REND_model->elementsForm()), $REND_model);
+
+$form = new CForm(array('elements'=>$elementsForm), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 
@@ -83,9 +91,9 @@ if(count($_POST) && $form->validate()) {
 				$array_edit_post_mtmparam[$name_norm] = trim($val);
 			}
 		}
-		//редактирование файлов
+		//редактирование файлов task так надоли это ?
 		if(isset($namefile) && strpos($key,$snamefile)!==false) {
-			file_put_contents($namefile, $val);
+			//file_put_contents($namefile, $val);
 		}
 
 	}
