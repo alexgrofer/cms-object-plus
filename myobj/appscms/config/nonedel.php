@@ -23,7 +23,7 @@ $nonedel = array(
 
 Yii::app()->params['api_conf_nonedel'] = $nonedel;
 
-apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','nonedel_*',true);
+apicms\utils\importRecursName('MYOBJ.appscms.config.user','nonedel_*',true);
 $nonedel = Yii::app()->params['api_conf_nonedel'];
 unset(Yii::app()->params['api_conf_nonedel']);
 return $nonedel;

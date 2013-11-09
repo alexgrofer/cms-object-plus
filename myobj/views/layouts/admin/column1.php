@@ -1,7 +1,7 @@
 <?php
 $cs = Yii::app()->getClientScript();
 $cs->coreScriptPosition=CClientScript::POS_HEAD; //load into tag
-$assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.myobj.assets'));
+$assetsFolder=Yii::app()->assetManager->publish(Yii::getPathOfAlias('MYOBJ.assets'));
 $cs->registerCoreScript('jquery');
 $cs->registerCoreScript('jquery.ui');
 $cs->registerCssFile(

@@ -31,7 +31,7 @@ $menu = array(
 
 
 Yii::app()->params['api_conf_menu'] = $menu;
-apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','menu_*',true);
+apicms\utils\importRecursName('MYOBJ.appscms.config.user','menu_*',true);
 $menu = Yii::app()->params['api_conf_menu'];
 unset(Yii::app()->params['api_conf_menu']);
 return $menu;

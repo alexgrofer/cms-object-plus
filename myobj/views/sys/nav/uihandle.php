@@ -2,7 +2,7 @@
 if(!$REND_acces_write) {
 	echo '<p class="alert">not acces edit</p>';
 }
-Yii::import('application.modules.myobj.appscms.api.utils',true);
+Yii::import('MYOBJ.appscms.api.utils',true);
 $classtemplate = uClasses::getclass('templates_sys');
 $classhandle = uClasses::getclass('handle_sys');
 $templates = $REND_model->getobjlinks('templates_sys')->findAll();

@@ -13,21 +13,21 @@ class AppCMS extends CComponent {
 	}
 	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.create
 		//import
-		Yii::import('application.modules.myobj.models.sys.*');
-        Yii::import('application.modules.myobj.components.cms.behaviors.*');
-        Yii::import('application.modules.myobj.components.cms.widgets.*');
+		Yii::import('MYOBJ.models.sys.*');
+        Yii::import('MYOBJ.components.cms.behaviors.*');
+        Yii::import('MYOBJ.components.cms.widgets.*');
 		//import include
-		Yii::import('application.modules.myobj.appscms.api.utils',true);
+		Yii::import('MYOBJ.appscms.api.utils',true);
 		//set components
-		$components = apicms\utils\importRecursName('application.modules.myobj.appscms.config','components.php',true,true);
+		$components = apicms\utils\importRecursName('MYOBJ.appscms.config','components.php',true,true);
 		yii::app()->setComponents($components);
 
 		//buils main cms config
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
-		$this->config = apicms\utils\importRecursName('application.modules.myobj.appscms.config',$name_file_config,true,true);
+		$this->config = apicms\utils\importRecursName('MYOBJ.appscms.config',$name_file_config,true,true);
 
 		//init preload components
-		$preload_components = apicms\utils\importRecursName('application.modules.myobj.appscms.config','preload.php',true,true);
+		$preload_components = apicms\utils\importRecursName('MYOBJ.appscms.config','preload.php',true,true);
 		foreach($preload_components as $nameComponent) yii::app()->$nameComponent->init();
 	}
 	//общие методы помошники для системы

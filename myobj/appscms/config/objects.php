@@ -62,7 +62,7 @@ $set_spaces['2'] = array('namemodel'=>'systemObjHeaders','namelinksmodel'=>'link
 Yii::app()->params['api_conf_objects'] = $objects;
 Yii::app()->params['api_conf_spaces'] = $set_spaces;
 
-apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','objects_*',true);
+apicms\utils\importRecursName('MYOBJ.appscms.config.user','objects_*',true);
 $objects = Yii::app()->params['api_conf_objects'];
 $set_spaces = Yii::app()->params['api_conf_spaces'];
 unset(Yii::app()->params['api_conf_objects']);

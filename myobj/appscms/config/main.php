@@ -32,10 +32,10 @@ $tables_db_dump = array(
 );
 
 list($objects,$set_spaces) = require(dirname(__FILE__).'/objects.php');
-$models = apicms\utils\importRecursName('application.modules.myobj.appscms.config','models.php',true,true);
-$ui = apicms\utils\importRecursName('application.modules.myobj.appscms.config','UI.php',true,true);
-$menu = apicms\utils\importRecursName('application.modules.myobj.appscms.config','menu.php',true,true);
-$none_del = apicms\utils\importRecursName('application.modules.myobj.appscms.config','nonedel.php',true,true);
+$models = apicms\utils\importRecursName('MYOBJ.appscms.config','models.php',true,true);
+$ui = apicms\utils\importRecursName('MYOBJ.appscms.config','UI.php',true,true);
+$menu = apicms\utils\importRecursName('MYOBJ.appscms.config','menu.php',true,true);
+$none_del = apicms\utils\importRecursName('MYOBJ.appscms.config','nonedel.php',true,true);
 
 $main = array(
 	'controlui' => array(
@@ -100,7 +100,7 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 );
 Yii::app()->params['api_conf_main'] = $main;
 //возможно дополнение конфигурации $main дополнительными параметрами
-apicms\utils\importRecursName('application.modules.myobj.appscms.config.user','main_*',true);
+apicms\utils\importRecursName('MYOBJ.appscms.config.user','main_*',true);
 $main = Yii::app()->params['api_conf_main'];
 unset(Yii::app()->params['api_conf_main']);
 return $main;

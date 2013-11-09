@@ -7,14 +7,16 @@ class MyobjModule extends CWebModule
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
 
+		Yii::setPathOfAlias('MYOBJ', dirname(__FILE__));
+
 		// import the module-level models and components
 		$this->setImport(array(
-			'myobj.models.*',
-			'myobj.components.*',
+			'MYOBJ.models.*',
+			'MYOBJ.components.*',
 		));
 		yii::app()->setComponents(array(
 			'appcms'=>array(
-				'class' =>'application.modules.myobj.components.cms.AppCMS',
+				'class' =>'MYOBJ.components.cms.AppCMS',
 				'testprop'=>'test'
 			)
 		));
