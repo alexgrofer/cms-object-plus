@@ -1,5 +1,8 @@
 <?php
-class AdminController extends Controller {
+namespace MYOBJ\controllers;
+use \yii as yii;
+
+class AdminController extends \Controller {
 	public $layout='/layouts/admin/column1';
 	public $apcms;
 	public $dicturls = array();
@@ -51,7 +54,7 @@ class AdminController extends Controller {
         }
 		$noneadmin = true;
 		if(!Yii::app()->user->isGuest) {
-			$objectadmingroup = uClasses::getclass('groups_sys')->objects()->findByAttributes(array('vp2' => 'admincms'));
+			$objectadmingroup = \uClasses::getclass('groups_sys')->objects()->findByAttributes(array('vp2' => 'admincms'));
 			if(in_array($objectadmingroup->vp1, Yii::app()->user->groupsident)) {
 				$noneadmin = false;
 			}
@@ -96,7 +99,7 @@ class AdminController extends Controller {
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//alias model
-					$params_modelget = apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
+					$params_modelget = \apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
 					$this->setVarRender('REND_confmodel',$params_modelget);
 					$NAMEMODEL_get = $params_modelget['namemodel'];
 
@@ -123,7 +126,7 @@ class AdminController extends Controller {
 							$this->param_contr['current_class_name'] = $actclass->codename;
 							$this->param_contr['current_class_conf_array'] = Yii::app()->appcms->config['spacescl'][$actclass->tablespace];
 						$objctsassociation = $actclass->association;
-						$modelAD->dbCriteria->addInCondition('id', apicms\utils\arrvaluesmodel($objctsassociation,'id'));
+						$modelAD->dbCriteria->addInCondition('id', \apicms\utils\arrvaluesmodel($objctsassociation,'id'));
 					}
 				}
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
@@ -224,7 +227,7 @@ class AdminController extends Controller {
 							$this->param_contr['current_class_ass_conf_array'] = Yii::app()->appcms->config['spacescl'][$association_class->tablespace]['namemodel'];
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1]);
 						if($getlinks) {
-							$this->paramsrender['REND_selectedarr'] = apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
+							$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
 						}
 						break;
 					case 'relationobj':
@@ -234,7 +237,7 @@ class AdminController extends Controller {
 						$subnamemodel = $this->dicturls['paramslist'][7];
 						$namemodelthis = $this->dicturls['paramslist'][1];
 						//selectedarr
-						$params_modelget = apicms\utils\normalAliasModel($namemodelthis);
+						$params_modelget = \apicms\utils\normalAliasModel($namemodelthis);
 
 						$NAMEMODEL_get = $params_modelget['namemodel'];
 						$relation_model = $NAMEMODEL_get::model()->relations();
@@ -244,7 +247,7 @@ class AdminController extends Controller {
 
 
 						$namemodelrelationtop = $params_modelget['relation'][$nameConfModelSelf][0];
-						$params_modelgettop = apicms\utils\normalAliasModel($namemodelrelationtop);
+						$params_modelgettop = \apicms\utils\normalAliasModel($namemodelrelationtop);
 						$objrelated = $params_modelgettop['namemodel']::model()->findByPk($this->dicturls['actionid']);
 
 						$nameRelatModelSelf = $params_modelget['relation'][$nameConfModelSelf][1];
@@ -274,22 +277,22 @@ class AdminController extends Controller {
 							}
 							else {
 								if($type_relation_self  == CActiveRecord::MANY_MANY) {
-									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, \apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
 								}
 								elseif($type_relation_self==CActiveRecord::HAS_ONE || $type_relation_self==CActiveRecord::HAS_MANY) {
 									//тут переделать причем равняять на USER in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))
 									//показываем
-									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->tableSchema->primaryKey, apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->tableSchema->primaryKey, \apicms\utils\arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
 								}
 								elseif($type_relation_self  == CActiveRecord::BELONGS_TO) {
-									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$relation_model[$nameConfModelSelf][2], apicms\utils\arrvaluesmodel($objrelself,$relation_model[$nameConfModelSelf][2]));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$relation_model[$nameConfModelSelf][2], \apicms\utils\arrvaluesmodel($objrelself,$relation_model[$nameConfModelSelf][2]));
 								}
 							}
 						}
 
 						if($objrelself) {
 							if(is_array($objrelself)) {
-								$this->paramsrender['REND_selectedarr'] = apicms\utils\arrvaluesmodel($objrelself,'id');
+								$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($objrelself,'id');
 							}
 							else {
 								$this->paramsrender['REND_selectedarr'] = array($objrelself->id);
@@ -319,7 +322,7 @@ class AdminController extends Controller {
 			$selectorsids_excluded = (array_key_exists('selectorsids_excluded',$_POST) && trim($_POST['selectorsids_excluded'])!='')?explode(',',$_POST['selectorsids_excluded']):array();
 
 			if(array_key_exists('saveaction',$_POST)) {
-				apicms\utils\action_job($this->dicturls['action'],$this->dicturls['actionid'],$selectorsids_post, $selectorsids_excluded, $this->dicturls['paramslist']);
+				\apicms\utils\action_job($this->dicturls['action'],$this->dicturls['actionid'],$selectorsids_post, $selectorsids_excluded, $this->dicturls['paramslist']);
 
 				$this->redirect(Yii::app()->request->url);
 			}

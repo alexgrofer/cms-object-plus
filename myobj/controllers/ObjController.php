@@ -1,4 +1,7 @@
 <?php
+namespace MYOBJ\controllers;
+use \yii as yii;
+
 class ObjController extends Controller {
 	public $apcms;
 	public $layout=false;
