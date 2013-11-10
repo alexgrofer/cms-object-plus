@@ -234,7 +234,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$propName = substr($name,0,$pos);
 			$this->set_properties($propName, $value);
 		}
-		//и т.д можно добавить еще свои типы
+		//elseif и т.д можно добавить еще свои типы
 
 		parent::__set($name, $value);
 	}

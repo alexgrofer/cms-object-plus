@@ -141,12 +141,14 @@ abstract class AbsModel extends CActiveRecord
 			//разбить по два подчеркивания
 			$this->edit_EArray($value,'namecol','elem',0);
 		}
+		//elseif и т.д можно добавить еще свои типы
+
 		parent::__set($name, $value);
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		//добавить значение к псевдо элементу
-		$this->addElemClass('earray_', $value);
+		$this->addElemClass($colName.'__'.$colName.($index?'__'.$index:'').'earray_', $value);
 		//добавить значение в нормальному элементу серриализации
 	}
 
