@@ -137,12 +137,12 @@ abstract class AbsModel extends CActiveRecord
 			$this->$name =  $value;
 		}
 		if(($pos = strpos($name,'earray_'))!==false) {
-			$this->edit_EArray('названиемассива','элемент','значение');
+			$this->edit_EArray('значение','названиемассива','элемент','ключ');
 		}
 		parent::__set($name, $value);
 	}
 
-	public function edit_EArray($name,$nameElem,$index=null) {
+	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		//добавить значение к псевдо элементу
 		//добавить значение в нормальному элементу серриализации
 	}
@@ -152,10 +152,15 @@ abstract class AbsModel extends CActiveRecord
 	 * @param $name
 	 * @param null $nameElem
 	 * @param null $index
-	 * @return array
+	 * @return string
 	 */
 	public function get_EArray($name,$nameElem=null,$index=null) {
-		$arrayElement = unserialize($this->$name);
+		if(trim($this->$name) && ($unserializeArray = @unserialize($this->$name))) {
+			return ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+		}
+		else {
+			return '';
+		}
 
 		//добавить значение к псевдо элементу
 		//добавить значение в нормальному элементу серриализации
@@ -192,11 +197,27 @@ abstract class AbsModel extends CActiveRecord
 		$typesEArray = $this->typesEArray();
 
 		if(count($typesEArray)) {
-			$i=0;
 			foreach($typesEArray as $nameCol => $setting) {
-				$valuesEArray = $this->get_EArray($nameCol);
-				//$this->addElemClass($nameCol,'');
-				$i++;
+				if(isset($setting['elements']) && count($setting['elements'])) {
+					if(isset($setting['elements']) && count($setting['elements'])) {
+						if(isset($setting['conf']['isMany']) && $setting['conf']['isMany']==true) {
+							$valuetypesEArray = $this->get_EArray($nameCol);
+							if(count($valuetypesEArray)) {
+								foreach($valuetypesEArray as $kP => $arrP) {
+									foreach($arrP as $kE => $vP) {
+										$this->edit_EArray($vP,$nameCol,$kE,$kP);
+									}
+								}
+							}
+							//если он пустой просто инициализируем
+							else {
+								foreach($setting['elements'] as $nameE) {
+									$this->edit_EArray('',$nameCol,$nameE);
+								}
+							}
+						}
+					}
+				}
 			}
 			//генерим элементы
 			//ненерим rules
