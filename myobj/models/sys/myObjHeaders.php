@@ -40,5 +40,27 @@ class myObjHeaders extends AbsBaseHeaders
 			'type'=>'checkbox',
 		),
 	);
+
+	/**
+	 * Возможность хранить массивы в базе.
+	 * @return array
+	 */
+	public function typesEArray() {
+		return array(
+			'name_col_typeEArray' => array(
+				'elements' => array( //возможные ключи массива, если пусто ТО возможно добавление любых ключей
+					'firstname',
+					'lastname',
+				),
+				'conf' => array(
+					'isMany'=>false, //множественное добавление вложенного массива
+					'rules'=>array(
+						array('firstname','required'),
+						array('*','boolean'), // * для любых ключей
+					),
+				),
+			)
+		);
+	}
 }
 
