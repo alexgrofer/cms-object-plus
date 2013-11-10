@@ -238,7 +238,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		parent::__set($name, $value);
 	}
 
-	public function dinamicModel() {
+	protected function dinamicModel() {
+		parent::dinamicModel();
 		//добавляем свойтсва к модели
 		if($currentproperties = $this->get_properties()) {
 			$arrconfcms = Yii::app()->appcms->config;

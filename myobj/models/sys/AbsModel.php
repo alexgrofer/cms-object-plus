@@ -136,6 +136,9 @@ abstract class AbsModel extends CActiveRecord
 		if(in_array($name,$this->_validPropElements)) {
 			$this->$name =  $value;
 		}
+		if(($pos = strpos($name,'earray_'))!==false) {
+			$this->edit_EArray('названиемассива','элемент','значение');
+		}
 		parent::__set($name, $value);
 	}
 
@@ -166,8 +169,13 @@ abstract class AbsModel extends CActiveRecord
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 
+	protected function dinamicModel() {
+		
+	}
+
 	/**
 	 * Возможность хранить массивы в базе.
+	 * name_col_typeEArray_firstname
 	 * @return array
 	 */
 	/*
