@@ -126,11 +126,11 @@ abstract class AbsModel extends CActiveRecord
 	 * @param $name
 	 * @param $value
 	 */
-	public function addElemClass($name, $value=null) {
+	public function addElemClass($name, $defValue=null) {
 		if(!in_array($name,$this->_validPropElements)) {
 			$this->_validPropElements[] = $name;
 		}
-		self::__set($name, $value);
+		self::__set($name, $defValue);
 	}
 	public function __set($name, $value) {
 		if(in_array($name,$this->_validPropElements)) {
@@ -142,7 +142,21 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
-	public function edit_EArray($name,$nameElem,$index) {
+	public function edit_EArray($name,$nameElem,$index=null) {
+		//добавить значение к псевдо элементу
+		//добавить значение в нормальному элементу серриализации
+	}
+
+	/**
+	 * Возвращает значение
+	 * @param $name
+	 * @param null $nameElem
+	 * @param null $index
+	 * @return array
+	 */
+	public function get_EArray($name,$nameElem=null,$index=null) {
+		$arrayElement = unserialize($this->$name);
+
 		//добавить значение к псевдо элементу
 		//добавить значение в нормальному элементу серриализации
 	}
@@ -175,9 +189,19 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	protected function dinamicModel() {
-		//генерим элементы
-		//ненерим rules
-		//генерим форму
+		$typesEArray = $this->typesEArray();
+
+		if(count($typesEArray)) {
+			$i=0;
+			foreach($typesEArray as $nameCol => $setting) {
+				$valuesEArray = $this->get_EArray($nameCol);
+				//$this->addElemClass($nameCol,'');
+				$i++;
+			}
+			//генерим элементы
+			//ненерим rules
+			//генерим форму
+		}
 	}
 
 	/**
