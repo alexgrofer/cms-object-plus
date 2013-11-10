@@ -175,7 +175,9 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	protected function dinamicModel() {
-		
+		//генерим элементы
+		//ненерим rules
+		//генерим форму
 	}
 
 	/**
@@ -196,6 +198,14 @@ abstract class AbsModel extends CActiveRecord
 					'rules'=>array(
 						array('firstname','required'),
 						array('*','boolean'), // * для любых ключей
+					),
+				),
+				'elementsForm' => array(
+					'firstname'=>array(
+						'type'=>'text',
+					),
+					'lastname'=>array(
+						'type'=>'checkbox',
 					),
 				),
 			)

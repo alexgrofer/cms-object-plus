@@ -56,6 +56,14 @@ class myObjHeaders extends AbsBaseHeaders
 						array('*','boolean'), // * для любых ключей
 					),
 				),
+				'elementsForm' => array(
+					'firstname'=>array(
+						'type'=>'text',
+					),
+					'lastname'=>array(
+						'type'=>'checkbox',
+					),
+				),
 			)
 		);
 	}
