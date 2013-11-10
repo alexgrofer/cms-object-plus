@@ -30,9 +30,6 @@ class myObjHeaders extends AbsBaseHeaders
 		'name'=>array(
 			'type'=>'text',
 		),
-		'content'=>array(
-			'type'=>'textarea',
-		),
 		'sort'=>array(
 			'type'=>'text',
 		),
@@ -48,12 +45,12 @@ class myObjHeaders extends AbsBaseHeaders
 	public function typesEArray() {
 		return array(
 			'content' => array(
-				'content' => array( //возможные ключи массива, если пусто ТО возможно добавление любых ключей
+				'elements' => array(
 					'firstname',
 					'lastname',
 				),
 				'conf' => array(
-					'isMany'=>false, //множественное добавление вложенного массива
+					'isMany'=>true,
 					'rules'=>array(
 						array('firstname','required'),
 						array('*','boolean'), // * для любых ключей

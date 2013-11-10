@@ -189,4 +189,7 @@ abstract class AbsModel extends CActiveRecord
 		);
 	}
 	*/
+	public function typesEArray() {
+		return array();
+	}
 }
