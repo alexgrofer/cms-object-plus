@@ -148,7 +148,7 @@ abstract class AbsModel extends CActiveRecord
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		//добавить значение к псевдо элементу
-		$this->addElemClass($colName.'__'.$colName.($index?'__'.$index:'').'earray_', $value);
+		$this->addElemClass($colName.'__'.$nameElem.($index?'__'.$index:'').'earray_', $value);
 		//добавить значение в нормальному элементу серриализации
 		$unserializeArray = $this->get_EArray($colName);
 		if(!$unserializeArray) {
@@ -184,9 +184,6 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		return $elem;
-
-		//добавить значение к псевдо элементу
-		//добавить значение в нормальному элементу серриализации
 	}
 
 	public $customRules=array();
@@ -236,6 +233,7 @@ abstract class AbsModel extends CActiveRecord
 							else {
 								foreach($setting['elements'] as $nameE) {
 									$this->edit_EArray('',$nameCol,$nameE);
+									$this->customElementsForm[$nameCol.'__'.$nameE.'earray_'] = array('type' => 'text');
 								}
 							}
 						}
