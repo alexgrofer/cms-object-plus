@@ -220,6 +220,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		$this->addElemClass($name.'prop_', $value);
 	}
 	public function __set($name, $value) {
+		//case
 		if($name=='attributes') {
 			if(is_array($value) && count($value)) {
 				foreach($value as $key => $val) {
@@ -233,7 +234,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$propName = substr($name,0,$pos);
 			$this->set_properties($propName, $value);
 		}
-		//можно добавить еще свои типы
+		//и т.д можно добавить еще свои типы
 
 		parent::__set($name, $value);
 	}

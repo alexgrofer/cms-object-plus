@@ -136,14 +136,17 @@ abstract class AbsModel extends CActiveRecord
 		if(in_array($name,$this->_validPropElements)) {
 			$this->$name =  $value;
 		}
-		if(($pos = strpos($name,'earray_'))!==false) {
-			$this->edit_EArray('значение','названиемассива','элемент','ключ');
+		//case
+		elseif(($pos = strpos($name,'earray_'))!==false) {
+			//разбить по два подчеркивания
+			$this->edit_EArray($value,'namecol','elem',0);
 		}
 		parent::__set($name, $value);
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		//добавить значение к псевдо элементу
+		$this->addElemClass('earray_', $value);
 		//добавить значение в нормальному элементу серриализации
 	}
 
@@ -152,15 +155,14 @@ abstract class AbsModel extends CActiveRecord
 	 * @param $name
 	 * @param null $nameElem
 	 * @param null $index
-	 * @return string
+	 * @return mixed может вернуть как массив так и значение string
 	 */
 	public function get_EArray($name,$nameElem=null,$index=null) {
+		$elem = null;
 		if(trim($this->$name) && ($unserializeArray = @unserialize($this->$name))) {
-			return ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+			$elem = ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 		}
-		else {
-			return '';
-		}
+		return $elem;
 
 		//добавить значение к псевдо элементу
 		//добавить значение в нормальному элементу серриализации
