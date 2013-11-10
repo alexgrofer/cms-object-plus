@@ -47,8 +47,8 @@ class myObjHeaders extends AbsBaseHeaders
 	 */
 	public function typesEArray() {
 		return array(
-			'name_col_typeEArray' => array(
-				'elements' => array( //возможные ключи массива, если пусто ТО возможно добавление любых ключей
+			'content' => array(
+				'content' => array( //возможные ключи массива, если пусто ТО возможно добавление любых ключей
 					'firstname',
 					'lastname',
 				),
