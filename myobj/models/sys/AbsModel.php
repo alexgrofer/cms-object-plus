@@ -150,6 +150,20 @@ abstract class AbsModel extends CActiveRecord
 		//добавить значение к псевдо элементу
 		$this->addElemClass($colName.'__'.$colName.($index?'__'.$index:'').'earray_', $value);
 		//добавить значение в нормальному элементу серриализации
+		$unserializeArray = $this->get_EArray($colName);
+		if(!$unserializeArray) {
+			$unserializeArray=array();
+		}
+		if($index) {
+			if(!isset($unserializeArray[$index])) {
+				$unserializeArray[$index] = array();
+			}
+			$unserializeArray[$index][$nameElem] = $value;
+		}
+		else {
+			$unserializeArray[$nameElem] = $value;
+		}
+		$this->$colName = serialize($unserializeArray);
 	}
 
 	/**
@@ -159,10 +173,15 @@ abstract class AbsModel extends CActiveRecord
 	 * @param null $index
 	 * @return mixed может вернуть как массив так и значение string
 	 */
-	public function get_EArray($name,$nameElem=null,$index=null) {
+	public function get_EArray($nameCol,$nameElem=null,$index=null) {
 		$elem = null;
-		if(trim($this->$name) && ($unserializeArray = @unserialize($this->$name))) {
-			$elem = ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
+			if($nameElem) {
+				$elem = ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+			}
+			else {
+				$elem = $unserializeArray;
+			}
 		}
 		return $elem;
 
