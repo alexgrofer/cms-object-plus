@@ -142,6 +142,11 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
+	public function edit_EArray($name,$nameElem,$index) {
+		//добавить значение к псевдо элементу
+		//добавить значение в нормальному элементу серриализации
+	}
+
 	public $customRules=array();
 	public function customRules() {
 		return array();
