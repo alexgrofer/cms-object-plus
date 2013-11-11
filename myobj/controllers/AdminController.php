@@ -60,7 +60,6 @@ class AdminController extends \Controller {
 			}
 		}
 		if($noneadmin) {
-			$this->layout = '/layouts/admin/main';
 			$this->render('/sys/user/autorize');
 			Yii::app()->end();
 		}

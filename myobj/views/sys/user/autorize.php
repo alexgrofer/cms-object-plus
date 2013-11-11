@@ -7,7 +7,7 @@ class LoginForm extends CFormModel
 
 	private $_identity;
 
-	public function customRules()
+	public function rules()
 	{
 		return array(
 			array('login, password', 'required'),
@@ -15,7 +15,7 @@ class LoginForm extends CFormModel
 			array('password', 'authenticate'),
 		);
 	}
-	public function customAttributeLabels()
+	public function attributeLabels()
 	{
 		return array(
 			'rememberMe'=>'Remember me next time',
