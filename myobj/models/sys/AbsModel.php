@@ -147,21 +147,29 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
-		//добавить значение к псевдо элементу
 		$this->addElemClass($colName.'__'.$nameElem.($index?'__'.$index:'').'earray_', $value);
-		//добавить значение в нормальному элементу серриализации
+
 		$unserializeArray = $this->get_EArray($colName);
-		if(!$unserializeArray) {
+		if(!$unserializeArray && $value) {
 			$unserializeArray=array();
 		}
+		//если элемент пуст его у базе не храним, делаем unset
 		if($index) {
-			if(!isset($unserializeArray[$index])) {
-				$unserializeArray[$index] = array();
+			if($this->has_EArray($value,$colName,$nameElem,$index) && !trim($value)) {
+				unset($unserializeArray[$index][$nameElem]);
 			}
-			$unserializeArray[$index][$nameElem] = $value;
+			elseif(trim($value)) {
+				$unserializeArray[$index] = array();
+				$unserializeArray[$index][$nameElem] = $value;
+			}
 		}
 		else {
-			$unserializeArray[$nameElem] = $value;
+			if($this->has_EArray($value,$colName,$nameElem,$index) && !trim($value)) {
+				unset($unserializeArray[$nameElem]);
+			}
+			elseif($value) {
+				$unserializeArray[$nameElem] = $value;
+			}
 		}
 		$this->$colName = serialize($unserializeArray);
 	}
@@ -184,6 +192,22 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		return $elem;
+	}
+
+	/**
+	 * Проверяет существует сам элемент
+	 * @param $nameCol
+	 * @param $nameElem
+	 * @param null $index
+	 * @return bool
+	 */
+	public function has_EArray($nameCol,$nameElem,$index=null) {
+		$result = false;
+		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
+			if($index && isset($unserializeArray[$index][$nameElem]))  $result = true;
+			elseif($index=null && isset($unserializeArray[$nameElem])) $result = true;
+		}
+		return $result;
 	}
 
 	public $customRules=array();
@@ -229,7 +253,7 @@ abstract class AbsModel extends CActiveRecord
 									}
 								}
 							}
-							//если он пустой просто инициализируем
+							//если он пустой просто по конфигурации
 							else {
 								foreach($setting['elements'] as $nameE) {
 									$this->edit_EArray('',$nameCol,$nameE);
