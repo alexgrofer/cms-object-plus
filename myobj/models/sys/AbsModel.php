@@ -133,21 +133,22 @@ abstract class AbsModel extends CActiveRecord
 		self::__set($name, $defValue);
 	}
 	public function __set($name, $value) {
+		//case
+		if(($pos = strpos($name,'earray_'))!==false) {
+			$arrName = explode('__',$name);
+			$this->edit_EArray($value,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
+		}
+		//elseif и т.д можно добавить еще свои типы
+
 		if(in_array($name,$this->_validPropElements)) {
 			$this->$name =  $value;
 		}
-		//case
-		elseif(($pos = strpos($name,'earray_'))!==false) {
-			//разбить по два подчеркивания
-			$this->edit_EArray($value,'namecol','elem',0);
-		}
-		//elseif и т.д можно добавить еще свои типы
 
 		parent::__set($name, $value);
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
-		$this->addElemClass($colName.'__'.$nameElem.($index?'__'.$index:'').'earray_', $value);
+		$this->{$colName.'__'.$nameElem.($index?'__'.$index:'').'earray_'} = $value;
 
 		$unserializeArray = $this->get_EArray($colName);
 		if(!$unserializeArray && $value) {
@@ -253,12 +254,13 @@ abstract class AbsModel extends CActiveRecord
 									}
 								}
 							}
-							//если он пустой просто по конфигурации
+							//если он пустой - просто по конфигурации
 							else {
 								foreach($setting['elements'] as $nameE) {
-									$this->edit_EArray('',$nameCol,$nameE);
-									$this->customElementsForm[$nameCol.'__'.$nameE.'earray_'] = array('type' => 'text');
-									$this->customRules[] = array($nameCol.'__'.$nameE.'earray_', 'required');
+									$nameElemClass = $nameCol.'__'.$nameE.'earray_';
+									$this->$nameElemClass = '';
+									$this->customElementsForm[$nameElemClass] = array('type' => 'text');
+									$this->customRules[] = array($nameElemClass, 'required');
 								}
 							}
 						}
