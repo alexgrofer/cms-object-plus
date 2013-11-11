@@ -155,7 +155,7 @@ abstract class AbsModel extends CActiveRecord
 		}
 		//если элемент пуст его у базе не храним, делаем unset
 		if($index) {
-			if($this->has_EArray($value,$colName,$nameElem,$index) && !trim($value)) {
+			if($this->has_EArray($colName,$nameElem,$index) && !trim($value)) {
 				unset($unserializeArray[$index][$nameElem]);
 			}
 			elseif(trim($value)) {
@@ -164,7 +164,7 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		else {
-			if($this->has_EArray($value,$colName,$nameElem,$index) && !trim($value)) {
+			if($this->has_EArray($colName,$nameElem,$index) && !trim($value)) {
 				unset($unserializeArray[$nameElem]);
 			}
 			elseif($value) {
@@ -258,6 +258,7 @@ abstract class AbsModel extends CActiveRecord
 								foreach($setting['elements'] as $nameE) {
 									$this->edit_EArray('',$nameCol,$nameE);
 									$this->customElementsForm[$nameCol.'__'.$nameE.'earray_'] = array('type' => 'text');
+									$this->customRules[] = array($nameCol.'__'.$nameE.'earray_', 'required');
 								}
 							}
 						}
