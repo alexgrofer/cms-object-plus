@@ -123,30 +123,50 @@ abstract class AbsModel extends CActiveRecord
 	/**
 	 * Управляемое добавление новых свойств
 	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
+	 * если уже есть такое свойство класса будет исключение
 	 * @param $name
 	 * @param $value
 	 */
 	public function addElemClass($name, $defValue=null) {
 		if(!in_array($name,$this->_validPropElements)) {
 			$this->_validPropElements[] = $name;
-			//пока не делаем исключение, но возможно будет
-			self::__set($name, $defValue);
+			$this->$name = $defValue;
+		}
+		else {
+			throw new CException(Yii::t('cms','element "{prop}" is already add class  "{class}"',
+				array('{prop}'=>$name, '{class}'=>get_class($this))));
 		}
 	}
 	public function __set($name, $value) {
-		/*
-		 * не все свойства мы можем добавлять к объекту а только те которые были умышленно созданны через addElemClass
-		 */
-		if(in_array($name,$this->_validPropElements)) {
-			$this->$name =  $value;
+		if($name=='attributes') {
+			if(is_array($value) && count($value)) {
+				//SWITCH
+				foreach($value as $nameElem => $val) {
+					//CASE type array
+					if(($pos = strpos($nameElem,'earray_'))!==false) {
+						$arrName = explode('__',$nameElem);
+						$this->edit_EArray($val,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
+					}
+					//CASE type new type
+				}
+			}
 		}
 
-		//case custom types
+		//SWITCH ONE
+
+		//CASE type array
 		if(($pos = strpos($name,'earray_'))!==false) {
 			$arrName = explode('__',$name);
 			$this->edit_EArray($value,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
 		}
-		//elseif и т.д можно добавить еще свои типы
+
+		//CASE type new type
+
+
+		//инитное добавление
+		if(in_array($name,$this->_validPropElements)) {
+			$this->$name =  $value;
+		}
 		parent::__set($name, $value);
 	}
 
