@@ -144,7 +144,7 @@ abstract class AbsModel extends CActiveRecord
 				foreach($value as $nameElem => $val) {
 					//CASE type array
 					if(($pos = strpos($nameElem,'earray_'))!==false) {
-						$arrName = explode('__',$nameElem);
+						$arrName = explode('__',substr($nameElem,0,$pos));
 						$this->edit_EArray($val,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
 					}
 					//CASE type new type
@@ -267,23 +267,22 @@ abstract class AbsModel extends CActiveRecord
 			foreach($typesEArray as $nameCol => $setting) {
 				if(isset($setting['elements']) && count($setting['elements'])) {
 					if(isset($setting['elements']) && count($setting['elements'])) {
-						if(isset($setting['conf']['isMany']) && $setting['conf']['isMany']==true) {
-							$valuetypesEArray = $this->get_EArray($nameCol);
-							if(count($valuetypesEArray)) {
-								foreach($valuetypesEArray as $kP => $arrP) {
-									foreach($arrP as $kE => $vP) {
-										$this->edit_EArray($vP,$nameCol,$kE,$kP);
-									}
-								}
+						$valuetypesEArray = $this->get_EArray($nameCol);
+						if(count($valuetypesEArray)) {
+							foreach($valuetypesEArray as $nameE => $valE) {
+								$nameElemClass = $nameCol.'__'.$nameE.'earray_';
+								$this->addElemClass($nameElemClass,$valE);
+								$this->customElementsForm[$nameElemClass] = array('type' => 'text');
+								$this->customRules[] = array($nameElemClass, 'required');
 							}
-							//если он пустой - просто по конфигурации
-							else {
-								foreach($setting['elements'] as $nameE) {
-									$nameElemClass = $nameCol.'__'.$nameE.'earray_';
-									$this->addElemClass($nameElemClass,'');
-									$this->customElementsForm[$nameElemClass] = array('type' => 'text');
-									$this->customRules[] = array($nameElemClass, 'required');
-								}
+						}
+						//если он пустой - просто по конфигурации
+						else {
+							foreach($setting['elements'] as $nameE) {
+								$nameElemClass = $nameCol.'__'.$nameE.'earray_';
+								$this->addElemClass($nameElemClass);
+								$this->customElementsForm[$nameElemClass] = array('type' => 'text');
+								$this->customRules[] = array($nameElemClass, 'required');
 							}
 						}
 					}
