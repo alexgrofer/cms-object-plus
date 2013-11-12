@@ -171,7 +171,10 @@ abstract class AbsModel extends CActiveRecord
 				$unserializeArray[$nameElem] = $value;
 			}
 		}
-		$this->$colName = serialize($unserializeArray);
+
+		if(count($unserializeArray)) {
+			$this->$colName = serialize($unserializeArray);
+		}
 	}
 
 	/**
