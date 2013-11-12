@@ -171,6 +171,8 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
+		$nameElemClass = $colName.'__'.$nameElem.'earray_';
+		$this->$nameElemClass = $value;
 		$unserializeArray = $this->get_EArray($colName);
 		
 		//если элемент пуст его у базе не храним, делаем unset
@@ -276,8 +278,8 @@ abstract class AbsModel extends CActiveRecord
 								$this->customRules[] = array($nameElemClass, 'required');
 							}
 						}
-						//если он пустой - просто по конфигурации
-						else {
+						//если он пустой ндо только если это фиксированный массив!! task
+						if(!count($valuetypesEArray)) {
 							foreach($setting['elements'] as $nameE) {
 								$nameElemClass = $nameCol.'__'.$nameE.'earray_';
 								$this->addElemClass($nameElemClass);
@@ -287,6 +289,7 @@ abstract class AbsModel extends CActiveRecord
 						}
 					}
 				}
+				//если элементов нет то добавлять что угодно для этого добавляем одно доп поле. но это надо делать НЕ ТУТ а в obj.php
 			}
 			//генерим элементы
 			//ненерим rules
