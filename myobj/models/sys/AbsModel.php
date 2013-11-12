@@ -152,9 +152,7 @@ abstract class AbsModel extends CActiveRecord
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		$unserializeArray = $this->get_EArray($colName);
-		if(!$unserializeArray && $value) {
-			$unserializeArray=array();
-		}
+		
 		//если элемент пуст его у базе не храним, делаем unset
 		if($index) {
 			if($this->has_EArray($colName,$nameElem,$index) && !trim($value)) {
@@ -184,7 +182,7 @@ abstract class AbsModel extends CActiveRecord
 	 * @return mixed может вернуть как массив так и значение string
 	 */
 	public function get_EArray($nameCol,$nameElem=null,$index=null) {
-		$elem = null;
+		$elem = array();
 		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
 			if($nameElem) {
 				$elem = ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
