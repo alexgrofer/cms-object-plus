@@ -119,7 +119,7 @@ abstract class AbsModel extends CActiveRecord
 		}
 	}
 
-	protected $_validPropElements = array();
+	protected $elements_enable_class = array();
 	/**
 	 * Управляемое добавление новых свойств
 	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
@@ -128,8 +128,8 @@ abstract class AbsModel extends CActiveRecord
 	 * @param $value
 	 */
 	public function addElemClass($name, $defValue=null) {
-		if(!in_array($name,$this->_validPropElements)) {
-			$this->_validPropElements[] = $name;
+		if(!in_array($name,$this->elements_enable_class)) {
+			$this->elements_enable_class[] = $name;
 			$this->$name = $defValue;
 		}
 		else {
@@ -137,57 +137,51 @@ abstract class AbsModel extends CActiveRecord
 				array('{prop}'=>$name, '{class}'=>get_class($this))));
 		}
 	}
-	public function __set($name, $value) {
-		if($name=='attributes') {
-			if(is_array($value) && count($value)) {
-				//SWITCH
-				foreach($value as $nameElem => $val) {
-					//CASE type array
-					if(($pos = strpos($nameElem,'earray_'))!==false) {
-						$arrName = explode('__',substr($nameElem,0,$pos));
-						$this->edit_EArray($val,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
-					}
-					//CASE type new type
+	public function setAttributes($values) {
+		if(is_array($values) && count($values)) {
+			//SWITCH MY TYPES
+			foreach($values as $nameElem => $val) {
+				//CASE type EAarray
+				if(($pos = strpos($nameElem,'earray_'))!==false) {
+					$arrName = explode('__',substr($nameElem,0,$pos));
+					$this->edit_EArray($val,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
 				}
+				//CASE type new type
+				//if(...)
 			}
 		}
 
-		//SWITCH ONE
-
-		//CASE type array
-		if(($pos = strpos($name,'earray_'))!==false) {
-			$arrName = explode('__',$name);
-			$this->edit_EArray($value,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
-		}
-
-		//CASE type new type
-
-
-		//инитное добавление
-		if(in_array($name,$this->_validPropElements)) {
+		parent::setAttributes($values);
+	}
+	public function __set($name, $value) {
+		//init new elements
+		if(in_array($name,$this->elements_enable_class)) {
 			$this->$name =  $value;
 		}
 		parent::__set($name, $value);
 	}
 
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
+		$isExists = $this->has_EArray($colName,$nameElem,$index)?true:false;
 		$nameElemClass = $colName.'__'.$nameElem.'earray_';
+		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
+			$this->addElemClass($nameElemClass);
+		}
 		$this->$nameElemClass = $value;
 		$unserializeArray = $this->get_EArray($colName);
-		
-		//если элемент пуст его у базе не храним, делаем unset
+
 		if($index) {
-			if($this->has_EArray($colName,$nameElem,$index) && !trim($value)) {
-				unset($unserializeArray[$index][$nameElem]);
+			if($isExists && !trim($value)) {
+				unset($unserializeArray[$index][$nameElem]); //пустые не храним в базе
 			}
-			elseif(trim($value)) {
+			elseif(trim($value)) { //если новый
 				$unserializeArray[$index] = array();
 				$unserializeArray[$index][$nameElem] = $value;
 			}
 		}
 		else {
-			if($this->has_EArray($colName,$nameElem,$index) && !trim($value)) {
-				unset($unserializeArray[$nameElem]);
+			if($isExists && !trim($value)) {
+				unset($unserializeArray[$nameElem]); //пустые не храним в базе
 			}
 			elseif($value) {
 				$unserializeArray[$nameElem] = $value;
