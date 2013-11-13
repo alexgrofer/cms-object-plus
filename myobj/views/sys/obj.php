@@ -49,6 +49,24 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$elementsForm[$snamefile] = array('type'=>'textarea');
 	$REND_model->customRules[] = array($snamefile, 'safe');
 }
+//work EArray
+$typesEArray = $REND_model->typesEArray();
+if(count($typesEArray)) {
+	foreach($typesEArray as $nameCol => $setting) {
+		$valuetypesEArray = $REND_model->get_EArray($nameCol);
+		if(isset($setting['elements']) && count($setting['elements'])) {
+			//множество множество
+			if(isset($setting['conf']['isMany']) && $setting['conf']['isMany']==true) {
+				//добавить еще пустые высчитав последний ключ
+				//само собой rules и elements
+			}
+		}
+		else {
+			//если нет элементов всегда добавить + парочку
+		}
+	}
+}
+//end EArray
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
