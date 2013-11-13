@@ -176,7 +176,9 @@ abstract class AbsModel extends CActiveRecord
 				unset($unserializeArray[$index][$nameElem]); //пустые не храним в базе
 			}
 			elseif(trim($value)) { //если новый
-				$unserializeArray[$index] = array();
+				if(!isset($unserializeArray[$index])) {
+					$unserializeArray[$index] = array();
+				}
 				$unserializeArray[$index][$nameElem] = $value;
 			}
 		}
