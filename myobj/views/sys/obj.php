@@ -56,7 +56,7 @@ if(count($typesEArray)) {
 		$valuetypesEArray = $REND_model->get_EArray($nameCol);
 		if(isset($setting['elements']) && count($setting['elements'])) {
 			//множество множество
-			if(isset($setting['conf']['isMany']) && $setting['conf']['isMany']==true) {
+			if($setting['conf']['isMany']) {
 				//добавить еще пустые высчитав последний ключ
 				//само собой rules и elements
 			}

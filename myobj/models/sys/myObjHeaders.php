@@ -50,7 +50,7 @@ class myObjHeaders extends AbsBaseHeaders
 					'lastname',
 				),
 				'conf' => array(
-					'isMany'=>true,
+					'isMany'=>false,
 					'rules'=>array(
 						array('firstname','required'),
 						array('*','boolean'), // * для любых ключей

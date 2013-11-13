@@ -259,6 +259,14 @@ abstract class AbsModel extends CActiveRecord
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 
+	public function generate_EArray($val,$nameCol,$nameE,$index=null) { //потом перенести в утилиты
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+		$this->addElemClass($nameElemClass,$val);
+		$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
+		$this->customRules[] = array($nameElemClass, 'required');
+	}
+
 	protected function dinamicModel() {
 		$typesEArray = $this->typesEArray();
 
@@ -266,28 +274,18 @@ abstract class AbsModel extends CActiveRecord
 			foreach($typesEArray as $nameCol => $setting) {
 				$valuetypesEArray = $this->get_EArray($nameCol);
 				if(isset($setting['elements']) && count($setting['elements'])) {
-					if(count($valuetypesEArray) && isset($setting['conf']) && isset($setting['conf']['isMany']) && $setting['conf']['isMany']) {
+					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
 						foreach($valuetypesEArray as $index => $valuetypesEArrayElem) {
 							foreach($setting['elements'] as $nameE) {
 								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
-								$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
-								$this->addElemClass($nameElemClass,$getValElem);
-								$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
-								$this->customRules[] = array($nameElemClass, 'required');
+								$this->generate_EArray($getValElem,$nameCol,$nameE,$index);
 							}
 						}
 					}
-					else {
-						$index = '';
-						if(isset($setting['conf']) && isset($setting['conf']['isMany']) && $setting['conf']['isMany']) {
-							$index = '__0';
-						}
+					elseif($setting['conf']['isMany']==false) {
 						foreach($setting['elements'] as $nameE) {
 							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
-							$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
-							$this->addElemClass($nameElemClass,$getValElem);
-							$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
-							$this->customRules[] = array($nameElemClass, 'required');
+							$this->generate_EArray($getValElem,$nameCol,$nameE);
 						}
 					}
 				}
