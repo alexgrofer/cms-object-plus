@@ -263,12 +263,29 @@ abstract class AbsModel extends CActiveRecord
 			foreach($typesEArray as $nameCol => $setting) {
 				$valuetypesEArray = $this->get_EArray($nameCol);
 				if(isset($setting['elements']) && count($setting['elements'])) {
-					foreach($setting['elements'] as $nameE) {
-						$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
-						$nameElemClass = $nameCol.'__'.$nameE.'earray_';
-						$this->addElemClass($nameElemClass,$getValElem);
-						$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
-						$this->customRules[] = array($nameElemClass, 'required');
+					if(count($valuetypesEArray) && isset($setting['conf']) && isset($setting['conf']['isMany']) && $setting['conf']['isMany']) {
+						foreach($valuetypesEArray as $index => $valuetypesEArrayElem) {
+							foreach($setting['elements'] as $nameE) {
+								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
+								$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
+								$this->addElemClass($nameElemClass,$getValElem);
+								$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
+								$this->customRules[] = array($nameElemClass, 'required');
+							}
+						}
+					}
+					else {
+						$index = '';
+						if(isset($setting['conf']) && isset($setting['conf']['isMany']) && $setting['conf']['isMany']) {
+							$index = '__0';
+						}
+						foreach($setting['elements'] as $nameE) {
+							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
+							$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+							$this->addElemClass($nameElemClass,$getValElem);
+							$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
+							$this->customRules[] = array($nameElemClass, 'required');
+						}
 					}
 				}
 				//если элементов нет то добавлять что угодно для этого добавляем одно доп поле. но это надо делать НЕ ТУТ а в obj.php
