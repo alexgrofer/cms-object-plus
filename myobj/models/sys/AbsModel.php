@@ -261,26 +261,14 @@ abstract class AbsModel extends CActiveRecord
 
 		if(count($typesEArray)) {
 			foreach($typesEArray as $nameCol => $setting) {
+				$valuetypesEArray = $this->get_EArray($nameCol);
 				if(isset($setting['elements']) && count($setting['elements'])) {
-					if(isset($setting['elements']) && count($setting['elements'])) {
-						$valuetypesEArray = $this->get_EArray($nameCol);
-						if(count($valuetypesEArray)) {
-							foreach($valuetypesEArray as $nameE => $valE) {
-								$nameElemClass = $nameCol.'__'.$nameE.'earray_';
-								$this->addElemClass($nameElemClass,$valE);
-								$this->customElementsForm[$nameElemClass] = array('type' => 'text');
-								$this->customRules[] = array($nameElemClass, 'required');
-							}
-						}
-						//если он пустой ндо только если это фиксированный массив!! task
-						if(!count($valuetypesEArray)) {
-							foreach($setting['elements'] as $nameE) {
-								$nameElemClass = $nameCol.'__'.$nameE.'earray_';
-								$this->addElemClass($nameElemClass);
-								$this->customElementsForm[$nameElemClass] = array('type' => 'text');
-								$this->customRules[] = array($nameElemClass, 'required');
-							}
-						}
+					foreach($setting['elements'] as $nameE) {
+						$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
+						$nameElemClass = $nameCol.'__'.$nameE.'earray_';
+						$this->addElemClass($nameElemClass,$getValElem);
+						$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
+						$this->customRules[] = array($nameElemClass, 'required');
 					}
 				}
 				//если элементов нет то добавлять что угодно для этого добавляем одно доп поле. но это надо делать НЕ ТУТ а в obj.php
@@ -306,9 +294,14 @@ abstract class AbsModel extends CActiveRecord
 				),
 				'conf' => array(
 					'isMany'=>false, //множественное добавление вложенного массива
-					'rules'=>array(
-						array('firstname','required'),
-						array('*','boolean'), // * для любых ключей
+				),
+				'rules'=>array(
+					'firstname'=>array(
+						array('required'),
+						array('boolean'), // * для любых ключей
+					),
+					'*'=>array(
+						array('safe'),
 					),
 				),
 				'elementsForm' => array(
@@ -317,6 +310,9 @@ abstract class AbsModel extends CActiveRecord
 					),
 					'lastname'=>array(
 						'type'=>'checkbox',
+					),
+					'*'=>array(
+						'type'=>'text',
 					),
 				),
 			)

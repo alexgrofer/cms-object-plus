@@ -61,7 +61,7 @@ class myObjHeaders extends AbsBaseHeaders
 						'type'=>'text',
 					),
 					'lastname'=>array(
-						'type'=>'checkbox',
+						'type'=>'text',
 					),
 				),
 			)
