@@ -144,7 +144,8 @@ abstract class AbsModel extends CActiveRecord
 				//CASE type EAarray
 				if(($pos = strpos($nameElem,'earray_'))!==false) {
 					$arrName = explode('__',substr($nameElem,0,$pos));
-					$this->edit_EArray($val,$arrName[0],$arrName[1],(isset($arrName[2])?$arrName[2]:null));
+					$index = (isset($arrName[2])?$arrName[2]:null);
+					$this->edit_EArray($val,$arrName[0],$arrName[1],$index);
 				}
 				//CASE type new type
 				//if(...)
@@ -170,7 +171,7 @@ abstract class AbsModel extends CActiveRecord
 		$this->$nameElemClass = $value;
 		$unserializeArray = $this->get_EArray($colName);
 
-		if($index) {
+		if($index!==null) {
 			if($isExists && !trim($value)) {
 				unset($unserializeArray[$index][$nameElem]); //пустые не храним в базе
 			}
@@ -204,7 +205,7 @@ abstract class AbsModel extends CActiveRecord
 		$elem = array();
 		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
 			if($nameElem) {
-				$elem = ($index)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 			}
 			else {
 				$elem = $unserializeArray;
@@ -223,8 +224,8 @@ abstract class AbsModel extends CActiveRecord
 	public function has_EArray($nameCol,$nameElem,$index=null) {
 		$result = false;
 		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
-			if($index && isset($unserializeArray[$index][$nameElem]))  $result = true;
-			elseif($index=null && isset($unserializeArray[$nameElem])) $result = true;
+			if($index!==null && isset($unserializeArray[$index][$nameElem]))  $result = true;
+			elseif($index==null && isset($unserializeArray[$nameElem])) $result = true;
 		}
 		return $result;
 	}
