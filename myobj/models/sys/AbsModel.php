@@ -311,54 +311,9 @@ abstract class AbsModel extends CActiveRecord
 						}
 					}
 				}
-				//если элементов нет то добавлять что угодно для этого добавляем одно доп поле. но это надо делать НЕ ТУТ а в obj.php
 			}
-			//генерим элементы
-			//ненерим rules
-			//генерим форму
 		}
 	}
-
-	/**
-	 * Возможность хранить массивы в базе.
-	 * name_col_typeEArray_firstname
-	 * @return array
-	 */
-	/*
-	public function typesEArray() {
-		return array(
-			'name_col_typeEArray' => array(
-				'elements' => array( //возможные ключи массива, если пусто ТО возможно добавление любых ключей
-					'firstname',
-					'lastname',
-				),
-				'conf' => array(
-					'isMany'=>false, //множественное добавление вложенного массива
-				),
-				'rules'=>array(
-					'firstname'=>array(
-						array('required'),
-						array('boolean'), // * для любых ключей
-					),
-					'*'=>array(
-						array('safe'),
-					),
-				),
-				'elementsForm' => array(
-					'firstname'=>array(
-						'type'=>'text',
-					),
-					'lastname'=>array(
-						'type'=>'checkbox',
-					),
-					'*'=>array(
-						'type'=>'text',
-					),
-				),
-			)
-		);
-	}
-	*/
 	public function typesEArray() {
 		return array();
 	}

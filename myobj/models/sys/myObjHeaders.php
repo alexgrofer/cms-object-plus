@@ -58,9 +58,6 @@ class myObjHeaders extends AbsBaseHeaders
 					array('*', 'length', 'min'=>3, 'max'=>12), //для любых ключей которых нет в этом списке
 				),
 				'elementsForm' => array(
-					'firstname'=>array(
-						'type'=>'text',
-					),
 					'lastname'=>array(
 						'type'=>'text',
 					),
