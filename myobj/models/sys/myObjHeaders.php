@@ -53,9 +53,13 @@ class myObjHeaders extends AbsBaseHeaders
 					'isMany'=>true,
 				),
 				'rules'=>array(
-					array('firstname', 'length', 'max'=>4),
-					array('*','required'), //для любых ключей которых нет в этом списке
-					array('*', 'length', 'min'=>3, 'max'=>12), //для любых ключей которых нет в этом списке
+					'firstname'=>array(
+						array('length', 'min'=>2,  'max'=>5),
+					),
+					'*'=>array(
+						array('required'),
+						array('length', 'min'=>3, 'max'=>12),
+					),
 				),
 				'elementsForm' => array(
 					'lastname'=>array(

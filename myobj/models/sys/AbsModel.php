@@ -285,8 +285,19 @@ abstract class AbsModel extends CActiveRecord
 		$index = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
 		$this->addElemClass($nameElemClass,$val);
+		//rules
+		$typesEArray = $this->typesEArray();
+		$elemRuleConf = '*';
+		if(isset($typesEArray[$nameCol]['rules'][$nameE])) {
+			$elemRuleConf = $nameE;
+		}
+		foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
+			array_unshift($settingArray,$nameElemClass);
+			$this->customRules[] = $settingArray;
+		}
+
+		//form elem
 		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
-		$this->customRules[] = array($nameElemClass, 'safe');
 	}
 
 	protected function dinamicModel() {
