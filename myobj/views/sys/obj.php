@@ -55,14 +55,15 @@ if(count($typesEArray)) {
 	foreach($typesEArray as $nameCol => $setting) {
 		$valuetypesEArray = $REND_model->get_EArray($nameCol);
 		if(isset($setting['elements']) && count($setting['elements'])) {
-			//множество множество
 			if($setting['conf']['isMany']) {
-				//добавить еще пустые высчитав последний ключ
-				//само собой rules и elements
+				$index = count($valuetypesEArray)?count($valuetypesEArray):0;
+				foreach($setting['elements'] as $nameE) {
+					$REND_model->generate_EArray(null,$nameCol,$nameE,$index);
+				}
 			}
 		}
 		else {
-			//если нет элементов всегда добавить + парочку
+			//если нет элементов можно добавить свои task
 		}
 	}
 }

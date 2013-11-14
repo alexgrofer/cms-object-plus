@@ -259,11 +259,11 @@ abstract class AbsModel extends CActiveRecord
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 
-	public function generate_EArray($val,$nameCol,$nameE,$index=null) { //потом перенести в утилиты
+	public function generate_EArray($val,$nameCol,$nameE,$index=null) {
 		$index = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
 		$this->addElemClass($nameElemClass,$val);
-		$this->customElementsForm[$nameElemClass] = (isset($setting['elementsForm']) && isset($setting['elementsForm'][$nameE]))?$setting['elementsForm'][$nameE]:array('type' => 'text');
+		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
 		$this->customRules[] = array($nameElemClass, 'required');
 	}
 
