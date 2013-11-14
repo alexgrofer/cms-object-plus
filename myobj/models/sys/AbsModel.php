@@ -162,6 +162,22 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
+	public function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			$typesEArray = $this->typesEArray();
+			if(count($typesEArray)) {
+				foreach($typesEArray as $nameCol => $setting) {
+					$valuetypesEArray = $this->get_EArray($nameCol);
+					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
+						$this->$nameCol = serialize(array_values($valuetypesEArray)); //сбрасываем ключи
+					}
+				}
+			}
+			return true;
+		}
+		else return parent::beforeSave();
+	}
+
 	public function edit_EArray($value,$colName,$nameElem,$index=null) {
 		$isExists = $this->has_EArray($colName,$nameElem,$index)?true:false;
 		$nameElemClass = $colName.'__'.$nameElem.'earray_';
@@ -172,8 +188,11 @@ abstract class AbsModel extends CActiveRecord
 		$unserializeArray = $this->get_EArray($colName);
 
 		if($index!==null) {
-			if($isExists && !trim($value)) {
-				unset($unserializeArray[$index][$nameElem]); //пустые не храним в базе
+			if($isExists && !trim($value)) { //пустые не храним в базе
+				unset($unserializeArray[$index][$nameElem]);
+				if(count($unserializeArray[$index])) {
+					unset($unserializeArray[$index]);
+				}
 			}
 			elseif(trim($value)) { //если новый
 				if(!isset($unserializeArray[$index])) {
@@ -264,7 +283,7 @@ abstract class AbsModel extends CActiveRecord
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
 		$this->addElemClass($nameElemClass,$val);
 		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
-		$this->customRules[] = array($nameElemClass, 'required');
+		$this->customRules[] = array($nameElemClass, 'safe');
 	}
 
 	protected function dinamicModel() {
