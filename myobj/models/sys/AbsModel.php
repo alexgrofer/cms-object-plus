@@ -185,20 +185,11 @@ abstract class AbsModel extends CActiveRecord
 		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
 			//создаем элемент
 			$this->addElemClass($nameElemClass,$value);
-			//так как массив динамический нужно генерить rules на лету
-			$typesEArray = $this->typesEArray();
-			$elemRuleConf = '*';
-			if(isset($typesEArray[$nameCol]['rules'][$nameElem])) {
-				$elemRuleConf = $nameElem;
-			}
-			foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
-				array_unshift($settingArray,$nameElemClass);
-				$this->customRules[] = $settingArray;
-			}
 		}
 		else {
 			$this->$nameElemClass = $value;
 		}
+
 		$unserializeArray = $this->get_EArray($nameCol);
 
 		if($index!==null) {
@@ -300,6 +291,19 @@ abstract class AbsModel extends CActiveRecord
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
 		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
 	}
+	public function genetate_rule_EArray($nameCol,$nameE,$index=null) {
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+		$typesEArray = $this->typesEArray();
+		$elemRuleConf = '*';
+		if(isset($typesEArray[$nameCol]['rules'][$nameE])) {
+			$elemRuleConf = $nameE;
+		}
+		foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
+			array_unshift($settingArray,$nameElemClass);
+			$this->customRules[] = $settingArray;
+		}
+	}
 
 	protected function dinamicModel() {
 		$typesEArray = $this->typesEArray();
@@ -314,6 +318,7 @@ abstract class AbsModel extends CActiveRecord
 								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
 								$this->edit_EArray($getValElem,$nameCol,$nameE,$index);
 								$this->genetate_form_EArray($nameCol,$nameE,$index);
+								$this->genetate_rule_EArray($nameCol,$nameE,$index);
 							}
 						}
 					}
@@ -322,6 +327,7 @@ abstract class AbsModel extends CActiveRecord
 							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
 							$this->edit_EArray($getValElem,$nameCol,$nameE);
 							$this->genetate_form_EArray($nameCol,$nameE);
+							$this->genetate_rule_EArray($nameCol,$nameE);
 						}
 					}
 					//если он пустой !count($valuetypesEArray) то сгенерить только для не множественного так как элемент нужен для формы
