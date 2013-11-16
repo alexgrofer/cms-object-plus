@@ -58,9 +58,10 @@ if(count($typesEArray)) {
 			if($setting['conf']['isMany']) {
 				$index = count($valuetypesEArray)?count($valuetypesEArray):0;
 				foreach($setting['elements'] as $nameE) {
-					$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+					$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
+					//создадим пустой элемент важно что он без rules
 					$REND_model->addElemClass($nameElemClass);
-					$REND_model->generate_EArray_ElementForm($nameCol,$nameE,$index);
+					$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
 				}
 			}
 		}

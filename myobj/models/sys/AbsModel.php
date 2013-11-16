@@ -162,7 +162,7 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
-	protected function beforeSave() {
+	public function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			$typesEArray = $this->typesEArray();
 			if(count($typesEArray)) {
@@ -180,12 +180,12 @@ abstract class AbsModel extends CActiveRecord
 
 	public function edit_EArray($value,$nameCol,$nameElem,$index=null) {
 		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
-		$nameElemClass = $nameCol.'__'.$nameElem.'earray_';
-
-		if(!property_exists($this,$nameElemClass)) {
-			//создаем новое свойство
-			$this->addElemClass($nameElemClass);
-			//так как этот тип данных является динамическим то rules нужно также диначисески добавлять как и свойства
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameElem.$index.'earray_';
+		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
+			//создаем элемент
+			$this->addElemClass($nameElemClass,$value);
+			//так как массив динамический нужно генерить rules на лету
 			$typesEArray = $this->typesEArray();
 			$elemRuleConf = '*';
 			if(isset($typesEArray[$nameCol]['rules'][$nameElem])) {
@@ -196,7 +196,9 @@ abstract class AbsModel extends CActiveRecord
 				$this->customRules[] = $settingArray;
 			}
 		}
-		$this->$nameElemClass = $value;
+		else {
+			$this->$nameElemClass = $value;
+		}
 		$unserializeArray = $this->get_EArray($nameCol);
 
 		if($index!==null) {
@@ -293,10 +295,9 @@ abstract class AbsModel extends CActiveRecord
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 
-	public function generate_EArray_ElementForm($nameCol,$nameE,$index=null) {
+	public function genetate_form_EArray($nameCol,$nameE,$index=null) {
 		$index = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
-
 		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
 	}
 
@@ -306,23 +307,24 @@ abstract class AbsModel extends CActiveRecord
 		if(count($typesEArray)) {
 			foreach($typesEArray as $nameCol => $setting) {
 				$valuetypesEArray = $this->get_EArray($nameCol);
-				if(isset($setting['elements']) && count($setting['elements']) && count($valuetypesEArray)) {
-					if($setting['conf']['isMany']) {
+				if(isset($setting['elements']) && count($setting['elements'])) {
+					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
 						foreach($valuetypesEArray as $index => $valuetypesEArrayElem) {
 							foreach($setting['elements'] as $nameE) {
 								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
 								$this->edit_EArray($getValElem,$nameCol,$nameE,$index);
-								$this->generate_EArray_ElementForm($nameCol,$nameE,$index);
+								$this->genetate_form_EArray($nameCol,$nameE,$index);
 							}
 						}
 					}
-					else {
+					elseif($setting['conf']['isMany']==false) {
 						foreach($setting['elements'] as $nameE) {
 							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
 							$this->edit_EArray($getValElem,$nameCol,$nameE);
-							$this->generate_EArray_ElementForm($nameCol,$nameE);
+							$this->genetate_form_EArray($nameCol,$nameE);
 						}
 					}
+					//если он пустой !count($valuetypesEArray) то сгенерить только для не множественного так как элемент нужен для формы
 				}
 			}
 		}
