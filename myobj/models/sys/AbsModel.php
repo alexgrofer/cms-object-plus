@@ -180,11 +180,13 @@ abstract class AbsModel extends CActiveRecord
 
 	public function edit_EArray($value,$nameCol,$nameElem,$index=null) {
 		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
-		$index = ($index!==null)?'__'.$index:'';
-		$nameElemClass = $nameCol.'__'.$nameElem.$index.'earray_';
+		$indexStr = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameElem.$indexStr.'earray_';
+		$isNewElement = false;
 		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
 			//создаем элемент
 			$this->addElemClass($nameElemClass,$value);
+			$isNewElement = true;
 		}
 		else {
 			$this->$nameElemClass = $value;
@@ -216,6 +218,9 @@ abstract class AbsModel extends CActiveRecord
 		}
 
 		if(count($unserializeArray)) {
+			if($index!==null && $isNewElement && trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
+				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
+			}
 			$this->$nameCol = serialize($unserializeArray);
 		}
 		else {
@@ -236,7 +241,7 @@ abstract class AbsModel extends CActiveRecord
 			if($nameElem) { //по ключу элемента или в зависимости от индекса при множественном
 				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 			}
-			elseif($index!==null) { //получить массив по ключу при множественной настройке
+			elseif($index!==null && isset($unserializeArray[$index])) { //получить массив по ключу при множественной настройке
 				$elem = $unserializeArray[$index];
 			}
 			else { //весь массив как есть
