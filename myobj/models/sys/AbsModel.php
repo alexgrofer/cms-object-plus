@@ -162,7 +162,7 @@ abstract class AbsModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
-	public function beforeSave() {
+	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			$typesEArray = $this->typesEArray();
 			if(count($typesEArray)) {
@@ -293,6 +293,13 @@ abstract class AbsModel extends CActiveRecord
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
 	}
 
+	public function generate_EArray_ElementForm($nameCol,$nameE,$index=null) {
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+
+		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
+	}
+
 	protected function dinamicModel() {
 		$typesEArray = $this->typesEArray();
 
@@ -305,6 +312,7 @@ abstract class AbsModel extends CActiveRecord
 							foreach($setting['elements'] as $nameE) {
 								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
 								$this->edit_EArray($getValElem,$nameCol,$nameE,$index);
+								$this->generate_EArray_ElementForm($nameCol,$nameE,$index);
 							}
 						}
 					}
@@ -312,6 +320,7 @@ abstract class AbsModel extends CActiveRecord
 						foreach($setting['elements'] as $nameE) {
 							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
 							$this->edit_EArray($getValElem,$nameCol,$nameE);
+							$this->generate_EArray_ElementForm($nameCol,$nameE);
 						}
 					}
 				}
