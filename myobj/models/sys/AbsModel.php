@@ -233,10 +233,13 @@ abstract class AbsModel extends CActiveRecord
 	public function get_EArray($nameCol,$nameElem=null,$index=null) {
 		$elem = array();
 		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
-			if($nameElem) {
+			if($nameElem) { //по ключу элемента или в зависимости от индекса при множественном
 				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 			}
-			else {
+			elseif($index!==null) { //получить массив по ключу при множественной настройке
+				$elem = $unserializeArray[$index];
+			}
+			else { //весь массив как есть
 				$elem = $unserializeArray;
 			}
 		}
