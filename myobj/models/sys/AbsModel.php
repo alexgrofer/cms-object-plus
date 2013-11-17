@@ -209,13 +209,26 @@ abstract class AbsModel extends CActiveRecord
 		}
 
 		if(count($unserializeArray)) {
-			if($index!==null && trim($value) && !count($this->get_EArray($nameCol,null,$index,true))) {
-				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
-			}
 			$this->$nameCol = serialize($unserializeArray);
 		}
 		else {
 			$this->$nameCol = null;
+		}
+
+		if($index!==null) {
+			//для новых элементов нужно прописывать правила
+			if(trim($value) && !count($this->get_EArray($nameCol,null,$index,true))) {
+				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
+			}
+
+			//если полностью удалил элементы убераем все правила так как считаем что элемент не нужен
+			elseif(!trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
+				foreach($this->customRules as $k => $arrayRule) {
+					if($arrayRule[0]==$nameElemClass) {
+						unset($this->customRules[$k]);
+					}
+				}
+			}
 		}
 	}
 
