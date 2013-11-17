@@ -111,14 +111,6 @@ abstract class AbsModel extends CActiveRecord
 		}
 	}
 
-	public function init() {
-		parent::init();
-		//запомнить старые значения иногда это требуется
-		foreach($this->attributes as $key => $value) {
-			$this->old_attributes[$key] = $value;
-		}
-	}
-
 	protected $elements_enable_class = array();
 	/**
 	 * Управляемое добавление новых свойств
@@ -216,7 +208,7 @@ abstract class AbsModel extends CActiveRecord
 		}
 
 		if(count($unserializeArray)) {
-			if($index!==null && trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
+			if($index!==null && trim($value) && !count($this->get_EArray($nameCol,null,$index,true))) {
 				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
 			}
 			$this->$nameCol = serialize($unserializeArray);
@@ -233,9 +225,10 @@ abstract class AbsModel extends CActiveRecord
 	 * @param null $index
 	 * @return mixed может вернуть как массив так и значение string
 	 */
-	public function get_EArray($nameCol,$nameElem=null,$index=null) {
+	public function get_EArray($nameCol,$nameElem=null,$index=null,$isOld=false) {
+		$strArr = (!$isOld)?$this->attributes[$nameCol]:$this->old_attributes[$nameCol];
 		$elem = array();
-		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
+		if(trim($strArr) && ($unserializeArray = @unserialize($strArr))) {
 			if($nameElem) { //по ключу элемента или в зависимости от индекса при множественном
 				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 			}
@@ -312,6 +305,13 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	protected function dinamicModel() {
+		foreach($this->attributes as $k => $v) {
+			$this->old_attributes[$k] = $v;
+		}
+
+		//types
+
+		//EArray
 		$typesEArray = $this->typesEArray();
 
 		if(count($typesEArray)) {
