@@ -182,11 +182,9 @@ abstract class AbsModel extends CActiveRecord
 		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
 		$indexStr = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameElem.$indexStr.'earray_';
-		$isNewElement = false;
 		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
 			//создаем элемент
 			$this->addElemClass($nameElemClass,$value);
-			$isNewElement = true;
 		}
 		else {
 			$this->$nameElemClass = $value;
@@ -218,7 +216,7 @@ abstract class AbsModel extends CActiveRecord
 		}
 
 		if(count($unserializeArray)) {
-			if($index!==null && $isNewElement && trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
+			if($index!==null && trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
 				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
 			}
 			$this->$nameCol = serialize($unserializeArray);
