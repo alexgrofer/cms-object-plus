@@ -289,7 +289,12 @@ abstract class AbsModel extends CActiveRecord
 	public function genetate_form_EArray($nameCol,$nameE,$index=null) {
 		$index = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
-		$this->customElementsForm[$nameElemClass] = array('type' => 'text');
+		$typesEArray = $this->typesEArray();
+		$elemRuleConf = '*';
+		if(isset($typesEArray[$nameCol]['elementsForm'][$nameE])) {
+			$elemRuleConf = $nameE;
+		}
+		$this->customElementsForm[$nameElemClass] = $typesEArray[$nameCol]['elementsForm'][$elemRuleConf];
 	}
 	public function genetate_rule_EArray($nameCol,$nameE,$index=null) {
 		$index = ($index!==null)?'__'.$index:'';

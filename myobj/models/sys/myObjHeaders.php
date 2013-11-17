@@ -66,7 +66,7 @@ class myObjHeaders extends AbsBaseHeaders
 						'type'=>'text',
 					),
 					'*'=>array(
-						'type'=>'text',
+						'type'=>'textarea',
 					),
 				),
 			)
