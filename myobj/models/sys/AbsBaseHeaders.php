@@ -217,26 +217,23 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			);
 		}
 		$this->_tmpProperties[$name] = $value;
-		$this->addElemClass($name.'prop_', $value);
+		$this->{$name.'prop_'} = $value;
 	}
-	public function __set($name, $value) {
-		//case
-		if($name=='attributes') {
-			if(is_array($value) && count($value)) {
-				foreach($value as $key => $val) {
-					if(($pos = strpos($key,'prop_'))!==false) {
-						$this->set_properties(substr($key,0,$pos),$val);
-					}
+
+	public function setAttributes($values) {
+		parent::setAttributes($values);
+
+		if(is_array($values) && count($values)) {
+			//SWITCH MY TYPES
+			foreach($values as $nameElem => $val) {
+				//CASE type Prop
+				if(($pos = strpos($nameElem,'prop_'))!==false) {
+					$this->set_properties(substr($nameElem,0,$pos),$val);
 				}
+				//CASE type new type
+				//if(...)
 			}
 		}
-		elseif(($pos = strpos($name,'prop_'))!==false) {
-			$propName = substr($name,0,$pos);
-			$this->set_properties($propName, $value);
-		}
-		//elseif и т.д можно добавить еще свои типы
-
-		parent::__set($name, $value);
 	}
 
 	protected function dinamicModel() {
@@ -247,7 +244,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
 				//инициализируем свойство
-				$this->$nameelem = $currentproperties[$prop->codename];
+				$this->addElemClass($nameelem,$currentproperties[$prop->codename]);
 				//устанавливаем правила валидации
 				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
 				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
