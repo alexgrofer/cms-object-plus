@@ -30,9 +30,6 @@ class myObjHeaders extends AbsBaseHeaders
 		'name'=>array(
 			'type'=>'text',
 		),
-		'content'=>array(
-			'type'=>'textarea',
-		),
 		'sort'=>array(
 			'type'=>'text',
 		),
@@ -40,5 +37,40 @@ class myObjHeaders extends AbsBaseHeaders
 			'type'=>'checkbox',
 		),
 	);
+
+	/**
+	 * Возможность хранить массивы в базе.
+	 * @return array
+	 */
+	public function typesEArray() {
+		return array(
+			'content' => array(
+				'elements' => array(
+					'firstname',
+					'lastname',
+				),
+				'conf' => array(
+					'isMany'=>true,
+				),
+				'rules'=>array(
+					'firstname'=>array(
+						array('length', 'min'=>2,  'max'=>5),
+					),
+					'*'=>array(
+						array('required'),
+						array('length', 'min'=>3, 'max'=>12),
+					),
+				),
+				'elementsForm' => array(
+					'lastname'=>array(
+						'type'=>'text',
+					),
+					'*'=>array(
+						'type'=>'textarea',
+					),
+				),
+			)
+		);
+	}
 }
 

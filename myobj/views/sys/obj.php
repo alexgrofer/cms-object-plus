@@ -8,10 +8,10 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-$elementsForm = $REND_model->elementsForm();
+//не показывать те элементы которых нет в настройке для этого типа
 if($REND_editForm) {
-	foreach($elementsForm as $nameElem => $nameAlias) {
-		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
+	foreach($REND_model->elementsForm() as $nameElem => $nameAlias) {
+		if(!in_array($nameElem,$REND_editForm)) unset($REND_model->customElementsForm[$nameElem]);
 	}
 }
 if($REND_AttributeLabels) {
@@ -29,7 +29,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 
 		$nameElem = $namer.$nameps_mtm;
 		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
-		$elementsForm[$nameElem] = array('type'=>'text');
+		$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
 		$REND_model->customRules[] = array($nameElem, 'safe');
 
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
@@ -46,9 +46,31 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$snamefile = 'edit_file_template';
 
 	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
-	$elementsForm[$snamefile] = array('type'=>'textarea');
+	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
 	$REND_model->customRules[] = array($snamefile, 'safe');
 }
+//work EArray
+$typesEArray = $REND_model->typesEArray();
+if(count($typesEArray)) {
+	foreach($typesEArray as $nameCol => $setting) {
+		$valuetypesEArray = $REND_model->get_EArray($nameCol);
+		if(isset($setting['elements']) && count($setting['elements'])) {
+			if($setting['conf']['isMany']) {
+				$index = count($valuetypesEArray)?count($valuetypesEArray):0;
+				foreach($setting['elements'] as $nameE) {
+					$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
+					//создадим пустой элемент важно что он без rules
+					$REND_model->addElemClass($nameElemClass);
+					$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
+				}
+			}
+		}
+		else {
+			//если нет элементов можно добавить свои task
+		}
+	}
+}
+//end EArray
 
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
@@ -57,7 +79,7 @@ if($paramsQueryPostModel) {
 	$REND_model->validate();
 }
 
-$form = new CForm(array('elements'=>$elementsForm), $REND_model);
+$form = new CForm(array('elements'=>$REND_model->elementsForm()), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 

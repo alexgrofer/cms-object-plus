@@ -111,32 +111,165 @@ abstract class AbsModel extends CActiveRecord
 		}
 	}
 
-	public function init() {
-		parent::init();
-		//запомнить старые значения иногда это требуется
-		foreach($this->attributes as $key => $value) {
-			$this->old_attributes[$key] = $value;
-		}
-	}
-
-	protected $_validPropElements = array();
+	protected $elements_enable_class = array();
 	/**
 	 * Управляемое добавление новых свойств
 	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
+	 * если уже есть такое свойство класса будет исключение
 	 * @param $name
 	 * @param $value
 	 */
-	public function addElemClass($name, $value=null) {
-		if(!in_array($name,$this->_validPropElements)) {
-			$this->_validPropElements[] = $name;
+	public function addElemClass($name, $defValue=null) {
+		if(!in_array($name,$this->elements_enable_class)) {
+			$this->elements_enable_class[] = $name;
+			$this->$name = $defValue;
 		}
-		self::__set($name, $value);
+		else {
+			throw new CException(Yii::t('cms','element "{prop}" is already add class  "{class}"',
+				array('{prop}'=>$name, '{class}'=>get_class($this))));
+		}
+	}
+	public function setAttributes($values) {
+		if(is_array($values) && count($values)) {
+			//SWITCH MY TYPES
+			foreach($values as $nameElem => $val) {
+				//CASE type EAarray
+				if(($pos = strpos($nameElem,'earray_'))!==false) {
+					$arrName = explode('__',substr($nameElem,0,$pos));
+					$index = (isset($arrName[2])?$arrName[2]:null);
+					$this->edit_EArray($val,$arrName[0],$arrName[1],$index);
+				}
+				//CASE type new type
+				//if(...)
+			}
+		}
+
+		parent::setAttributes($values);
 	}
 	public function __set($name, $value) {
-		if(in_array($name,$this->_validPropElements)) {
+		//init new elements
+		if(in_array($name,$this->elements_enable_class)) {
 			$this->$name =  $value;
 		}
 		parent::__set($name, $value);
+	}
+
+	protected function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			//сбрасываем ключи для того что бы ключи всегда шли по порядку, т.к возможно удаление элемента массива
+			$typesEArray = $this->typesEArray();
+			if(count($typesEArray)) {
+				foreach($typesEArray as $nameCol => $setting) {
+					$valuetypesEArray = $this->get_EArray($nameCol);
+					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
+						$this->$nameCol = serialize(array_values($valuetypesEArray));
+					}
+				}
+			}
+			return true;
+		}
+		else return parent::beforeSave();
+	}
+
+	public function edit_EArray($value,$nameCol,$nameElem,$index=null) {
+		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
+		$indexStr = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameElem.$indexStr.'earray_';
+		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
+			//создаем элемент
+			$this->addElemClass($nameElemClass,$value);
+		}
+		else {
+			$this->$nameElemClass = $value;
+		}
+
+		$unserializeArray = $this->get_EArray($nameCol);
+
+		if($index!==null) {
+			if($isExists && !trim($value)) { //пустые не храним в базе
+				unset($unserializeArray[$index][$nameElem]);
+				if(!count($unserializeArray[$index])) {
+					unset($unserializeArray[$index]);
+				}
+			}
+			elseif(trim($value)) { //если новый
+				if(!isset($unserializeArray[$index])) {
+					$unserializeArray[$index] = array();
+				}
+				$unserializeArray[$index][$nameElem] = $value;
+			}
+		}
+		else {
+			if($isExists && !trim($value)) {
+				unset($unserializeArray[$nameElem]); //пустые не храним в базе
+			}
+			elseif($value) {
+				$unserializeArray[$nameElem] = $value;
+			}
+		}
+
+		if(count($unserializeArray)) {
+			$this->$nameCol = serialize($unserializeArray);
+		}
+		else {
+			$this->$nameCol = null;
+		}
+
+		if($index!==null) {
+			//для новых элементов нужно прописывать правила
+			if(trim($value) && !count($this->get_EArray($nameCol,null,$index,true))) {
+				$this->genetate_rule_EArray($nameCol,$nameElem,$index);
+			}
+
+			//если полностью удалил элементы убераем все правила так как считаем что элемент не нужен
+			elseif(!trim($value) && !count($this->get_EArray($nameCol,null,$index))) {
+				foreach($this->customRules as $k => $arrayRule) {
+					if($arrayRule[0]==$nameElemClass) {
+						unset($this->customRules[$k]);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Возвращает значение
+	 * @param $name
+	 * @param null $nameElem
+	 * @param null $index
+	 * @return mixed может вернуть как массив так и значение string
+	 */
+	public function get_EArray($nameCol,$nameElem=null,$index=null,$isOld=false) {
+		$strArr = (!$isOld)?$this->attributes[$nameCol]:$this->old_attributes[$nameCol];
+		$elem = array();
+		if(trim($strArr) && ($unserializeArray = @unserialize($strArr))) {
+			if($nameElem) { //по ключу элемента или в зависимости от индекса при множественном
+				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
+			}
+			else{
+				$elem = $unserializeArray;
+				if($index!==null) {
+					$elem = (isset($unserializeArray[$index]))?$unserializeArray[$index]:array();
+				}
+			}
+		}
+		return $elem;
+	}
+
+	/**
+	 * Проверяет существует сам элемент
+	 * @param $nameCol
+	 * @param $nameElem
+	 * @param null $index
+	 * @return bool
+	 */
+	public function has_EArray($nameCol,$nameElem,$index=null) {
+		$result = false;
+		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
+			if($index!==null && isset($unserializeArray[$index][$nameElem]))  $result = true;
+			elseif($index==null && isset($unserializeArray[$nameElem])) $result = true;
+		}
+		return $result;
 	}
 
 	public $customRules=array();
@@ -164,5 +297,70 @@ abstract class AbsModel extends CActiveRecord
 	public function attributeLabels() {
 		$defCustomAttributeLabels = $this->customAttributeLabels();
 		return array_merge($defCustomAttributeLabels, $this->customAttributeLabels);
+	}
+
+	public function genetate_form_EArray($nameCol,$nameE,$index=null) {
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+		$typesEArray = $this->typesEArray();
+		$elemRuleConf = '*';
+		if(isset($typesEArray[$nameCol]['elementsForm'][$nameE])) {
+			$elemRuleConf = $nameE;
+		}
+		$this->customElementsForm[$nameElemClass] = $typesEArray[$nameCol]['elementsForm'][$elemRuleConf];
+	}
+	public function genetate_rule_EArray($nameCol,$nameE,$index=null) {
+		$index = ($index!==null)?'__'.$index:'';
+		$nameElemClass = $nameCol.'__'.$nameE.$index.'earray_';
+		$typesEArray = $this->typesEArray();
+		$elemRuleConf = '*';
+		if(isset($typesEArray[$nameCol]['rules'][$nameE])) {
+			$elemRuleConf = $nameE;
+		}
+		foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
+			array_unshift($settingArray,$nameElemClass);
+			$this->customRules[] = $settingArray;
+		}
+	}
+
+	protected function dinamicModel() {
+		foreach($this->attributes as $k => $v) {
+			$this->old_attributes[$k] = $v;
+		}
+
+		//types
+
+		//EArray
+		$typesEArray = $this->typesEArray();
+
+		if(count($typesEArray)) {
+			foreach($typesEArray as $nameCol => $setting) {
+				$valuetypesEArray = $this->get_EArray($nameCol);
+				if(isset($setting['elements']) && count($setting['elements'])) {
+					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
+						foreach($valuetypesEArray as $index => $valuetypesEArrayElem) {
+							foreach($setting['elements'] as $nameE) {
+								$getValElem = (isset($valuetypesEArrayElem[$nameE]))?$valuetypesEArrayElem[$nameE]:null;
+								$this->edit_EArray($getValElem,$nameCol,$nameE,$index);
+								$this->genetate_form_EArray($nameCol,$nameE,$index);
+								$this->genetate_rule_EArray($nameCol,$nameE,$index);
+							}
+						}
+					}
+					elseif($setting['conf']['isMany']==false) {
+						foreach($setting['elements'] as $nameE) {
+							$getValElem = (count($valuetypesEArray) && isset($valuetypesEArray[$nameE]))?$valuetypesEArray[$nameE]:null;
+							$this->edit_EArray($getValElem,$nameCol,$nameE);
+							$this->genetate_form_EArray($nameCol,$nameE);
+							$this->genetate_rule_EArray($nameCol,$nameE);
+						}
+					}
+					//если он пустой !count($valuetypesEArray) то сгенерить только для не множественного так как элемент нужен для формы
+				}
+			}
+		}
+	}
+	public function typesEArray() {
+		return array();
 	}
 }
