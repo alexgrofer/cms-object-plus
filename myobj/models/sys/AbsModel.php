@@ -156,12 +156,13 @@ abstract class AbsModel extends CActiveRecord
 
 	public function beforeSave() {
 		if(parent::beforeSave()!==false) {
+			//сбрасываем ключи для того что бы ключи всегда шли по порядку, т.к возможно удаление элемента массива
 			$typesEArray = $this->typesEArray();
 			if(count($typesEArray)) {
 				foreach($typesEArray as $nameCol => $setting) {
 					$valuetypesEArray = $this->get_EArray($nameCol);
 					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
-						$this->$nameCol = serialize(array_values($valuetypesEArray)); //сбрасываем ключи
+						$this->$nameCol = serialize(array_values($valuetypesEArray));
 					}
 				}
 			}
@@ -232,11 +233,11 @@ abstract class AbsModel extends CActiveRecord
 			if($nameElem) { //по ключу элемента или в зависимости от индекса при множественном
 				$elem = ($index!==null)?$unserializeArray[$index][$nameElem]:$unserializeArray[$nameElem];
 			}
-			elseif($index!==null && isset($unserializeArray[$index])) { //получить массив по ключу при множественной настройке
-				$elem = $unserializeArray[$index];
-			}
-			else { //весь массив как есть
+			else{
 				$elem = $unserializeArray;
+				if($index!==null) {
+					$elem = (isset($unserializeArray[$index]))?$unserializeArray[$index]:array();
+				}
 			}
 		}
 		return $elem;
