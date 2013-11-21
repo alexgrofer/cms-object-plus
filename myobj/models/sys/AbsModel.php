@@ -162,6 +162,21 @@ abstract class AbsModel extends CActiveRecord
 				foreach($typesEArray as $nameCol => $setting) {
 					$valuetypesEArray = $this->get_EArray($nameCol);
 					if(count($valuetypesEArray) && $setting['conf']['isMany']) {
+						foreach($valuetypesEArray as $index => $array) {
+							foreach($array as $nameElem =>$val) {
+								$nameElemClass = $nameCol.'__'.$nameElem.'__'.$index.'earray_';
+								$isUnsafe = true;
+								foreach($this->rules() as $arrayRule) {
+									if($arrayRule[0]==$nameElemClass && $arrayRule[1]!='unsafe') {
+										$isUnsafe = false;
+										break;
+									}
+								}
+								if($isUnsafe) {
+									unset($valuetypesEArray[$index][$nameElem]);
+								}
+							}
+						}
 						$this->$nameCol = serialize(array_values($valuetypesEArray));
 					}
 				}
@@ -170,6 +185,11 @@ abstract class AbsModel extends CActiveRecord
 		}
 		else return parent::beforeSave();
 	}
+
+	/**
+	 * @var array Массив всегда хранит сохраненный элементы типа earray даже если нет правил или оно unsafe
+	 */
+	protected $save_tmp_not_rules_earray = array();
 
 	public function edit_EArray($value,$nameCol,$nameElem,$index=null) {
 		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
@@ -210,6 +230,7 @@ abstract class AbsModel extends CActiveRecord
 
 		if(count($unserializeArray)) {
 			$this->$nameCol = serialize($unserializeArray);
+			$this->save_tmp_not_rules_earray[$nameCol] = $unserializeArray;
 		}
 		else {
 			$this->$nameCol = null;
@@ -317,9 +338,11 @@ abstract class AbsModel extends CActiveRecord
 		if(isset($typesEArray[$nameCol]['rules'][$nameE])) {
 			$elemRuleConf = $nameE;
 		}
-		foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
-			array_unshift($settingArray,$nameElemClass);
-			$this->customRules[] = $settingArray;
+		if(isset($typesEArray[$nameCol]['rules'][$elemRuleConf])) {
+			foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
+				array_unshift($settingArray,$nameElemClass);
+				$this->customRules[] = $settingArray;
+			}
 		}
 	}
 
