@@ -2,7 +2,7 @@
 namespace MYOBJ\controllers;
 use \yii as yii;
 
-class ObjController extends Controller {
+class ObjController extends \Controller {
 	public $apcms;
 	public $layout=false;
 	public $dicturls = array();
@@ -24,7 +24,7 @@ class ObjController extends Controller {
 		//Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
 
 		$findparamname = (preg_match('/\D/', $index))?'vp2':'id';
-		$objnav = uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $index, 'bp1' => true));
+		$objnav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $index, 'bp1' => true));
 
 		if($objnav) {
 			//если нет объекта шаблона привязанного к этому объекту навигации
@@ -41,7 +41,7 @@ class ObjController extends Controller {
 			$this->render('/cms/templates/'.$templateobj->vp1.'_content',$conf_site);
 		}
 		else {
-			throw new CHttpException(404,'page not is find');
+			throw new \CHttpException(404,'page not is find');
 		}
 	}
 }
