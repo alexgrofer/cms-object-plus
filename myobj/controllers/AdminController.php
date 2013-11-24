@@ -221,7 +221,7 @@ class AdminController extends \Controller {
 						}
 						break;
 					case 'lenksobjedit':
-						$association_class = uClasses::getclass($this->dicturls['paramslist'][6]);
+						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
 							$this->param_contr['current_class_ass_name'] = $association_class->codename;
 							$this->param_contr['current_class_ass_conf_array'] = Yii::app()->appcms->config['spacescl'][$association_class->tablespace]['namemodel'];
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1]);
