@@ -62,6 +62,7 @@ if(count($typesEArray)) {
 					//создадим пустой элемент важно что он без rules
 					$REND_model->addElemClass($nameElemClass);
 					$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
+					$REND_model->customAttributeLabels[$nameElemClass] = 'new_element_'.$nameE;
 				}
 			}
 		}
