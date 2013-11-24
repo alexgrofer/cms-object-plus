@@ -69,7 +69,7 @@ if(array_key_exists('submit',$_POST)) {
 }
 ?>
 <form method="post">
-<p>template:<select name="settemplid"><option value="0">---</option>'
+<p> <code>template <b>default</b>: </code> <select name="settemplid"><option value="0">---</option>'
 <?php
 	foreach($alltemolates->findAll() as $objtmpl) {
 		$select = ($templates && $templates[0]->id == $objtmpl->id)?'selected="selected"':'';
