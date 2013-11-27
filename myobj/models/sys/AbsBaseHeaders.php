@@ -209,6 +209,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	public function propertyNames() {
 		return $this->_propertiesNames;
 	}
+	private $_tmp_ClassProperties = array();
+	public function getClassProperties() {
+		if(!$this->_tmp_ClassProperties) {
+			foreach($this->uclass->properties as $prop) {
+				$this->_tmp_ClassProperties[$prop->codename] = $prop;
+			}
+		}
+		return $this->_tmp_ClassProperties;
+	}
 	public function set_properties($name,$value) {
 		if(!$this->hasProperty($name)) {
 			throw new CException(
