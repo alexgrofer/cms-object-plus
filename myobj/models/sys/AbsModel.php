@@ -43,7 +43,8 @@ abstract class AbsModel extends CActiveRecord
 						throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
 							array('{prop}'=>$cond[0], '{class}'=>$this->uclass->codename)));
 					}
-					$critStr = $isand."(lines.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[2]." ".$cond[3]." AND property_alias.codename='".$cond[0]."') ".$typecond." ";
+					$critStr = $isand."(lines_find.".$arrconfcms['TYPES_COLUMNS'][$properties[$cond[0]]->myfield]." ".$cond[2]." ".$cond[3]." AND (lines_find.property_id=".$properties[$cond[0]]->id.")) ".$typecond." ";
+					//ждойнить нужно каждый раз тут
 				}
 				//param
 				else {
@@ -53,8 +54,10 @@ abstract class AbsModel extends CActiveRecord
 				$this->_conditStart[] = $critStr;
 			}
 			if($propYes!='') {
-				$save_dbCriteria->with['lines'] = array('with' => 'property_alias', 'together'=>true);
-				$save_dbCriteria->with['uclass.properties'] = array();
+				//нужно джойнить таблицу что бы в ней появился столбец по которому можно будет отсортировать
+				$save_dbCriteria->with['lines_find']['together'] = true;
+				//в целях оптимизации нам не нужны в селекте никакие лишнии данные,оставим только property_id так как должен быть хоть один столбец с синтаксисе sql
+				$save_dbCriteria->with['lines_find']['select'] = 'property_id';
 			}
 		}
 		if(array_key_exists('order',$array) && count($array['order'])) {
@@ -64,18 +67,21 @@ abstract class AbsModel extends CActiveRecord
 			$typf = (count($elem_order)>=2)?$elem_order[1]:'asc';
 
 			if($isprop) { //is prop
-				$save_dbCriteria->with['lines_alias'] = array();
 				if(!isset($properties[$elem_order[0]])) {
 					throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
 						array('{prop}'=>$elem_order[0], '{class}'=>$this->uclass->codename)));
 				}
-				$save_dbCriteria->with['lines_order'] = array('on'=>"lines_order.property_id=".$properties[$elem_order[0]]->id,'together'=>true);
 
 				$typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$elem_order[0]]->myfield];
-				$textsql = '(case when lines_order.'.$typeprop.' is null then 1 else 0 end) asc, lines_order.'.$typeprop.' '.$typf;
-				$save_dbCriteria->order = $textsql;
-				//необходимо при пагинации что бы не создавались одинаковые элементы
-				$save_dbCriteria->addCondition('lines_order.id IS NOT NULL');
+				$textsql = '(case when lines_sort.'.$typeprop.' is null then 1 else 0 end) asc, lines_sort.'.$typeprop.' '.$typf;
+				//нужно джойнить таблицу что бы в ней появился столбец по которому можно будет отсортировать
+				$save_dbCriteria->with['lines_sort']['together'] = true;
+				//в целях оптимизации нам не нужны в селекте никакие лишнии данные,оставим только property_id так как должен быть хоть один столбец с синтаксисе sql
+				$save_dbCriteria->with['lines_sort']['select'] = 'property_id';
+				//сама сортировка
+				$save_dbCriteria->with['lines_sort']['order'] = $textsql;
+				//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
+				$save_dbCriteria->with['lines_sort']['condition'] = 'lines_sort.property_id='.$properties[$elem_order[0]]->id;
 			}
 			//is param
 			else {
@@ -84,13 +90,37 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 		if(array_key_exists('limit',$array) && count($array['limit'])) {
-			$save_dbCriteria->group = $this->tableAlias.'.id';
+			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
+			if(isset($save_dbCriteria->with['lines_sort']) || isset($save_dbCriteria->with['lines_find'])) {
+				$save_dbCriteria->group = 't.id';
+			}
 			$save_dbCriteria->limit = $array['limit']['limit'];
-			$save_dbCriteria->offset = $array['limit']['offset'];;
+			$save_dbCriteria->offset = $array['limit']['offset'];
 		}
+
 		$this->setDbCriteria($save_dbCriteria);
 		return $this;
 	}
+
+	/**
+	 * @var bool Мержить запрос с дополнительными данными, необходимо если:
+	 * (FALSE) мы не будем в списке использовать свойства каким либо образом
+	 */
+	public $force_join_props = true;
+	public function beforeFind() {
+		if($this->isHeaderModel) {
+			if($this->force_join_props) {
+				$this->dbCriteria->with['lines.property'] = array();
+				$this->dbCriteria->with['uclass.properties'] = array();
+			}
+			else {
+				unset($this->dbCriteria->with['lines.property']);
+				unset($this->dbCriteria->with['uclass.properties']);
+			}
+		}
+		parent::beforeFind();
+	}
+
 	public function behaviors()
 	{
 		return array(

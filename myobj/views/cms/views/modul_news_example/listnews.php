@@ -45,11 +45,6 @@ $objClass_news_objects->setuiprop(array('order'=>array(array($objClass_news_obje
 $objClass_news_objects->setuiprop(array('order'=>array(array('text_news_example','desc',true))),$get_criteria); //так же может учавствовать вместе с condition и select
 //1)Найти что мне мешает показать нужные элементы
 
-
-
-//использовать метод set_force_prop(true); для того что бы ограничить колличество запросов при поиске строк свойств (так как в выводе будут присутствовать свойства)
-$objClass_news_objects->set_force_prop(true);
-
 // go PAGE
 $COUNTVIEWELEMS = 31;
 $COUNTVIEWPAGES = 10;

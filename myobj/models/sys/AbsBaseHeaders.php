@@ -18,31 +18,15 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		if($this->isitlines == true) {
 			$arr_relationsdef['lines'] = array(self::MANY_MANY, $namemodellines.'Lines',
 				'setcms_'.strtolower($namemodellines).'headers_lines(from_headers_id, to_lines_id)'); // lines = models.ManyToManyField(myObjLines,blank=True)
-			$arr_relationsdef['lines_alias'] = $arr_relationsdef['lines'];
-			$arr_relationsdef['lines_order'] = $arr_relationsdef['lines'];$arr_relationsdef['lines_order2'] = $arr_relationsdef['lines'];
+			//для поиска по свойствам
+			$arr_relationsdef['lines_sort'] = $arr_relationsdef['lines'];
+			//для сортировки по свойствам
+			$arr_relationsdef['lines_find'] = $arr_relationsdef['lines'];
 		}
 		return $arr_relationsdef;
 	}
 	//user
 	public $isHeaderModel=true;
-	/**
-	 * @var bool Не будет дополнительных запросов но будет join, стоит использовать в списках
-	 */
-	private $_is_force_prop = false;
-	public function set_force_prop($flag=false) {
-		if($flag) {
-			$this->dbCriteria->with['lines_alias.property'] = array();
-			$this->dbCriteria->with['uclass.properties'] = array();
-		}
-		else {
-			unset($this->dbCriteria->with['lines_alias.property']);
-			unset($this->dbCriteria->with['uclass.properties']);
-		}
-		$_is_force_prop = $flag;
-	}
-	public function status_set_force_prop() {
-		return $this->_is_force_prop;
-	}
 
 	private $_tmpProperties = array();
 	private $_propertiesNames = array();
@@ -51,7 +35,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
-			foreach($this->lines_alias as $objline) {
+			foreach($this->lines as $objline) {
 				$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
 				$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 			}
@@ -70,7 +54,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
 		$arraylinesvalue = array();
 		$arrconfcms = Yii::app()->appcms->config;
-		foreach($this->lines_alias as $objline) {
+		foreach($this->lines as $objline) {
 			$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}

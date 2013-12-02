@@ -88,8 +88,6 @@ class AdminController extends \Controller {
 						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->id));
 					}
 					$modelAD = $actclass->objects();
-					//вытащить одним запросом вместе со свойствами
-					$modelAD->set_force_prop(true);
 					$settui = array();
 					if(isset(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename])) {
 						$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
@@ -343,7 +341,6 @@ class AdminController extends \Controller {
 					Yii::import('ext.ECSVExport');
 					$namefile = '';
 					if($modelAD->isHeaderModel) {
-						$modelAD->set_force_prop(true);
 						$namefile = 'class-'.$actclass->codename;
 					}
 					else {

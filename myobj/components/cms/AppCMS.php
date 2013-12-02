@@ -57,8 +57,9 @@ class AppCMS extends CComponent {
 				$idsview[] = $handle->vp1; //vp1 = idview , sort = handletmplid
 			}
 			$CRITERIA = new CDbCriteria();
-			$CRITERIA->addInCondition('id', $idsview);
-			$listview = uClasses::getclass('views_sys')->objects()->findAll($CRITERIA);
+			$CRITERIA->addInCondition('t.id', $idsview);
+			$headerModel = uClasses::getclass('views_sys')->objects();
+			$listview = $headerModel->findAll($CRITERIA);
 			$elemsview = array();
 			foreach($listview as $view) {
 				$elemsview[$view->id] = array('patchview' => $view->vp1, 'objview' => $view); //vp1 = patchview
