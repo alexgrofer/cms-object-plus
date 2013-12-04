@@ -1,22 +1,34 @@
 <?php
-/*
- * start controller - в реальной работе контроллер вынести в отдельное представление
- */
+$idnews = 3;
+$model_obj = uClasses::getclass('news_example')->objects()->findbypk($idnews); //найти
 
-$model_obj = uClasses::getclass('news_example')->objects()->findbypk(3); //найти
-//$model_obj = uClasses::getclass('news_example')->initobject(); //создать новый
-$addelem = array();
-$addelem[] = array('name'=>'image', 'def_value'=>'dfdf', 'elem'=>array('type'=>'CMultiFileUpload'));
-$addrules = array();
-$addrules[] = array('image', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true);
-$form = $model_obj->UserFormModel->initform($_POST,array('name'=>'name2','annotation_news_exampleprop_'=>'annotation prop','image'=>'файлы'),$addelem,$addrules);
+if(!$model_obj) {
+	echo '<p>not find element news</p>';
+	return;
+}
+
+$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($model_obj));
+if($paramsQueryPostModel) {
+	$model_obj->attributes = $paramsQueryPostModel;
+	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
+	$model_obj->validate();
+}
+
+
+$model_obj->customElementsForm['image'] = array('type'=>'CMultiFileUpload');
+
+$model_obj->customRules[] = array('image', 'file', 'maxFiles'=>10, 'maxSize'=>((1024*1024)*16), 'allowEmpty'=>true, 'safe'=>true);
+
+
+$form = new CForm(array('elements'=>$model_obj->elementsForm()), $model_obj);
+$form->attributes = array('enctype' => 'multipart/form-data');
 
 if(count($_POST) && $form->validate()) {
-/*
- * показать загруженные файлы
- * загрузка единичего файла если передаю не массив
- * показать сами файлы виджет ниже формы
- */
+	/*
+	 * показать загруженные файлы
+	 * загрузка единичего файла если передаю не массив
+	 * показать сами файлы виджет ниже формы
+	 */
 	$model_obj->save();
 	//сохраним файлы если они были добавленны
 	if(isset($_FILES['EmptyForm[image]'])) {
@@ -39,8 +51,11 @@ if(Yii::app()->user->hasFlash('savemodel')) {
 	echo Yii::app()->user->getFlash('savemodel').'<br/>';
 	echo Yii::app()->user->getFlash('savefile');
 }
+/*
+ * end controller - в реальной работе контроллер вынести в отдельное представление
+ */
 
-$form->attributes = array('enctype' => 'multipart/form-data');
+
 $form->activeForm = array(
 	'enableClientValidation'=>false,
 	'clientOptions'=>array(
