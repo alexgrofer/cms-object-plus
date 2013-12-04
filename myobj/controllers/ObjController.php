@@ -29,7 +29,7 @@ class ObjController extends \Controller {
 		if($objnav) {
 			//если нет объекта шаблона привязанного к этому объекту навигации
 			if(!($templateobj = $objnav->getobjlinks('templates_sys')->find())) {
-				throw new CException(Yii::t('cms','none object template'));
+				throw new \CException(Yii::t('cms','none object template'));
 			}
 			Yii::app()->params['OBJNAV'] = $objnav;
 			Yii::app()->params['OBJPARENT_CONTROLLER'] = $this;
