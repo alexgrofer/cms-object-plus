@@ -1,4 +1,15 @@
 <?php
+$classes_system = array(
+	'group'=>'groups_sys',
+	'template'=>'templates_sys',
+	'view'=>'views_sys',
+	'handle'=>'handle_sys',
+	'navigation'=>'navigation_sys',
+	'params'=>'param_sys',
+	'controllersnav'=>'controllersnav_sys',
+	'db_dump'=>'db_dump_sys',
+);
+
 $objects = array(
 	$classes_system['handle'] => array(
 		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view'),
@@ -66,4 +77,4 @@ apicms\utils\importRecursName('MYOBJ.appscms.config.user','objects_*',true);
 $objects = Yii::app()->params['api_conf_objects'];
 $set_spaces = Yii::app()->params['api_conf_spaces'];
 unset(Yii::app()->params['api_conf_objects']);
-return array($objects,$set_spaces);
+return array($objects,$set_spaces,$classes_system);

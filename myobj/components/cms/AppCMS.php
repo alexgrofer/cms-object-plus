@@ -24,7 +24,12 @@ class AppCMS extends CComponent {
 
 		//buils main cms config
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
+		$name__admin_file_config = YII_DEBUG ? 'main_admin.php' : 'main_admin_debug.php';
 		$this->config = apicms\utils\importRecursName('MYOBJ.appscms.config',$name_file_config,true,true);
+		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
+		if($routeArr[1]=='admin') {
+			$this->config = array_merge_recursive($this->config,apicms\utils\importRecursName('MYOBJ.appscms.config',$name__admin_file_config,true,true));
+		}
 
 		//init preload components
 		$preload_components = apicms\utils\importRecursName('MYOBJ.appscms.config','preload.php',true,true);
