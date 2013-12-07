@@ -9,8 +9,17 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	protected function getNameLinksModel() {
 		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
 	}
-	protected $isitlines = true; // is true lines this object model
-	public $flagAutoAddedLinks = true; // creade links from create object
+
+	/**
+	 * @var bool у псевдоллассов есть возможность работать как с композицией(ссылками на другие объекты) так и со свойствами.
+	 * Свойства лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
+	 */
+	protected $isitlines = true;
+	/**
+	 * @var bool Возможность создавать композицию
+	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects
+	 */
+	public $flagAutoAddedLinks = true;
 	public function relations()
 	{
 		$namemodellines = str_replace('Headers','',get_class($this));
@@ -25,11 +34,20 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		return $arr_relationsdef;
 	}
-	//user
+
+	/**
+	 * @var bool класс модели свойственный для работы с псевдоклассами
+	 */
 	public $isHeaderModel=true;
 
 	private $_tmpProperties = array();
-	private $_propertiesNames = array();
+	private $_propertiesNames = array(); //названия свойств существующие у данного объекта
+
+	/**
+	 * Получить свойства
+	 * @param bool $force возвращает без кеширование на уровне объекта
+	 * @return array
+	 */
 	public function get_properties($force=false) {
 		if(!count($this->_tmpProperties) || $force==true) {
 			$arrconfcms = Yii::app()->appcms->config;
