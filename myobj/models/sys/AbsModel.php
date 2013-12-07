@@ -107,19 +107,6 @@ abstract class AbsModel extends CActiveRecord
 	 * (FALSE) мы не будем в списке использовать свойства каким либо образом
 	 */
 	public $force_join_props = true;
-	public function beforeFind() {
-		if($this->isHeaderModel) {
-			if($this->force_join_props) {
-				$this->dbCriteria->with['lines.property'] = array();
-				$this->dbCriteria->with['uclass.properties'] = array();
-			}
-			else {
-				unset($this->dbCriteria->with['lines.property']);
-				unset($this->dbCriteria->with['uclass.properties']);
-			}
-		}
-		parent::beforeFind();
-	}
 
 	public function behaviors()
 	{
@@ -415,5 +402,21 @@ abstract class AbsModel extends CActiveRecord
 	}
 	public function typesEArray() {
 		return array();
+	}
+
+	/**
+	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class::model()->declareObj()
+	 */
+	public function declareObj() {
+		//обявление элемента элемента
+	}
+	protected function initObj() {
+		//инициализация элемента элемента
+	}
+
+	protected function afterFind() {
+		parent::beforeFind();
+		$this->declareObj();
+		$this->initObj();
 	}
 }

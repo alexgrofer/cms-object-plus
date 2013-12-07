@@ -216,6 +216,8 @@ class AdminController extends \Controller {
 							if($this->dicturls['paramslist'][0]=='class') {
 								$modelAD->uclass = $actclass;
 							}
+							//объявляем новый объект
+							$modelAD->declareObj();
 						}
 						break;
 					case 'lenksobjedit':

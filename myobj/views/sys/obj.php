@@ -49,7 +49,7 @@ if(in_array($this->param_contr['current_class_name'],array('templates_sys','view
 	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
 	$REND_model->customRules[] = array($snamefile, 'safe');
 }
-//work EArray
+//work EArray  Добавляем в ручную только если это множественный массив
 $typesEArray = $REND_model->typesEArray();
 if(count($typesEArray)) {
 	foreach($typesEArray as $nameCol => $setting) {
@@ -62,12 +62,9 @@ if(count($typesEArray)) {
 					//создадим пустой элемент важно что он без rules
 					$REND_model->addElemClass($nameElemClass);
 					$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
-					$REND_model->customAttributeLabels[$nameElemClass] = 'new_element_'.$nameE;
+					$REND_model->customAttributeLabels[$nameElemClass] = $nameElemClass;
 				}
 			}
-		}
-		else {
-			//если нет элементов можно добавить свои task
 		}
 	}
 }

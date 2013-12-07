@@ -1,5 +1,5 @@
 <?php
-$idnews = 3;
+$idnews = 55;
 $model_obj = uClasses::getclass('news_example')->objects()->findbypk($idnews); //найти
 
 if(!$model_obj) {

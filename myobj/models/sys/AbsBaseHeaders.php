@@ -35,6 +35,20 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		return $arr_relationsdef;
 	}
 
+	public function beforeFind() {
+		if($this->isHeaderModel && $this->isitlines) {
+			if($this->force_join_props) {
+				$this->dbCriteria->with['lines.property'] = array();
+				$this->dbCriteria->with['uclass.properties'] = array();
+			}
+			else {
+				unset($this->dbCriteria->with['lines.property']);
+				unset($this->dbCriteria->with['uclass.properties']);
+			}
+		}
+		parent::beforeFind();
+	}
+
 	/**
 	 * @var bool класс модели свойственный для работы с псевдоклассами
 	 */
@@ -250,12 +264,14 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	protected function dinamicModel() {
 		parent::dinamicModel();
 		//добавляем свойтсва к модели
-		if($currentproperties = $this->get_properties()) {
+		if($this->isitlines) {
 			$arrconfcms = Yii::app()->appcms->config;
+			$currentproperties = $this->get_properties();
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
 				//инициализируем свойство
-				$this->addElemClass($nameelem,$currentproperties[$prop->codename]);
+				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
+				$this->addElemClass($nameelem,$valProp);
 				//устанавливаем правила валидации
 				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
 				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
@@ -298,8 +314,60 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 	}
 	protected $old_properties=null;
-	public function afterFind() {
+	public function declareObj() {
+		parent::declareObj();
+		//добавляем свойтсва к модели
+		if($this->isitlines) {
+			$arrconfcms = Yii::app()->appcms->config;
+			$currentproperties = $this->get_properties();
+			foreach($this->uclass->properties as $prop) {
+				$nameelem = $prop->codename.'prop_';
+				//инициализируем свойство
+				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
+				$this->addElemClass($nameelem,$valProp);
+				//устанавливаем правила валидации
+				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
+				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
+				if($prop->required) $this->customRules[] = array($nameelem, 'required');
+				if($prop->udefault) $this->customRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
+
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				/*
+				 * для некоторый свойство возможна тонкая настройка type=>string
+				 */
+				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
+					$addarrsett = array($nameelem);
+					$parsecvs = str_getcsv($prop->setcsv,"\n");
+					foreach($parsecvs as $keyval) {
+						if(trim($keyval)=='') continue;
+						if(strpos($keyval,'us_set')===false) {
+							if(strpos($keyval,'=>')===false) {
+								array_push($addarrsett,$keyval);
+							}
+							else {
+								list($typeval,$val) = explode('=>',trim($keyval));
+								$addarrsett[$typeval] = $val;
+							}
+						}
+					}
+					$this->customRules[] = $addarrsett;
+				}
+				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
+				else {
+					$this->customRules[] = array($nameelem, 'safe');
+				}
+				if($nametypef=='bool') $this->customRules[] = array($nameelem, 'boolean');
+				if($nametypef=='url') $this->customRules[] = array($nameelem, 'url');
+				if($nametypef=='email') $this->customRules[] = array($nameelem, 'email');
+
+				//добавить в типы полей формы элементы для свойств
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				$this->customElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
+			}
+		}
+	}
+	protected function initObj() {
+		parent::initObj();
 		$this->old_properties = $this->get_properties();
-		$this->dinamicModel();
 	}
 }
