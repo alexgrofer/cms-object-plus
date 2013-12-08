@@ -50,7 +50,7 @@ class myObjHeaders extends AbsBaseHeaders
 					'lastname',
 				),
 				'conf' => array(
-					'isMany'=>true,
+					'isMany'=>false,
 				),
 				'rules'=>array(
 					'firstname'=>array(

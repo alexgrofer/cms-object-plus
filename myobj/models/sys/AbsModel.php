@@ -363,7 +363,16 @@ abstract class AbsModel extends CActiveRecord
 		}
 	}
 
-	protected function dinamicModel() {
+	public function typesEArray() {
+		return array();
+	}
+
+	/**
+	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class();$newObj->declareObj();
+	 */
+	public function declareObj() {
+		//обявление элемента
+
 		foreach($this->attributes as $k => $v) {
 			$this->old_attributes[$k] = $v;
 		}
@@ -399,16 +408,6 @@ abstract class AbsModel extends CActiveRecord
 				}
 			}
 		}
-	}
-	public function typesEArray() {
-		return array();
-	}
-
-	/**
-	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class();$newObj->declareObj();
-	 */
-	public function declareObj() {
-		//обявление элемента элемента
 	}
 	protected function initObj() {
 		//инициализация элемента элемента
