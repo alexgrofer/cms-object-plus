@@ -405,7 +405,7 @@ abstract class AbsModel extends CActiveRecord
 	}
 
 	/**
-	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class::model()->declareObj()
+	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class();$newObj->declareObj();
 	 */
 	public function declareObj() {
 		//обявление элемента элемента

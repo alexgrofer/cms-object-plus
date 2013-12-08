@@ -92,7 +92,7 @@ class uClasses extends AbsModel
 	//comment doc
 	public function objects() { //namesvprop left join props lines
 		$NameClassHeader = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
-		$modelheaders = new $NameClassHeader();
+		$modelheaders = $NameClassHeader::model();
 		$modelheaders->dbCriteria->compare('uclass_id',$this->id);
 		$modelheaders->dbCriteria->select = array('t.*');
 		$modelheaders->uclass_id = $this->id;

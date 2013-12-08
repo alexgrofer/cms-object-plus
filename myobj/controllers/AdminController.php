@@ -407,7 +407,8 @@ class AdminController extends \Controller {
 								}
 							}
 							$namemodel= get_class($modelAD);
-							$newobj = new $namemodel;
+							$newobj = new $namemodel();
+							$newobj->declareObj();
 							$newobj->attributes = $attributes_csv;
 							if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
 								$namepk = $modelAD->primaryKey();

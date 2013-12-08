@@ -11,9 +11,9 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 		$typeThisRelation = $thisRelation[0];
 		$nameModelThisRelation = $thisRelation[1];
 		$nameLinkPrimaryKeyThisRelation = $thisRelation[2];
-		$objModelThisRelation = $nameModelThisRelation::model();
-		$nameTableThisRelation = $objModelThisRelation->tableName();
-		$namePrimaryKeyThisRelation = $objModelThisRelation->primaryKey();
+		$modelThisRelation = $nameModelThisRelation::model();
+		$nameTableThisRelation = $modelThisRelation->tableName();
+		$namePrimaryKeyThisRelation = $modelThisRelation->primaryKey();
 
 		if($typeThisRelation==CActiveRecord::MANY_MANY) {
 			$arrDataM = preg_split('/[,()]/', $thisRelation[2]);

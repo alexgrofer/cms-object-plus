@@ -152,11 +152,11 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			//array('{class}'=>get_class($this), '{property}'=>$name)));
 		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');
 		$nameModelHeader = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
-		$objmodel = new $nameModelHeader();
-		$objmodel->dbCriteria->addInCondition($objmodel->tableAlias.'.id', $idsheaders);
-		$objmodel->dbCriteria->compare($objmodel->tableAlias.'.uclass_id',$objclass->id);
-		$objmodel->uclass_id = $objclass->id;
-		return $objmodel;
+		$model = $nameModelHeader::model();
+		$model->dbCriteria->addInCondition($model->tableAlias.'.id', $idsheaders);
+		$model->dbCriteria->compare($model->tableAlias.'.uclass_id',$objclass->id);
+		$model->uclass_id = $objclass->id;
+		return $model;
 	}
 
 	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
