@@ -100,7 +100,7 @@ class AdminController extends \Controller {
 					$this->setVarRender('REND_confmodel',$params_modelget);
 					$NAMEMODEL_get = $params_modelget['namemodel'];
 
-					$modelAD =  $NAMEMODEL_get::model();
+					$modelAD =  new $NAMEMODEL_get();
 					//permission show classes
 					if(get_class($modelAD)=='uClasses') {
 						$show_none_permission_classes = array();
@@ -239,7 +239,7 @@ class AdminController extends \Controller {
 						$params_modelget = \apicms\utils\normalAliasModel($namemodelthis);
 
 						$NAMEMODEL_get = $params_modelget['namemodel'];
-						$relation_model = $NAMEMODEL_get::model()->relations();
+						$relation_model = $NAMEMODEL_get->relations();
 
 						$nameConfModelSelf = $this->dicturls['paramslist'][7];
 

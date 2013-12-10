@@ -11,7 +11,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 		$typeThisRelation = $thisRelation[0];
 		$nameModelThisRelation = $thisRelation[1];
 		$nameLinkPrimaryKeyThisRelation = $thisRelation[2];
-		$modelThisRelation = $nameModelThisRelation::model();
+		$modelThisRelation = new $nameModelThisRelation();
 		$nameTableThisRelation = $modelThisRelation->tableName();
 		$namePrimaryKeyThisRelation = $modelThisRelation->primaryKey();
 

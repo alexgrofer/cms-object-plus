@@ -152,7 +152,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			//array('{class}'=>get_class($this), '{property}'=>$name)));
 		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');
 		$nameModelHeader = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
-		$model = $nameModelHeader::model();
+		$model = new $nameModelHeader();
 		$model->dbCriteria->addInCondition($model->tableAlias.'.id', $idsheaders);
 		$model->dbCriteria->compare($model->tableAlias.'.uclass_id',$objclass->id);
 		$model->uclass_id = $objclass->id;
