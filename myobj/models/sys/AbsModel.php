@@ -27,6 +27,7 @@ abstract class AbsModel extends CActiveRecord
 			foreach(count($this->_conditStart) as $str_cond) {
 				$save_dbCriteria->condition = str_replace($str_cond,'',$save_dbCriteria->condition);
 			}
+			$this->_conditStart = array();
 		}
 		//для обычных моделей свойтва не трубуются
 		if($this->isHeaderModel) $properties = $this->getClassProperties(); //task проверить тут были изменения теперь только свойства этого объекта выбираются раньше выбиральсь все
