@@ -24,22 +24,18 @@ $form = new CForm(array('elements'=>$model_obj->elementsForm()), $model_obj);
 $form->attributes = array('enctype' => 'multipart/form-data');
 
 if(count($_POST) && $form->validate()) {
-	/*
-	 * показать загруженные файлы
-	 * загрузка единичего файла если передаю не массив
-	 * показать сами файлы виджет ниже формы
-	 */
+	//вначале сохраним объект
 	$model_obj->save();
-	//сохраним файлы если они были добавленны
+	//создадим файлы если пользователь их загрузил
 	if(isset($_FILES['EmptyForm[image]'])) {
 		/* @var CStoreFile $initFile */
-		$initFile = yii::app()->storeFile->obj();
-		$initFile->setFolderAll('news'); //установить главную папку для загрузки (относительно настройки плагина)
+		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF); //инициализируем новый объект нужным плагином(определит поведение)
+		$initFile->folderAll = 'news'; //установить главную папку для загрузки (относительно настройки плагина конечно)
 		$initFile->isRandAll = true; //все файлы будут названны рандомно
 
-		$initFile->fileAll = 'EmptyForm[image]'; //загрузит пачкой все файлы если EmptyForm[image] массив
-		$initFile->path = $model_obj->id; //логическая папка файлов новости $_FILES['EmptyForm[image]'] если это множество файлов
-		$initFile->save();
+		$initFile->filesMany = $_FILES['EmptyForm[image]']; //загрузит пачкой все файлы если EmptyForm[image] массив
+		$initFile->path = $model_obj->id; //логическая папка(id объекта это название) файлов новости $_FILES['EmptyForm[image]'] если это множество файлов
+		$initFile->save(); //физически сохранит файл
 		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
 	}
 	Yii::app()->user->setFlash('savemodel','save model OK');
