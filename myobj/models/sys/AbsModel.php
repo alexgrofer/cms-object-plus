@@ -356,11 +356,9 @@ abstract class AbsModel extends CActiveRecord
 		if(isset($typesEArray[$nameCol]['rules'][$nameE])) {
 			$elemRuleConf = $nameE;
 		}
-		if(isset($typesEArray[$nameCol]['rules'][$elemRuleConf])) {
-			foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
-				array_unshift($settingArray,$nameElemClass);
-				$this->customRules[] = $settingArray;
-			}
+		foreach($typesEArray[$nameCol]['rules'][$elemRuleConf] as $settingArray) {
+			array_unshift($settingArray,$nameElemClass);
+			$this->customRules[] = $settingArray;
 		}
 	}
 
