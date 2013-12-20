@@ -28,9 +28,11 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 		$SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
 
 		$nameElem = $namer.$nameps_mtm;
-		$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
-		$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
-		$REND_model->customRules[] = array($nameElem, 'safe');
+		if(!$REND_model->isAddElemClass($nameElem)) {
+			$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
+			$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
+			$REND_model->customRules[] = array($nameElem, 'safe');
+		}
 
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
@@ -59,10 +61,12 @@ if(count($typesEArray)) {
 				$index = count($valuetypesEArray)?count($valuetypesEArray):0;
 				foreach($setting['elements'] as $nameE) {
 					$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
-					//создадим пустой элемент важно что он без rules
-					$REND_model->addElemClass($nameElemClass);
-					$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
-					$REND_model->customAttributeLabels[$nameElemClass] = $nameElemClass;
+					if(!$REND_model->isAddElemClass($nameElemClass)) {
+						//создадим пустой элемент важно что он без rules
+						$REND_model->addElemClass($nameElemClass);
+						$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
+						$REND_model->customAttributeLabels[$nameElemClass] = $nameElemClass;
+					}
 				}
 			}
 		}

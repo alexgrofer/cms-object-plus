@@ -138,7 +138,7 @@ abstract class AbsModel extends CActiveRecord
 	 * @param $value
 	 */
 	public function addElemClass($name, $defValue=null) {
-		if(!in_array($name,$this->elements_enable_class)) {
+		if(!$this->isAddElemClass($name)) {
 			$this->elements_enable_class[] = $name;
 			$this->$name = $defValue;
 		}
@@ -146,6 +146,15 @@ abstract class AbsModel extends CActiveRecord
 			throw new CException(Yii::t('cms','element "{prop}" is already add class  "{class}"',
 				array('{prop}'=>$name, '{class}'=>get_class($this))));
 		}
+	}
+
+	/**
+	 * Проверка на существование кастомных свойств в этом экземпляре
+	 * @param $name
+	 * @return bool
+	 */
+	public function isAddElemClass($name) {
+		return in_array($name,$this->elements_enable_class);
 	}
 	public function setAttributes($values) {
 		if(is_array($values) && count($values)) {
@@ -213,7 +222,7 @@ abstract class AbsModel extends CActiveRecord
 		$isExists = $this->has_EArray($nameCol,$nameElem,$index)?true:false;
 		$indexStr = ($index!==null)?'__'.$index:'';
 		$nameElemClass = $nameCol.'__'.$nameElem.$indexStr.'earray_';
-		if(!property_exists($this,$nameElemClass)) { //что то придумать для правильной логики добавления
+		if(!$this->isAddElemClass($nameElemClass)) { //что то придумать для правильной логики добавления
 			//создаем элемент
 			$this->addElemClass($nameElemClass,$value);
 		}
