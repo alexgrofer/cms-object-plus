@@ -74,6 +74,8 @@ class AdminController extends \Controller {
 		$this->dicturls['action'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+1)]:'';
 		$this->dicturls['actionid'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+2)]:'';
 
+		$objectsDelete = array();
+
 		//VARS
 		$view = ($this->dicturls['action']=='edit')?'/sys/obj':'/sys/list';
 		$modelAD = null;
@@ -188,17 +190,6 @@ class AdminController extends \Controller {
 					$this->setVarRender('REND_selfobjrelationElements',$settui['selfobjrelationElements']);
 				}
 
-				if(isset($settui['controller']) && is_array($settui['controller'])) {
-					if(isset($settui['controller']['default']) && $settui['controller']['default']) {
-						$namecontroller = $settui['controller']['default'];
-					}
-					elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
-						$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
-					}
-					if(isset($namecontroller)) require(dirname(__FILE__).'/cms/sys/'.$namecontroller);
-				}
-
-				unset($settui);
 				}
 				/////
 				// acces
@@ -302,8 +293,7 @@ class AdminController extends \Controller {
 						if($this->paramsrender['REND_acces_write']==false) $this->redirect($this->getUrlBeforeAction());
 						if((int)$this->dicturls['paramslist'][4]>0) {
 							$modelAD = $modelAD->findByPk($this->dicturls['paramslist'][4]);
-							$modelAD->delete();
-							$this->redirect($this->getUrlBeforeAction());
+							$objectsDelete[] = $modelAD;
 						}
 						break;
 				}
@@ -334,9 +324,8 @@ class AdminController extends \Controller {
 					$linkAnFuncSetCritModel();
 					$objects = $modelAD->findAll();
 					foreach($objects as $obj) {
-						$obj->delete();
+						$objectsDelete[] = $obj;
 					}
-					$this->redirect(Yii::app()->request->url);
 				}
 				elseif(array_key_exists('importcsv',$_POST)) {
 					$linkAnFuncSetCritModel();
@@ -441,6 +430,25 @@ class AdminController extends \Controller {
 			$view = '/sys/acces';
 		}
 		$this->paramsrender['REND_model'] = $modelAD;
+		//USER CONTROLLER
+		if(isset($settui['controller']) && is_array($settui['controller'])) {
+			if(isset($settui['controller']['default']) && $settui['controller']['default']) {
+				$namecontroller = $settui['controller']['default'];
+			}
+			elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
+				$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
+			}
+			if(isset($namecontroller)) require(dirname(__FILE__).'/cms/sys/'.$namecontroller);
+		}
+
+		//delete objects
+		if($objectsDelete) {
+			foreach($objectsDelete as $obj) {
+				$obj->delete();
+			}
+			$this->redirect($this->getUrlBeforeAction());
+		}
+
 		$this->render($view, $this->paramsrender);
 	}
 }
