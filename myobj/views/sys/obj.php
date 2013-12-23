@@ -85,6 +85,8 @@ $form = new CForm(array('elements'=>$REND_model->elementsForm()), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 
+echo CHtml::errorSummary($REND_model,'<div class="alert alert-danger">','</p>');
+
 foreach($form->getElements() as $element) {
 	echo $element->render();
 }
