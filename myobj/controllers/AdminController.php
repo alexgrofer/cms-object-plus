@@ -230,11 +230,10 @@ class AdminController extends \Controller {
 						$params_modelget = \apicms\utils\normalAliasModel($namemodelthis);
 
 						$NAMEMODEL_get = $params_modelget['namemodel'];
-						$relation_model = $NAMEMODEL_get->relations();
+						$modelAD_LINK =  new $NAMEMODEL_get();
+						$relation_model = $modelAD_LINK->relations();
 
 						$nameConfModelSelf = $this->dicturls['paramslist'][7];
-
-
 
 						$namemodelrelationtop = $params_modelget['relation'][$nameConfModelSelf][0];
 						$params_modelgettop = \apicms\utils\normalAliasModel($namemodelrelationtop);
@@ -242,8 +241,6 @@ class AdminController extends \Controller {
 
 						$nameRelatModelSelf = $params_modelget['relation'][$nameConfModelSelf][1];
 						$objectsRelTop = $objrelated->$nameRelatModelSelf;
-
-
 
 						$objrelself = $objectsRelTop;
 						if($subnamemodel=='classes') {
@@ -397,18 +394,25 @@ class AdminController extends \Controller {
 							}
 							$namemodel= get_class($modelAD);
 							$newobj = new $namemodel();
+
+							if($newobj->isHeaderModel) {
+								$newobj->uclass_id = $attributes_csv['uclass_id'];
+								if(count($properties_csv)) {
+									foreach($properties_csv as $keyP => $keyP) {
+										$newobj->set_properties($keyP,$keyP);
+									}
+								}
+							}
+
 							$newobj->declareObj();
 							$newobj->attributes = $attributes_csv;
 							if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
 								$namepk = $modelAD->primaryKey();
 								$newobj->$namepk = $attributes_csv[$modelAD->primaryKey()];
 							}
-							if($newobj->isHeaderModel) {
-								$newobj->uclass_id = $attributes_csv['uclass_id'];
-								$newobj->properties = $properties_csv;
-							}
+
 							$newobj->save();
-							if($newobj->getErrors()) throw new CException(Yii::t('cms',serialize($newobj->getErrors())));
+							if($newobj->getErrors()) throw new \CException(Yii::t('cms',serialize($newobj->getErrors())));
 						}
 						$row++;
 					}
