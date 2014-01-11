@@ -348,7 +348,7 @@ class AdminController extends \Controller {
 						}
 						$most_array_all[] = array_merge($array_insert,$prop_array);
 					}
-					$csv = new ECSVExport($most_array_all);
+					$csv = new \ECSVExport($most_array_all);
 
 					$content = $csv->toCSV();
 					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time());//.'csv';
