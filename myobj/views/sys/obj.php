@@ -8,12 +8,6 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-//не показывать те элементы которых нет в настройке для этого типа
-if($REND_editForm) {
-	foreach($REND_model->elementsForm() as $nameElem => $nameAlias) {
-		if(!in_array($nameElem,$REND_editForm)) unset($REND_model->customElementsForm[$nameElem]);
-	}
-}
 if($REND_AttributeLabels) {
 	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
 }
@@ -81,7 +75,15 @@ if($paramsQueryPostModel) {
 	$REND_model->validate();
 }
 
-$form = new CForm(array('elements'=>$REND_model->elementsForm()), $REND_model);
+//если есть настройка то только по ней
+$elementsForm = $REND_model->elementsForm();
+if($REND_editForm) {
+	foreach($REND_model->elementsForm() as $nameElem => $nameAlias) {
+		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
+	}
+}
+
+$form = new CForm(array('elements'=>$elementsForm), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
 

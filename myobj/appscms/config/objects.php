@@ -38,8 +38,9 @@ $objects = array(
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['view'] => array(
-		'cols' => array('id'=>'id','name'=>'name view'),
+		'cols' => array('id'=>'id','name'=>'name view','content'=>'description'),
 		'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
+		'editForm' => array('name','vp1','content','edit_file_template'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
