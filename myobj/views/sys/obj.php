@@ -132,7 +132,6 @@ if(count($_POST) && $form->validate()) {
 
 
 	if($this->dicturls['actionid']=='0') {
-		//print_r($_SERVER);exit;Yii::app()->request->getUrlReferrer();
 		$urlRedirect = $this->getUrlBeforeAction();
 		if($this->dicturls['paramslist'][5]=='relationobjonly') {
 			$urlRedirect = $urlRedirect.'action/'.$this->dicturls['paramslist'][5].'/'.$this->dicturls['paramslist'][6].'/add/'.$this->dicturls['paramslist'][7].'/'.$this->dicturls['paramslist'][8];

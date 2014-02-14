@@ -298,7 +298,7 @@ class AdminController extends \Controller {
 				break;
 			case 'logout':
 				Yii::app()->user->logout();
-				$this->redirect(Yii::app()->request->getUrlReferrer());
+				$this->redirect(Yii::app()->request->url);
 			default:
 				$this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes/'));
 		}
@@ -427,7 +427,7 @@ class AdminController extends \Controller {
 
 					fclose($handle);
 				}
-				$this->redirect(Yii::app()->request->getUrlReferrer());
+				$this->redirect(Yii::app()->request->url);
 			}
 		}
 		if(isset($this->paramsrender['REND_acces_read']) && $this->paramsrender['REND_acces_read']===false) {
