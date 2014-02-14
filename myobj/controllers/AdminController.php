@@ -37,7 +37,16 @@ class AdminController extends \Controller {
 	public function setVarRender($name,$value) {
 		$this->paramsrender[$name] = $value;
 	}
+
+	/**
+	 * Некоторые url нужно средиректить в исходное состояние до action/
+	 * @return string
+	 * @throws \CException
+	 */
 	public function getUrlBeforeAction() {
+		if(($pos = strpos(Yii::app()->request->url,'action/'))===false) {
+			throw new \CException(Yii::t('cms','url not corresponds pattern action/'));
+		}
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
 	public function getMenuhtmlSub() {
@@ -450,7 +459,7 @@ class AdminController extends \Controller {
 			foreach($objectsDelete as $obj) {
 				$obj->delete();
 			}
-			$this->redirect($this->getUrlBeforeAction());
+			$this->redirect(Yii::app()->request->url);
 		}
 
 		$this->render($view, $this->paramsrender);
