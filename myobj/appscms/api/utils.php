@@ -179,20 +179,27 @@ function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flag
 	$pagination = sprintf($tamplate['pagination'], $linkspt, $linksp);
 	return $pagination;
 }
-function treelem($elems,$namekeyid,$namekeyparent,$parent=0,$padd='---',$leftp='',$nlist=array(),$objisarray=true) {
-	$parenttmp='';
-	foreach($elems as $objt) {
-		if($objt[$namekeyparent] == $parent) {
-			if($parent != 0 && $parenttmp != $parent) {
-				$leftp .= $padd;
+function treelem($aArr,$atop,$keyId,$keyTop,$func,$tmpLeft=null) {
+	$atop = (string)$atop;
+	static $tmpArr = array();
+	static $saveTopIndex = null;
+	if($saveTopIndex===null) {
+		$saveTopIndex = $atop;
+	}
+	$topTmp=null;
+	foreach($aArr as $obj) {
+		$indexObjId = (string)is_array($obj)?$obj[$keyId]:$obj->$keyId;
+		$indexObjTop = (string)is_array($obj)?$obj[$keyTop]:$obj->$keyTop;
+		if($indexObjTop==$atop) {
+			if($atop != $saveTopIndex && $topTmp != $atop) {
+				$tmpLeft = $func($tmpLeft);
 			}
-			array_push($nlist, array($objt,$leftp));
-			$parenttmp = $parent;
-			$idtop = ($objisarray)?$objt[$namekeyid]:$objt->$namekeyid;
-			$nlist = treelem($elems,$namekeyid,$namekeyparent,$idtop,$padd,$leftp,$nlist);
+			$topTmp = $atop;
+			$tmpArr[] = array('obj'=>$obj,'left'=>$tmpLeft);
+			treelem($aArr,$indexObjId,$keyId,$keyTop,$func,$tmpLeft);
 		}
 	}
-	return $nlist;
+	return $tmpArr;
 }
 function GUID()
 {

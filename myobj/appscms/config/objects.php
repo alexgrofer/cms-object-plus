@@ -18,7 +18,7 @@ $objects = array(
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['navigation'] => array(
-		'cols' => array('id'=>'id','vp1'=>'top','name'=>'name','vp2'=>'codename','bp1'=>'visible','sort'=>'sort'),
+		'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
 		'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','bp1'=>'visible'),
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
 		'groups_read' => null,

@@ -8,7 +8,7 @@ $idelemspush = array();
 foreach($_POST as $key => $value) {
 	//push
 	if(strpos($key, 'push_')!==false && $idindexpage===false) {
-		$idindexpage = substr($key,5);
+		$idindexpage = (string)substr($key,5);
 	}
 	elseif(strpos($key, 'elemch_')!==false) {
 		$idelemspush[] = substr($key,7);
