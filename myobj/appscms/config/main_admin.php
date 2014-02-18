@@ -35,7 +35,7 @@ $main_admin = array(
 	'path_db_dump_files' => 'dbdump',
 	'path_db_dump_tables' => $tables_db_dump,
 
-	'countelements' => 10,
+	'countelements' => 50,
 	'countpage' => 10,
 );
 
