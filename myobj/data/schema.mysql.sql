@@ -198,7 +198,7 @@ CREATE TABLE `setcms_userpasport` (
 	`user_id` int(11) NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end User
 -- assotiation
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
