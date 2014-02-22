@@ -1,6 +1,7 @@
 <?php
 namespace MYOBJ\controllers;
 use \yii as yii;
+use \CActiveRecord as CActiveRecord;
 
 class AdminController extends \Controller {
 	public $layout='/layouts/admin/column1';
@@ -45,7 +46,8 @@ class AdminController extends \Controller {
 	 */
 	public function getUrlBeforeAction() {
 		if(($pos = strpos(Yii::app()->request->url,'action/'))===false) {
-			throw new \CException(Yii::t('cms','url not corresponds pattern action/'));
+			return Yii::app()->request->url;
+			//throw new \CException(Yii::t('cms','url not corresponds pattern action/'));
 		}
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
@@ -459,7 +461,7 @@ class AdminController extends \Controller {
 			foreach($objectsDelete as $obj) {
 				$obj->delete();
 			}
-			$this->redirect(Yii::app()->request->url);
+			$this->redirect($this->getUrlBeforeAction());
 		}
 
 		$this->render($view, $this->paramsrender);
