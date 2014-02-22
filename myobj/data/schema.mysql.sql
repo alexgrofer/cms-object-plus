@@ -244,9 +244,9 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (4,9,'default','default controller',null,'default','',null),
 -- modul_example_news
 -- navigation - Class (navigation_sys) id = 5
-(15,5,'example news list','',0,'0','news_list_example',1),
-(16,5,'example news object','',0,'0','news_object_example',1),
-(17,5,'example news edit object','',0,'0','news_edit_object_example',1),
+(15,5,'example news list','',0,'','news_list_example',1),
+(16,5,'example news object','',0,'','news_object_example',1),
+(17,5,'example news edit object','',0,'','news_edit_object_example',1),
 -- templates - Class (templates_sys) id = 3
 (18,3,'example news index','',0,'modul_news_example/index','',0),
 -- views - Class (views_sys) id = 2

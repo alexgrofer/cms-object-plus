@@ -105,7 +105,10 @@ elseif($this->dicturls['class']=='objects') {
 	}
 
 	if($this->dicturls['action']=='lenksobjedit') {
-		$arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][6].'/links/';
+		/* @todo совершенно не понятно для чего это было сделанно
+		 * закомментировал для того что бы если я перехожу с editlinksclass нв объекты и в них нажимаю links то замем то это условие подменяет класс
+		 * */
+		//$arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][6].'/links/';
 	}
 }
 ?>
