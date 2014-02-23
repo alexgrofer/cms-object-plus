@@ -55,10 +55,8 @@ abstract class AbsModel extends CActiveRecord
 				$this->_conditStart[] = $critStr;
 			}
 			if($propYes!='') {
-				//нужно джойнить таблицу что бы в ней появился столбец по которому можно будет отсортировать
-				$save_dbCriteria->with['lines_find']['together'] = true;
-				//в целях оптимизации нам не нужны в селекте никакие лишнии данные,оставим только property_id так как должен быть хоть один столбец с синтаксисе sql
-				$save_dbCriteria->with['lines_find']['select'] = 'property_id';
+				//в целях оптимизации нам не нужны в селекте никакие лишнии данные
+				$save_dbCriteria->with['lines_find']['select'] = false;
 			}
 		}
 		if(array_key_exists('order',$array) && count($array['order'])) {
@@ -75,14 +73,12 @@ abstract class AbsModel extends CActiveRecord
 
 				$typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$elem_order[0]]->myfield];
 				$textsql = '(case when lines_sort.'.$typeprop.' is null then 1 else 0 end) asc, lines_sort.'.$typeprop.' '.$typf;
-				//нужно джойнить таблицу что бы в ней появился столбец по которому можно будет отсортировать
-				$save_dbCriteria->with['lines_sort']['together'] = true;
-				//в целях оптимизации нам не нужны в селекте никакие лишнии данные,оставим только property_id так как должен быть хоть один столбец с синтаксисе sql
-				$save_dbCriteria->with['lines_sort']['select'] = 'property_id';
+				//в целях оптимизации нам не нужны в селекте никакие лишнии данные
+				$save_dbCriteria->with['lines_sort']['select'] = false;
 				//сама сортировка
 				$save_dbCriteria->with['lines_sort']['order'] = $textsql;
 				//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
-				$save_dbCriteria->with['lines_sort']['condition'] = 'lines_sort.property_id='.$properties[$elem_order[0]]->id;
+				$save_dbCriteria->with['lines_sort']['condition'] = 'lines_sort.property_id='.$properties[$elem_order[0]]->id.' OR lines_sort.id IS NULL';
 			}
 			//is param
 			else {
@@ -92,8 +88,13 @@ abstract class AbsModel extends CActiveRecord
 		}
 		if(array_key_exists('limit',$array) && count($array['limit'])) {
 			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
-			if(isset($save_dbCriteria->with['lines_sort']) || isset($save_dbCriteria->with['lines_find'])) {
-				$save_dbCriteria->group = 't.id';
+			if(isset($save_dbCriteria->with['lines_sort'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$save_dbCriteria->with['lines_sort']['together'] = true;
+			}
+			if(isset($save_dbCriteria->with['lines_find'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$save_dbCriteria->with['lines_find']['together'] = true;
 			}
 			$save_dbCriteria->limit = $array['limit']['limit'];
 			$save_dbCriteria->offset = $array['limit']['offset'];
