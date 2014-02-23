@@ -311,11 +311,12 @@ abstract class AbsModel extends CActiveRecord
 	 * @param null $index
 	 * @return bool
 	 */
-	public function has_EArray($nameCol,$nameElem,$index=null) {
+	public function has_EArray($nameCol,$nameElem,$index=null,$isOld=false) {
+		$strArr = (!$isOld)?$this->attributes[$nameCol]:$this->old_attributes[$nameCol];
 		$result = false;
-		if(trim($this->$nameCol) && ($unserializeArray = @unserialize($this->$nameCol))) {
-			if($index!==null && isset($unserializeArray[$index][$nameElem]))  $result = true;
-			elseif($index==null && isset($unserializeArray[$nameElem])) $result = true;
+		if(trim($strArr) && ($unserializeArray = @unserialize($strArr))) {
+			if($index!==null && isset($unserializeArray[$index][$nameElem])) $result = true;
+			elseif($index===null && isset($unserializeArray[$nameElem])) $result = true;
 		}
 		return $result;
 	}
