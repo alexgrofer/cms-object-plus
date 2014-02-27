@@ -25,8 +25,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		$namemodellines = str_replace('Headers','',get_class($this));
 		$arr_relationsdef = array('uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id')); // uclass = models.ForeignKey(uClasses))
 		if($this->isitlines == true) {
-			$arr_relationsdef['lines'] = array(self::MANY_MANY, $namemodellines.'Lines',
-				'setcms_'.strtolower($namemodellines).'headers_lines(from_headers_id, to_lines_id)'); // lines = models.ManyToManyField(myObjLines,blank=True)
+			$arr_relationsdef['lines'] = array(self::HAS_MANY, $namemodellines.'Lines', 'header_id');
 			//для поиска по свойствам
 			$arr_relationsdef['lines_sort'] = $arr_relationsdef['lines'];
 			//для сортировки по свойствам
@@ -103,8 +102,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
 					$newobjlines->$namecolumn = $this->_tmpProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
+					$newobjlines->header_id = $this->id;
 					$newobjlines->save();
-					$this->UserRelated->links_edit('add','lines',array($newobjlines->primaryKey));
 				}
 			}
 		}
