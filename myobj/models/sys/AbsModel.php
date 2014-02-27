@@ -74,7 +74,7 @@ abstract class AbsModel extends CActiveRecord
 				$typeprop = $arrconfcms['TYPES_COLUMNS'][$properties[$elem_order[0]]->myfield];
 				$textsql = '(case when lines_sort.'.$typeprop.' is null then 1 else 0 end) asc, lines_sort.'.$typeprop.' '.$typf;
 				//в целях оптимизации нам не нужны в селекте никакие лишнии данные
-				//$save_dbCriteria->with['lines_sort']['select'] = false;
+				$save_dbCriteria->with['lines_sort']['select'] = false;
 				//сама сортировка
 				$save_dbCriteria->with['lines_sort']['order'] = $textsql;
 				//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
