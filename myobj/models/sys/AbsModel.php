@@ -79,6 +79,7 @@ abstract class AbsModel extends CActiveRecord
 				$save_dbCriteria->with['lines_sort']['order'] = $textsql;
 				//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
 				$save_dbCriteria->with['lines_sort']['condition'] = 'lines_sort.property_id='.$properties[$elem_order[0]]->id.' OR lines_sort.id IS NULL';
+				$save_dbCriteria->with['lines_sort']['on'] = 'lines_sort.property_id='.$properties[$elem_order[0]]->id;
 			}
 			//is param
 			else {

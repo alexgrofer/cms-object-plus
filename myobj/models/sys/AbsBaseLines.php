@@ -9,10 +9,16 @@ abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(mode
 	public $upintegerfield; //models.IntegerField(blank=True,null=True)
 	public $upfloatfield; //models.FloatField(blank=True,null=True)
 	public $property_id;
+	public $header_id;
 
 	public function relations()
 	{
-		$arr_relationsdef = array('property'=>array(self::BELONGS_TO, 'objProperties', 'property_id')); // property = models.ForeignKey(objProperties)
+		$namemodellines = str_replace('Lines','',get_class($this));
+
+		$arr_relationsdef = array('property'=>array(self::BELONGS_TO, 'objProperties', 'property_id'));
+
+		$arr_relationsdef['header']=array(self::BELONGS_TO, $namemodellines.'Headers', 'header_id');
+
 		return $arr_relationsdef;
 	}
 
