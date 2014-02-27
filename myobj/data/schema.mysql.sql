@@ -61,13 +61,15 @@ CREATE TABLE `setcms_systemobjheaders` (
 CREATE TABLE `setcms_systemobjlines` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL, -- models.ForeignKey(objProperties)
+	`header_id` int(11) NOT NULL,
 	`uptextfield` longtext NOT NULL,
 	`upcharfield` varchar(255) NOT NULL,
 	`updatetimefield` datetime DEFAULT NULL,
 	`upintegerfield` int(11) DEFAULT NULL,
 	`upfloatfield` double DEFAULT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE,
+	FOREIGN KEY (`header_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- systemobjheaders systemobjlines (relation)
 CREATE TABLE `setcms_systemobjheaders_lines` (
@@ -100,13 +102,15 @@ CREATE TABLE `setcms_myobjheaders` (
 CREATE TABLE `setcms_myobjlines` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
+	`header_id` int(11) NOT NULL,
 	`uptextfield` longtext NOT NULL,
 	`upcharfield` varchar(255) NOT NULL,
 	`updatetimefield` datetime DEFAULT NULL,
 	`upintegerfield` int(11) DEFAULT NULL,
 	`upfloatfield` double DEFAULT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE
+	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE,
+	FOREIGN KEY (`header_id`) REFERENCES `setcms_myobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- myobjheaders myobjlines (relation)
 CREATE TABLE `setcms_myobjheaders_lines` (
