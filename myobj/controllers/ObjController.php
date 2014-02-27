@@ -44,4 +44,17 @@ class ObjController extends \Controller {
 			throw new \CHttpException(404,'page not is find');
 		}
 	}
+
+	public function createUrl($route,$params=array(),$ampersand='&') {
+		$url = parent::createUrl($route,$params,$ampersand);
+
+		$pat = 'index.php?r=myobj';
+		$count = strlen($pat);
+		if(strrpos($url,$pat.'/obj')!==false) {
+			$count = strlen($pat.'/obj');
+		}
+
+		return substr($url,$count+1);
+	}
+
 }

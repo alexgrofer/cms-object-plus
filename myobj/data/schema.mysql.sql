@@ -245,13 +245,11 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 -- modul_example_news
 -- navigation - Class (navigation_sys) id = 5
 (15,5,'example news list','',0,'','news_list_example',1),
-(16,5,'example news object','',0,'','news_object_example',1),
 (17,5,'example news edit object','',0,'','news_edit_object_example',1),
 -- templates - Class (templates_sys) id = 3
 (18,3,'example news index','',0,'modul_news_example/index','',0),
 -- views - Class (views_sys) id = 2
 (19,2,'example list news','',0,'modul_news_example/listnews','',0),
-(20,2,'example object news','',0,'modul_news_example/getobjnews','',0),
 (21,2,'example edit object news','',0,'modul_news_example/editobjnews','',0);
 -- Object Links
 INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
@@ -264,13 +262,11 @@ INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 -- example news
 -- navigation - Class (navigation_sys) id = 5
 (15,5),
-(16,5),
 (17,5),
 -- templates - Class (templates_sys) id = 3
 (18,3),
 -- views - Class (views_sys) id = 2
 (19,2),
-(20,2),
 (21,2);
 
 -- User

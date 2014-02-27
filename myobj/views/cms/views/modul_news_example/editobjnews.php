@@ -1,6 +1,7 @@
 <?php
-$idnews = 55;
-$model_obj = uClasses::getclass('news_example')->objects()->findbypk($idnews); //найти
+$this->pageTitle='edit info page';
+
+$model_obj = uClasses::getclass('news_example')->objects()->findByAttributes(array('name'=>'test_news1'));
 
 if(!$model_obj) {
 	echo '<p>not find element news</p>';
@@ -53,7 +54,7 @@ if(Yii::app()->user->hasFlash('savemodel')) {
 	echo Yii::app()->user->getFlash('savefile');
 }
 /*
- * end controller - в реальной работе контроллер вынести в отдельное представление
+ * end controller - в реальной работе контроллер подключить отдельным файлом require
  */
 
 

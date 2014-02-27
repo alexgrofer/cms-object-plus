@@ -141,6 +141,11 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 ');
 */
 function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flagpro,$tamplate,$countleft=5) {
+	$func_getlink = function($linkstr,$index) {
+		$str = str_replace('T_ID_PAGE',$index,$linkstr);
+		return $str;
+	};
+
 	$countlinks = (int)(ceil($countlinks / (float)($count_elems)));
 	$linksp = ''; $linkspt = '';
 	$finc = $indexpage % $count_pages;
@@ -155,11 +160,13 @@ function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flag
 
 	$rangenorm = array_slice(range(0,($countlinks - 1)),$startslice, $count_pages);
 
-	if($startslice > 0)
-		$linksp .= sprintf($tamplate['nextleft'], $urlp.$idleftnext);
+	if($startslice > 0) {
+		$linksp .= $func_getlink(sprintf($tamplate['nextleft'], $urlp), $idleftnext);
+	}
 
-	if($indexpage != 0)
-		$linkspt .=  sprintf($tamplate['prevpg'], $urlp.$idprev);
+	if($indexpage != 0) {
+		$linkspt .= $func_getlink(sprintf($tamplate['prevpg'], $urlp), $idprev);
+	}
 
 	foreach($rangenorm as $i) {
 		$actclassl = '';
@@ -167,13 +174,15 @@ function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flag
 
 		$idthisutl = ($i + 1);
 
-		$linksp .= sprintf($tamplate['elem'], $actclassl, $idthisutl, $idthisutl);
+		$linksp .= $func_getlink(sprintf($tamplate['elem'], $actclassl, $idthisutl), $idthisutl);
 	}
 
-	if($indexpage != $countlinks - 1)
-		$linkspt .= sprintf($tamplate['nextpg'], $urlp.$idnext);
-	if($idthisutl < $countlinks)
-		$linksp .= sprintf($tamplate['nextright'], $urlp.$idrightnext);
+	if($indexpage != $countlinks - 1) {
+		$linkspt .= $func_getlink(sprintf($tamplate['nextpg'], $urlp), $idnext);
+	}
+	if($idthisutl < $countlinks) {
+		$linksp .= $func_getlink(sprintf($tamplate['nextright'], $urlp), $idrightnext);
+	}
 
 
 	$pagination = sprintf($tamplate['pagination'], $linkspt, $linksp);

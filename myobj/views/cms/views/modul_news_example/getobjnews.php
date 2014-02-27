@@ -1,1 +1,0 @@
-<br/>object_news

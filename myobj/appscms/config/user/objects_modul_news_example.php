@@ -5,7 +5,7 @@ $objects = array(
 		'cols_props' => array('text_news_example'=>'text_news_example','annotation_news_example'=>'annotation_news_example'), //колонки-свойства объектов
 		'find' => array('id', 'text_news_example__prop'), //разрешенные для поиска
 		'order_by' => array('id','name', 'text_news_example__prop', 'annotation_news_example__prop'), //сортирова в меню
-		'order_by_def' => array('text_news_example__prop desc'),
+		'order_by_def' => array('text_news_example__prop ASC'),
 		//relation
 		'namemodel' => 'myObjHeaders',
 		'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),

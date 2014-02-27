@@ -1,12 +1,25 @@
 <?php
-echo Yii::app()->appcms->testprop;
 $this->pageTitle='list news';
+//хлебный крошки
 $this->breadcrumbs=array(
 	'list news',
 );
 ?>
 <h4>list news</h4>
+
+<p><a href="<?php echo $this->createUrl($this->dicturls['paramslist'][0],array('flag_all'=>1))?>">all news</a></p>
+
 <?php
+if(Yii::app()->request->getQuery('flag_all')) {
+	//получим все новости без условий
+	$objClass_news_objects = uClasses::getclass('news_example')->objects();
+	//важный фактор для того что бы не потерять условия нужно использовать перед каждым вызовом find, findAll, Count - если это необходимо
+	$get_criteria = $objClass_news_objects->getDbCriteria();
+
+	$COUNT_P = $objClass_news_objects->count();
+}
+else {
+
 //получить все объекты класса раздела "news_section_example" новостей
 $objClass_news_section_example = uClasses::getclass('news_section_example')->objects();
 if(!$objClass_news_section_example) {
@@ -45,18 +58,13 @@ $objClass_news_objects->setuiprop(array('order'=>array(array($objClass_news_obje
 $objClass_news_objects->setuiprop(array('order'=>array(array('text_news_example','desc',true))),$get_criteria); //так же может учавствовать вместе с condition и select
 //1)Найти что мне мешает показать нужные элементы
 
-// go PAGE
-$COUNTVIEWELEMS = 31;
-$COUNTVIEWPAGES = 10;
-$idpage = 0;
-if(strpos(implode('',array_keys($_GET)),'goin_')!==false) {
-	foreach($_GET as $key => $value) {
-		if($key == 'goin_') {
-			$idpage = $value;
-		}
-	}
 }
-elseif(array_key_exists('idpage',$_POST)) $idpage = $_POST['idpage'];
+
+// go PAGE
+$COUNTVIEWELEMS = 1;
+$COUNTVIEWPAGES = 10;
+
+$idpage = Yii::app()->request->getQuery('idpage',0); //по умолчанию 0
 
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
@@ -77,14 +85,15 @@ foreach($array_objClass_news_objects as $obj) {
 echo '</table>';
 
 if($COUNT_P>$COUNTVIEWELEMS) {
+$allGetParams = array_merge($_GET,array('idpage'=>'T_ID_PAGE'));
 //normal url
 $tamplate = array(
 	'action'=>' class="active"',
-	'nextleft'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&laquo;</a></li>',
-	'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&larr;</a></li>',
-	'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s"> &rarr;</a></li>',
-	'nextright'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&raquo;</a></li>',
-	'elem'=>'<li%s><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">%s</a></li>',
+	'nextleft'=>'<li><a href="'.$this->createUrl($this->dicturls['paramslist'][0],$allGetParams).'">&laquo;</a></li>',
+	'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['paramslist'][0],$allGetParams).'">&larr;</a></li>',
+	'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['paramslist'][0],$allGetParams).'"> &rarr;</a></li>',
+	'nextright'=>'<li><a href="'.$this->createUrl($this->dicturls['paramslist'][0],$allGetParams).'">&raquo;</a></li>',
+	'elem'=>'<li%s><a href="'.$this->createUrl($this->dicturls['paramslist'][0],$allGetParams).'">%s</a></li>',
 	'pagination' => '
 		<div id="pagination" class="pagination">
 			<ul class="pager">
