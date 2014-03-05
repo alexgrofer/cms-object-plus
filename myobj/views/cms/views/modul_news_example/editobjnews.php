@@ -1,14 +1,20 @@
 <?php
-$this->pageTitle='edit info page';
 
-$model_obj = uClasses::getclass('news_example')->objects()->findByAttributes(array('name'=>'test_news1'));
+$id_edit_news = $this->dicturls['paramslist'][2];
+
+$model_obj = uClasses::getclass('news_example')->objects()->findByPk($id_edit_news);
+
 
 if(!$model_obj) {
 	echo '<p>not find element news</p>';
 	return;
 }
 
-$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($model_obj));
+$nameClassModel = get_class($model_obj);
+
+$this->pageTitle='edit info page'.$model_obj->name;
+
+$paramsQueryPostModel = yii::app()->getRequest()->getPost($nameClassModel);
 if($paramsQueryPostModel) {
 	$model_obj->attributes = $paramsQueryPostModel;
 	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
@@ -27,20 +33,36 @@ $form->attributes = array('enctype' => 'multipart/form-data');
 if(count($_POST) && $form->validate()) {
 	//вначале сохраним объект
 	$model_obj->save();
-	//создадим файлы если пользователь их загрузил
-	if(isset($_FILES['EmptyForm[image]'])) {
+	//возьмем загруженные файл
+	$files = CUploadedFile::getInstancesByName($nameClassModel.'[image]');
+	if(count($files)) {
 		//start load file
 		/* @var CStoreFile $initFile */
-		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF); //инициализируем новый объект нужным плагином(определит поведение)
-		//методы общие как для мн. так и для отд. загрузкой
-		$initFile->isRandAll = true; //все файлы будут названны рандомно
-		//end
-		//метод нужно использовать только при мн. хранении,загрузит файлы пачкой
-		$initFile->filesMany = $_FILES['EmptyForm[image]']; //загрузит пачкой все файлы если EmptyForm[image] массив
-		//метод
-		$initFile->path = $model_obj->id; //логическая папка(news-папка плагина будет учтена/id объекта это название) файлов новости $_FILES['EmptyForm[image]'] если это множество файлов
+		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF, null); //инициализируем новый объект нужным плагином(определит поведение)
 
-		$initFile->save(); //сохранит объект и файл
+		foreach($files as $file) {
+			//следующий индекс используем для добавления новых файлов
+			$indexEdit = $initFile->objPlugin->getNextIndex();
+
+			//будет рандомное название
+			$initFile->set_IsRand(true,$indexEdit);
+
+			//сам файл
+			$initFile->set_File($file,$indexEdit);
+
+			//логическая папка(news-папка плагина будет учтена/id объекта это название)
+			$initFile->set_Path($model_obj->id,$indexEdit); //установить относительную папку
+
+			//установить кроп
+
+			//установить архивацию
+
+			//следующий индекс файла
+			$indexEdit++;
+		}
+
+		$initFile->save(); //сохранит объект файла (происходит измерение EArray b загрузка новых файлов)
+
 		//end load file
 		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
 	}
