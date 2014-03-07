@@ -13,7 +13,9 @@ abstract class AbsModel extends CActiveRecord
 			$class = new static();
 			$className = get_class($class);
 		}
-		return parent::model($className);
+		$obj = parent::model($className);
+		$obj->declareObj();
+		return $obj;
 	}
 
 	private $_conditStart=array();
@@ -284,10 +286,11 @@ abstract class AbsModel extends CActiveRecord
 
 	/**
 	 * Возвращает значение
-	 * @param $name
+	 * @param $nameCol
 	 * @param null $nameElem
 	 * @param null $index
-	 * @return mixed может вернуть как массив так и значение string
+	 * @param bool $isOld
+	 * @return array|mixed
 	 */
 	public function get_EArray($nameCol,$nameElem=null,$index=null,$isOld=false) {
 		$strArr = (!$isOld)?$this->attributes[$nameCol]:$this->old_attributes[$nameCol];
