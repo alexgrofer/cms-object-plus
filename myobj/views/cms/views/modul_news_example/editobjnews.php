@@ -1,5 +1,4 @@
 <?php
-
 $id_edit_news = $this->dicturls['paramslist'][2];
 
 $model_obj = uClasses::getclass('news_example')->objects()->findByPk($id_edit_news);
@@ -38,11 +37,12 @@ if(count($_POST) && $form->validate()) {
 	if(count($files)) {
 		//start load file
 		/* @var CStoreFile $initFile */
-		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF, null); //инициализируем новый объект нужным плагином(определит поведение)
+		//так же можно создать экземпляр уже с какимито настройками new EnumerationPluginStoreFile::DEF($params)
+		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF, 8); //инициализируем новый объект нужным плагином(определит поведение)
 
 		foreach($files as $file) {
 			//следующий индекс используем для добавления новых файлов
-			$indexEdit = $initFile->objPlugin->getNextIndex();
+			$indexEdit = $initFile->getNextIndex();
 
 			//будет рандомное название
 			$initFile->set_IsRand(true,$indexEdit);
@@ -62,6 +62,7 @@ if(count($_POST) && $form->validate()) {
 		}
 
 		$initFile->save(); //сохранит объект файла (происходит измерение EArray b загрузка новых файлов)
+		$initFile->activeRObj->save();
 
 		//end load file
 		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
