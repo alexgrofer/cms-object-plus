@@ -9,13 +9,10 @@ abstract class AbsModel extends CActiveRecord
 	public $old_attributes=array();
 	public static function model($className=null)
 	{
-		if($className===null) {
-			$class = new static();
-			$className = get_class($class);
+		if(!$className) {
+			$className = get_called_class();
 		}
-		$obj = parent::model($className);
-		$obj->declareObj();
-		return $obj;
+		return parent::model($className);
 	}
 
 	private $_conditStart=array();
