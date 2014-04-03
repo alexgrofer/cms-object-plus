@@ -38,7 +38,8 @@ if(count($_POST) && $form->validate()) {
 		//start load file
 		/* @var CStoreFile $initFile */
 		//так же можно создать экземпляр уже с какимито настройками new EnumerationPluginStoreFile::DEF($params)
-		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF, 8); //инициализируем новый объект нужным плагином(определит поведение)
+		$initFile = yii::app()->storeFile->obj(EnumerationPluginStoreFile::DEF); //инициализируем новый объект нужным плагином(определит поведение)
+		// 8); работа со следующим файлов
 
 		foreach($files as $file) {
 			//следующий индекс используем для добавления новых файлов
@@ -61,8 +62,7 @@ if(count($_POST) && $form->validate()) {
 			$indexEdit++;
 		}
 
-		$initFile->save(); //сохранит объект файла (происходит измерение EArray b загрузка новых файлов)
-		$initFile->activeRObj->save();
+		$initFile->save(); //сохранит сам файл и объект файла в базе
 
 		//end load file
 		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
