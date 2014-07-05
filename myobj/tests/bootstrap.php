@@ -13,3 +13,10 @@ require_once(dirname(__FILE__).'/WebTestCase.php');
 
 $config=dirname(__FILE__).'/config_test.php';
 Yii::createWebApplication($config);
+
+yii::app()->setComponents(array(
+	'appcms'=>array(
+		'class' =>'MYOBJ.components.cms.AppCMS',
+		'testprop'=>'test'
+	)
+));
