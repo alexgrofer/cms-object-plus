@@ -41,9 +41,9 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	public function testGet_properties($force=false) {
 
 		//каждое утверждение необходимо конмментаровать для лучшего понимания и отладки!!!
-		$objHeader = $this->objectsHeaders('AbsBaseHeadersTest_sample_id_1');
+		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
 
-		print_r($objHeader);
+		//print_r($objHeader);
 
 	}
 
