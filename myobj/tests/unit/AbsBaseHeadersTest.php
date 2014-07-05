@@ -20,7 +20,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 
 	public $fixtures=array(
-		'ObjectsHeaders'=>'myObjHeaders',
+		'objectsHeaders'=>'myObjHeaders',
 	);
 
 	/*
@@ -34,11 +34,6 @@ class AbsBaseHeadersTest extends CDbTestCase {
  */
 
 	/**
-	 * @var AbsBaseHeaders
-	 */
-	protected $ObjectsHeaders;
-
-	/**
 	 * Получить свойства
 	 * @param bool $force возвращает без кеширование на уровне объекта
 	 * @return array должен вернуть массив ключ значение свойство
@@ -46,7 +41,9 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	public function testGet_properties($force=false) {
 
 		//каждое утверждение необходимо конмментаровать для лучшего понимания и отладки!!!
+		$objHeader = $this->objectsHeaders['AbsBaseHeadersTest_sample_id_1'];
 
+		//print_r($objHeader);
 
 	}
 
