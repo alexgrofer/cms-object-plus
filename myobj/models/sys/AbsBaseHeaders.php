@@ -6,6 +6,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	{
 		return 'setcms_'.strtolower(get_class($this));
 	}
+
+	/**
+	 * @return string Название модели в которой лежит ссылки , пример linksObjectsAllMy
+	 */
 	public function getNameLinksModel() {
 		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
 	}
@@ -23,6 +27,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	public function relations()
 	{
 		$namemodellines = str_replace('Headers','',get_class($this));
+
 		$arr_relationsdef = array('uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id')); // uclass = models.ForeignKey(uClasses))
 		if($this->isitlines == true) {
 			$arr_relationsdef['lines'] = array(self::HAS_MANY, $namemodellines.'Lines', 'header_id');

@@ -26,13 +26,26 @@ class AbsBaseHeadersTest extends CDbTestCase {
 
 	//end yii config fixtures
 
-	public function getNameLinksModel() {
-		//PROBLEM
+	public function testGetNameLinksModel() {
+		/* @var $objHeader myObjHeaders */
+		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+
+		$this->assertEquals('linksObjectsAllMy', $objHeader->getNameLinksModel());
 	}
 
 	public function testRelations()
 	{
-		//
+		/* @var $objHeader myObjHeaders */
+		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+
+		//по умолчанию есть свойства
+		$this->assertCount(0,array_diff(array_keys($objHeader->relations()), array('uclass','lines','lines_sort','lines_find')));
+		$this->assertCount(4, $objHeader->relations());
+
+		//если не нужно работать со строками то только нужена ссылка на класс ->uclass
+		$objHeader->isitlines = false;
+		$this->assertCount(0,array_diff(array_keys($objHeader->relations()), array('uclass')));
+		$this->assertCount(1, $objHeader->relations());
 	}
 
 	/*
@@ -48,12 +61,22 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	public function testGet_properties($force=false) {
 		//
 	}
-	private function _saveProperties() {
+	public function saveProperties() {
 		//PROBLEM
 	}
 
-	private function _getobjectlink() {
-		//PROBLEM
+	/**
+	 * тестируем защищенный метод _getobjectlink
+	 */
+	public function testPRIVATE_Getobjectlink() {
+		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$class = new ReflectionClass($objHeader);
+		$method = $class->getMethod('_getobjectlink');
+		$method->setAccessible(true);
+
+		$objectLinks = $method->invoke($objHeader);
+
+		//$objectLinks = $objHeader->_getobjectlink();
 	}
 	public function testEditlinks() {
 		//
@@ -135,7 +158,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testSetAttributes($values) {
+	public function testSetAttributes() {
 
 	}
 
@@ -156,7 +179,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	protected function testInitObj() {
+	public function testInitObj() {
 		//
 	}
 }
