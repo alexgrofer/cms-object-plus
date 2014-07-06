@@ -6,7 +6,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	{
 		return 'setcms_'.strtolower(get_class($this));
 	}
-	protected function getNameLinksModel() {
+	public function getNameLinksModel() {
 		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
 	}
 
