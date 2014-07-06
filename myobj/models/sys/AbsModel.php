@@ -420,7 +420,7 @@ abstract class AbsModel extends CActiveRecord
 			}
 		}
 	}
-	protected function initObj() {
+	public function initObj() {
 		//инициализация элемента элемента
 	}
 

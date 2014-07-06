@@ -11,13 +11,13 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 
 	/**
-	 * @var bool у псевдоллассов есть возможность работать как с композицией(ссылками на другие объекты) так и со свойствами.
-	 * Свойства лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
+	 * @var bool
+	 * Данные Свойств лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
 	 */
 	protected $isitlines = true;
 	/**
-	 * @var bool Возможность создавать композицию
-	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects
+	 * @var bool Возможность создавать композицию объектов (ссылок объектов друг на друга)
+	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects таблица setcms_linksobjectsallmy
 	 */
 	public $flagAutoAddedLinks = true;
 	public function relations()
@@ -53,8 +53,17 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	 */
 	public $isHeaderModel=true;
 
+	/**
+	 * При добавлении новых свойств set_properties, они временно хранятся в этом массиве.
+	 * При получении свойств get_properties, они временно хранятся в этом массиве.
+	 * @var array
+	 */
 	private $_tmpProperties = array();
-	private $_propertiesNames = array(); //названия свойств существующие у данного объекта
+
+	/**
+	 * @var array названия свойств существующие у данного объекта
+	 */
+	private $_tmpPropertiesNames = array();
 
 	/**
 	 * Получить свойства
@@ -76,11 +85,16 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 					$this->_tmpProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
 				}
 			}
-			$this->_propertiesNames = array_keys($this->_tmpProperties);
+			$this->_tmpPropertiesNames = array_keys($this->_tmpProperties);
 		}
 		return $this->_tmpProperties;
 	}
-	private function _saveProperties() {
+
+	/*
+	 * Сохранить свойства в базе
+	 *
+	 */
+	public function saveProperties() {
 		$classproperties = $this->uclass->properties;
 		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
 		$arraylinesvalue = array();
@@ -107,8 +121,17 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				}
 			}
 		}
+		//теперь старые данные полностью переписанны
+		$this->old_properties = $this->get_properties();
 	}
 	private $_tempthislink;
+
+	/*
+	 * Есть таблица ссылок setcms_linksobjectsallmy.
+	 * При создании объекта всегда создается ссылка. это поведение управляется параметром flagAutoAddedLinks, читать там
+	 * она позволяет цеплять обекты одного класса к другому.
+	 * Таблица ссылается сама на себя через таблицу связку setcms_linksobjectsallmy_links.
+	 */
 	private function _getobjectlink() {
 		if(empty($this->_tempthislink)) {
 			$namelinkallmodel = $this->getNameLinksModel();
@@ -171,10 +194,10 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 					$objectcurrentlink->save();
 				}
 			}
+
 			//если были изменены свойства то сохраняем их
 			if(count($this->_tmpProperties)) {
-				$this->_saveProperties();
-				$this->old_properties = $this->get_properties();
+				$this->saveProperties();
 			}
 			return true;
 		}
@@ -218,11 +241,11 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 	public $_properties = array();
 	public function hasProperty($name) {
-		return in_array($name, $this->_propertiesNames);
+		return in_array($name, $this->_tmpPropertiesNames);
 	}
 
 	public function propertyNames() {
-		return $this->_propertiesNames;
+		return $this->_tmpPropertiesNames;
 	}
 	private $_tmp_ClassProperties = array();
 	public function getClassProperties() {
@@ -312,7 +335,12 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			}
 		}
 	}
-	protected $old_properties=null;
+
+	/**
+	 * При изменении свойств до записи, иногда необходимо знать что было раньше до изменения
+	 * @var array
+	 */
+	protected $old_properties=array();
 	public function declareObj() {
 		parent::declareObj();
 		//добавляем свойтсва к модели
@@ -365,7 +393,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 			}
 		}
 	}
-	protected function initObj() {
+	public function initObj() {
 		parent::initObj();
 		$this->old_properties = $this->get_properties();
 	}
