@@ -8,6 +8,13 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 
 	/**
+	 * @var bool В запросе будет join нить таблицы при работе со свойствами.
+	 * если false и свойства используются тогда будет запрос при каждом вызов списка свойств
+	 * false - лучше использовать когда мы точно не собираемся вызывать свойства на данном этапе выборки
+	 */
+	public $force_join_props = true;
+
+	/**
 	 * @return string Название модели в которой лежит ссылки , пример linksObjectsAllMy
 	 */
 	public function getNameLinksModel() {
@@ -121,6 +128,8 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 				}
 			}
 		}
+		//передать список имен свойств при новом созранении, т.к возможно были добавленны новые свойства
+		$this->_tmpPropertiesNames = array_keys($this->_tmpProperties);
 		//теперь старые данные полностью переписанны
 		$this->old_properties = $this->get_properties();
 	}
@@ -239,7 +248,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		else return parent::beforeSave();
 	}
-	public $_properties = array();
+
 	public function hasProperty($name) {
 		return in_array($name, $this->_tmpPropertiesNames);
 	}

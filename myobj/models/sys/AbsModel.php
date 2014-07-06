@@ -104,12 +104,6 @@ abstract class AbsModel extends CActiveRecord
 		return $this;
 	}
 
-	/**
-	 * @var bool Мержить запрос с дополнительными данными, необходимо если:
-	 * (FALSE) мы не будем в списке использовать свойства каким либо образом
-	 */
-	public $force_join_props = true;
-
 	public function behaviors()
 	{
 		return array(
