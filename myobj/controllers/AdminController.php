@@ -339,7 +339,7 @@ class AdminController extends \Controller {
 					$linkAnFuncSetCritModel();
 					Yii::import('ext.ECSVExport');
 					$namefile = '';
-					if($modelAD->isHeaderModel) {
+					if($modelAD instanceof \AbsBaseHeaders) {
 						$namefile = 'class-'.$actclass->codename;
 					}
 					else {
@@ -350,7 +350,7 @@ class AdminController extends \Controller {
 					foreach($objects as $obj) {
 						$array_insert = $obj->attributes;
 						$prop_array = array();
-						if($modelAD->isHeaderModel) {
+						if($modelAD instanceof \AbsBaseHeaders) {
 							$prop_array = $obj->get_properties();
 							foreach($prop_array as $key => $val) {
 								$prop_array[$key.'__prop'] = $val;
@@ -406,7 +406,7 @@ class AdminController extends \Controller {
 							$namemodel= get_class($modelAD);
 							$newobj = new $namemodel();
 
-							if($newobj->isHeaderModel) {
+							if($newobj instanceof \AbsBaseHeaders) {
 								$newobj->uclass_id = $attributes_csv['uclass_id'];
 								if(count($properties_csv)) {
 									foreach($properties_csv as $keyP => $keyP) {

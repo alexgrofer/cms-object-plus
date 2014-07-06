@@ -5,7 +5,7 @@ abstract class AbsModel extends CActiveRecord
 	{
 		return 'id';
 	}
-	public $isHeaderModel=false;
+
 	public $old_attributes=array();
 	public static function model($className=null)
 	{
@@ -29,7 +29,7 @@ abstract class AbsModel extends CActiveRecord
 			$this->_conditStart = array();
 		}
 		//для обычных моделей свойтва не трубуются
-		if($this->isHeaderModel) $properties = $this->getClassProperties(); //task проверить тут были изменения теперь только свойства этого объекта выбираются раньше выбиральсь все
+		if($this instanceof AbsBaseHeaders) $properties = $this->getClassProperties(); //task проверить тут были изменения теперь только свойства этого объекта выбираются раньше выбиральсь все
 		$arrconfcms = Yii::app()->appcms->config;
 		if(array_key_exists('condition',$array)) {
 			$propYes = false;

@@ -40,7 +40,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	}
 
 	public function beforeFind() {
-		if($this->isHeaderModel && $this->isitlines) {
+		if($this->isitlines) {
 			if($this->force_join_props) {
 				$this->dbCriteria->with['lines.property'] = array();
 				$this->dbCriteria->with['uclass.properties'] = array();
@@ -52,11 +52,6 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 		}
 		parent::beforeFind();
 	}
-
-	/**
-	 * @var bool класс модели свойственный для работы с псевдоклассами
-	 */
-	public $isHeaderModel=true;
 
 	/**
 	 * При добавлении новых свойств set_properties, они временно хранятся в этом массиве.
