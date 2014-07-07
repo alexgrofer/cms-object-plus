@@ -1,5 +1,5 @@
 <?php
-abstract class AbsModel extends CActiveRecord
+abstract class AbsBaseModel extends CActiveRecord
 {
 	public function primaryKey()
 	{

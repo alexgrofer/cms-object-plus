@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseLinksObjects extends AbsModel // (Django) class AbsBaseLinksObjects(models.Model):
+abstract class AbsBaseLinksObjects extends AbsBaseModel // (Django) class AbsBaseLinksObjects(models.Model):
 {
 	public $idobj; //models.IntegerField(blank=False)
 	//public $name; //models.CharField(max_length=255)

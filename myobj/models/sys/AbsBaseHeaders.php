@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(models.Model):
+abstract class AbsBaseHeaders extends AbsBaseModel // (Django) class AbsBaseHeaders(models.Model):
 {
 	public $uclass_id;
 	public function tableName()
@@ -25,7 +25,7 @@ abstract class AbsBaseHeaders extends AbsModel // (Django) class AbsBaseHeaders(
 	 * @var bool
 	 * Данные Свойств лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
 	 */
-	protected $isitlines = true;
+	public $isitlines = true;
 	/**
 	 * @var bool Возможность создавать композицию объектов (ссылок объектов друг на друга)
 	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects таблица setcms_linksobjectsallmy

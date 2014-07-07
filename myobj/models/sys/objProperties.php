@@ -1,5 +1,5 @@
 <?php
-class objProperties extends AbsModel
+class objProperties extends AbsBaseModel
 {
 	public $name; //models.CharField(max_length=255)
 	public $codename; //models.CharField(max_length=30,unique=True)

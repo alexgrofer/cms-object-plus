@@ -1,5 +1,5 @@
 <?php
-class uClasses extends AbsModel
+class uClasses extends AbsBaseModel
 {
 	public $name; //models.CharField(max_length=255)
 	public $codename; //models.CharField(max_length=30,unique=True)

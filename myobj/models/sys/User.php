@@ -1,5 +1,5 @@
 <?php
-class User extends AbsModel
+class User extends AbsBaseModel
 {
 	public $login;
 	public $password;

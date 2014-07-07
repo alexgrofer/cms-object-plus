@@ -1,5 +1,5 @@
 <?php
-class UserPasport extends AbsModel
+class UserPasport extends AbsBaseModel
 {
 	public $firstname;
 	public $lastname;

@@ -1,5 +1,5 @@
 <?php
-class Ugroup extends AbsModel
+class Ugroup extends AbsBaseModel
 {
 	public $name;
 	public $guid;

@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseLines extends AbsModel // (Django) class AbsBaseLines(models.Model):
+abstract class AbsBaseLines extends AbsBaseModel // (Django) class AbsBaseLines(models.Model):
 {
 
 	public $uptextfield; //models.TextField(blank=True)
