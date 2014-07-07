@@ -260,12 +260,3 @@ INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES 
 INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1BF-461A-B1FE-3182B24D2812');
 -- (One to M) User -> Groups
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
-
--- для объектов также возможно цеплять таблицы, пример с HAS_MANY
-CREATE TABLE `setcms_testtablehm` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`text` varchar(255) NOT NULL,
-	`obj_id` int(11) NULL,
-	PRIMARY KEY (`id`),
-	KEY (`obj_id`)
-);

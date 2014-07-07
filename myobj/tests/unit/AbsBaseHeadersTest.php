@@ -5,8 +5,8 @@
  * ВАЖНО! при Разработки класса AbsBaseHeaders всегда вначале описывать метот тут!!!
  * ВАЖНО! после Разработки      AbsBaseHeaders всегда проверять этот тест!!!
  * ВАЖНО! каждое УТВЕРЖДЕНИЕ необходимо конмментаровать для лучшего понимания и отладки!!!
+ * ВАЖНО! необходимо описывать только утверждения свойственные для работы метода и не больше!!!!
  *
- * !!!каждое утверждение необходимо конмментаровать для лучшего понимания и последующей отладки!!!
  *
  */
 class AbsBaseHeadersTest extends CDbTestCase {
@@ -33,26 +33,37 @@ class AbsBaseHeadersTest extends CDbTestCase {
 		$this->assertEquals('linksObjectsAllMy', $objHeader->getNameLinksModel());
 	}
 
-	public function testRelations()
-	{
+	public function testRelations() {
 		/* @var $objHeader myObjHeaders */
 		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
 
 		//по умолчанию есть свойства
-		$this->assertCount(0,array_diff(array_keys($objHeader->relations()), array('uclass','lines','lines_sort','lines_find')));
-		$this->assertCount(4, $objHeader->relations());
+		$this->assertEquals(array_keys($objHeader->relations()), array('uclass', 'lines', 'lines_sort', 'lines_find'));
+		$this->assertNotEmpty($objHeader->uclass);
 
 		//если не нужно работать со строками то только нужена ссылка на класс ->uclass
 		$objHeader->isitlines = false;
-		$this->assertCount(0,array_diff(array_keys($objHeader->relations()), array('uclass')));
-		$this->assertCount(1, $objHeader->relations());
+		$this->assertEquals(array_keys($objHeader->relations()), array('uclass'));
 	}
 
 	/*
 	 *
 	 */
 	public function testBeforeFind() {
-		//
+		/* @var $objHeader myObjHeaders */
+		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+
+		$objHeader->isitlines = true;
+
+		$objHeader->force_join_props = true;
+		$objHeader->beforeFind();
+		$this->assertArrayHasKey('lines.property', $objHeader->dbCriteria->with);
+		$this->assertArrayHasKey('uclass.properties', $objHeader->dbCriteria->with);
+
+		$objHeader->force_join_props = false;
+		$objHeader->beforeFind();
+		$this->assertArrayNotHasKey('lines.property', $objHeader->dbCriteria->with);
+		$this->assertArrayNotHasKey('uclass.properties', $objHeader->dbCriteria->with);
 	}
 
 	/*
@@ -118,14 +129,18 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 *
 	 */
 	public function testHasProperty() {
-		//
+		//проверить существование свойств по одному
+		//проверить не существование названия свойства accesfalse
 	}
 
 	/*
 	 *
 	 */
 	public function testPropertyNames() {
-		//
+		//получить текущий спикок имен свойств
+		//добавить в класс новое свойство
+		//добавить в объект данные нового свойства
+		//получить новый список свойств
 	}
 
 	/*
