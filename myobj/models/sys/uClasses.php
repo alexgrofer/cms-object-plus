@@ -82,17 +82,26 @@ class uClasses extends AbsBaseModel
 		);
 	}
 	//user func Object class
-	//comment doc
+	/**
+	 * Инициализирует новый объект от кэтого класса
+	 * $obj = initobject();
+	 * $obj->save()
+	 * @return CActiveRecord
+	 */
 	public function initobject() { //newobj = $class->initobject(); $newobj.save()
-		$modelheaders = $this->objects();
-		$newobj = new $modelheaders();
+		$modelheaders = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
+		$newobj = new $modelheaders;
 		$newobj->uclass_id = $this->id;
 		return $newobj;
 	}
-	//comment doc
+
+	/**
+	 * Вытаскивает ссылку на объект класса с установленной критерией для поиска объектов
+	 * @return CActiveRecord
+	 */
 	public function objects() { //namesvprop left join props lines
 		$NameClassHeader = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
-		$modelheaders = new $NameClassHeader();
+		$modelheaders = new $NameClassHeader;
 		$modelheaders->dbCriteria->compare('uclass_id',$this->id);
 		$modelheaders->dbCriteria->select = array('t.*');
 		$modelheaders->uclass_id = $this->id;

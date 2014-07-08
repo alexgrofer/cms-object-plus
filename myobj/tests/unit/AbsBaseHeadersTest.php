@@ -70,10 +70,21 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 *
 	 */
 	public function testGet_properties($force=false) {
+		//необходимо создать два свойства они должны быть привязанны к классу и заполнить их
+		//получить эти всойства
+		//изменить эти свойства но через другую ссылку
+		//получить по старой ссылке - не должны быть новые свойства, если видим новые нет смысла в $force
+		//$force - true - теперь должны увидеть
+		//
 		//
 	}
 	public function saveProperties() {
-		//PROBLEM
+		/*
+		 *изменить свойства
+		 * посмотреть Get_properties возвращает новый
+		 * old prop возвращает новые
+		 * Get_properties force - тоже самое
+		 */
 	}
 
 	/**
@@ -86,6 +97,11 @@ class AbsBaseHeadersTest extends CDbTestCase {
 		$method->setAccessible(true);
 
 		$objectLinks = $method->invoke($objHeader);
+
+		/*
+		 * возвращает объект класса baselinks
+		 * возвращает правильную ссылку получаем объект и смотрим чему равен idobj, uclass_id
+		 */
 
 		//$objectLinks = $objHeader->_getobjectlink();
 	}
@@ -118,10 +134,6 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 *
 	 */
 	function testBeforeDelete() {
-		//
-	}
-
-	public function testBeforeSave() {
 		//
 	}
 

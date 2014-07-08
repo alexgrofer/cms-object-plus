@@ -142,12 +142,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Таблица ссылается сама на себя через таблицу связку setcms_linksobjectsallmy_links.
 	 */
 	private function _getobjectlink() {
-		if(empty($this->_tempthislink)) {
+		if($this->_tempthislink) {
 			$namelinkallmodel = $this->getNameLinksModel();
 			$objectcurrentlink = $namelinkallmodel::model()->findByAttributes(array('idobj' => $this->id, 'uclass_id' => $this->uclass_id));
 			$this->_tempthislink = $objectcurrentlink;
 		}
-		if(!$this->_tempthislink) return false;
 		return $this->_tempthislink;
 	}
 	public function editlinks($type, $class, $idsheaders) {
@@ -239,14 +238,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$objectcurrentlink->delete(); //удалить ссылку
 		}
 		return parent::beforeDelete();
-	}
-
-	public function beforeSave() {
-		if(parent::beforeSave()!==false) {
-			if($this->isNewRecord && method_exists(get_class($this),'get_properties')) $this->uclass_id = $this->uclass->id;
-			return true;
-		}
-		else return parent::beforeSave();
 	}
 
 	public function hasProperty($name) {
