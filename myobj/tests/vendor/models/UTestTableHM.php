@@ -1,5 +1,5 @@
 <?php
-class TestTableHM extends AbsBaseModel
+class UTestTableHM extends AbsBaseModel
 {
 	public $name;
 	public $obj_id;

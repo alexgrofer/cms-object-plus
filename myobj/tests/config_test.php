@@ -13,6 +13,16 @@ return CMap::mergeArray(
 				'connectionString'=>'mysql:host=localhost;dbname=DBTest',
 			),
 
+			'log'=>array(
+				'class'=>'CLogRouter',
+				'routes'=>array(
+					array(
+						'class'=>'CFileLogRoute',
+						'levels'=>'error, warning, trace',
+					),
+				),
+			),
+
 		),
 	)
 );

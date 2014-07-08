@@ -20,7 +20,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 
 	public $fixtures=array(
-		'objectsHeaders'=>'myObjHeaders',
+		'objectAbsBaseHeader'=>'TestAbsBaseHeaders',
 	);
 
 
@@ -28,14 +28,14 @@ class AbsBaseHeadersTest extends CDbTestCase {
 
 	public function testGetNameLinksModel() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 
 		$this->assertEquals('linksObjectsAllMy', $objHeader->getNameLinksModel());
 	}
 
 	public function testRelations() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 
 		//по умолчанию есть свойства
 		$this->assertEquals(array_keys($objHeader->relations()), array('uclass', 'lines', 'lines_sort', 'lines_find'));
@@ -51,7 +51,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 	public function testBeforeFind() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 
 		$objHeader->isitlines = true;
 
@@ -80,7 +80,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 * тестируем защищенный метод _getobjectlink
 	 */
 	public function testPRIVATE_Getobjectlink() {
-		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 		$class = new ReflectionClass($objHeader);
 		$method = $class->getMethod('_getobjectlink');
 		$method->setAccessible(true);
@@ -158,7 +158,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	public function testSet_properties() {
 		//каждое утверждение необходимо конмментаровать для лучшего понимания и отладки!!!
 
-		$objHeader = $this->objectsHeaders('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 
 		$propertiesArray = $objHeader->get_properties();
 		//должен возвращать массив
