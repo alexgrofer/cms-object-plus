@@ -1,6 +1,10 @@
 <?php
 abstract class AbsBaseLines extends AbsBaseModel // (Django) class AbsBaseLines(models.Model):
 {
+	public function tableName()
+	{
+		return 'setcms_'.strtolower(get_class($this));
+	}
 
 	public $uptextfield; //models.TextField(blank=True)
 	public $upcharfield; //models.CharField(max_length=255,blank=True)

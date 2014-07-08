@@ -1,8 +1,12 @@
 <?php
 abstract class AbsBaseLinksObjects extends AbsBaseModel // (Django) class AbsBaseLinksObjects(models.Model):
 {
-	public $idobj; //models.IntegerField(blank=False)
-	//public $name; //models.CharField(max_length=255)
+	public function tableName()
+	{
+		return 'setcms_'.strtolower(get_class($this));
+	}
+
+	public $idobj;
 
 	public function relations()
 	{
