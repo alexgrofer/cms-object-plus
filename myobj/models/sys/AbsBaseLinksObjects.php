@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseLinksObjects extends AbsBaseModel // (Django) class AbsBaseLinksObjects(models.Model):
+abstract class AbsBaseLinksObjects extends AbsBaseModel
 {
 	public function tableName()
 	{

@@ -1,5 +1,5 @@
 <?php
-abstract class AbsBaseHeaders extends AbsBaseModel // (Django) class AbsBaseHeaders(models.Model):
+abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	public $uclass_id;
 	public function tableName()
