@@ -351,7 +351,7 @@ class AdminController extends \Controller {
 						$array_insert = $obj->attributes;
 						$prop_array = array();
 						if($modelAD instanceof \AbsBaseHeaders) {
-							$prop_array = $obj->get_properties();
+							$prop_array = $obj->uProperties;
 							foreach($prop_array as $key => $val) {
 								$prop_array[$key.'__prop'] = $val;
 								unset($prop_array[$key]);
@@ -410,7 +410,7 @@ class AdminController extends \Controller {
 								$newobj->uclass_id = $attributes_csv['uclass_id'];
 								if(count($properties_csv)) {
 									foreach($properties_csv as $keyP => $keyP) {
-										$newobj->set_properties($keyP,$keyP);
+										$newobj->uProperties[$keyP] = $keyP;
 									}
 								}
 							}

@@ -307,7 +307,7 @@ foreach($listall as $obj) {
 		echo '<td>'.$valobj.'</td>';
 	}
 	if($REND_thispropsui) {
-		$properties = $obj->get_properties();
+		$properties = $obj->uProperties;
 		foreach(array_keys($REND_thispropsui) as $colname) {
 			echo '<td>'.$properties[$colname].'</td>';
 		}

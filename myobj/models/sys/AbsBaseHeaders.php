@@ -61,8 +61,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	/**
-	 * При добавлении новых свойств set_properties, они временно хранятся в этом массиве.
-	 * При получении свойств get_properties, они временно хранятся в этом массиве.
+	 * При добавлении новых свойств uProperties, они временно хранятся в этом массиве.
+	 * При получении свойств uProperties, они временно хранятся в этом массиве.
 	 * @var array
 	 */
 	private $_tmpProperties = array();
@@ -77,7 +77,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param bool $force возвращает без кеширование на уровне объекта
 	 * @return array
 	 */
-	public function get_properties($force=false) {
+	public function getUProperties($force=false) {
 		if(!count($this->_tmpProperties) || $force==true) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
@@ -131,7 +131,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//передать список имен свойств при новом созранении, т.к возможно были добавленны новые свойства
 		$this->_tmpPropertiesNames = array_keys($this->_tmpProperties);
 		//теперь старые данные полностью переписанны
-		$this->old_properties = $this->get_properties();
+		$this->old_properties = $this->uProperties;
 	}
 	private $_tempthislink;
 
@@ -212,7 +212,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		else return parent::afterSave();
 	}
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
-	function beforeDelete() {
+	public function beforeDelete() {
 		//запрет на удаление отдельных объектов системы
 		if(isset(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
 			foreach(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
@@ -247,16 +247,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function propertyNames() {
 		return $this->_tmpPropertiesNames;
 	}
-	private $_tmp_ClassProperties = array();
-	public function getClassProperties() {
-		if(!$this->_tmp_ClassProperties) {
-			foreach($this->uclass->properties as $prop) {
-				$this->_tmp_ClassProperties[$prop->codename] = $prop;
-			}
-		}
-		return $this->_tmp_ClassProperties;
-	}
-	public function set_properties($name,$value) {
+
+	public function setUProperties($name,$value) {
 		if(!$this->hasProperty($name)) {
 			throw new CException(
 				Yii::t('cms','Not find prop {prop}',
@@ -275,7 +267,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			foreach($values as $nameElem => $val) {
 				//CASE type Prop
 				if(($pos = strpos($nameElem,'prop_'))!==false) {
-					$this->set_properties(substr($nameElem,0,$pos),$val);
+					$this->uProperties[substr($nameElem,0,$pos)] = $val;
 				}
 				//CASE type new type
 				//if(...)
@@ -288,7 +280,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//добавляем свойтсва к модели
 		if($this->isitlines) {
 			$arrconfcms = Yii::app()->appcms->config;
-			$currentproperties = $this->get_properties();
+			$currentproperties = $this->uProperties;
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
 				//инициализируем свойство
@@ -346,7 +338,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//добавляем свойтсва к модели
 		if($this->isitlines) {
 			$arrconfcms = Yii::app()->appcms->config;
-			$currentproperties = $this->get_properties();
+			$currentproperties = $this->uProperties;
 			foreach($this->uclass->properties as $prop) {
 				$nameelem = $prop->codename.'prop_';
 				//инициализируем свойство
@@ -395,6 +387,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 	public function initObj() {
 		parent::initObj();
-		$this->old_properties = $this->get_properties();
+		$this->old_properties = $this->uProperties;
 	}
 }
