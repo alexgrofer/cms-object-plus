@@ -19,7 +19,7 @@ CREATE TABLE `setcms_testabsbaselines` (
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_testabsbaseheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_linksobjectsallabsbase` (
+CREATE TABLE `setcms_linksobjectsalltestabsbase` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`idobj` int(11) NOT NULL,
 	`uclass_id` int(11) NOT NULL,
@@ -28,14 +28,14 @@ CREATE TABLE `setcms_linksobjectsallabsbase` (
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_linksobjectsallabsbase_links` (
+CREATE TABLE `setcms_linksobjectsalltestabsbase_links` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_self_id` int(11) NOT NULL,
 	`to_self_id` int(11) NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`from_self_id`,`to_self_id`),
-	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsalltestabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsalltestabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_testabsbasemodel` (

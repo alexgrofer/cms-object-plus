@@ -20,7 +20,8 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 
 	public $fixtures=array(
-		'objectAbsBaseHeader'=>'TestAbsBaseHeaders',
+		//'objectAbsBaseHeader'=>'TestAbsBaseHeaders', //строки
+		'objectAbsBaseHeader'=>'TestAbsBaseHeaders', //объекты TestAbsBaseHeaders
 	);
 
 
@@ -69,7 +70,10 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testGet_properties($force=false) {
+	public function testGetUProperties($force=false) {
+		/* @var $objHeader myObjHeaders */
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+
 		//необходимо создать два свойства они должны быть привязанны к классу и заполнить их
 		//получить эти всойства
 		//изменить эти свойства но через другую ссылку
@@ -77,13 +81,14 @@ class AbsBaseHeadersTest extends CDbTestCase {
 		//$force - true - теперь должны увидеть
 		//
 		//
+		print_r($objHeader->uProperties);
 	}
 	public function saveProperties() {
 		/*
 		 *изменить свойства
-		 * посмотреть Get_properties возвращает новый
+		 * посмотреть GetUProperties возвращает новый
 		 * old prop возвращает новые
-		 * Get_properties force - тоже самое
+		 * GetUProperties force - тоже самое
 		 */
 	}
 
@@ -106,14 +111,19 @@ class AbsBaseHeadersTest extends CDbTestCase {
 		//$objectLinks = $objHeader->_getobjectlink();
 	}
 	public function testEditlinks() {
-		//
+		/*
+		 * ссылкм можно добавлять удалять чистить редактировать все это проверить
+		 */
 	}
 
 	/*
 	 *
 	 */
 	public function testGetobjlinks() {
-		//
+		/*
+		 * изночатьно  у класса добавить 2 ссылки на 1 класс и 2 на другой
+		 * проверить по каждому классу колличестро и id возвр ссылок
+		 */
 	}
 
 	/**
@@ -127,7 +137,11 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 * проверка на остаток старых свойств если понадобятся
 	 */
 	public function testAfterSave() {
-		//
+		//создать новый объект можно с пом класса class::obj
+		//ghjntcnbnm протестит ьсохранение ссылки с flagAutoAddedLinks и без
+
+		//изменить свойства
+		//после схранения они должны быть в базе
 	}
 
 	/*
@@ -156,23 +170,17 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	}
 
 	/*
-	 *
-	 */
-	public function testGetClassProperties() {
-		//
-	}
-
-	/*
 	 * -если методы могут зависить друг от друга лучше сделать зависимости что бы сразе все проверить борее правильно
-	 * -get_properties
 	 * -нужно описать все все работу что ест ьв классе все методы досконально
 	 */
-	public function testSet_properties() {
+	public function testSetUProperties() {
+		//проверить как работает сеттер
+
 		//каждое утверждение необходимо конмментаровать для лучшего понимания и отладки!!!
 
 		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
 
-		$propertiesArray = $objHeader->get_properties();
+		$propertiesArray = $objHeader->uProperties;
 		//должен возвращать массив
 		$this->assertTrue(is_array($propertiesArray));
 		//должно быть 3 свойства

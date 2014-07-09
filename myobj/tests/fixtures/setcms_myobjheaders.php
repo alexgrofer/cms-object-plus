@@ -2,6 +2,9 @@
 return array(
 	//ТЕСТИРОВАНИЕ класса myObjHeaders
 	/*
+	 * *Стандартные объекты системы.
+	 *
+	 * +id = первичный ключ для таблицы
 	 * +uclass_id = класса которому принадлежит объект
 	 *
 	 * +name = название объекта, к примеру "название новости на сайте"
@@ -10,7 +13,7 @@ return array(
 	 * +bpublic = признак публикации
 	 */
 
-	'myObjHeaders_sample_id_1'=>array(
+	'myObjHeaders_sample_id_2'=>array(
 		'id'=>'2',
 		'uclass_id'=>'3', //обязательна фикстура - "uClasses_sample_id_1"
 		'name'=>'name',
