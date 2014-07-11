@@ -47,16 +47,14 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function beforeFind() {
-		if($this->isitlines) {
-			if($this->force_join_props) {
-				$this->dbCriteria->with['lines.property'] = array();
-				$this->dbCriteria->with['uclass.properties'] = array();
-			}
-			else {
-				unset($this->dbCriteria->with['lines.property']);
-				unset($this->dbCriteria->with['uclass.properties']);
-			}
+		/*
+		 * в случае если есть поддержка свойств(isitlines) и юзер хочет в запросе извлекать строки без дополнительных запросов 'будет join таблиц' force_join_props
+		 */
+		if($this->isitlines && $this->force_join_props) {
+			$this->dbCriteria->with['lines.property'] = array();
+			$this->dbCriteria->with['uclass.properties'] = array();
 		}
+
 		parent::beforeFind();
 	}
 
@@ -65,12 +63,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * При получении свойств uProperties, они временно хранятся в этом массиве.
 	 * @var array
 	 */
-	private $_tmpProperties = array();
+	private $_tmpUProperties = array();
 
 	/**
 	 * @var array названия свойств существующие у данного объекта
 	 */
-	private $_tmpPropertiesNames = array();
+	private $_tmpUPropertiesNames = array();
 
 	/**
 	 * Получить свойства
@@ -78,7 +76,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return array
 	 */
 	public function getUProperties($force=false) {
-		if(!count($this->_tmpProperties) || $force==true) {
+		if(!count($this->_tmpUProperties) || $force==true) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
@@ -89,12 +87,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			if(count($classproperties)) {
 
 				foreach($classproperties as $objprop) {
-					$this->_tmpProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
+					$this->_tmpUProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
 				}
 			}
-			$this->_tmpPropertiesNames = array_keys($this->_tmpProperties);
+			$this->_tmpUPropertiesNames = array_keys($this->_tmpUProperties);
 		}
-		return $this->_tmpProperties;
+		return $this->_tmpUProperties;
 	}
 
 	/*
@@ -112,16 +110,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 		foreach($classproperties as $objprop) {
 			//если не изменял свойство не нужно каждый раз делать запрос
-			if($this->old_properties[$objprop->codename]==$this->_tmpProperties[$objprop->codename]) continue;
-			if(array_key_exists($objprop->codename, $this->_tmpProperties)!==false) {
+			if($this->old_properties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename]) continue;
+			if(array_key_exists($objprop->codename, $this->_tmpUProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
-					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpProperties[$objprop->codename];
+					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpUProperties[$objprop->codename];
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
 					$newobjlines = new $namemodellines();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
-					$newobjlines->$namecolumn = $this->_tmpProperties[$objprop->codename];
+					$newobjlines->$namecolumn = $this->_tmpUProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
 					$newobjlines->header_id = $this->id;
 					$newobjlines->save();
@@ -129,7 +127,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			}
 		}
 		//передать список имен свойств при новом созранении, т.к возможно были добавленны новые свойства
-		$this->_tmpPropertiesNames = array_keys($this->_tmpProperties);
+		$this->_tmpUPropertiesNames = array_keys($this->_tmpUProperties);
 		//теперь старые данные полностью переписанны
 		$this->old_properties = $this->uProperties;
 	}
@@ -204,7 +202,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			}
 
 			//если были изменены свойства то сохраняем их
-			if(count($this->_tmpProperties)) {
+			if(count($this->_tmpUProperties)) {
 				$this->saveProperties();
 			}
 			return true;
@@ -241,22 +239,22 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function hasProperty($name) {
-		return in_array($name, $this->_tmpPropertiesNames);
+		return in_array($name, $this->_tmpUPropertiesNames);
 	}
 
 	public function propertyNames() {
-		return $this->_tmpPropertiesNames;
+		return $this->_tmpUPropertiesNames;
 	}
 
-	public function setUProperties($name,$value) {
-		if(!$this->hasProperty($name)) {
+	public function setUProperties($arrayName_Value) {
+		if(!$this->hasProperty($arrayName_Value[0])) {
 			throw new CException(
 				Yii::t('cms','Not find prop {prop}',
-				array('{prop}'=>$name))
+				array('{prop}'=>$arrayName_Value[0]))
 			);
 		}
-		$this->_tmpProperties[$name] = $value;
-		$this->{$name.'prop_'} = $value;
+		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[0];
+		$this->{$arrayName_Value[0].'prop_'} = $arrayName_Value[1];
 	}
 
 	public function setAttributes($values) {

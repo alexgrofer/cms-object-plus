@@ -410,7 +410,7 @@ class AdminController extends \Controller {
 								$newobj->uclass_id = $attributes_csv['uclass_id'];
 								if(count($properties_csv)) {
 									foreach($properties_csv as $keyP => $keyP) {
-										$newobj->uProperties[$keyP] = $keyP;
+										$newobj->uProperties = [$keyP,$keyP];
 									}
 								}
 							}
