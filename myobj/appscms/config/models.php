@@ -6,12 +6,12 @@ $models = array(
 		'relation' => array('properties'=>array('properties','classes'), 'association'=>array('classes','association')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
 		'order_by_def' => array('id desc'),
-		'selfobjrelationElements' => array('properties'=>array('test',)), //сделать описание task
+		//'selfobjrelationElements' => array('properties'=>array('test',)), //сделать описание task
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
 		'relation' => array('classes'=>array('classes','properties')),
-		'selfobjrelationElements' => array('classes'=>array('test',)), //сделать описание task
+		//'selfobjrelationElements' => array('classes'=>array('test',)), //сделать описание task
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),

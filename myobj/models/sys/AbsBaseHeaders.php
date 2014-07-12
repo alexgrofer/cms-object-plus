@@ -109,8 +109,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}
 		foreach($classproperties as $objprop) {
-			//если не изменял свойство не нужно каждый раз делать запрос
-			if($this->old_properties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename]) continue;
+			//если не изменял свойство не нужно каждый раз делать запрос,??? тут могут быть большие текстровые строки может быть проблема со скоростью
+			//лучше использовать какие то возможности клиента
+			if(!$this->isNewRecord && ($this->old_properties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename])) continue;
 			if(array_key_exists($objprop->codename, $this->_tmpUProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
 					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpUProperties[$objprop->codename];
@@ -238,6 +239,15 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return parent::beforeDelete();
 	}
 
+	public function beforeSave() {
+		if(parent::beforeSave()!==false) {
+			//для новых объектов необходимо подставить класс
+			if($this->isNewRecord) $this->uclass_id = $this->uclass->id;
+			return true;
+		}
+		else return parent::beforeSave();
+	}
+
 	public function hasProperty($name) {
 		return in_array($name, $this->_tmpUPropertiesNames);
 	}
@@ -253,7 +263,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				array('{prop}'=>$arrayName_Value[0]))
 			);
 		}
-		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[0];
+		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[1];
 		$this->{$arrayName_Value[0].'prop_'} = $arrayName_Value[1];
 	}
 
@@ -265,7 +275,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			foreach($values as $nameElem => $val) {
 				//CASE type Prop
 				if(($pos = strpos($nameElem,'prop_'))!==false) {
-					$this->uProperties[substr($nameElem,0,$pos)] = $val;
+					$this->uProperties = [substr($nameElem,0,$pos), $val];
 				}
 				//CASE type new type
 				//if(...)

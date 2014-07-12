@@ -14,6 +14,16 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 		return parent::model($className);
 	}
+	//??? это нужно перенести в baseheaders но придумать что бы обзий метод свойств работал, хотелось сделать  behouverom этот метод
+	private $_tmp_ClassProperties = array();
+	public function getClassProperties() {
+		if(!$this->_tmp_ClassProperties) {
+			foreach($this->uclass->properties as $prop) {
+				$this->_tmp_ClassProperties[$prop->codename] = $prop;
+			}
+		}
+		return $this->_tmp_ClassProperties;
+	}
 
 	private $_conditStart=array();
 	public function setuiprop($array,$save_dbCriteria=null,$isclear=false) {
