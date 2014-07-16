@@ -2,6 +2,8 @@
 return array(
 	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseHeaders
 	/*
+	 * * Дочерняя таблица для связки классов "from_uclasses_id" к свойствам "to_objproperties_id" MTM
+	 *
 	 * +id = первичный ключ для таблицы
 	 * +from_uclasses_id = ссылка на класс
 	 * +to_objproperties_id = ссылка на свойство

@@ -34,7 +34,7 @@ return array(
 		'name'=>'name2',
 		'codename'=>'codename2',
 		'description'=>'description',
-		'myfield'=>'1',
+		'myfield'=>'2',
 		'minfield'=>'',
 		'maxfield'=>'',
 		'required'=>'',
@@ -42,7 +42,4 @@ return array(
 		'setcsv'=>'',
 	),
 
-	/*
-	 * возможно тестирование всех типов свойств с разными настройками setcsv
-	 */
 );
