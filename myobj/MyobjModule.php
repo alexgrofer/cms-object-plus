@@ -18,7 +18,7 @@ class MyobjModule extends CWebModule
 		yii::app()->setComponents(array(
 			'appcms'=>array(
 				'class' =>'MYOBJ.components.cms.AppCMS',
-				'testprop'=>'test'
+				'isTest'=>false,
 			)
 		));
 		yii::app()->appcms->init();

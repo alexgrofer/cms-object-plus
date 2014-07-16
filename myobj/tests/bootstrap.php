@@ -19,6 +19,6 @@ Yii::createWebApplication($config);
 yii::app()->setComponents(array(
 	'appcms'=>array(
 		'class' =>'MYOBJ.components.cms.AppCMS',
-		'testprop'=>'test'
+		'isTest'=>true
 	)
 ));
