@@ -377,7 +377,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 							}
 						}
 					}
-					$this->customRules[] = $addarrsett;
+					$this->customRules[] = (count($addarrsett)==1) ? array($nameelem, 'safe') : $addarrsett;
 				}
 				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
 				else {
