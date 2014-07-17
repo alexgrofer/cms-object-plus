@@ -1,6 +1,6 @@
 <?php
 return array(
-	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseHeaders
+	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseObjHeaders
 	/*
 	 * Таблица для стандартных объектов.
 	 *
@@ -10,12 +10,12 @@ return array(
 	 *
 	 */
 
-	'AbsBaseHeaders_sample_id_1'=>array(
+	'AbsBaseObjHeaders_sample_id_1'=>array(
 		'id'=>'1',
 		'uclass_id'=>'1', //фикстура - "uClasses_sample_id_1"
 	),
 
-	'AbsBaseHeaders_sample_id_2'=>array(
+	'AbsBaseObjHeaders_sample_id_2'=>array(
 		'id'=>'2',
 		'uclass_id'=>'2', //фикстура - "uClasses_sample_id_2"
 	),

@@ -1,6 +1,6 @@
 <?php
 return array(
-	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseHeaders
+	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseObjHeaders
 	/*
 	 * *Строки в которых кранятся данные свойств объектов.
 	 *
@@ -19,7 +19,7 @@ return array(
 	'table_setcms_uclasses_objproperties_sample_id_1'=>array(
 		'id'=>'1',
 		'property_id'=>'1', // --> objProperties_sample_id_1
-		'header_id'=>'1', // --> AbsBaseHeaders_sample_id_1
+		'header_id'=>'1', // --> AbsBaseObjHeaders_sample_id_1
 		'uptextfield'=>'',
 		'upcharfield'=>'type uptextfield1',
 		'updatetimefield'=>'',
@@ -30,7 +30,7 @@ return array(
 	'table_setcms_uclasses_objproperties_sample_id_2'=>array(
 		'id'=>'2',
 		'property_id'=>'2', // --> objProperties_sample_id_2
-		'header_id'=>'1', // --> AbsBaseHeaders_sample_id_1
+		'header_id'=>'1', // --> AbsBaseObjHeaders_sample_id_1
 		'uptextfield'=>'',
 		'upcharfield'=>'',
 		'updatetimefield'=>'',

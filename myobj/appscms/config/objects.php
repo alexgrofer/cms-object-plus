@@ -73,7 +73,7 @@ $set_spaces['2'] = array('namemodel'=>'systemObjHeaders','namelinksmodel'=>'link
 
 //на данный момент такое решение, так как тесты нужно делать, ??? возможно нужко как то перенести все конфиги в папку tests
 if(true) {
-	$set_spaces['-1'] = array('namemodel'=>'TestAbsBaseObjHeaders','namelinksmodel'=>'linksObjectsAllTestAbsBase');
+	$set_spaces['777'] = array('namemodel'=>'TestAbsBaseObjHeaders','namelinksmodel'=>'linksObjectsAllTestAbsBase');
 }
 
 Yii::app()->params['api_conf_objects'] = $objects;

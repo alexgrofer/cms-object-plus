@@ -1,6 +1,6 @@
 <?php
 return array(
-	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseHeaders
+	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseObjHeaders
 	/*
 	 * Классы системы.
 	 *
@@ -18,7 +18,7 @@ return array(
 		'name'=>'name',
 		'codename'=>'codename1',
 		'description'=>'description',
-		'tablespace'=>'1',
+		'tablespace'=>'777',
 	),
 
 	'uClasses_sample_id_2'=>array(
@@ -26,20 +26,7 @@ return array(
 		'name'=>'name2',
 		'codename'=>'codename2',
 		'description'=>'description',
-		'tablespace'=>'1',
-	),
-
-	//ТЕСТИРОВАНИЕ класса ????
-	/*
-	 * тоже что и для AbsBaseHeaders
-	 */
-
-	'uClasses_sample_id_3'=>array(
-		'id'=>'3',
-		'name'=>'name3',
-		'codename'=>'codename3',
-		'description'=>'description',
-		'tablespace'=>'1',
+		'tablespace'=>'777',
 	),
 
 );

@@ -1,6 +1,6 @@
 <?php
 return array(
-	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseHeaders
+	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseObjHeaders
 	/*
 	 *
 	 * * Дочерняя таблица для связки классов "from_uclasses_id" к классами "from_uclasses_id" MTM

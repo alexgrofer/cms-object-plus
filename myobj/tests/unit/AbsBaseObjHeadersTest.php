@@ -1,13 +1,13 @@
 <?php
 /*
- * Класс для тестирования класса предка AbsBaseHeaders
+ * Класс для тестирования класса предка AbsBaseObjHeaders
  *
- * ВАЖНО! при Разработки класса AbsBaseHeaders всегда вначале описывать метот тут!!!
+ * ВАЖНО! при Разработки класса AbsBaseObjHeaders всегда вначале описывать метот тут!!!
  * 		проверяем что он не работает
  * 		создаем тест
  * 		реализовываем метод в классе
  * 		проверяем тест
- * ВАЖНО! после Разработки      AbsBaseHeaders всегда проверять этот тест!!!
+ * ВАЖНО! после Разработки      AbsBaseObjHeaders всегда проверять этот тест!!!
  * ВАЖНО! каждое УТВЕРЖДЕНИЕ необходимо конмментаровать для лучшего понимания и отладки!!!
  * ВАЖНО! необходимо описывать только утверждения свойственные для работы метода и не больше!!!!
  *
@@ -15,31 +15,31 @@
  *
  *
  */
-class AbsBaseHeadersTest extends CDbTestCase {
+class AbsBaseObjHeadersTest extends CDbTestCase {
 
 	/*
 	 * необходимые фикстуры моделей:
-	 * TestAbsBaseHeaders
+	 * TestAbsBaseObjHeaders
 	 *
 	 * необходимые фикстуры таблиц:
 	 *
 	 */
 
 	public $fixtures=array(
-		'objectAbsBaseHeader'=>'TestAbsBaseHeaders', //объекты TestAbsBaseHeaders
+		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
 		'objProperty'=>'objProperties', //объекты objProperties
 	);
 
 	public function testGetNameLinksModel() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 		//название ссылки на модель в которой хранятся ссылки объектов (цепляются друг на друга с помощью дочерней таблицы)
-		$this->assertEquals('linksObjectsAllMy', $objHeader->getNameLinksModel());
+		$this->assertEquals('linksObjectsAllTestAbsBase', $objHeader->getNameLinksModel());
 	}
 
 	public function testRelations() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 
 		//по умолчанию должен быть данный набор связующих переменных
 		$this->assertEquals(array_keys($objHeader->relations()), array('uclass', 'lines', 'lines_sort', 'lines_find'));
@@ -55,7 +55,9 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 	public function testBeforeFind() {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
+		unset($objHeader->dbCriteria->with['lines.property']);
+		unset($objHeader->dbCriteria->with['uclass.properties']);
 		//сделаем возможность цеплять к объекту другие объекты
 		$objHeader->isitlines = true;
 		//джойнить в запросе таблицу строй всегда
@@ -64,13 +66,15 @@ class AbsBaseHeadersTest extends CDbTestCase {
 		$this->assertArrayHasKey('lines.property', $objHeader->dbCriteria->with);
 		$this->assertArrayHasKey('uclass.properties', $objHeader->dbCriteria->with);
 
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
-		$objHeader->beforeFind();
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
+		unset($objHeader->dbCriteria->with['lines.property']);
+		unset($objHeader->dbCriteria->with['uclass.properties']);
 		//если строки в этом классе отключенны значит нельзя их использовать также
 		$objHeader->isitlines = false;
 		$objHeader->force_join_props = true;
-		//$this->assertArrayNotHasKey('lines.property', $objHeader->dbCriteria->with);
-		//$this->assertArrayNotHasKey('uclass.properties', $objHeader->dbCriteria->with);
+		$objHeader->beforeFind();
+		$this->assertArrayNotHasKey('lines.property', $objHeader->dbCriteria->with);
+		$this->assertArrayNotHasKey('uclass.properties', $objHeader->dbCriteria->with);
 	}
 
 	/*
@@ -78,59 +82,24 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 */
 	public function testGetUProperties($force=false) {
 		/* @var $objHeader myObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 
-		//необходимо создать два свойства они должны быть привязанны к классу и заполнить их
-		//получить эти всойства
-		//изменить эти свойства но через другую ссылку
-		//получить по старой ссылке - не должны быть новые свойства, если видим новые нет смысла в $force
-		//$force - true - теперь должны увидеть
-		//
-		//
+		$this->assertCount(2, $objHeader->uProperties);
 
-		//$this->assertCount(2, $objHeader->uProperties);
-		//доделать, как проверить $force ??? добавить к классу новой свойство динамически, найти объект по id и изменить текст свойства
-		/* @var $uClasses Uclasses */
+		$this->assertEquals($objHeader->uProperties['codename1'], 'type uptextfield1');
+		$this->assertEquals($objHeader->uProperties['codename2'], '');
 
-		//$uClasses = $objHeader->uclass;
-		//$uClasses->UserRelated->links_edit('add','properties',array($this->objProperty('objProperties_sample_id_3')->primaryKey));
-
-		//найти класс поиском и посмотреть сколько у него свойств
-		//$uClasses = uClasses::model()->findByPk($uClasses->primaryKey);
-		//$objHeader->uclass = $uClasses
-
-		//доделать верхний если будет правильно??(что есть правильно) в реальной системе динамически просматривать объект
-
-
-		//$this->assertCount(2, $objHeader->uProperties);
-		//$this->assertEquals($objHeader->uProperties['codename1'], 'type uptextfield1');
-		//$this->assertEquals($objHeader->uProperties['codename2'], '');
-		//$objHeader->uProperties = ['codename2','type uptextfield4441'];
-		//print_r($objHeader->uProperties);
-		//$objHeader->save();
-
-		//$objHeader->save();
-		$ssdsd = new TestAbsBaseHeaders;
-
-
-		$sdsd = new Uclasses;
-		$sss = $sdsd::model()->findAll();
-
-		$ssdsd->uclass = $sss[0];
-		$ssdsd->save();
-
-		//echo $ssdsd->primaryKey;
 
 		//обновляем свойства из другой ссылки на этот объект
-		//$findObjHeader = $objHeader::model()->findByPk($objHeader->primaryKey);
-		//print_r($findObjHeader->uProperties);
-		//$findObjHeader->uProperties = ['codename2', 'type uptextfield2'];
-		//$findObjHeader->save();
+		$findObjHeader = $objHeader::model()->findByPk($objHeader->primaryKey);
+		$findObjHeader->uProperties = ['codename2', 'type uptextfield2'];
+		$findObjHeader->save();
 
-		//проверяем значение нового свойства
-		//$this->assertNotEquals($objHeader->uProperties['codename2'], 'type upcharfield2');
-		//$objHeader->getUProperties(true);
-		//$this->assertEquals($objHeader->uProperties['codename2'], 'type upcharfield2');
+
+		$this->assertEquals($objHeader->uProperties['codename2'], '');
+		//принудительно обновляем из базы
+		$objHeader->getUProperties(true);
+		$this->assertEquals($objHeader->uProperties['codename2'], 'type upcharfield2');
 
 
 	}
@@ -146,8 +115,8 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/**
 	 * тестируем защищенный метод _getobjectlink
 	 */
-	public function testPRPT_Getobjectlink() {
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+	public function PRPT_Getobjectlink() {
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 		$class = new ReflectionClass($objHeader);
 		$method = $class->getMethod('_getobjectlink');
 		$method->setAccessible(true);
@@ -161,7 +130,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 
 		//$objectLinks = $objHeader->_getobjectlink();
 	}
-	public function testEditlinks() {
+	public function Editlinks() {
 		/*
 		 * ссылкм можно добавлять удалять чистить редактировать все это проверить
 		 */
@@ -170,7 +139,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testGetobjlinks() {
+	public function Getobjlinks() {
 		/*
 		 * изночатьно  у класса добавить 2 ссылки на 1 класс и 2 на другой
 		 * проверить по каждому классу колличестро и id возвр ссылок
@@ -187,7 +156,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 * добавление нового свойства
 	 * проверка на остаток старых свойств если понадобятся
 	 */
-	public function testAfterSave() {
+	public function AfterSave() {
 		//создать новый объект можно с пом класса class::obj
 		//ghjntcnbnm протестит ьсохранение ссылки с flagAutoAddedLinks и без
 
@@ -198,14 +167,14 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	function testBeforeDelete() {
+	function BeforeDelete() {
 		//
 	}
 
 	/*
 	 *
 	 */
-	public function testHasProperty() {
+	public function HasProperty() {
 		//проверить существование свойств по одному
 		//проверить не существование названия свойства accesfalse
 	}
@@ -213,7 +182,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testPropertyNames() {
+	public function PropertyNames() {
 		//получить текущий спикок имен свойств
 		//добавить в класс новое свойство
 		//добавить в объект данные нового свойства
@@ -224,12 +193,12 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	 * -если методы могут зависить друг от друга лучше сделать зависимости что бы сразе все проверить борее правильно
 	 * -нужно описать все все работу что ест ьв классе все методы досконально
 	 */
-	public function testSetUProperties() {
+	public function SetUProperties() {
 		//проверить как работает сеттер
 
 		//каждое утверждение необходимо конмментаровать для лучшего понимания и отладки!!!
 
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 
 		$propertiesArray = $objHeader->uProperties;
 		//должен возвращать массив
@@ -244,7 +213,7 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testSetAttributes() {
+	public function SetAttributes() {
 
 	}
 
@@ -258,14 +227,14 @@ class AbsBaseHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testDeclareObj() {
+	public function DeclareObj() {
 		//
 	}
 
 	/*
 	 *
 	 */
-	public function testInitObj() {
+	public function InitObj() {
 		//
 	}
 }
