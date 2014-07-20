@@ -116,7 +116,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		foreach($classproperties as $objprop) {
 			//если не изменял свойство не нужно каждый раз делать запрос,??? тут могут быть большие текстровые строки может быть проблема со скоростью
 			//лучше использовать какие то возможности клиента
-			if(!$this->isNewRecord && ($this->old_properties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename])) continue;
+			if(!$this->isNewRecord && ($this->oldProperties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename])) continue;
 			if(array_key_exists($objprop->codename, $this->_tmpUProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
 					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpUProperties[$objprop->codename];
@@ -132,12 +132,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				}
 			}
 		}
-		//передать список имен свойств при новом созранении, т.к возможно были добавленны новые свойства
-		$this->_tmpUPropertiesNames = array_keys($this->_tmpUProperties);
+
 		//теперь старые данные полностью переписанны
-		$this->old_properties = $this->uProperties;
+		$this->oldProperties = $this->uProperties;
 	}
-	private $_tempthislink;
+	private $_tempthislink=null;
 
 	/*
 	 * Есть таблица ссылок setcms_linksobjectsallmy.
@@ -146,7 +145,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Таблица ссылается сама на себя через таблицу связку setcms_linksobjectsallmy_links.
 	 */
 	private function _getobjectlink() {
-		if($this->_tempthislink) {
+		if(!$this->_tempthislink) {
 			$namelinkallmodel = $this->getNameLinksModel();
 			$objectcurrentlink = $namelinkallmodel::model()->findByAttributes(array('idobj' => $this->id, 'uclass_id' => $this->uclass_id));
 			$this->_tempthislink = $objectcurrentlink;
@@ -173,7 +172,14 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		$objectcurrentlink->UserRelated->links_edit($type,'links',apicms\utils\arrvaluesmodel($linksobjects,'id'));
 	}
-	public function getobjlinks($class) {
+
+	/**
+	 * Возвращает модель с настроенной criteria
+	 * @param uClasses $class
+	 * @return AbsBaseHeaders
+	 * @throws CException
+	 */
+	public function getobjlinks(uClasses $class) {
 		$objectcurrentlink = $this->_getobjectlink();
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
@@ -345,7 +351,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * При изменении свойств до записи, иногда необходимо знать что было раньше до изменения
 	 * @var array
 	 */
-	protected $old_properties=array();
+	protected $oldProperties=array();
+	public function getOldProperties() {
+		return $this->oldProperties;
+	}
+
 	public function declareObj() {
 		parent::declareObj();
 		//добавляем свойтсва к модели
@@ -400,6 +410,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 	public function initObj() {
 		parent::initObj();
-		$this->old_properties = $this->uProperties;
+		$this->oldProperties = $this->uProperties;
 	}
 }
