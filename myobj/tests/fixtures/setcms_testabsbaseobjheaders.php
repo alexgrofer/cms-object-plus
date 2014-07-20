@@ -19,4 +19,22 @@ return array(
 		'id'=>'2',
 		'uclass_id'=>'2', //фикстура - "uClasses_sample_id_2"
 	),
+
+	'AbsBaseObjHeaders_sample_id_3'=>array(
+		'id'=>'3',
+		'uclass_id'=>'3', //фикстура - "uClasses_sample_id_2"
+	),
+	'AbsBaseObjHeaders_sample_id_4'=>array(
+		'id'=>'4',
+		'uclass_id'=>'3', //фикстура - "uClasses_sample_id_2"
+	),
+
+	'AbsBaseObjHeaders_sample_id_5'=>array(
+		'id'=>'5',
+		'uclass_id'=>'4', //фикстура - "uClasses_sample_id_4"
+	),
+	'AbsBaseObjHeaders_sample_id_6'=>array(
+		'id'=>'6',
+		'uclass_id'=>'4', //фикстура - "uClasses_sample_id_4"
+	),
 );
