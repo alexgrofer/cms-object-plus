@@ -30,14 +30,15 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		'objProperty'=>'objProperties', //объекты objProperties
 	);
 
-	public function testGetNameLinksModel() {
+	public function GetNameLinksModel() {
 		/* @var $objHeader myObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 		//название ссылки на модель в которой хранятся ссылки объектов (цепляются друг на друга с помощью дочерней таблицы)
 		$this->assertEquals('linksObjectsAllTestAbsBase', $objHeader->getNameLinksModel());
+		$objHeader->save();
 	}
 
-	public function testRelations() {
+	public function Relations() {
 		/* @var $objHeader myObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 
@@ -53,7 +54,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testBeforeFind() {
+	public function BeforeFind() {
 		/* @var $objHeader myObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
 		unset($objHeader->dbCriteria->with['lines.property']);
@@ -83,12 +84,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	public function testGetUProperties($force=false) {
 		/* @var $objHeader myObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
-
-		$this->assertCount(2, $objHeader->uProperties);
-
-		$this->assertEquals($objHeader->uProperties['codename1'], 'type uptextfield1');
-		$this->assertEquals($objHeader->uProperties['codename2'], '');
-
+		$this->assertEquals($objHeader->uProperties['codename1'], 'type upcharfield1');
 
 		//обновляем свойства из другой ссылки на этот объект
 		$findObjHeader = $objHeader::model()->findByPk($objHeader->primaryKey);
@@ -99,9 +95,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($objHeader->uProperties['codename2'], '');
 		//принудительно обновляем из базы
 		$objHeader->getUProperties(true);
-		$this->assertEquals($objHeader->uProperties['codename2'], 'type upcharfield2');
-
-
+		$this->assertEquals($objHeader->uProperties['codename2'], 'type uptextfield2');
 	}
 	public function saveProperties() {
 		/*
