@@ -76,7 +76,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return array
 	 */
 	public function getUProperties($force=false) {
-		if(!count($this->_tmpUProperties) || $force==true) {
+		if($force) {
+			$this->_tmpUProperties = array();
+			$this->refresh();
+		}
+
+		if(!count($this->_tmpUProperties)) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$classproperties = $this->uclass->properties;
 			$arraylinesvalue = array();
