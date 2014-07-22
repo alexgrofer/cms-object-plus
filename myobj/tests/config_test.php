@@ -5,7 +5,7 @@ return CMap::mergeArray(
 	array(
 		'components'=>array(
 			'fixture'=>array(
-				'class'=>'system.test.CDbFixtureManager',
+				'class'=>'MYOBJ.tests.DbFixtureManager',
 				'basePath'=>yii::getPathOfAlias('MYOBJ.tests.fixtures'),
 			),
 

@@ -1,6 +1,5 @@
 <?php
 return array(
-	//ТЕСТИРОВАНИЕ абстрактного класса AbsBaseObjHeaders
 	/*
 	 * Классы системы.
 	 *

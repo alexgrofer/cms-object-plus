@@ -16,13 +16,6 @@
  *
  */
 class AbsBaseObjHeadersTest extends CDbTestCase {
-
-	protected function setUp()
-	{
-		Yii::app()->assetManager->basePath = yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
-		parent::setUp();
-	}
-
 	/*
 	 * необходимые фикстуры моделей:
 	 * TestAbsBaseObjHeaders
@@ -30,6 +23,12 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	 * необходимые фикстуры таблиц:
 	 *
 	 */
+
+	protected function setUp()
+	{
+		Yii::app()->assetManager->basePath = yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
+		parent::setUp();
+	}
 
 	public $fixtures=array(
 		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
@@ -153,14 +152,16 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($objectlink->attributes['uclass_id'], '1');
 		$this->assertEquals($objectlink->attributes['idobj'], '1');
 	}
-	public function Editlinks() {
-		/* @var $objHeader TestAbsBaseObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
+
+	public function testEditlinks() {
+		/* @var $objHeader1 TestAbsBaseObjHeaders */
+		$objHeader1 = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
+		$objHeader2 = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_2');
 
 		/*
 		 * ссылкм можно добавлять удалять чистить редактировать все это проверить
 		 *
-		 * узнать какие ссылки могут быть добавить, удалить, очистит все
+		 * узнать какие ссылки могут быть ---- добавить, удалить, очистит все
 		 * добавить 3 ссылки на 1 на 1 класс и 2 на другой
 		 * удадить одну
 		 * проверить
@@ -169,11 +170,22 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		 * добавить 3 ссылки на 1 на 1 класс и 2 на другой
 		 * вернуть объект
 		 */
-		return $objHeader;
+
+		//привяжем два объекта класса "codename3" к AbsBaseObjHeaders_sample_id_1
+		$objHeader1->editlinks('add','codename3',array(
+				$this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_3')->primaryKey,
+				$this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_4')->primaryKey,
+			)
+		);
+
+
+
+
+		return $objHeader1;
 	}
 
 	/**
-	 * @depends testSetUProperties
+	 * @depends teEditlinkies
 	 */
 	public function Getobjlinks(TestAbsBaseObjHeaders $objHeader) {
 		/*
