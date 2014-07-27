@@ -152,34 +152,40 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 		return $this->_tempthislink;
 	}
-	public function editlinks($type, $class, $idsheaders) {
-		if(is_object($idsheaders)) $idsheaders = $idsheaders->id;
-		if(!is_object($class)) {
-			$class = uClasses::getclass($class);
-		}
-		$classid = $class->id;
-		$namelinkallmodel = $this->getNameLinksModel();
+	public function editlinks($type, $class, $idsheaders=null) {
+		$objects = null;
 		$objectcurrentlink = $this->_getobjectlink();
-		$CRITERIA = new CDbCriteria();
-		if(!is_array($idsheaders)) $idsheaders = array($idsheaders);
-		$CRITERIA->addInCondition('idobj', $idsheaders);
-		$CRITERIA->compare('uclass_id',$classid);
-		$linksobjects = $namelinkallmodel::model()->findAll($CRITERIA);
-		if(!$linksobjects) {
-			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}, table_links "{nametable}"',
-			array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
+
+		if($idsheaders) {
+			if(is_object($idsheaders)) $idsheaders = $idsheaders->id;
+			if(!is_object($class)) {
+				$class = uClasses::getclass($class);
+			}
+			$classid = $class->id;
+			$namelinkallmodel = $this->getNameLinksModel();
+			$CRITERIA = new CDbCriteria();
+			if(!is_array($idsheaders)) $idsheaders = array($idsheaders);
+			$CRITERIA->addInCondition('idobj', $idsheaders);
+			$CRITERIA->compare('uclass_id',$classid);
+			$linksobjects = $namelinkallmodel::model()->findAll($CRITERIA);
+			if(!$linksobjects) {
+				throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}, table_links "{nametable}"',
+				array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
+			}
+			$objects = apicms\utils\arrvaluesmodel($linksobjects,'id');
 		}
 
-		$objectcurrentlink->UserRelated->links_edit($type,'links',apicms\utils\arrvaluesmodel($linksobjects,'id'));
+		$objectcurrentlink->UserRelated->links_edit($type,'links',$objects);
 	}
 
 	/**
-	 * Возвращает модель с настроенной criteria
-	 * @param uClasses $class
-	 * @return AbsBaseHeaders
+	 * Получить ссылки на другие объекты
+	 * @param mixed $class класс объекта
+	 * @param string $tableSpace табличное пространство
+	 * @return AbsBaseHeaders возвращает модель с настроенной criteria
 	 * @throws CException
 	 */
-	public function getobjlinks(uClasses $class) {
+	public function getobjlinks($class,string $tableSpace=null) {
 		$objectcurrentlink = $this->_getobjectlink();
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',

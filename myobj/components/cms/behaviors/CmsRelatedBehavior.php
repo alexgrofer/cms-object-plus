@@ -1,7 +1,7 @@
 <?php
 class CmsRelatedBehavior extends CActiveRecordBehavior
 {
-	public function links_edit($type, $namerelation, array $idsObj=array(), $addparam=null) {
+	public function links_edit($type, $namerelation, array $idsObj=null, $addparam=null) {
 		$thisObj = $this->getOwner();
 		$thisTable = $thisObj->tableName();
 		$thisObjNamePrimaryKey = $thisObj->primaryKey();
