@@ -31,13 +31,32 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects таблица setcms_linksobjectsallmy
 	 */
 	public $flagAutoAddedLinks = true;
+
+	/**
+	 * Модель строк объекта
+	 * @return mixed
+	 */
+	public function getModelLines() {
+		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
+		return $namemodellines::model();
+	}
+
+	/**
+	 * Модель ссылок объекта
+	 * @return mixed
+	 */
+	public function getModelLinks() {
+		$namemodellines = 'Links'.get_class($this);
+		return $namemodellines::model();
+	}
 	public function relations()
 	{
-		$namemodellines = str_replace('Headers','',get_class($this));
+
+		$namemodellines = get_class($this->getModelLines());
 
 		$arr_relationsdef = array('uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id')); // uclass = models.ForeignKey(uClasses))
 		if($this->isitlines == true) {
-			$arr_relationsdef['lines'] = array(self::HAS_MANY, $namemodellines.'Lines', 'header_id');
+			$arr_relationsdef['lines'] = array(self::HAS_MANY, $namemodellines, 'header_id');
 			//для поиска по свойствам
 			$arr_relationsdef['lines_sort'] = $arr_relationsdef['lines'];
 			//для сортировки по свойствам
@@ -232,26 +251,36 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//запрет на удаление отдельных объектов системы
 		if(isset(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
 			foreach(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
-				if($this->$key==$val) return false;
+				if(is_array($val)) {
+					$delCount=0;
+					foreach($val as $kkey => $vval) {
+						if($this->$kkey==$vval) {
+							$delCount++;
+						}
+					}
+					if($delCount=count($vval)) {
+						return false;
+					}
+				}
+				elseif($this->$key==$val) {
+					return false;
+				}
 			}
 		}
 		//del lines
 		if($this->isitlines == true && count($this->lines)) {
-			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']); //очистить ссылки на строки в дочерней тиблице
-			//удалить строки этого объекта
-			//в таблице строк объекта мы ничего не знаем о объекте так как работаем через настраиваемую таблицу строк, ключа объекта в ней нет, поэтому возможет только подобный метод удаления
-			$idslines = apicms\utils\arrvaluesmodel($this->lines, 'id');
-			$CRITERIA = new CDbCriteria();
-			$CRITERIA->addInCondition('id', $idslines);
-			$this->lines[0]->model()->deleteAll($CRITERIA);
+			//очистим строки
+			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
 		$objectcurrentlink = $this->_getobjectlink();
 		if($objectcurrentlink) {
 			if(count($objectcurrentlink->links)) {
-				$objectcurrentlink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']); //очистить ссылки на *ссылки в дочерней тиблице
+				//ссылки объектов
+				$objectcurrentlink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 			}
-			$objectcurrentlink->delete(); //удалить ссылку
+			//удалить ведущую ссылку, благодаря ей возможна привязка объектов разных классов и разных табличных пространств
+			$objectcurrentlink->delete();
 		}
 		return parent::beforeDelete();
 	}

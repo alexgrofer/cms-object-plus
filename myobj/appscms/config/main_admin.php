@@ -31,7 +31,6 @@ $main_admin = array(
 		'none_del' => $none_del,
 	),
 
-	'sys_db_type_InnoDB'=>true, //в случае true не будет делать лишний запрос для удаления ссылок MTM при работе с AbsBaseModel::clearMTMLink
 	'path_db_dump_files' => 'dbdump',
 	'path_db_dump_tables' => $tables_db_dump,
 
