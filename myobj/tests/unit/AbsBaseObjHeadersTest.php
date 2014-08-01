@@ -249,11 +249,56 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//ну нужно проверять saveProperties так как для него есть уже тесты
 	}
 
+	/**
+	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
+	 * @param array $newConfig
+	 */
+	static function editTestConfig(array $newConfig) {
+		$class = new ReflectionClass(Yii::app()->appcms);
+		$conf = $class->getProperty('config');
+		$conf->setAccessible(true);
+		$conf->setValue(Yii::app()->appcms,$newConfig);
+	}
+
 	/*
 	 *
 	 */
 	function testBeforeDelete() {
+		//создать объекты двух ранных классов
+		$objHeader1 = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_1');
+		$objHeader1->save();
+		$primaryKeyobjHeader1 = $objHeader1->primaryKey;
 
+		$objHeader2 = $this->objectAbsBaseHeader('AbsBaseObjHeaders_sample_id_2');
+		$objHeader2->save();
+		$primaryKeyobjHeader2 = $objHeader2->primaryKey;
+
+		//изменим конфиг приложения
+		$config = [];
+		$config['controlui']['none_del']['objects']['codename1'] = array('id'=>1);
+		self::editTestConfig(array_merge_recursive(Yii::app()->appcms->config, $config));
+
+		$objHeader1Lines = $objHeader1->lines;
+		$modelLines = $objHeader1->getModelLines();
+
+		$objHeader1->delete();
+		$objHeader2->delete();
+
+		//объект небыл удален
+		$findObjHeader = $objHeader1::model()->findByPk($primaryKeyobjHeader1);
+		$this->assertNotNull($findObjHeader);
+
+		//объект был удален
+		$findObjHeader = $objHeader2::model()->findByPk($primaryKeyobjHeader2);
+		$this->assertNull($findObjHeader);
+
+		//должны быть удалены быть все строки этого объекта
+		$findObjHeader = $modelLines->findByPk($objHeader1Lines[0]->primaryKey);
+		$this->assertNull($findObjHeader);
+
+
+		//не должно остаться ведущей ссылки
+		//не должно остаться ссылко на этот объект
 	}
 
 	/*
