@@ -5,7 +5,7 @@ CREATE TABLE `setcms_testabsbaseobjheaders` (
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_testabsbaseobjlines` (
+CREATE TABLE `setcms_linestestabsbaseobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
 	`header_id` int(11) NOT NULL,
