@@ -58,7 +58,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_systemobjlines` (
+CREATE TABLE `setcms_linessystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL, -- models.ForeignKey(objProperties)
 	`header_id` int(11) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE `setcms_myobjheaders` (
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_myobjlines` (
+CREATE TABLE `setcms_linesmyobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
 	`header_id` int(11) NOT NULL,
@@ -184,10 +184,6 @@ CREATE TABLE `setcms_userpasport` (
 	FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- -------------------------------------------------- end User
-
-
---****END COPY TEST****
-
 
 -- assotiation
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES

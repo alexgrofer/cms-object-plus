@@ -92,6 +92,7 @@ class uClasses extends AbsBaseModel
 		$modelheaders = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
 		$newobj = new $modelheaders;
 		$newobj->uclass_id = $this->id;
+		$newobj->declareObj();
 		return $newobj;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-class systemObjHeaders extends AbsBaseHeaders
+class SystemObjHeaders extends AbsBaseHeaders
 {
 	public $name; //models.CharField(max_length=255)
 	public $content; //models.TextField(blank=True)

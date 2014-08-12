@@ -32,37 +32,19 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 */
 	public $flagAutoAddedLinks = true;
 
-	/**
-	 * Модель строк объекта
-	 * @return mixed
-	 */
-	public function getModelLines() {
-		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
-		return $namemodellines::model();
-	}
+	public function relations() {
+		$relations = [];
 
-	/**
-	 * Модель ссылок объекта
-	 * @return mixed
-	 */
-	public function getModelLinks() {
-		$namemodellines = 'Links'.get_class($this);
-		return $namemodellines::model();
-	}
-	public function relations()
-	{
+		$relations['uclass'] = array(self::BELONGS_TO, 'uClasses', 'uclass_id');
 
-		$namemodellines = get_class($this->getModelLines());
-
-		$arr_relationsdef = array('uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id')); // uclass = models.ForeignKey(uClasses))
 		if($this->isitlines == true) {
-			$arr_relationsdef['lines'] = array(self::HAS_MANY, $namemodellines, 'header_id');
+			$relations['lines'] = array(self::HAS_MANY, 'lines'.get_class($this), 'header_id');
 			//для поиска по свойствам
-			$arr_relationsdef['lines_sort'] = $arr_relationsdef['lines'];
+			$relations['lines_sort'] = $relations['lines'];
 			//для сортировки по свойствам
-			$arr_relationsdef['lines_find'] = $arr_relationsdef['lines'];
+			$relations['lines_find'] = $relations['lines'];
 		}
-		return $arr_relationsdef;
+		return $relations;
 	}
 
 	public function beforeFind() {
@@ -125,7 +107,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 */
 	public function saveProperties() {
 		$classproperties = $this->uclass->properties;
-		$namemodellines = str_replace('Headers','',get_class($this)).'Lines';
+		$nameClassModelLines = $this->getActiveRelation('lines')->className;
 		$arraylinesvalue = array();
 		$arrconfcms = Yii::app()->appcms->config;
 		foreach($this->lines as $objline) {
@@ -142,7 +124,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
-					$newobjlines = new $namemodellines();
+					$newobjlines = new $nameClassModelLines();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
 					$newobjlines->$namecolumn = $this->_tmpUProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->id;
@@ -155,25 +137,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//теперь старые данные полностью переписанны
 		$this->oldProperties = $this->uProperties;
 	}
-	private $_tempthislink=null;
 
-	/*
-	 * Есть таблица ссылок setcms_linksobjectsallmy.
-	 * При создании объекта всегда создается ссылка. это поведение управляется параметром flagAutoAddedLinks, читать там
-	 * она позволяет цеплять обекты одного класса к другому.
-	 * Таблица ссылается сама на себя через таблицу связку setcms_linksobjectsallmy_links.
-	 */
-	private function _getobjectlink() {
-		if(!$this->_tempthislink) {
-			$namelinkallmodel = $this->getNameLinksModel();
-			$objectcurrentlink = $namelinkallmodel::model()->findByAttributes(array('idobj' => $this->id, 'uclass_id' => $this->uclass_id));
-			$this->_tempthislink = $objectcurrentlink;
-		}
-		return $this->_tempthislink;
-	}
 	public function editlinks($type, $class, $idsheaders=null) {
 		$objects = null;
-		$objectcurrentlink = $this->_getobjectlink();
+		$objectcurrentlink = $this->toplink;
 
 		if($idsheaders) {
 			if(is_object($idsheaders)) $idsheaders = $idsheaders->id;
@@ -205,7 +172,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @throws CException
 	 */
 	public function getobjlinks($class,string $tableSpace=null) {
-		$objectcurrentlink = $this->_getobjectlink();
+		$objectcurrentlink = $this->toplink;
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
 			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->id,'{nametable}'=>$this->getNameLinksModel())));
@@ -229,7 +196,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		if(parent::afterSave()!==false) {
 			if($this->flagAutoAddedLinks) {
 				$namelinkallmodel = $this->getNameLinksModel();
-				$objectcurrentlink = $this->_getobjectlink();
+				$objectcurrentlink = $this->toplink;
 				if(!$objectcurrentlink) {
 					$objectcurrentlink = new $namelinkallmodel();
 					$objectcurrentlink->idobj = $this->id;
@@ -273,7 +240,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
-		$objectcurrentlink = $this->_getobjectlink();
+		$objectcurrentlink = $this->toplink;
 		if($objectcurrentlink) {
 			if(count($objectcurrentlink->links)) {
 				//ссылки объектов
@@ -392,6 +359,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function declareObj() {
+		$nameLinksModel = $this->getNameLinksModel();
+		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
+
 		parent::declareObj();
 		//добавляем свойтсва к модели
 		if($this->isitlines) {

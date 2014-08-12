@@ -68,8 +68,8 @@ $objects = array(
  * namelinksmodel - (модель для ссылок) если в классе будут предусмотренны ссылки на другие объекты,
  * если null ссылки для объектов этого табличного пространства не предусмотренны
  */
-$set_spaces['1'] = array('namemodel'=>'myObjHeaders','namelinksmodel'=>'linksObjectsAllMy'); //пользовательские классы
-$set_spaces['2'] = array('namemodel'=>'systemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'); //системные классы
+$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','namelinksmodel'=>'linksObjectsAllMy'); //пользовательские классы
+$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'); //системные классы
 
 //на данный момент такое решение, так как тесты нужно делать, ??? возможно нужко как то перенести все конфиги в папку tests
 if(true) {
