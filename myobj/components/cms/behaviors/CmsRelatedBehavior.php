@@ -39,19 +39,27 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 				}
 			break;
 			case 'edit':
-				foreach($idsObj as $id) {
-					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$id));
+				if($typeThisRelation == CActiveRecord::MANY_MANY) {
+					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
 				}
+				/* ??? доделать
+				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
+					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => null), array('in', $namePrimaryKeyThisRelation, $idsObj));
+				}
+				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => null), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+				}
+				*/
 			break;
 			case 'remove':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
 					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
-					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => null), array('in', $namePrimaryKeyThisRelation, $idsObj));
+					$command->delete($nameTableThisRelation, array('in', $namePrimaryKeyThisRelation, $idsObj));
 				}
 				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
-					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => null), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+					$command->delete($thisTable, $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
 				}
 			break;
 			case 'clear':
@@ -59,7 +67,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 					$command->delete($mtmNameTable,$mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal);
 				}
 				elseif($typeThisRelation == CActiveRecord::HAS_MANY) {
-					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => null), $nameLinkPrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+					$command->delete($nameTableThisRelation, $nameLinkPrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
 				}
 			break;
 

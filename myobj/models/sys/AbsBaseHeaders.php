@@ -191,9 +191,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $model;
 	}
 
-	//после создания объекта создаем линк в (таблице ссылок для объектов) для работы со ссылками можду классами
 	public function afterSave() {
 		if(parent::afterSave()!==false) {
+			//Если flagAutoAddedLinks=true, после создания объекта создаем линк в (таблице ссылок для объектов).
+			//С этим параметром можно работать как для нового так и для существующего объекта, т.е если раньше у объекта небыло возможность связки
+			//то эту возможность можно реализовать в любой момент
 			if($this->flagAutoAddedLinks) {
 				$namelinkallmodel = $this->getNameLinksModel();
 				$objectcurrentlink = $this->toplink;
@@ -202,6 +204,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 					$objectcurrentlink->idobj = $this->id;
 					$objectcurrentlink->uclass_id = $this->uclass_id;
 					$objectcurrentlink->save();
+				}
+
+				if($this->isNewRecord===false) {
+					$this->refresh();
 				}
 			}
 
@@ -236,18 +242,18 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 		//del lines
 		if($this->isitlines == true && count($this->lines)) {
-			//очистим строки
+			//удалим строки
 			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
-		$objectcurrentlink = $this->toplink;
-		if($objectcurrentlink) {
-			if(count($objectcurrentlink->links)) {
+		$objectCurrentLink = $this->toplink;
+		if($objectCurrentLink) {
+			if(count($objectCurrentLink->links)) {
 				//ссылки объектов
-				$objectcurrentlink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
+				$objectCurrentLink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 			}
 			//удалить ведущую ссылку, благодаря ей возможна привязка объектов разных классов и разных табличных пространств
-			$objectcurrentlink->delete();
+			$objectCurrentLink->delete();
 		}
 		return parent::beforeDelete();
 	}
