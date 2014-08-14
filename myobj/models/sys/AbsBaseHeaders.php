@@ -197,17 +197,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			//С этим параметром можно работать как для нового так и для существующего объекта, т.е если раньше у объекта небыло возможность связки
 			//то эту возможность можно реализовать в любой момент
 			if($this->flagAutoAddedLinks) {
-				$namelinkallmodel = $this->getNameLinksModel();
-				$objectcurrentlink = $this->toplink;
-				if(!$objectcurrentlink) {
+				if(!$this->toplink) {
+					$namelinkallmodel = $this->getNameLinksModel();
 					$objectcurrentlink = new $namelinkallmodel();
 					$objectcurrentlink->idobj = $this->id;
 					$objectcurrentlink->uclass_id = $this->uclass_id;
 					$objectcurrentlink->save();
-				}
-
-				if($this->isNewRecord===false) {
-					$this->refresh();
+					/*
+					 * toplink это реляционная таблица, что бы полностью не перезагружать ($this->refresh()) объект просто инициализируем свойство новым объектов
+					 */
+					$this->toplink = $objectcurrentlink;
 				}
 			}
 
