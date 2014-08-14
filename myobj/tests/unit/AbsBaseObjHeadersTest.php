@@ -28,6 +28,14 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	{
 		Yii::app()->assetManager->basePath = yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
 		parent::setUp();
+
+		//изменим конфиг приложения
+		//добавляем тестовое табличное пространство
+		$spacescl = Yii::app()->appcms->config['spacescl'];
+		if(isset($spacescl['777'])===false) {
+			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders','namelinksmodel'=>'linksObjectsAllTestAbsBase');
+			self::editTestConfig($spacescl, 'spacescl');
+		}
 	}
 
 	public $fixtures=array(
@@ -211,9 +219,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	 * проверка на остаток старых свойств если понадобятся
 	 */
 	public function testAfterSave() {
-		$class = new ReflectionClass('TestAbsBaseObjHeaders');
-
-		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_1');
+		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_5');
 		$objHeader->flagAutoAddedLinks=false;
 		$objHeader->save();
 		$objectcurrentlink = $objHeader->toplink;
@@ -233,10 +239,15 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
 	 * @param array $newConfig
 	 */
-	static function editTestConfig(array $newConfig) {
+	static function editTestConfig(array $newConfig, $nameElem=null) {
 		$class = new ReflectionClass(Yii::app()->appcms);
 		$conf = $class->getProperty('config');
 		$conf->setAccessible(true);
+		if($nameElem) {
+			$arrayConfig = Yii::app()->appcms->config;
+			$arrayConfig[$nameElem] = $newConfig;
+			$newConfig = $arrayConfig;
+		}
 		$conf->setValue(Yii::app()->appcms,$newConfig);
 	}
 
@@ -261,6 +272,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//не удалится
 		$objHeader1->delete();
 
+		$objHeader2_toplink = $objHeader2->toplink;
 		$objHeader2_Lines = $objHeader2->lines;
 		//удалится
 		$objHeader2->delete();
@@ -278,9 +290,12 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$objHeader2_Line = $nameLinesModel::model()->findByPk($objHeader2_Lines[0]->primaryKey);
 		$this->assertNull($objHeader2_Line);
 
-
-		//не должно остаться ведущей ссылки
 		//не должно остаться ссылко на этот объект
+		$nameLinksModel = $objHeader1->getActiveRelation('toplink')->className;
+		$this->assertNull($objHeader2_Line);
+		//не должно остаться ведущей ссылки
+		$nameLinkModel = $objHeader1->getActiveRelation('top')->className;
+		$this->assertNull($objHeader2_Line);
 	}
 
 	/*

@@ -41,7 +41,7 @@ return array(
 		'name'=>'name4',
 		'codename'=>'codename4',
 		'description'=>'description',
-		'tablespace'=>'888',
+		'tablespace'=>'777',
 	),
 
 );
