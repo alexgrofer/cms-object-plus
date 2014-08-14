@@ -24,10 +24,16 @@ return array(
 	 * +upfloatfield
 	 */
 
-	'table_setcms_uclasses_objproperties_sample_id_1'=>array(
+	'linesTestAbsBaseObjHeaders_sample_id_1'=>array(
 		'property_id'=>'1', // --> objProperties_sample_id_1
 		'header_id'=>'1', // --> AbsBaseObjHeaders_sample_id_1
-		'upcharfield'=>'type upcharfield1',
+		'upcharfield'=>'type upcharfield1 header 1',
+	),
+
+	'linesTestAbsBaseObjHeaders_sample_id_2'=>array(
+		'property_id'=>'1', // --> objProperties_sample_id_1
+		'header_id'=>'2', // --> AbsBaseObjHeaders_sample_id_2
+		'upcharfield'=>'type upcharfield1 header 2',
 	),
 
 );
