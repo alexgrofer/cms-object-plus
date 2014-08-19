@@ -15,4 +15,10 @@ return array(
 		'to_uclasses_id'=>'2',
 	),
 
+	'teble_setcms_uclasses_association_sample_id_1'=>array(
+		'id'=>'1',
+		'from_uclasses_id'=>'4',
+		'to_uclasses_id'=>'1',
+	),
+
 );
