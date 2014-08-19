@@ -127,8 +127,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 					$newobjlines = new $nameClassModelLines();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
 					$newobjlines->$namecolumn = $this->_tmpUProperties[$objprop->codename];
-					$newobjlines->property_id = $objprop->id;
-					$newobjlines->header_id = $this->id;
+					$newobjlines->property_id = $objprop->primaryKey;
+					$newobjlines->header_id = $this->primaryKey;
 					$newobjlines->save();
 				}
 			}
@@ -143,11 +143,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$objectcurrentlink = $this->toplink;
 
 		if($idsheaders) {
-			if(is_object($idsheaders)) $idsheaders = $idsheaders->id;
+			if(is_object($idsheaders)) $idsheaders = $idsheaders->primaryKey;
 			if(!is_object($class)) {
 				$class = uClasses::getclass($class);
 			}
-			$classid = $class->id;
+			$classid = $class->primaryKey;
+
+			if(!$this->uclass->with('association')->findByPk($classid)) {
+				throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
+			}
+
 			$namelinkallmodel = $this->getNameLinksModel();
 			$CRITERIA = new CDbCriteria();
 			if(!is_array($idsheaders)) $idsheaders = array($idsheaders);
@@ -175,9 +180,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$objectcurrentlink = $this->toplink;
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
-			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->id,'{nametable}'=>$this->getNameLinksModel())));
+			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->primaryKey,'{nametable}'=>$this->getNameLinksModel())));
 		}
 		$objclass = \uClasses::getclass($class);
+		if(!$this->uclass->with('association')->findByPk($objclass->primaryKey)) {
+			throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
+		}
 		//проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
 		//сделать путь для сообщений cms-ки, будут ли работать yii
 		//throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
@@ -186,8 +194,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$nameModelHeader = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
 		$model = new $nameModelHeader();
 		$model->dbCriteria->addInCondition($model->tableAlias.'.id', $idsheaders);
-		$model->dbCriteria->compare($model->tableAlias.'.uclass_id',$objclass->id);
-		$model->uclass_id = $objclass->id;
+		$model->dbCriteria->compare($model->tableAlias.'.uclass_id',$objclass->primaryKey);
+		$model->uclass_id = $objclass->primaryKey;
 		return $model;
 	}
 
@@ -200,13 +208,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				if(!$this->toplink) {
 					$namelinkallmodel = $this->getNameLinksModel();
 					$objectcurrentlink = new $namelinkallmodel();
-					$objectcurrentlink->idobj = $this->id;
+					$objectcurrentlink->idobj = $this->primaryKey;
 					$objectcurrentlink->uclass_id = $this->uclass_id;
 					$objectcurrentlink->save();
-					/*
-					 * toplink это реляционная таблица, что бы полностью не перезагружать ($this->refresh()) объект просто инициализируем свойство новым объектов
-					 */
-					$this->toplink = $objectcurrentlink;
+
+					//toplink это реляционная таблица, будет инициализированна после refresh()
+					$this->refresh();
 				}
 			}
 
@@ -249,7 +256,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		if($objectCurrentLink) {
 			if(count($objectCurrentLink->links)) {
 				//ссылки объектов
-				$objectCurrentLink->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
+				$objectCurrentLink->UserRelated->links_edit('clear','links');
 			}
 			//удалить ведущую ссылку, благодаря ей возможна привязка объектов разных классов и разных табличных пространств
 			$objectCurrentLink->delete();
@@ -260,7 +267,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			//для новых объектов необходимо подставить класс
-			if($this->isNewRecord) $this->uclass_id = $this->uclass->id;
+			if($this->isNewRecord) $this->uclass_id = $this->uclass->primaryKey;
 			return true;
 		}
 		else return parent::beforeSave();
