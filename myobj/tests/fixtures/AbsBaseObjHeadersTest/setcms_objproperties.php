@@ -1,18 +1,26 @@
 <?php
 return array(
 	/*
-	 * *Свойства для классов.
+	 * *Свойства для псевдо-классов.
 	 *
 	 * +id = первичный ключ для таблицы
 	 * +name = название свойства
 	 * +codename = коловое название свойства
 	 * +description = описание свойства
 	 * +myfield = тип свойства
+	 main.php
+	 	'1'=>'upcharfield',
+		'2'=>'uptextfield',
+		'3'=>'uptextfield',
+		'4'=>'updatetimefield',
+		'5'=>'uptextfield',
+		'6'=>'upcharfield',
+		'7'=>'upcharfield',
 	 * +minfield = минимальное значение
 	 * +maxfield = максимальное значение
 	 * +required = обязательное
 	 * +udefault = значение по умолчанию
-	 * +setcsv = дополнительные настройки настройки
+	 * +setcsv = дополнительные настройки для задания особых типов
 	 */
 
 	'objProperties_sample_id_1'=>array(

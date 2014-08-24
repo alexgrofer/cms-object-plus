@@ -1,7 +1,7 @@
 <?php
 return array(
 	/*
-	 * Классы системы.
+	 * Псевдо-Классы.
 	 *
 	 * +id = первичный ключ для таблицы
 	 * +name = название класса
@@ -14,7 +14,7 @@ return array(
 
 	'uClasses_sample_id_1'=>array(
 		'id'=>'1',
-		'name'=>'name',
+		'name'=>'name1',
 		'codename'=>'codename1',
 		'description'=>'description',
 		'tablespace'=>'777',
@@ -27,21 +27,4 @@ return array(
 		'description'=>'description',
 		'tablespace'=>'777',
 	),
-
-	'uClasses_sample_id_3'=>array(
-		'id'=>'3',
-		'name'=>'name3',
-		'codename'=>'codename3',
-		'description'=>'description',
-		'tablespace'=>'777',
-	),
-
-	'uClasses_sample_id_4'=>array(
-		'id'=>'4',
-		'name'=>'name4',
-		'codename'=>'codename4',
-		'description'=>'description',
-		'tablespace'=>'777',
-	),
-
 );
