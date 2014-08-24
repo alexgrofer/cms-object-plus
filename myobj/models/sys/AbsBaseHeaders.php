@@ -1,6 +1,8 @@
 <?php
 abstract class AbsBaseHeaders extends AbsBaseModel
 {
+	const PRE_PROP='prop_';
+
 	public $uclass_id;
 	public function tableName()
 	{
@@ -84,19 +86,18 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		if(!count($this->_tmpUProperties)) {
 			$arrconfcms = Yii::app()->appcms->config;
-			$classproperties = $this->uclass->properties;
-			$arraylinesvalue = array();
-			foreach($this->lines as $objline) {
-				$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
-				$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
-			}
-			if(count($classproperties)) {
+			$uclassProperties = $this->uclass->properties;
 
-				foreach($classproperties as $objprop) {
-					$this->_tmpUProperties[$objprop->codename] = (array_key_exists($objprop->codename,$arraylinesvalue)!==false)?$arraylinesvalue[$objprop->codename]['value']:'';
+			foreach($uclassProperties as $property) {
+				if(isset($this->_tmpUProperties[$property->codename])===false) {
+					$this->_tmpUProperties[$property->codename] = null;
 				}
 			}
-			$this->_tmpUPropertiesNames = array_keys($this->_tmpUProperties);
+
+			foreach($this->lines as $objline) {
+				$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objline->property->myfield];
+				$this->_tmpUProperties[$objline->property->codename] = $objline->$namecolumn;
+			}
 		}
 		return $this->_tmpUProperties;
 	}
@@ -284,12 +285,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function setUProperties($arrayName_Value) {
 		if(!$this->hasProperty($arrayName_Value[0])) {
 			throw new CException(
-				Yii::t('cms','Not find prop {prop}',
-				array('{prop}'=>$arrayName_Value[0]))
+				Yii::t('cms','Not find prop {prop} this class {class}',
+				array('{prop}'=>$arrayName_Value[0],'{class}'=>$this->uclass->codename))
 			);
 		}
 		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[1];
-		$this->{$arrayName_Value[0].'prop_'} = $arrayName_Value[1];
+		$this->{$arrayName_Value[0].self::PRE_PROP} = $arrayName_Value[1];
 	}
 
 	public function setAttributes($values) {
@@ -299,7 +300,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			//SWITCH MY TYPES
 			foreach($values as $nameElem => $val) {
 				//CASE type Prop
-				if(($pos = strpos($nameElem,'prop_'))!==false) {
+				if(($pos = strpos($nameElem,self::PRE_PROP))!==false) {
 					$this->uProperties = [substr($nameElem,0,$pos), $val];
 				}
 				//CASE type new type
@@ -315,7 +316,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$arrconfcms = Yii::app()->appcms->config;
 			$currentproperties = $this->uProperties;
 			foreach($this->uclass->properties as $prop) {
-				$nameelem = $prop->codename.'prop_';
+				$nameelem = $prop->codename.self::PRE_PROP;
 				//инициализируем свойство
 				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
 				$this->addElemClass($nameelem,$valProp);
@@ -371,8 +372,15 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function declareObj() {
+		//реляция для ссылки возможна только после того как инициализован класс
 		$nameLinksModel = $this->getNameLinksModel();
 		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
+
+		//необходимо узнать список свойств у этого объекта
+		foreach($this->uclass->properties as $prop) {
+			//для списка названий свойств этого объекта
+			$this->_tmpUPropertiesNames[] = $prop->codename;
+		}
 
 		parent::declareObj();
 		//добавляем свойтсва к модели
@@ -380,7 +388,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$arrconfcms = Yii::app()->appcms->config;
 			$currentproperties = $this->uProperties;
 			foreach($this->uclass->properties as $prop) {
-				$nameelem = $prop->codename.'prop_';
+				$nameelem = $prop->codename.self::PRE_PROP;
 				//инициализируем свойство
 				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
 				$this->addElemClass($nameelem,$valProp);
