@@ -42,4 +42,10 @@ return array(
 		'uptextfield'=>'type uptextfield line4 header 3',
 	),
 
+	'linesTestAbsBaseObjHeaders_sample_5'=>array(
+		'property_id'=>'2', // --> objProperties_sample_id_2
+		'header_id'=>'9', // --> AbsBaseObjHeaders_sample_id_10
+		'uptextfield'=>'type uptextfield line5 header 9',
+	),
+
 );
