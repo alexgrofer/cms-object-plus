@@ -129,5 +129,10 @@ class uClasses extends AbsBaseModel
 		}
 		return $objclass;
 	}
+
+	public function hasAssotiation($codeName) {
+		$criteria = new CDbCriteria();
+		return (bool) $this->association($criteria->compare('association.codename', $codeName));
+	}
 }
 

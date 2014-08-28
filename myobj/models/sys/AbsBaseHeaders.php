@@ -139,9 +139,15 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$this->oldProperties = $this->uProperties;
 	}
 
-	public function editlinks($type, $class, $idsheaders=null) {
+	/**
+	 * Редактирование ссылок - асоциативность объектов
+	 * @param $type add, remove, clear
+	 * @param $class
+	 * @param array $idsheaders
+	 * @throws CException
+	 */
+	public function editlinks($type, $class, array $idsheaders=null) {
 		$objects = null;
-		$objectcurrentlink = $this->toplink;
 
 		if($idsheaders) {
 			if(is_object($idsheaders)) $idsheaders = $idsheaders->primaryKey;
@@ -150,7 +156,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			}
 			$classid = $class->primaryKey;
 
-			if(!$this->uclass->with('association')->findByPk($classid)) {
+			if(!$this->uclass->hasAssotiation($class->codename)) {
 				throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
 			}
 
@@ -161,13 +167,13 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$CRITERIA->compare('uclass_id',$classid);
 			$linksobjects = $namelinkallmodel::model()->findAll($CRITERIA);
 			if(!$linksobjects) {
-				throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}, table_links "{nametable}"',
-				array('{class}'=>$class->name, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
+				throw new CException(Yii::t('cms','Not find link id {idlink}, Class {class}, table_links "{nametable}"',
+				array('{class}'=>$class->codename, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
 			}
 			$objects = apicms\utils\arrvaluesmodel($linksobjects,'id');
 		}
 
-		$objectcurrentlink->UserRelated->links_edit($type,'links',$objects);
+		$this->toplink->UserRelated->links_edit($type,'links',$objects);
 	}
 
 	/**
@@ -184,9 +190,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->primaryKey,'{nametable}'=>$this->getNameLinksModel())));
 		}
 		$objclass = \uClasses::getclass($class);
-		if(!$this->uclass->with('association')->findByPk($objclass->primaryKey)) {
+
+		if(!$this->uclass->hasAssotiation($objclass->codename)) {
 			throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
 		}
+
 		//проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
 		//сделать путь для сообщений cms-ки, будут ли работать yii
 		//throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
@@ -213,8 +221,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 					$objectcurrentlink->uclass_id = $this->uclass_id;
 					$objectcurrentlink->save();
 
-					//toplink это реляционная таблица, будет инициализированна после refresh()
-					$this->refresh();
+					//toplink это реляционная таблица, будет инициализированна
+					$this->toplink = $this->getRelated('toplink', true);
 				}
 			}
 
