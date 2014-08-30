@@ -44,6 +44,22 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		'objProperty'=>'objProperties', //объекты objProperties
 	);
 
+	/**
+	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
+	 * @param array $newConfig
+	 */
+	static function editTestConfig(array $newConfig, $nameElem=null) {
+		$class = new ReflectionClass(Yii::app()->appcms);
+		$conf = $class->getProperty('config');
+		$conf->setAccessible(true);
+		if($nameElem) {
+			$arrayConfig = Yii::app()->appcms->config;
+			$arrayConfig[$nameElem] = $newConfig;
+			$newConfig = $arrayConfig;
+		}
+		$conf->setValue(Yii::app()->appcms,$newConfig);
+	}
+
 	public function OktestGetNameLinksModel() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
@@ -147,7 +163,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($findObjHeader->uProperties, ['codename1'=>'type upcharfield line3 header 3new', 'codename2'=>'type uptextfield line4 header 3new']);
 	}
 
-	public function oKtestEditlinks() {
+	public function OktestEditlinks() {
 		/* @var $objHeader4 TestAbsBaseObjHeaders */
 		/*
 		 * при созданении нового объекта для него создается общая ссылка
@@ -235,26 +251,10 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertNotNull($objectcurrentlink);
 	}
 
-	/**
-	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
-	 * @param array $newConfig
-	 */
-	static function editTestConfig(array $newConfig, $nameElem=null) {
-		$class = new ReflectionClass(Yii::app()->appcms);
-		$conf = $class->getProperty('config');
-		$conf->setAccessible(true);
-		if($nameElem) {
-			$arrayConfig = Yii::app()->appcms->config;
-			$arrayConfig[$nameElem] = $newConfig;
-			$newConfig = $arrayConfig;
-		}
-		$conf->setValue(Yii::app()->appcms,$newConfig);
-	}
-
 	/*
 	 *
 	 */
-	function testBeforeDelete() {
+	function OktestBeforeDelete() {
 		//создать объекты двух ранных классов
 		$objHeader8 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_8');
 		$objHeader8->save();
@@ -295,46 +295,54 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function HasProperty() {
+	public function OkHasProperty() {
 		//проверить существование свойств по одному
-		//проверить не существование названия свойства accesfalse
+		/* @var $objHeader TestAbsBaseObjHeaders */
+		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
+		$this->assertTrue($objHeader->hasProperty('codename1'));
+		$this->assertTrue($objHeader->hasProperty('codename2'));
+		$this->assertFalse($objHeader->hasProperty('codename3'));
 	}
 
 	/*
 	 *
 	 */
-	public function PropertyNames() {
-		//получить текущий спикок имен свойств
-		//добавить в класс новое свойство
-		//добавить в объект данные нового свойства
-		//получить новый список свойств
+	public function OktestPropertyNames() {
+		/* @var $objHeader TestAbsBaseObjHeaders */
+		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
+		$this->assertEquals($objHeader->propertyNames(), ['codename1', 'codename2']);
 	}
 
 	/*
 	 *
 	 */
-	public function SetAttributes() {
-
-	}
-
-	/*
-	 *
-	 */
-	protected function dinamicModel() {
-		//
+	public function testSetAttributes() {
+		/* @var $objHeader TestAbsBaseObjHeaders */
+		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
+		$nameClass = get_class($objHeader);
+		$objHeader->attributes = array(
+			'codename1'.$nameClass::PRE_PROP=>'value1',
+			'codename2'.$nameClass::PRE_PROP=>'value2',
+		);
+		$this->assertEquals($objHeader->uProperties, ['codename1'=>'value1', 'codename2'=>'value2']);
 	}
 
 	/*
 	 *
 	 */
 	public function DeclareObj() {
-		//
+		//была добавленна реляция toplink
+		//заполнен список имен свойств
+		//добавленны новые свойства класса для псевдосвойств
+		//установленные правила валидации для свойств
+		//установленны так же сложные правила исходя из ностройки свойства
+
 	}
 
 	/*
 	 *
 	 */
 	public function InitObj() {
-		//
+		//заполним переменную oldProperties
 	}
 }
