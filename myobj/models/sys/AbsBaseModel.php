@@ -429,7 +429,8 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	protected function afterFind() {
-		parent::beforeFind();
+		parent::afterFind();
+
 		$this->declareObj();
 		$this->initObj();
 	}

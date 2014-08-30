@@ -301,6 +301,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$this->{$arrayName_Value[0].self::PRE_PROP} = $arrayName_Value[1];
 	}
 
+	/**
+	 * Добавление сеттера
+	 *
+	 * //CASE type Prop
+	 * Из формы hrml $obj->attributes = $_POST свайства попадают в аттрибуты (пример name_string_1.self::PRE_PROP) тут мы их ловим и передаем в $this->uProperties для дальнейшей
+	 * бработки и сохранения.
+	 * В ручном режиме конечно можно работать и на прямую через uProperties или setUProperties
+	 *
+	 * @param $values
+	 */
 	public function setAttributes($values) {
 		parent::setAttributes($values);
 
@@ -317,59 +327,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 	}
 
-	protected function dinamicModel() {
-		parent::dinamicModel();
-		//добавляем свойтсва к модели
-		if($this->isitlines) {
-			$arrconfcms = Yii::app()->appcms->config;
-			$currentproperties = $this->uProperties;
-			foreach($this->uclass->properties as $prop) {
-				$nameelem = $prop->codename.self::PRE_PROP;
-				//инициализируем свойство
-				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
-				$this->addElemClass($nameelem,$valProp);
-				//устанавливаем правила валидации
-				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
-				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
-				if($prop->required) $this->customRules[] = array($nameelem, 'required');
-				if($prop->udefault) $this->customRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
-
-				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				/*
-				 * для некоторый свойство возможна тонкая настройка type=>string
-				 */
-				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
-					$addarrsett = array($nameelem);
-					$parsecvs = str_getcsv($prop->setcsv,"\n");
-					foreach($parsecvs as $keyval) {
-						if(trim($keyval)=='') continue;
-						if(strpos($keyval,'us_set')===false) {
-							if(strpos($keyval,'=>')===false) {
-								array_push($addarrsett,$keyval);
-							}
-							else {
-								list($typeval,$val) = explode('=>',trim($keyval));
-								$addarrsett[$typeval] = $val;
-							}
-						}
-					}
-					$this->customRules[] = $addarrsett;
-				}
-				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
-				else {
-					$this->customRules[] = array($nameelem, 'safe');
-				}
-				if($nametypef=='bool') $this->customRules[] = array($nameelem, 'boolean');
-				if($nametypef=='url') $this->customRules[] = array($nameelem, 'url');
-				if($nametypef=='email') $this->customRules[] = array($nameelem, 'email');
-
-				//добавить в типы полей формы элементы для свойств
-				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				$this->customElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
-			}
-		}
-	}
-
 	/**
 	 * При изменении свойств до записи, иногда необходимо знать что было раньше до изменения
 	 * @var array
@@ -380,18 +337,19 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function declareObj() {
-		//реляция для ссылки возможна только после того как инициализован класс
-		$nameLinksModel = $this->getNameLinksModel();
-		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
+		parent::declareObj();
 
-		//необходимо узнать список свойств у этого объекта
+		//+++реляция для ссылки возможна только после того как инициализован класс
+		$nameLinksModel = $this->getNameLinksModel();
+		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass->id));
+
+		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {
 			//для списка названий свойств этого объекта
 			$this->_tmpUPropertiesNames[] = $prop->codename;
 		}
 
-		parent::declareObj();
-		//добавляем свойтсва к модели
+		//+++добавляем свойтсва к модели
 		if($this->isitlines) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$currentproperties = $this->uProperties;
