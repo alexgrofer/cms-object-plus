@@ -360,7 +360,7 @@ class AdminController extends \Controller {
 					$csv = new \ECSVExport($most_array_all);
 
 					$content = $csv->toCSV();
-					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time());//.'csv';
+					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time()).'.csv';
 					$typefile = 'text/csv';
 					$this->layout=false;
 					$view = '/sys/sendfile';
