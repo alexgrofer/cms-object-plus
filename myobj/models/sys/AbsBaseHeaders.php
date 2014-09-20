@@ -402,5 +402,46 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function initObj() {
 		parent::initObj();
 		$this->oldProperties = $this->uProperties;
+		//пройтись по критерии и если там встречается параметр "_uProp" тогда добавить некоторые дополнительные критерии для нормальног опоиска
+	}
+
+	/**
+	 * Установка критерии по для превдо-свойствам
+	 * примеры:
+	 * *Поиск:
+	 * setCDbCriteriaUProp('prop2','condition','prop2=:val'[, ]) - аналог addCondition()
+	 * -возможно указать простой запрос с одним свойством так как не стоит злоупортерблять поиском по свойствам
+	 *
+	 * @param $nameUProp
+	 * @param $type
+	 * @param $value
+	 * @param null $operator
+	 * @throws CException
+	 */
+	final function setCDbCriteriaUProp($nameUProp,$type,$value,$operator=null) {
+		$config = Yii::app()->appcms->config;
+		$thisClassProperties = [];
+		foreach($this->uclass->properties as $prop) {
+			$thisClassProperties[$prop->codename] = $prop;
+		}
+
+		if(!isset($thisClassProperties[$nameUProp])) {
+			throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
+				array('{prop}'=>$nameUProp, '{class}'=>$this->uclass->codename)));
+		}
+
+		if($type=='condition') {
+			$this->getDbCriteria()->with['lines_find']['together'] = true;
+
+			$operator = $operator ?: 'AND';
+
+			$condition = '(lines_find.'.$config['TYPES_COLUMNS'][$thisClassProperties[$nameUProp]->myfield].str_replace($nameUProp, '', $value)
+				.' AND (lines_find.property_id=:prop_id))';
+
+			$this->getDbCriteria()->addCondition($condition, $operator);
+			$this->getDbCriteria()->params[':prop_id'] = $thisClassProperties[$nameUProp]->id;
+		}
+
+
 	}
 }
