@@ -18,34 +18,76 @@ return array(
 	 * +upfloatfield
 	 */
 
-	'linesTestAbsBaseObjHeaders_sample_1'=>array(
-		'property_id'=>'1', // --> objProperties_sample_id_1
-		'header_id'=>'2', // --> AbsBaseObjHeaders_sample_id_2
+	array(
+		'property_id'=>'1',
+		'header_id'=>'2',
 		'upcharfield'=>'type upcharfield line1 header 2',
 	),
 
-	'linesTestAbsBaseObjHeaders_sample_2'=>array(
-		'property_id'=>'2', // --> objProperties_sample_id_2
-		'header_id'=>'2', // --> AbsBaseObjHeaders_sample_id_2
+	array(
+		'property_id'=>'2',
+		'header_id'=>'2',
 		'uptextfield'=>'type uptextfield line2 header 2',
 	),
 
-	'linesTestAbsBaseObjHeaders_sample_3'=>array(
-		'property_id'=>'1', // --> objProperties_sample_id_1
-		'header_id'=>'3', // --> AbsBaseObjHeaders_sample_id_3
+	array(
+		'property_id'=>'1',
+		'header_id'=>'3',
 		'upcharfield'=>'type upcharfield line3 header 3',
 	),
 
-	'linesTestAbsBaseObjHeaders_sample_4'=>array(
-		'property_id'=>'2', // --> objProperties_sample_id_2
-		'header_id'=>'3', // --> AbsBaseObjHeaders_sample_id_3
+	array(
+		'property_id'=>'2',
+		'header_id'=>'3',
 		'uptextfield'=>'type uptextfield line4 header 3',
 	),
 
-	'linesTestAbsBaseObjHeaders_sample_5'=>array(
-		'property_id'=>'2', // --> objProperties_sample_id_2
-		'header_id'=>'9', // --> AbsBaseObjHeaders_sample_id_10
+	array(
+		'property_id'=>'2',
+		'header_id'=>'9',
 		'uptextfield'=>'type uptextfield line5 header 9',
+	),
+
+	array(
+		'property_id'=>'1',
+		'header_id'=>'10',
+		'upcharfield'=>'type upcharfield line1 header 10',
+	),
+
+	array(
+		'property_id'=>'2',
+		'header_id'=>'10',
+		'uptextfield'=>'type uptextfield line2 header 10',
+	),
+
+	array(
+		'property_id'=>'1',
+		'header_id'=>'11',
+		'upcharfield'=>'type upcharfield line1 header 11',
+	),
+
+	array(
+		'property_id'=>'2',
+		'header_id'=>'12',
+		'uptextfield'=>'type uptextfield line2 header 12',
+	),
+
+	array(
+		'property_id'=>'1',
+		'header_id'=>'13',
+		'upcharfield'=>'type upcharfield line1 header 13',
+	),
+
+	array(
+		'property_id'=>'2',
+		'header_id'=>'13',
+		'uptextfield'=>'type uptextfield line2 header 13',
+	),
+
+	array(
+		'property_id'=>'1',
+		'header_id'=>'14',
+		'upcharfield'=>'type upcharfield line1 header 14',
 	),
 
 );

@@ -27,4 +27,12 @@ return array(
 		'description'=>'description',
 		'tablespace'=>'777',
 	),
+
+	'uClasses_sample_id_3'=>array(
+		'id'=>'3',
+		'name'=>'name3',
+		'codename'=>'codename3',
+		'description'=>'description',
+		'tablespace'=>'777',
+	),
 );

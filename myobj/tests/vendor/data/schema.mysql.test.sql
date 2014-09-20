@@ -1,6 +1,8 @@
 CREATE TABLE `setcms_testabsbaseobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`uclass_id` int(11) NOT NULL,
+	`param1` varchar(255) DEFAULT NULL,
+	`param2` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

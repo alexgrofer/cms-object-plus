@@ -295,7 +295,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OkHasProperty() {
+	public function OktestHasProperty() {
 		//проверить существование свойств по одному
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
@@ -316,7 +316,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function testSetAttributes() {
+	public function OktestSetAttributes() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 		$nameClass = get_class($objHeader);
@@ -325,6 +325,35 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 			'codename2'.$nameClass::PRE_PROP=>'value2',
 		);
 		$this->assertEquals($objHeader->uProperties, ['codename1'=>'value1', 'codename2'=>'value2']);
+	}
+
+	public function testSetCDbCriteriaUProp() {
+		/* @var $modelObjects TestAbsBaseObjHeaders */
+		$modelObjects = uClasses::getclass('codename3')->objects();
+
+		$modelObjects->setCDbCriteriaUProp('codename1', 'condition', 'codename1=:param_prop_1');
+		$modelObjects->getDbCriteria()->params[':param_prop_1'] = 'type upcharfield line1 header 10';
+
+		$modelObjects->getDbCriteria()->addCondition($modelObjects->getTableAlias().'.param1=:param_param1');
+		$modelObjects->getDbCriteria()->params[':param_param1'] = 'text param1 header 10';
+		$saveCriteria = $modelObjects->getDbCriteria();
+
+		$this->assertEquals(1, $modelObjects->count($saveCriteria));
+
+		$this->assertEquals(1, count($modelObjects->findAll($saveCriteria)));
+
+		//устанавливаем критерию по ПСЕВДОСВОЙСТВАМ
+		//$modelObjects->setCDbCriteriaUProp('select','codename_news_section_example');
+		//$modelObjects->setCDbCriteriaUProp('codename_news_section_example', 'condition', 'codename_news_section_example=:business');
+		//$modelObjects->setCDbCriteriaUProp('params', array(':business'=>'jahdjakhsd'));
+		//$modelObjects->setCDbCriteriaUProp('order','date_create DESC, first_name ASC');
+		//проверяем по индексам что и как отсортировалось
+
+		//продолжаем устанавливать критерию --- ОБЫЧНЫЕ СВОЙСТВА
+		//$modelObjects->getDbCriteria()->addCondition("codename_news_section_example=:p4");
+		//$modelObjects->getDbCriteria()->params[':p4'] = 'sdfsdf';
+		//$modelObjects->order = 'date_create DESC, first_name ASC';
+		//проверяем по индексам что и как отсортировалось
 	}
 
 	/*
@@ -342,7 +371,10 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function InitObj() {
+	public function initObj() {
+		/* @var $objHeader TestAbsBaseObjHeaders */
+		//$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_10');
+		//$objHeader->initObj();
 		//заполним переменную oldProperties
 	}
 }
