@@ -410,7 +410,17 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * примеры:
 	 * *Поиск:
 	 * setCDbCriteriaUProp('prop2','condition','prop2=:val'[, ]) - аналог addCondition()
-	 * -возможно указать простой запрос с одним свойством так как не стоит злоупортерблять поиском по свойствам
+	 * -возможно указать простой запрос только с ОДНИМ свойством так как не стоит ЗЛОУПОРТЕРБЛЯТЬ поиском по свойствам
+	 * *Сортировка
+	 * setCDbCriteriaUProp('prop2','order','ASC')
+	 * *Лимиты
+	 * setCDbCriteriaUProp('prop2','limit',0,10)
+	 * -Если метод setCDbCriteriaUProp уже используется то для установки лимитов использовать только этот метод
+	 * -не нужно использовать ДВОЙНЫЕ сортировки поэтому этот метод перетерает order критерии всегда
+	 *
+	 *
+	 * *НЕОБХОДИМО ВСЕГДА сохранять критерию если необходимо собирать запрос по цепочке
+	 * -$saveCriteria = $modelObjects->getDbCriteria();
 	 *
 	 * @param $nameUProp
 	 * @param $type
@@ -418,7 +428,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param null $operator
 	 * @throws CException
 	 */
-	final function setCDbCriteriaUProp($nameUProp,$type,$value,$operator=null) {
+	final function setCDbCriteriaUProp($nameUProp,$type,$option1,$option2=null) {
 		$config = Yii::app()->appcms->config;
 		$thisClassProperties = [];
 		foreach($this->uclass->properties as $prop) {
@@ -430,18 +440,59 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				array('{prop}'=>$nameUProp, '{class}'=>$this->uclass->codename)));
 		}
 
+		$objProp = $thisClassProperties[$nameUProp];
+		$name_column = $config['TYPES_COLUMNS'][$objProp->myfield];
+
 		if($type=='condition') {
+			$value = $option1;
+			$operator = $option2;
+
 			$this->getDbCriteria()->with['lines_find']['together'] = true;
 
 			$operator = $operator ?: 'AND';
 
-			$condition = '(lines_find.'.$config['TYPES_COLUMNS'][$thisClassProperties[$nameUProp]->myfield].str_replace($nameUProp, '', $value)
+			$condition = '(lines_find.'.$name_column.str_replace($nameUProp, '', $value)
 				.' AND (lines_find.property_id=:prop_id))';
 
 			$this->getDbCriteria()->addCondition($condition, $operator);
-			$this->getDbCriteria()->params[':prop_id'] = $thisClassProperties[$nameUProp]->id;
+			$this->getDbCriteria()->params[':prop_id'] = $objProp->id;
+
+			return true;
 		}
 
+		if($type=='order') {
+			$type_order = $option1;
+
+			$this->getDbCriteria()->with['lines_sort']['together'] = true;
+			//столбцы которые принадлежат не вошли в join будут содержать NULL поэтому для сортировки необходимо примести к другому типу
+			$sql_query = '(CASE WHEN lines_sort.'.$name_column.' IS NULL THEN 1 ELSE 0 END) ASC, lines_sort.'.$name_column.' '.$type_order;
+			//сама сортировка
+			$this->getDbCriteria()->with['lines_sort']['order'] .= $sql_query;
+			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
+			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->id.' OR lines_sort.id IS NULL';
+			$this->getDbCriteria()->with['lines_sort']['on'] = 'lines_sort.property_id='.$objProp->id;
+
+			return true;
+		}
+
+		if($type=='limit') {
+			$limit = $option1;
+			$offset = $option2;
+
+			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
+			if(isset($this->getDbCriteria()->with['lines_sort'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$this->getDbCriteria()->with['lines_sort']['together'] = true;
+			}
+			if(isset($this->getDbCriteria()->with['lines_find'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$this->getDbCriteria()->with['lines_find']['together'] = true;
+			}
+			$this->getDbCriteria()->limit = $limit;
+			$this->getDbCriteria()->offset = $offset;
+
+			return true;
+		}
 
 	}
 }
