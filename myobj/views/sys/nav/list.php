@@ -29,18 +29,18 @@ $listobjsort = apicms\utils\treelem($listall,'','vp2','vp1',function($str) {retu
 foreach($listobjsort as $objarr) {
 	$obj = $objarr['obj'];
 	$uihtml = '';
-	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->id.'"><i class="icon-edit"></i></a>';
-	if($arrayuirow['links']) $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->id.'">links</a>';
+	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'"><i class="icon-edit"></i></a>';
+	if($arrayuirow['links']) $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
 
 	$objclass = uClasses::getclass(array('navigation_sys','param_sys','controllersnav_sys'));
-	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$objclass['navigation_sys']->id.'">params</a>';
-	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['controllersnav_sys']->id.'/action/lenksobjedit/'.$obj->id.'/class/'.$this->dicturls['paramslist'][1].'">controller</a>';
-	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->id.'&usercontroller=usernav">template</a>';
+	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass['navigation_sys']->primaryKey.'">params</a>';
+	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['controllersnav_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$this->dicturls['paramslist'][1].'">controller</a>';
+	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->primaryKey.'&usercontroller=usernav">template</a>';
 
 	$visibl = ($obj->bp1)?'+':'-';
 
-	$uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->id.'\')" href="'.$arrayuirow['remove'].$obj->id.'"><i class="icon-remove"></i></a>';
-	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->id.'" /></td><td>'.$obj->id.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->vp2.'</td><td>'.$obj->vp1.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
+	$uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
+	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->vp2.'</td><td>'.$obj->vp1.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
 	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->vp2.'" value="push" /> | '.$uihtml.' </td>
 	</tr>';
 }

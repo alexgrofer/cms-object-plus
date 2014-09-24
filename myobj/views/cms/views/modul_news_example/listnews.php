@@ -79,8 +79,8 @@ echo '<table border="1"><tr><td>id</td><td>name</td><td>annotation_news</td><td>
 $v = 1;
 foreach($array_objClass_news_objects as $obj) {
 	$properties = $obj->uProperties;
-	echo '<tr><td>'.$v.'--'.$obj->id.'</td><td>'.$obj->name.'</td><td>'.$properties['annotation_news_example'].'</td><td>'.$properties['text_news_example'].'</td>
-	<td><a href="'.$this->createUrl('news_edit_object_example/edit/'.$obj->id).'">редактировать</a></td>
+	echo '<tr><td>'.$v.'--'.$obj->primaryKey.'</td><td>'.$obj->name.'</td><td>'.$properties['annotation_news_example'].'</td><td>'.$properties['text_news_example'].'</td>
+	<td><a href="'.$this->createUrl('news_edit_object_example/edit/'.$obj->primaryKey).'">редактировать</a></td>
 	</tr>';
 	$v++;
 }

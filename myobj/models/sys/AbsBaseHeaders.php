@@ -341,7 +341,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		//+++реляция для ссылки возможна только после того как инициализован класс
 		$nameLinksModel = $this->getNameLinksModel();
-		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass->id));
+		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass->primaryKey));
 
 		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {
@@ -455,7 +455,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				.' AND (lines_find.property_id=:prop_id))';
 
 			$this->getDbCriteria()->addCondition($condition, $operator);
-			$this->getDbCriteria()->params[':prop_id'] = $objProp->id;
+			$this->getDbCriteria()->params[':prop_id'] = $objProp->primaryKey;
 
 			return true;
 		}
@@ -469,8 +469,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			//сама сортировка
 			$this->getDbCriteria()->with['lines_sort']['order'] .= $sql_query;
 			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
-			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->id.' OR lines_sort.id IS NULL';
-			$this->getDbCriteria()->with['lines_sort']['on'] = 'lines_sort.property_id='.$objProp->id;
+			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->primaryKey.' OR lines_sort.id IS NULL';
+			$this->getDbCriteria()->with['lines_sort']['on'] = 'lines_sort.property_id='.$objProp->primaryKey;
 
 			return true;
 		}

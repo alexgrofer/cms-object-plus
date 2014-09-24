@@ -100,7 +100,7 @@ class AdminController extends \Controller {
 					$this->setVarRender('REND_objclass',$actclass);
 						$this->param_contr['current_class_name'] = $actclass->codename;
 					if(!(int)$this->dicturls['paramslist'][1]) {
-						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->id));
+						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->primaryKey));
 					}
 					$modelAD = $actclass->objects();
 					$settui = array();
@@ -291,7 +291,7 @@ class AdminController extends \Controller {
 								$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($objrelself,'id');
 							}
 							else {
-								$this->paramsrender['REND_selectedarr'] = array($objrelself->id);
+								$this->paramsrender['REND_selectedarr'] = array($objrelself->primaryKey);
 							}
 						}
 						break;

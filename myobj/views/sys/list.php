@@ -100,8 +100,8 @@ elseif($this->dicturls['class']=='objects') {
 	$arrayuirow['remove'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
 	//groups views
 	$objclass = uClasses::getclass(array('views_sys','groups_sys'));
-	if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
-		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
+	if($objclass['views_sys']->primaryKey==$this->dicturls['paramslist'][1]) {
+		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->primaryKey.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->primaryKey;
 	}
 
 	if($this->dicturls['action']=='lenksobjedit') {

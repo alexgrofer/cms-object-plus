@@ -27,7 +27,7 @@ class User extends AbsBaseModel
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			if(!$this->isNewRecord) {
-				$objuser = $this->model()->findByPk($this->id);
+				$objuser = $this->model()->findByPk($this->primaryKey);
 				if($objuser->password!=$this->password) {
 					$this->password = md5($this->password);
 				}

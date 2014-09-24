@@ -15,7 +15,7 @@ foreach($currenthandles as $objhandle) {
 $alltemolates = $classtemplate->objects();
 if(array_key_exists('submit',$_POST)) {
 
-	if(($templates && $templates[0]->id != $_POST['settemplid']) || !$templates) {
+	if(($templates && $templates[0]->primaryKey != $_POST['settemplid']) || !$templates) {
 		if($templates) {
 			$REND_model->editlinks('remove','templates_sys',$templates[0]);
 		}
@@ -39,7 +39,7 @@ if(array_key_exists('submit',$_POST)) {
 						//автоматически если удаляем ссылки есть такая задача
 						$keysidhandle[$tmplhandl]->delete();
 						//task можно не удалять а только отвязывать и ставить vp1 = 0 потом при создании искать свободный
-						//$REND_model->editlinks('remove','handle_sys',$keysidhandle[$tmplhandl]->id);
+						//$REND_model->editlinks('remove','handle_sys',$keysidhandle[$tmplhandl]->primaryKey);
 					}
 					else {
 						$keysidhandle[$tmplhandl]->vp1 = $idview;
@@ -72,8 +72,8 @@ if(array_key_exists('submit',$_POST)) {
 <p> <code>template <b>default</b>: </code> <select name="settemplid"><option value="0">---</option>'
 <?php
 	foreach($alltemolates->findAll() as $objtmpl) {
-		$select = ($templates && $templates[0]->id == $objtmpl->id)?'selected="selected"':'';
-		echo '<option value="'.$objtmpl->id.'" '.$select.'>'.$objtmpl->name.'</option>';
+		$select = ($templates && $templates[0]->primaryKey == $objtmpl->primaryKey)?'selected="selected"':'';
+		echo '<option value="'.$objtmpl->primaryKey.'" '.$select.'>'.$objtmpl->name.'</option>';
 	}
 ?>
 </select></p>
@@ -82,7 +82,7 @@ if($templates) {
 $handleview = array();
 foreach($currenthandles as $handle) {
 	$view = $handle->getobjlinks('handle_sys')->findAll();
-	$idview = ($view)?$view[0]->id:'';
+	$idview = ($view)?$view[0]->primaryKey:'';
 	$handleview[] = array('idtemp'=>$handle->vp1,'idview'=>$idview);
 }
 $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
@@ -104,10 +104,10 @@ $namehand = str_replace('\'','',$namehand);
 			echo '<option value="0">---</option>';
 			foreach($arrallviews as $objviw) {
 				$select = '';
-				if(array_key_exists($arraypregtmp[2][$key],$keysidhandle) && $keysidhandle[$arraypregtmp[2][$key]]->vp1 == $objviw->id) {
+				if(array_key_exists($arraypregtmp[2][$key],$keysidhandle) && $keysidhandle[$arraypregtmp[2][$key]]->vp1 == $objviw->primaryKey) {
 					$select = 'selected="selected"';
 				}
-				echo '<option value="'.$objviw->id.'" '.$select.'>'.$objviw->name.' - '.$objviw->vp1.'.php</option>';
+				echo '<option value="'.$objviw->primaryKey.'" '.$select.'>'.$objviw->name.' - '.$objviw->vp1.'.php</option>';
 			}
 			?>
 			</select></p>

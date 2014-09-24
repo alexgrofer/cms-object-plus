@@ -68,7 +68,7 @@ class AppCMS extends CComponent {
 			$listview = $headerModel->findAll($CRITERIA);
 			$elemsview = array();
 			foreach($listview as $view) {
-				$elemsview[$view->id] = array('patchview' => $view->vp1, 'objview' => $view); //vp1 = patchview
+				$elemsview[$view->primaryKey] = array('patchview' => $view->vp1, 'objview' => $view); //vp1 = patchview
 			}
 			foreach($handles as $handle) {
 				$this->_thisnavhandles[$handle->sort] = $elemsview[$handle->vp1];

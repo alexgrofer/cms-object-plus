@@ -11,7 +11,7 @@ class UserIdentity extends CUserIdentity {
 		}
 		else
 		{
-			$this->_id=$record->id;
+			$this->_id=$record->primaryKey;
 			// WORK groupsident CMS SYSTEM GROUPS array USER
 			$groupsident = array();
 			foreach($record->groups as $objgroup) {

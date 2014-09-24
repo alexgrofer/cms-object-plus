@@ -52,7 +52,7 @@ if(count($_POST) && $form->validate()) {
 			$initFile->set_File($file,$indexEdit);
 
 			//логическая папка(news-папка плагина будет учтена/id объекта это название)
-			$initFile->set_Path($model_obj->id,$indexEdit); //установить относительную папку
+			$initFile->set_Path($model_obj->primaryKey,$indexEdit); //установить относительную папку
 
 			//установить кроп
 
@@ -65,7 +65,7 @@ if(count($_POST) && $form->validate()) {
 		$initFile->save(); //сохранит сам файл и объект файла в базе
 
 		//end load file
-		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->id.' OK');
+		Yii::app()->user->setFlash('savemodel','save file id='.$initFile->primaryKey.' OK');
 	}
 	Yii::app()->user->setFlash('savemodel','save model OK');
 	//$this->redirect(Yii::app()->request->url);
