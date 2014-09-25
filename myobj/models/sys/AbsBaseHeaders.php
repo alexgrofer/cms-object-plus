@@ -409,12 +409,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Установка критерии по для превдо-свойствам
 	 * примеры:
 	 * *Поиск:
-	 * setCDbCriteriaUProp('prop2','condition','prop2=:val'[, ]) - аналог addCondition()
+	 * setCDbCriteriaUProp('condition','prop2','prop2=:val', 'AND') - аналог addCondition()
 	 * -возможно указать простой запрос только с ОДНИМ свойством так как не стоит ЗЛОУПОРТЕРБЛЯТЬ поиском по свойствам
 	 * *Сортировка
-	 * setCDbCriteriaUProp('prop2','order','ASC')
+	 * setCDbCriteriaUProp('order','prop2','ASC')
 	 * *Лимиты
-	 * setCDbCriteriaUProp('prop2','limit',0,10)
+	 * setCDbCriteriaUProp('limit','prop2',0,10)
 	 * -Если метод setCDbCriteriaUProp уже используется то для установки лимитов использовать только этот метод
 	 * -не нужно использовать ДВОЙНЫЕ сортировки поэтому этот метод перетерает order критерии всегда
 	 *
@@ -422,14 +422,35 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * *НЕОБХОДИМО ВСЕГДА сохранять критерию если необходимо собирать запрос по цепочке
 	 * -$saveCriteria = $modelObjects->getDbCriteria();
 	 *
-	 * @param $nameUProp
 	 * @param $type
-	 * @param $value
-	 * @param null $operator
+	 * @param $nameUProp
+	 * @param $option1
+	 * @param null $option2
+	 * @return bool
 	 * @throws CException
 	 */
-	final function setCDbCriteriaUProp($nameUProp,$type,$option1,$option2=null) {
+	final function setCDbCriteriaUProp($type,$nameUProp,$option1,$option2=null) {
 		$config = Yii::app()->appcms->config;
+
+		if($type=='limit') {
+			$limit = $nameUProp;
+			$offset = $option1;
+
+			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
+			if(isset($this->getDbCriteria()->with['lines_sort'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$this->getDbCriteria()->with['lines_sort']['together'] = true;
+			}
+			if(isset($this->getDbCriteria()->with['lines_find'])) {
+				//необходимо принудительно джойнить таблицу в случае с постраничностью
+				$this->getDbCriteria()->with['lines_find']['together'] = true;
+			}
+			$this->getDbCriteria()->limit = $limit;
+			$this->getDbCriteria()->offset = $offset;
+
+			return true;
+		}
+
 		$thisClassProperties = [];
 		foreach($this->uclass->properties as $prop) {
 			$thisClassProperties[$prop->codename] = $prop;
@@ -451,11 +472,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 			$operator = $operator ?: 'AND';
 
-			$condition = '(lines_find.'.$name_column.str_replace($nameUProp, '', $value)
-				.' AND (lines_find.property_id=:prop_id))';
+			$condition = 'lines_find.'.$name_column.str_replace($nameUProp, '', $value)
+				.' AND lines_find.property_id='.$objProp->primaryKey;
 
 			$this->getDbCriteria()->addCondition($condition, $operator);
-			$this->getDbCriteria()->params[':prop_id'] = $objProp->primaryKey;
 
 			return true;
 		}
@@ -467,29 +487,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			//столбцы которые принадлежат не вошли в join будут содержать NULL поэтому для сортировки необходимо примести к другому типу
 			$sql_query = '(CASE WHEN lines_sort.'.$name_column.' IS NULL THEN 1 ELSE 0 END) ASC, lines_sort.'.$name_column.' '.$type_order;
 			//сама сортировка
-			$this->getDbCriteria()->with['lines_sort']['order'] .= $sql_query;
+			$this->getDbCriteria()->with['lines_sort']['order'] = $sql_query;
 			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
 			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->primaryKey.' OR lines_sort.id IS NULL';
 			$this->getDbCriteria()->with['lines_sort']['on'] = 'lines_sort.property_id='.$objProp->primaryKey;
-
-			return true;
-		}
-
-		if($type=='limit') {
-			$limit = $option1;
-			$offset = $option2;
-
-			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
-			if(isset($this->getDbCriteria()->with['lines_sort'])) {
-				//необходимо принудительно джойнить таблицу в случае с постраничностью
-				$this->getDbCriteria()->with['lines_sort']['together'] = true;
-			}
-			if(isset($this->getDbCriteria()->with['lines_find'])) {
-				//необходимо принудительно джойнить таблицу в случае с постраничностью
-				$this->getDbCriteria()->with['lines_find']['together'] = true;
-			}
-			$this->getDbCriteria()->limit = $limit;
-			$this->getDbCriteria()->offset = $offset;
 
 			return true;
 		}

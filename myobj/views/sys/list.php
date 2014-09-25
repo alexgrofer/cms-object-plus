@@ -5,7 +5,6 @@
 //коммент task
 $REND_model_criteria_save = $REND_model->getDbCriteria();
 if(array_key_exists('serach_param',$_POST)) {
-	$array_search = array();
 	foreach($_POST['serach_param'] as $key => $value) {
 		if($value!='') {
 			$tableAlias = '';
@@ -20,21 +19,18 @@ if(array_key_exists('serach_param',$_POST)) {
 			//для свойств true
 			if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
 				$valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-				$array_search[] = array($serach_hooks_left.$valueSearchElem,true,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'".$serach_hooks_right,$typecond);
+				$REND_model->setCDbCriteriaUProp('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond);
+				$REND_model->getDbCriteria()->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
 			}
 			//для обычных параметров модели false
 			else {
-				$array_search[] = array($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem,false,$_POST['serach_condition'][$key],"'".$_POST['serach_param'][$key]."'".$serach_hooks_right,$typecond);
+				$REND_model->getDbCriteria()->addCondition($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_'.$key.$serach_hooks_right, $typecond);
+				$REND_model->getDbCriteria()->params[':param_s_'.$key] = $_POST['serach_param'][$key];
 			}
+
+			$REND_model_criteria_save = $REND_model->getDbCriteria();
 		}
 	}
-	//поиск по параметрам модели
-	if(count($array_search)) {
-		$array_search[count($array_search)-1][4] = ''; //удалить ненужный and или or в конце
-		$REND_model = $REND_model->setuiprop(array('condition' => $array_search),$REND_model_criteria_save);
-		unset($array_search);
-	}
-
 }
 //sort
 if(isset($_POST['order_by']) && $_POST['order_by']!='0') {
@@ -47,12 +43,14 @@ elseif($REND_order_by_def) {
 if(isset($order_array)) {
 	$name_order_explode = explode('---',$order_array);
 	if(($pos_prop = strpos($name_order_explode[0],'__prop'))!==false) {
-		$REND_model->setuiprop(array('order' => array(array(substr($name_order_explode[0],0,$pos_prop),$name_order_explode[1],true))),$REND_model_criteria_save);
+		$REND_model->setCDbCriteriaUProp('order', substr($name_order_explode[0],0,$pos_prop), $name_order_explode[1]);
 	}
 	else {
-		$REND_model->setuiprop(array('order' =>array(array($REND_model->tableAlias.'.'.$name_order_explode[0],$name_order_explode[1],false))),$REND_model_criteria_save);
+		$REND_model->getDbCriteria()->order = $REND_model->tableAlias.'.'.$name_order_explode[0].' '.$name_order_explode[1];
 	}
 	unset($name_order_explode,$pos_prop);
+
+	$REND_model_criteria_save = $REND_model->getDbCriteria();
 }
 unset($order_array);
 //sort
@@ -100,8 +98,8 @@ elseif($this->dicturls['class']=='objects') {
 	$arrayuirow['remove'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
 	//groups views
 	$objclass = uClasses::getclass(array('views_sys','groups_sys'));
-	if($objclass['views_sys']->primaryKey==$this->dicturls['paramslist'][1]) {
-		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->primaryKey.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->primaryKey;
+	if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
+		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
 	}
 
 	if($this->dicturls['action']=='lenksobjedit') {
@@ -135,6 +133,9 @@ if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
 	$REND_model->setuiprop(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$REND_model_criteria_save);
+	$REND_model->setCDbCriteriaUProp('limit', $COUNTVIEWELEMS, $COUNTVIEWELEMS * $idpage);
+
+	$REND_model_criteria_save = $REND_model->getDbCriteria();
 }
 
 $listall = $REND_model->findAll($REND_model_criteria_save);
