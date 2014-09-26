@@ -406,6 +406,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	/**
+	 * Названия реляций.
+	 * При каждом новом условии добавляется в массив, псевдо-свойства необходимо джойнить еще раз таблицу строк.
+	 * @var array
+	 */
+	protected $_finderUProp=array();
+	/**
 	 * Установка критерии по для превдо-свойствам
 	 * примеры:
 	 * *Поиск:
@@ -441,10 +447,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				//необходимо принудительно джойнить таблицу в случае с постраничностью
 				$this->getDbCriteria()->with['lines_sort']['together'] = true;
 			}
-			if(isset($this->getDbCriteria()->with['lines_find'])) {
-				//необходимо принудительно джойнить таблицу в случае с постраничностью
-				$this->getDbCriteria()->with['lines_find']['together'] = true;
+
+			//необходимо принудительно джойнить таблицу в случае с постраничностью
+			foreach($this->_finderUProp as $key_RelationProp => $val_RelationProp) {
+				$this->getDbCriteria()->with['lines_find_'.$val_RelationProp]['together'] = true;
 			}
+
 			$this->getDbCriteria()->limit = $limit;
 			$this->getDbCriteria()->offset = $offset;
 
@@ -466,15 +474,21 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		if($type=='condition') {
 			$value = $option1;
-			$operator = $option2;
+			$operator = $option2 ?: 'AND';
 
-			$this->getDbCriteria()->with['lines_find']['together'] = true;
+			$keyLinesProp = array_search($nameUProp, $this->_finderUProp);
+			if(in_array($nameUProp, $this->_finderUProp)===false) {
+				$this->_finderUProp[] = $nameUProp;
+				$keyLinesProp = count($this->_finderUProp)-1;
+				$relations = $this->relations();
+				$this->metaData->addRelation('lines_find_'.$keyLinesProp, $relations['lines']);
+			}
+			$nameRelate = 'lines_find_'.$keyLinesProp;
 
-			$operator = $operator ?: 'AND';
+			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['together'] = true;
+			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['select'] = false;
 
-			$condition = 'lines_find.'.$name_column.str_replace($nameUProp, '', $value)
-				.' AND lines_find.property_id='.$objProp->primaryKey;
-
+			$condition = $nameRelate.'.'.$name_column.str_replace($nameUProp, '', $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
 			$this->getDbCriteria()->addCondition($condition, $operator);
 
 			return true;
