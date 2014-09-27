@@ -64,6 +64,8 @@ if(isset($order_array)) {
 unset($order_array);
 //sort
 $COUNT_P = $REND_model->count($REND_model_criteria_save);
+//обязательно необходимо пересохранять критерию, так как она теряется после запроса (count(),findAll() и т.д)
+$REND_model->setDbCriteria($REND_model_criteria_save);
 
 $arrchecked = $REND_selectedarr;
 
@@ -316,9 +318,8 @@ foreach($listall as $obj) {
 		echo '<td>'.$valobj.'</td>';
 	}
 	if($REND_thispropsui) {
-		$properties = $obj->uProperties;
 		foreach(array_keys($REND_thispropsui) as $colname) {
-			echo '<td>'.$properties[$colname].'</td>';
+			echo '<td>'.$obj->uProperties[$colname].'</td>';
 		}
 	}
 	$uihtml = '';
