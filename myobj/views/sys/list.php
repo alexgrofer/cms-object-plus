@@ -141,7 +141,6 @@ if(array_key_exists('selectorsids',$_POST) && $_POST['selectorsids']!='') $selec
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-	$REND_model->setuiprop(array('limit'=>array('limit'=>$COUNTVIEWELEMS,'offset'=>$COUNTVIEWELEMS * $idpage)),$REND_model_criteria_save);
 	$REND_model->setCDbCriteriaUProp('limit', $COUNTVIEWELEMS, $COUNTVIEWELEMS * $idpage);
 
 	$REND_model_criteria_save = $REND_model->getDbCriteria();

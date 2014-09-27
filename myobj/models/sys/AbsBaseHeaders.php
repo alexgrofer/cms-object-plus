@@ -41,10 +41,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		if($this->isitlines == true) {
 			$relations['lines'] = array(self::HAS_MANY, 'lines'.get_class($this), 'header_id');
-			//для поиска по свойствам
-			$relations['lines_sort'] = $relations['lines'];
-			//для сортировки по свойствам
-			$relations['lines_find'] = $relations['lines'];
 		}
 		return $relations;
 	}
@@ -437,6 +433,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 */
 	final function setCDbCriteriaUProp($type,$nameUProp,$option1,$option2=null) {
 		$config = Yii::app()->appcms->config;
+		$relations = $this->relations();
 
 		if($type=='limit') {
 			$limit = $nameUProp;
@@ -480,7 +477,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			if(in_array($nameUProp, $this->_finderUProp)===false) {
 				$this->_finderUProp[] = $nameUProp;
 				$keyLinesProp = count($this->_finderUProp)-1;
-				$relations = $this->relations();
 				$this->metaData->addRelation('lines_find_'.$keyLinesProp, $relations['lines']);
 			}
 			$nameRelate = 'lines_find_'.$keyLinesProp;
@@ -496,6 +492,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		if($type=='order') {
 			$type_order = $option1;
+
+			$this->metaData->addRelation('lines_sort', $relations['lines']);
+			$this->getDbCriteria()->with['lines_sort']['select'] = false;
 
 			$this->getDbCriteria()->with['lines_sort']['together'] = true;
 			//столбцы которые принадлежат не вошли в join будут содержать NULL поэтому для сортировки необходимо примести к другому типу
