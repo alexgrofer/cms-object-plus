@@ -4,6 +4,7 @@
 <?php
 //коммент task
 $REND_model_criteria_save = $REND_model->getDbCriteria();
+$nextCond=null;
 if(array_key_exists('serach_param',$_POST)) {
 	foreach($_POST['serach_param'] as $key => $value) {
 		if($value!='') {
@@ -18,8 +19,16 @@ if(array_key_exists('serach_param',$_POST)) {
 			}
 			//для свойств true
 			if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
+				if(!$nextCond) {
+					$typecond_r = 'AND';
+				}
+				else {
+					$typecond_r = $nextCond;
+				}
+				$nextCond = $typecond;
+
 				$valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-				$REND_model->setCDbCriteriaUProp('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond);
+				$REND_model->setCDbCriteriaUProp('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond_r);
 				$REND_model->getDbCriteria()->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
 			}
 			//для обычных параметров модели false
