@@ -475,9 +475,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['select'] = false;
 			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['condition'] = $nameRelate.'.property_id='.$objProp->primaryKey.' OR '.$nameRelate.'.id IS NULL';
 
+			//скобка справа, с левой проблемы нет
+			$bracket_r='';
+			if(substr(trim($value), -1)==')') {
+				$bracket_r = ')';
+				$value = substr(trim($value), 0, -1);
+			}
+
 			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в поиске
 			$condition = str_replace($nameUProp, $nameRelate.'.'.$name_column, $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
-			$this->getDbCriteria()->addCondition($condition, $operator);
+			$this->getDbCriteria()->addCondition($condition.$bracket_r, $operator);
 
 			return true;
 		}
