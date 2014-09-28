@@ -17,23 +17,24 @@ if(array_key_exists('serach_param',$_POST)) {
 			if(strpos($valueSearchElem,'.')===false) {
 				$tableAlias = $REND_model->tableAlias.'.';
 			}
+
+			if(!$nextCond) {
+				$typecond_r = 'AND';
+			}
+			else {
+				$typecond_r = $nextCond;
+			}
+			$nextCond = $typecond;
+
 			//для свойств true
 			if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
-				if(!$nextCond) {
-					$typecond_r = 'AND';
-				}
-				else {
-					$typecond_r = $nextCond;
-				}
-				$nextCond = $typecond;
-
 				$valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-				$REND_model->setCDbCriteriaUProp('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond_r);
+				$REND_model->setSetupCriteria(array('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond_r));
 				$REND_model->getDbCriteria()->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
 			}
 			//для обычных параметров модели false
 			else {
-				$REND_model->getDbCriteria()->addCondition($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_'.$key.$serach_hooks_right, $typecond);
+				$REND_model->getDbCriteria()->addCondition($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_'.$key.$serach_hooks_right, $typecond_r);
 				$REND_model->getDbCriteria()->params[':param_s_'.$key] = $_POST['serach_param'][$key];
 			}
 
@@ -52,7 +53,7 @@ elseif($REND_order_by_def) {
 if(isset($order_array)) {
 	$name_order_explode = explode('---',$order_array);
 	if(($pos_prop = strpos($name_order_explode[0],'__prop'))!==false) {
-		$REND_model->setCDbCriteriaUProp('order', substr($name_order_explode[0],0,$pos_prop), $name_order_explode[1]);
+		$REND_model->setSetupCriteria(array('order', substr($name_order_explode[0],0,$pos_prop), $name_order_explode[1]));
 	}
 	else {
 		$REND_model->getDbCriteria()->order = $REND_model->tableAlias.'.'.$name_order_explode[0].' '.$name_order_explode[1];
@@ -143,7 +144,7 @@ if(array_key_exists('selectorsids',$_POST) && $_POST['selectorsids']!='') $selec
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-	$REND_model->setCDbCriteriaUProp('limit', $COUNTVIEWELEMS, $COUNTVIEWELEMS * $idpage);
+	$REND_model->setSetupCriteria(array('limit', $COUNTVIEWELEMS, $COUNTVIEWELEMS * $idpage));
 
 	$REND_model_criteria_save = $REND_model->getDbCriteria();
 }

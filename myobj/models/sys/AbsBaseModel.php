@@ -335,4 +335,39 @@ abstract class AbsBaseModel extends CActiveRecord
 		$this->declareObj();
 		$this->initObj();
 	}
+
+	public function setSetupCriteria($configArray) {
+		$type = $configArray[0];
+		$nameUProp = $configArray[1];
+		$option1 = $configArray[2];
+		$option2 = isset($configArray[3])?$configArray[3]:null;
+
+		if($type=='limit') {
+			$limit = $nameUProp;
+			$offset = $option1;
+
+			$this->getDbCriteria()->limit = $limit;
+			$this->getDbCriteria()->offset = $offset;
+
+			return true;
+		}
+
+		if($type=='condition') {
+			$condition = $option1;
+			$operator = $option2 ?: 'AND';
+
+			$this->getDbCriteria()->addCondition($condition, $operator);
+
+			return true;
+		}
+
+		if($type=='order') {
+			$type_order = $option1;
+
+			$this->getDbCriteria()->order = $nameUProp.' '.$type_order;
+
+			return true;
+		}
+
+	}
 }

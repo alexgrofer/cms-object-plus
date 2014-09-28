@@ -431,7 +431,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return bool
 	 * @throws CException
 	 */
-	final function setCDbCriteriaUProp($type,$nameUProp,$option1,$option2=null) {
+	public function setSetupCriteria($configArray) {
+		$type = $configArray[0];
+		$nameUProp = $configArray[1];
+		$option1 = $configArray[2];
+		$option2 = isset($configArray[3])?$configArray[3]:null;
+
 		$config = Yii::app()->appcms->config;
 		$relations = $this->relations();
 
