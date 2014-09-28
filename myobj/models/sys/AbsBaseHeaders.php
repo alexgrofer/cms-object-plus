@@ -441,22 +441,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$relations = $this->relations();
 
 		if($type=='limit') {
-			$limit = $nameUProp;
-			$offset = $option1;
-
-			//всегда группировать так как и поиск и сортировка создают строки в результате запроса
-			if(isset($this->getDbCriteria()->with['lines_sort'])) {
-				//необходимо принудительно джойнить таблицу в случае с постраничностью
-				$this->getDbCriteria()->with['lines_sort']['together'] = true;
-			}
-
-			//необходимо принудительно джойнить таблицу в случае с постраничностью
-			foreach($this->_finderUProp as $key_RelationProp => $val_RelationProp) {
-				$this->getDbCriteria()->with['lines_find_'.$val_RelationProp]['together'] = true;
-			}
-
-			$this->getDbCriteria()->limit = $limit;
-			$this->getDbCriteria()->offset = $offset;
+			parent::setSetupCriteria($configArray);
 
 			return true;
 		}
@@ -488,7 +473,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['together'] = true;
 			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['select'] = false;
+			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['condition'] = $nameRelate.'.property_id='.$objProp->primaryKey.' OR '.$nameRelate.'.id IS NULL';
 
+			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в поиске
 			$condition = $nameRelate.'.'.$name_column.str_replace($nameUProp, '', $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
 			$this->getDbCriteria()->addCondition($condition, $operator);
 
@@ -508,7 +495,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->getDbCriteria()->with['lines_sort']['order'] = $sql_query;
 			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
 			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->primaryKey.' OR lines_sort.id IS NULL';
-			$this->getDbCriteria()->with['lines_sort']['on'] = 'lines_sort.property_id='.$objProp->primaryKey;
 
 			return true;
 		}
