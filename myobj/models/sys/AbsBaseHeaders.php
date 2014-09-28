@@ -476,7 +476,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['condition'] = $nameRelate.'.property_id='.$objProp->primaryKey.' OR '.$nameRelate.'.id IS NULL';
 
 			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в поиске
-			$condition = $nameRelate.'.'.$name_column.str_replace($nameUProp, '', $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
+			$condition = str_replace($nameUProp, $nameRelate.'.'.$name_column, $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
 			$this->getDbCriteria()->addCondition($condition, $operator);
 
 			return true;

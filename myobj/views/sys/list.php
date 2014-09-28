@@ -29,7 +29,7 @@ if(array_key_exists('serach_param',$_POST)) {
 			//для свойств true
 			if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
 				$valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-				$REND_model->setSetupCriteria(array('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key, $typecond_r));
+				$REND_model->setSetupCriteria(array('condition', $valueSearchElem, $serach_hooks_left.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key.$serach_hooks_right, $typecond_r));
 				$REND_model->getDbCriteria()->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
 			}
 			//для обычных параметров модели false
