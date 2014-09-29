@@ -1,6 +1,6 @@
 <?php
 
-return CMap::mergeArray(
+$config =  CMap::mergeArray(
 	require(dirname(__FILE__).'/../../../config/main.php'),
 	array(
 		'components'=>array(
@@ -13,16 +13,19 @@ return CMap::mergeArray(
 				'connectionString'=>'mysql:host=localhost;dbname=DBTest',
 			),
 
-			'log'=>array(
-				'class'=>'CLogRouter',
-				'routes'=>array(
-					array(
-						'class'=>'CFileLogRoute',
-						'levels'=>'error, warning, trace',
-					),
-				),
-			),
-
 		),
 	)
 );
+
+$config['components']['log'] = array(
+	'class'=>'CLogRouter',
+	'routes'=>array(
+		array(
+			'class'=>'CFileLogRoute',
+			'logFile'=>'application_test.log',
+			'levels'=>'', //все уровни
+		),
+	),
+);
+
+return $config;
