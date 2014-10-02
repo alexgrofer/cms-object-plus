@@ -370,4 +370,19 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 
 	}
+
+	protected function beforeMyQuery() {
+
+	}
+
+	protected function beforeFind() {
+		parent::beforeFind();
+
+		$this->beforeMyQuery();
+	}
+	protected function beforeCount() {
+		parent::beforeCount();
+
+		$this->beforeMyQuery();
+	}
 }

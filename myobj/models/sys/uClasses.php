@@ -103,8 +103,6 @@ class uClasses extends AbsBaseModel
 	public function objects() { //namesvprop left join props lines
 		$NameClassHeader = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
 		$modelheaders = new $NameClassHeader;
-		$modelheaders->dbCriteria->compare('uclass_id',$this->primaryKey);
-		$modelheaders->dbCriteria->select = array('t.*');
 		$modelheaders->uclass_id = $this->primaryKey;
 		return $modelheaders;
 	}

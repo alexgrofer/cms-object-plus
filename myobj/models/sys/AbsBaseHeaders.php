@@ -45,16 +45,20 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $relations;
 	}
 
-	public function beforeFind() {
+	protected function beforeMyQuery() {
 		/*
 		 * в случае если есть поддержка свойств(isitlines) и юзер хочет в запросе извлекать строки без дополнительных запросов 'будет join таблиц' force_join_props
 		 */
 		if($this->isitlines && $this->force_join_props) {
-			$this->dbCriteria->with['lines.property'] = array();
-			$this->dbCriteria->with['uclass.properties'] = array();
+			$this->getDbCriteria()->with['lines.property'] = array();
+			$this->getDbCriteria()->with['uclass.properties'] = array();
 		}
 
-		parent::beforeFind();
+		if($this->uclass_id && strpos($this->getDbCriteria()->condition,'uclass_id')===false) {
+			$criteria = new CDbCriteria;
+			$criteria->compare('uclass_id', $this->uclass_id);
+			$this->getDbCriteria()->mergeWith($criteria);
+		}
 	}
 
 	/**
