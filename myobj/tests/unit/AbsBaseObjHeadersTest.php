@@ -73,7 +73,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 
 		//по умолчанию должен быть данный набор связующих переменных
-		$this->assertEquals(array_keys($objHeader->relations()), array('uclass', 'lines', 'lines_sort', 'lines_find'));
+		$this->assertEquals(array_keys($objHeader->relations()), array('uclass', 'lines'));
 		$this->assertNotEmpty($objHeader->uclass);
 
 		//если не нужно работать со строками то нужна ссылка только на uclass
@@ -327,33 +327,71 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($objHeader->uProperties, ['codename1'=>'value1', 'codename2'=>'value2']);
 	}
 
-	public function testSetCDbCriteriaUProp() {
+	public function testSetSetupCriteria() {
 		/* @var $modelObjects TestAbsBaseObjHeaders */
+
+		//важный момент для цепочки критерии
 		$modelObjects = uClasses::getclass('codename3')->objects();
 
-		$modelObjects->setCDbCriteriaUProp('codename1', 'condition', 'codename1=:param_prop_1');
-		$modelObjects->getDbCriteria()->params[':param_prop_1'] = 'type upcharfield line1 header 10';
+		//установка критерии для поиска по свойству
+		$modelObjects->setSetupCriteria(array('condition','codename1', 'codename1=:param_prop_1'));
+		$modelObjects->getDbCriteria()->params[':param_prop_1'] = 'h type upcharfield line1 header 10';
 
+		//установка критерии для поиска по обычному параметру
 		$modelObjects->getDbCriteria()->addCondition($modelObjects->getTableAlias().'.param1=:param_param1');
 		$modelObjects->getDbCriteria()->params[':param_param1'] = 'text param1 header 10';
+		//необходимо сохранять критерию для цепочки
 		$saveCriteria = $modelObjects->getDbCriteria();
 
 		$this->assertEquals(1, $modelObjects->count($saveCriteria));
 
-		$this->assertEquals(1, count($modelObjects->findAll($saveCriteria)));
 
-		//устанавливаем критерию по ПСЕВДОСВОЙСТВАМ
-		//$modelObjects->setCDbCriteriaUProp('select','codename_news_section_example');
-		//$modelObjects->setCDbCriteriaUProp('codename_news_section_example', 'condition', 'codename_news_section_example=:business');
-		//$modelObjects->setCDbCriteriaUProp('params', array(':business'=>'jahdjakhsd'));
-		//$modelObjects->setCDbCriteriaUProp('order','date_create DESC, first_name ASC');
-		//проверяем по индексам что и как отсортировалось
+		//важный момент для цепочки критерии
+		$modelObjects = uClasses::getclass('codename3')->objects();
+		//найти строку у которой codename1 и codename2
+		$modelObjects->setSetupCriteria(array('condition','codename1', '(codename1=:h_10_prop_1'));
+		$modelObjects->getDbCriteria()->params[':h_10_prop_1'] = 'h type upcharfield line1 header 10';
 
-		//продолжаем устанавливать критерию --- ОБЫЧНЫЕ СВОЙСТВА
-		//$modelObjects->getDbCriteria()->addCondition("codename_news_section_example=:p4");
-		//$modelObjects->getDbCriteria()->params[':p4'] = 'sdfsdf';
-		//$modelObjects->order = 'date_create DESC, first_name ASC';
-		//проверяем по индексам что и как отсортировалось
+		$modelObjects->setSetupCriteria(array('condition','codename2', 'codename2=:h_10_prop_2)'));
+		$modelObjects->getDbCriteria()->params[':h_10_prop_2'] = 'g type uptextfield line2 header 10';
+		//необходимо сохранять критерию для цепочки
+		$saveCriteria = $modelObjects->getDbCriteria();
+
+		//проверить колличество 1
+		$this->assertEquals(1, $modelObjects->count($saveCriteria));
+		//передаем критерию по цепочке дальше
+		$modelObjects->setDbCriteria($saveCriteria);
+		//добавляем к критерии ИЛИ еще у которой codename1 и codename2 скобки
+		$modelObjects->setSetupCriteria(array('condition','codename1', '(codename1=:h_12_prop_1', 'OR'));
+		$modelObjects->getDbCriteria()->params[':h_12_prop_1'] = 'e type upcharfield line1 header 12';
+
+		$modelObjects->setSetupCriteria(array('condition','codename2', 'codename2=:h_12_prop_2)'));
+		$modelObjects->getDbCriteria()->params[':h_12_prop_2'] = 'd type uptextfield line2 header 12';
+
+		//установка критерии для поиска по обычному параметру
+		$modelObjects->getDbCriteria()->addCondition($modelObjects->getTableAlias().'.param2=:param_param2', 'OR');
+		$modelObjects->getDbCriteria()->params[':param_param2'] = 'text param2 header 11';
+
+		//необходимо сохранять критерию для цепочки
+		$saveCriteria = $modelObjects->getDbCriteria();
+		echo $saveCriteria->condition;
+
+		//проверить колличество 2
+		$this->assertEquals(2, $modelObjects->count($saveCriteria));
+		//передаем критерию по цепочке дальше
+		$modelObjects->setDbCriteria($saveCriteria);
+		//делаем постраничность через 1
+		$modelObjects->setSetupCriteria(array('limit', 0, 1));
+		//установить сортировку по свойству codename1 asc
+		$modelObjects->setSetupCriteria(array('order', 'codename1', 'DESC'));
+		//проверяем постраничность т.е каждое свойство каждый лимит через 1
+		//добавляем к критерии еще одно свойство или
+		//проверить колличество 3
+		//проверяем по постраничности снова - постраничность уже установленна
+		//убрать постраничность вообще
+		//ставим сортировку по другому свойству codename2 проверить сортировку по всем свойствам - она установленна
+		//установить постраничность снова
+		//и проверить все совйства
 	}
 
 	/*

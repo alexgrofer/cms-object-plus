@@ -13,17 +13,17 @@ return array(
 		'id'=>'1',
 		'uclass_id'=>'1',
 	),
-
+	//test find testGetUProperties
 	'TestAbsBaseObjHeaders_sample_id_2'=>array(
 		'id'=>'2',
 		'uclass_id'=>'1',
 	),
-
+	//test find testSetUProperties
 	'TestAbsBaseObjHeaders_sample_id_3'=>array(
 		'id'=>'3',
 		'uclass_id'=>'1',
 	),
-
+	//test find testEditlinks
 	'TestAbsBaseObjHeaders_sample_id_4'=>array(
 		'id'=>'4',
 		'uclass_id'=>'1',
@@ -38,12 +38,12 @@ return array(
 		'id'=>'6',
 		'uclass_id'=>'2',
 	),
-
+	//test find testAfterSave
 	'TestAbsBaseObjHeaders_sample_id_7'=>array(
 		'id'=>'7',
 		'uclass_id'=>'1',
 	),
-
+	//test find testBeforeDelete
 	'TestAbsBaseObjHeaders_sample_id_8'=>array(
 		'id'=>'8',
 		'uclass_id'=>'1',
@@ -53,7 +53,7 @@ return array(
 		'id'=>'9',
 		'uclass_id'=>'2',
 	),
-
+	//test find testSetSetupCriteria
 	'TestAbsBaseObjHeaders_sample_id_10'=>array(
 		'id'=>'10',
 		'uclass_id'=>'3',

@@ -51,43 +51,49 @@ return array(
 	array(
 		'property_id'=>'1',
 		'header_id'=>'10',
-		'upcharfield'=>'type upcharfield line1 header 10',
+		'upcharfield'=>'h type upcharfield line1 header 10',
 	),
 
 	array(
 		'property_id'=>'2',
 		'header_id'=>'10',
-		'uptextfield'=>'type uptextfield line2 header 10',
+		'uptextfield'=>'g type uptextfield line2 header 10',
 	),
 
 	array(
 		'property_id'=>'1',
 		'header_id'=>'11',
-		'upcharfield'=>'type upcharfield line1 header 11',
+		'upcharfield'=>'f type upcharfield line1 header 11',
+	),
+
+	array(
+		'property_id'=>'1',
+		'header_id'=>'12',
+		'upcharfield'=>'e type upcharfield line1 header 12',
 	),
 
 	array(
 		'property_id'=>'2',
 		'header_id'=>'12',
-		'uptextfield'=>'type uptextfield line2 header 12',
+		'uptextfield'=>'d type uptextfield line2 header 12',
 	),
 
 	array(
 		'property_id'=>'1',
 		'header_id'=>'13',
-		'upcharfield'=>'type upcharfield line1 header 13',
+		'upcharfield'=>'c type upcharfield line1 header 13',
 	),
 
 	array(
 		'property_id'=>'2',
 		'header_id'=>'13',
-		'uptextfield'=>'type uptextfield line2 header 13',
+		'uptextfield'=>'b type uptextfield line2 header 13',
 	),
 
 	array(
 		'property_id'=>'1',
 		'header_id'=>'14',
-		'upcharfield'=>'type upcharfield line1 header 14',
+		'upcharfield'=>'a type upcharfield line1 header 14',
 	),
 
 );
