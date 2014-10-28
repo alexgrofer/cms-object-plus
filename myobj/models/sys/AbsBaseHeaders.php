@@ -45,19 +45,21 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $relations;
 	}
 
-	protected function beforeMyQuery() {
+	protected function beforeFind() {
+		parent::beforeFind();
+
+		$this->getDbCriteria()->with['uclass'] = [];
+		//это нужно только при поиске для count есть beforeCount или beforeMyQuery(происходит до любого запроса) НО эти поля нам там не нужны
 		/*
 		 * в случае если есть поддержка свойств(isitlines) и юзер хочет в запросе извлекать строки без дополнительных запросов 'будет join таблиц' force_join_props
 		 */
 		if($this->isitlines && $this->force_join_props) {
-			$this->getDbCriteria()->with['lines.property'] = array();
-			$this->getDbCriteria()->with['uclass.properties'] = array();
-		}
-
-		if($this->uclass_id && strpos($this->getDbCriteria()->condition,'uclass_id')===false) {
-			$criteria = new CDbCriteria;
-			$criteria->compare('uclass_id', $this->uclass_id);
-			$this->getDbCriteria()->mergeWith($criteria);
+			//НЕ делать каждый раз при $header->lines или $header->uclass запрос в базу
+			$this->getDbCriteria()->with['lines'] = [];
+			//никогда не джойнить таблицу строк во избежании задвоений при поиске и сортировке по свойствам, будет делать дополнительный запрос в таблицу строк
+			$this->getDbCriteria()->with['lines'] = ['together'=>false];
+			$this->getDbCriteria()->with['lines.property'] = ['together'=>false];
+			$this->getDbCriteria()->with['uclass.properties'] = ['together'=>false];
 		}
 	}
 
@@ -406,12 +408,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	/**
-	 * Названия реляций.
-	 * При каждом новом условии добавляется в массив, псевдо-свойства необходимо джойнить еще раз таблицу строк.
-	 * @var array
-	 */
-	protected $_finderUProp=array();
-	/**
 	 * Установка критерии по для превдо-свойствам
 	 * примеры:
 	 * *Поиск:
@@ -435,79 +431,61 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return bool
 	 * @throws CException
 	 */
-	public function setSetupCriteria($configArray) {
-		$type = $configArray[0];
-		$nameUProp = $configArray[1];
-		$option1 = $configArray[2];
-		$option2 = isset($configArray[3])?$configArray[3]:null;
-
+	public function getPropCriteria($type, $nameUProps, $option1, $option2=null) {
 		$config = Yii::app()->appcms->config;
 		$relations = $this->relations();
-
-		if($type=='limit') {
-			parent::setSetupCriteria($configArray);
-
-			return true;
-		}
+		$criteria = new CDbCriteria;
 
 		$thisClassProperties = [];
 		foreach($this->uclass->properties as $prop) {
 			$thisClassProperties[$prop->codename] = $prop;
 		}
 
-		if(!isset($thisClassProperties[$nameUProp])) {
-			throw new CException(Yii::t('cms','None prop "{prop}" object class  "{class}"',
-				array('{prop}'=>$nameUProp, '{class}'=>$this->uclass->codename)));
+		if($type=='condition') {
+			$this->force_join_props = true;
+
+			$condition = $option1;
+			$operator = $option2 ?: 'AND';
+			$nameUProps = is_array($nameUProps)?$nameUProps:[$nameUProps];
+
+			foreach($nameUProps as $nameUProp) {
+				$objProp = $thisClassProperties[$nameUProp];
+				$name_column = $config['TYPES_COLUMNS'][$objProp->myfield];
+				$nameRelate = 'lines_find_'.$nameUProp;
+				//HAS_ONE - у одного объекта может быть только одно строка определенного свойства!
+				$this->metaData->addRelation('lines_find_'.$nameUProp, array(self::HAS_ONE, 'lines'.get_class($this), 'header_id', 'on'=> $nameRelate.'.property_id='.$objProp->primaryKey));
+				$criteria->with['lines_find_'.$nameUProp] = array();
+
+				$criteria->with['lines_find_'.$nameUProp]['select'] = false;
+				$criteria->with['lines_find_'.$nameUProp]['together'] = true;
+				$condition = str_replace($nameUProp, $nameRelate.'.'.$name_column, $condition);
+			}
+
+			$criteria->addCondition($condition, $operator);
+
+			return $criteria;
 		}
 
+		$nameUProp = $nameUProps;
 		$objProp = $thisClassProperties[$nameUProp];
 		$name_column = $config['TYPES_COLUMNS'][$objProp->myfield];
 
-		if($type=='condition') {
-			$value = $option1;
-			$operator = $option2 ?: 'AND';
-
-			$keyLinesProp = array_search($nameUProp, $this->_finderUProp);
-			if(in_array($nameUProp, $this->_finderUProp)===false) {
-				$this->_finderUProp[] = $nameUProp;
-				$keyLinesProp = count($this->_finderUProp)-1;
-				$this->metaData->addRelation('lines_find_'.$keyLinesProp, $relations['lines']);
-			}
-			$nameRelate = 'lines_find_'.$keyLinesProp;
-
-			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['together'] = true;
-			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['select'] = false;
-			$this->getDbCriteria()->with['lines_find_'.$keyLinesProp]['condition'] = $nameRelate.'.property_id='.$objProp->primaryKey.' OR '.$nameRelate.'.id IS NULL';
-
-			//скобка справа, с левой проблемы нет
-			$bracket_r='';
-			if(substr(trim($value), -1)==')') {
-				$bracket_r = ')';
-				$value = substr(trim($value), 0, -1);
-			}
-
-			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в поиске
-			$condition = str_replace($nameUProp, $nameRelate.'.'.$name_column, $value).' AND '.$nameRelate.'.property_id='.$objProp->primaryKey;
-			$this->getDbCriteria()->addCondition($condition.$bracket_r, $operator);
-
-			return true;
-		}
-
 		if($type=='order') {
+			$this->force_join_props = true;
+
 			$type_order = $option1;
+			//HAS_ONE - у одного объекта может быть только одно строка определенного свойства!
+			$this->metaData->addRelation('lines_sort', array(self::HAS_ONE, 'lines'.get_class($this), 'header_id', 'on'=> 'lines_sort.property_id='.$objProp->primaryKey));
+			$criteria->with['lines_sort'] = array();
 
-			$this->metaData->addRelation('lines_sort', $relations['lines']);
-			$this->getDbCriteria()->with['lines_sort']['select'] = false;
-
-			$this->getDbCriteria()->with['lines_sort']['together'] = true;
+			$criteria->with['lines_sort']['select'] = false;
+			$criteria->with['lines_sort']['together'] = true;
 			//столбцы которые принадлежат не вошли в join будут содержать NULL поэтому для сортировки необходимо примести к другому типу
 			$sql_query = '(CASE WHEN lines_sort.'.$name_column.' IS NULL THEN 1 ELSE 0 END) ASC, lines_sort.'.$name_column.' '.$type_order;
 			//сама сортировка
-			$this->getDbCriteria()->with['lines_sort']['order'] = $sql_query;
-			//для того что бы не попали лишнии строки(проблемы limit) при джойне ограничим только нужным свойством которое учавствует в сортировке
-			$this->getDbCriteria()->with['lines_sort']['condition'] = 'lines_sort.property_id='.$objProp->primaryKey.' OR lines_sort.id IS NULL';
+			$criteria->order = $sql_query;
 
-			return true;
+			return $criteria;
 		}
 
 	}

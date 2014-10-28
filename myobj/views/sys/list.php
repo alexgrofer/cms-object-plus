@@ -3,16 +3,25 @@
 </style>
 <?php
 //коммент task
-$REND_model_criteria_save = $REND_model->getDbCriteria();
+$fix_criteria = clone $REND_model->getDbCriteria();
+
+$new_criteria = new CDbCriteria;
+
 $nextCond=null;
 if(array_key_exists('serach_param',$_POST)) {
+	$index_find = 0;
+	$count_pf = 0;
+	foreach($_POST['serach_param'] as $val_param_prop) {
+		if($val_param_prop) $count_pf++;
+	}
 	foreach($_POST['serach_param'] as $key => $value) {
 		if($value!='') {
+			$index_find++;
 			$tableAlias = '';
 			$valueSearchElem = $_POST['filter_param'][$key];
 			$typecond = (array_key_exists('serach_cond',$_POST) && isset($_POST['serach_cond'][$key]))?'OR':'AND';
-			$serach_hooks_left = (array_key_exists('serach_hooks_left',$_POST) && isset($_POST['serach_hooks_left'][$key]))?'( ':'';
-			$serach_hooks_right = (array_key_exists('serach_hooks_right',$_POST) && isset($_POST['serach_hooks_right'][$key]))?' )':'';
+			$serach_hooks_left = (array_key_exists('serach_hooks_left',$_POST) && isset($_POST['serach_hooks_left'][$key]))?true:false;
+			$serach_hooks_right = (array_key_exists('serach_hooks_right',$_POST) && isset($_POST['serach_hooks_right'][$key]))?true:false;
 			//если параметр модели указан без псевдонима таблицы берем по умолчанию первичный
 			if(strpos($valueSearchElem,'.')===false) {
 				$tableAlias = $REND_model->tableAlias.'.';
@@ -26,21 +35,35 @@ if(array_key_exists('serach_param',$_POST)) {
 			}
 			$nextCond = $typecond;
 
+			if($serach_hooks_left===true || $index_find==1) {
+				$criteria_find = new CDbCriteria();
+			}
+
 			//для свойств true
 			if(($pos_prop = strpos($valueSearchElem,'__prop'))!==false) {
+
 				$valueSearchElem = substr($valueSearchElem,0,$pos_prop);
-				$REND_model->setSetupCriteria(array('condition', $valueSearchElem, $serach_hooks_left.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key.$serach_hooks_right, $typecond_r));
-				$REND_model->getDbCriteria()->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
+				$tmp_criteria = $REND_model->getPropCriteria('condition', $valueSearchElem, $valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_prop_'.$key);
+				$criteria_find->mergeWith($tmp_criteria, $typecond_r);
+				$criteria_find->params[':param_s_prop_'.$key] = $_POST['serach_param'][$key];
+
+				if($index_find>=$count_pf && !$new_criteria->condition) {
+					$typecond_r = 'AND';
+				}
+
 			}
 			//для обычных параметров модели false
 			else {
-				$REND_model->getDbCriteria()->addCondition($serach_hooks_left.$REND_model->tableAlias.'.'.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_'.$key.$serach_hooks_right, $typecond_r);
-				$REND_model->getDbCriteria()->params[':param_s_'.$key] = $_POST['serach_param'][$key];
+				$criteria_find->addCondition($REND_model->tableAlias.'.'.$valueSearchElem.' '.$_POST['serach_condition'][$key].' :param_s_'.$key, $typecond_r);
+				$criteria_find->params[':param_s_'.$key] = $_POST['serach_param'][$key];
 			}
 
-			$REND_model_criteria_save = $REND_model->getDbCriteria();
+			if($serach_hooks_right===true || $index_find>=$count_pf) {
+				$new_criteria->mergeWith($criteria_find, $typecond_r);
+			}
 		}
 	}
+	$new_criteria->mergeWith($fix_criteria, 'AND');
 }
 //sort
 if(isset($_POST['order_by']) && $_POST['order_by']!='0') {
@@ -53,20 +76,18 @@ elseif($REND_order_by_def) {
 if(isset($order_array)) {
 	$name_order_explode = explode('---',$order_array);
 	if(($pos_prop = strpos($name_order_explode[0],'__prop'))!==false) {
-		$REND_model->setSetupCriteria(array('order', substr($name_order_explode[0],0,$pos_prop), $name_order_explode[1]));
+		$orderCriteria = $REND_model->getPropCriteria('order', substr($name_order_explode[0],0,$pos_prop), $name_order_explode[1]);
+
+		$new_criteria->mergeWith($orderCriteria);
 	}
 	else {
-		$REND_model->getDbCriteria()->order = $REND_model->tableAlias.'.'.$name_order_explode[0].' '.$name_order_explode[1];
+		$new_criteria->order = $REND_model->tableAlias.'.'.$name_order_explode[0].' '.$name_order_explode[1];
 	}
 	unset($name_order_explode,$pos_prop);
-
-	$REND_model_criteria_save = $REND_model->getDbCriteria();
 }
 unset($order_array);
 //sort
-$COUNT_P = $REND_model->count($REND_model_criteria_save);
-//обязательно необходимо пересохранять критерию, так как она теряется после запроса (count(),findAll() и т.д)
-$REND_model->setDbCriteria($REND_model_criteria_save);
+$COUNT_P = $REND_model->count($new_criteria);
 
 $arrchecked = $REND_selectedarr;
 
@@ -144,12 +165,11 @@ if(array_key_exists('selectorsids',$_POST) && $_POST['selectorsids']!='') $selec
 if($idpage==1) $idpage=0;
 elseif($idpage!=0) $idpage -= 1;
 if($COUNT_P > $COUNTVIEWELEMS) {
-	$REND_model->setSetupCriteria(array('limit', $COUNTVIEWELEMS, $COUNTVIEWELEMS * $idpage));
-
-	$REND_model_criteria_save = $REND_model->getDbCriteria();
+	$new_criteria->limit = $COUNTVIEWELEMS;
+	$new_criteria->offset = $COUNTVIEWELEMS * $idpage;
 }
 
-$listall = $REND_model->findAll($REND_model_criteria_save);
+$listall = $REND_model->findAll($new_criteria);
 
 if(array_key_exists('selectorsids_excluded',$_POST) && $_POST['selectorsids_excluded']!='') {
 	$selectorsids_excluded = explode(',',$_POST['selectorsids_excluded']);

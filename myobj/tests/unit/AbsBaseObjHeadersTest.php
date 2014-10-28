@@ -327,71 +327,127 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($objHeader->uProperties, ['codename1'=>'value1', 'codename2'=>'value2']);
 	}
 
-	public function testSetSetupCriteria() {
+	public function testGetPropCriteria() {
 		/* @var $modelObjects TestAbsBaseObjHeaders */
-
-		//важный момент для цепочки критерии
 		$modelObjects = uClasses::getclass('codename3')->objects();
+		//необходимо склонировать текущую критерию
+		$fix_criteria = clone $modelObjects->getDbCriteria();
+		//если несколько свойства необходимо каждое поставить в скобки
+		$criteria1 = $modelObjects->getPropCriteria('condition',array('codename1', 'codename2'), '(codename1=:h_10_prop_1)
+		 AND (codename2=:h_10_prop_2)');
+		$criteria1->params[':h_10_prop_1'] = 'h type upcharfield line1 header 10';
+		$criteria1->params[':h_10_prop_2'] = 'g type uptextfield line2 header 10';
+
+		$new_criteria = new CDbCriteria;
+		$new_criteria->mergeWith($fix_criteria);
+		$new_criteria->mergeWith($criteria1);//($fix_condition) AND ($criteria1)
+		$this->assertEquals(1, $modelObjects->count($new_criteria));
+		//
+		$criteria2 = $modelObjects->getPropCriteria('condition',array('codename1', 'codename2'), '(codename1=:h_12_prop_1)
+		 AND (codename2=:h_12_prop_2)');
+		$criteria2->params[':h_12_prop_1'] = 'e type upcharfield line1 header 12';
+		$criteria2->params[':h_12_prop_2'] = 'd type uptextfield line2 header 12';
+
+		$criteria3 = new CDbCriteria;
+		$criteria3->addCondition($modelObjects->getTableAlias().'.param2=:param_param2');
+		$criteria3->params[':param_param2'] = 'text param2 header 13';
+
+		$criteria2->mergeWith($criteria1, 'OR'); //($criteria1 OR $criteria2)
+		$criteria3->mergeWith($criteria2, 'OR'); //($criteria1 OR ($criteria2 OR $criteria3))
+
+		$new_criteria = new CDbCriteria;
+		$new_criteria->mergeWith($fix_criteria);
+		$new_criteria->mergeWith($criteria3); //($fix_condition) AND (($criteria1 OR ($criteria2 OR $criteria3)))
+		$this->assertEquals(3, $modelObjects->count($new_criteria));
+
+		$fix_criteria_find = clone $new_criteria;
+		//установить сортировку по свойству codename1 desc
+		$order_criteria_codename1_desc = $modelObjects->getPropCriteria('order','codename1','DESC');
+
+		$new_criteria = new CDbCriteria;
+		$new_criteria->mergeWith($fix_criteria_find);//($fix_condition) AND (($criteria1 OR ($criteria2 OR $criteria3)))
+		$new_criteria->mergeWith($order_criteria_codename1_desc);//($fix_condition) AND (($criteria1 OR ($criteria2 OR $criteria3))) order by 'codename1_desc'
+		$objects = $modelObjects->findAll($new_criteria);
+		$this->assertEquals(3, count($objects));
+		$this->assertEquals($objects[0]->uProperties['codename1'], 'h type upcharfield line1 header 10');
+		$this->assertEquals($objects[1]->uProperties['codename1'], 'e type upcharfield line1 header 12');
+		$this->assertEquals($objects[2]->uProperties['codename1'], null); //task пока null не получилось опусить вниз при сортировке
+
+		$this->assertEquals($objects[0]->uProperties['codename2'], 'g type uptextfield line2 header 10');
+		$this->assertEquals($objects[1]->uProperties['codename2'], 'd type uptextfield line2 header 12');
+		$this->assertEquals($objects[2]->uProperties['codename2'], 'b type uptextfield line2 header 13');
+
+		$order_criteria_codename1_asc = $modelObjects->getPropCriteria('order','codename1','ASC');
+
+		$new_criteria = new CDbCriteria;
+		$new_criteria->mergeWith($fix_criteria_find);//($fix_condition) AND (($criteria1 OR ($criteria2 OR $criteria3)))
+		$new_criteria->mergeWith($order_criteria_codename1_asc);//($fix_condition) AND (($criteria1 OR ($criteria2 OR $criteria3))) order by 'codename1_asc'
+		$objects = $modelObjects->findAll($new_criteria);
+		$this->assertEquals(3, count($objects));
+		$this->assertEquals($objects[0]->uProperties['codename1'], 'e type upcharfield line1 header 12');
+		$this->assertEquals($objects[1]->uProperties['codename1'], 'h type upcharfield line1 header 10');
+		$this->assertEquals($objects[2]->uProperties['codename1'], null);
+
+		$this->assertEquals($objects[0]->uProperties['codename2'], 'd type uptextfield line2 header 12');
+		$this->assertEquals($objects[1]->uProperties['codename2'], 'g type uptextfield line2 header 10');
+		$this->assertEquals($objects[2]->uProperties['codename2'], 'b type uptextfield line2 header 13');
+
+		$fix_criteria_find_order  = clone $new_criteria;
+
+		$new_criteria = new CDbCriteria;;
+		$new_criteria->mergeWith($fix_criteria_find_order);
+		$new_criteria->limit = 1;
+		$new_criteria->offset = 0;
+		$objects = $modelObjects->findAll($new_criteria);
+		$this->assertEquals(1, count($objects));
+
+		$this->assertEquals($objects[0]->uProperties['codename1'], 'e type upcharfield line1 header 12');
+		$this->assertEquals($objects[0]->uProperties['codename2'], 'd type uptextfield line2 header 12');
+
+		$new_criteria = new CDbCriteria;;
+		$new_criteria->mergeWith($fix_criteria_find_order);
+		$new_criteria->limit = 1;
+		$new_criteria->offset = 1;
+		$objects = $modelObjects->findAll($new_criteria);
+		$this->assertEquals(1, count($objects));
+
+		$this->assertEquals($objects[0]->uProperties['codename1'], 'h type upcharfield line1 header 10');
+		$this->assertEquals($objects[0]->uProperties['codename2'], 'g type uptextfield line2 header 10');
+
+		$new_criteria = new CDbCriteria;;
+		$new_criteria->mergeWith($fix_criteria_find_order);
+		$new_criteria->limit = 1;
+		$new_criteria->offset = 2;
+		$objects = $modelObjects->findAll($new_criteria);
+		$this->assertEquals(1, count($objects));
+
+		$this->assertEquals($objects[0]->uProperties['codename1'], null);
+		$this->assertEquals($objects[0]->uProperties['codename2'], 'b type uptextfield line2 header 13');
+
+		/*************************************/
+
+		/*
+		 * Просто обычный поиск когда условие "И"
+		 * Если одно свойство в getPropCriteria (Внутри скобки не обязательны)
+		 */
+		$modelObjects = uClasses::getclass('codename3')->objects();
+		$fix_criteria = clone $modelObjects->getDbCriteria();
 
 		//установка критерии для поиска по свойству
-		$modelObjects->setSetupCriteria(array('condition','codename1', 'codename1=:param_prop_1'));
-		$modelObjects->getDbCriteria()->params[':param_prop_1'] = 'h type upcharfield line1 header 10';
+		$criteria1 = $modelObjects->getPropCriteria('condition','codename1', 'codename1=:param_prop_1');
+		$criteria1->params[':param_prop_1'] = 'd type upcharfield line1 header 10';
 
 		//установка критерии для поиска по обычному параметру
-		$modelObjects->getDbCriteria()->addCondition($modelObjects->getTableAlias().'.param1=:param_param1');
-		$modelObjects->getDbCriteria()->params[':param_param1'] = 'text param1 header 10';
-		//необходимо сохранять критерию для цепочки
-		$saveCriteria = $modelObjects->getDbCriteria();
+		$criteria2 = new CDbCriteria;
+		$criteria2->addCondition($modelObjects->getTableAlias().'.param1=:param_param1');
+		$criteria2->params[':param_param1'] = 'text param1 header 14';
 
-		$this->assertEquals(1, $modelObjects->count($saveCriteria));
+		$criteria2->mergeWith($criteria1); //($criteria1 AND $criteria2)
 
-
-		//важный момент для цепочки критерии
-		$modelObjects = uClasses::getclass('codename3')->objects();
-		//найти строку у которой codename1 и codename2
-		$modelObjects->setSetupCriteria(array('condition','codename1', '(codename1=:h_10_prop_1'));
-		$modelObjects->getDbCriteria()->params[':h_10_prop_1'] = 'h type upcharfield line1 header 10';
-
-		$modelObjects->setSetupCriteria(array('condition','codename2', 'codename2=:h_10_prop_2)'));
-		$modelObjects->getDbCriteria()->params[':h_10_prop_2'] = 'g type uptextfield line2 header 10';
-		//необходимо сохранять критерию для цепочки
-		$saveCriteria = $modelObjects->getDbCriteria();
-
-		//проверить колличество 1
-		$this->assertEquals(1, $modelObjects->count($saveCriteria));
-		//передаем критерию по цепочке дальше
-		$modelObjects->setDbCriteria($saveCriteria);
-		//добавляем к критерии ИЛИ еще у которой codename1 и codename2 скобки
-		$modelObjects->setSetupCriteria(array('condition','codename1', '(codename1=:h_12_prop_1', 'OR'));
-		$modelObjects->getDbCriteria()->params[':h_12_prop_1'] = 'e type upcharfield line1 header 12';
-
-		$modelObjects->setSetupCriteria(array('condition','codename2', 'codename2=:h_12_prop_2)'));
-		$modelObjects->getDbCriteria()->params[':h_12_prop_2'] = 'd type uptextfield line2 header 12';
-
-		//установка критерии для поиска по обычному параметру
-		$modelObjects->getDbCriteria()->addCondition($modelObjects->getTableAlias().'.param2=:param_param2', 'OR');
-		$modelObjects->getDbCriteria()->params[':param_param2'] = 'text param2 header 11';
-
-		//необходимо сохранять критерию для цепочки
-		$saveCriteria = $modelObjects->getDbCriteria();
-		echo $saveCriteria->condition;
-
-		//проверить колличество 2
-		$this->assertEquals(2, $modelObjects->count($saveCriteria));
-		//передаем критерию по цепочке дальше
-		$modelObjects->setDbCriteria($saveCriteria);
-		//делаем постраничность через 1
-		$modelObjects->setSetupCriteria(array('limit', 0, 1));
-		//установить сортировку по свойству codename1 asc
-		$modelObjects->setSetupCriteria(array('order', 'codename1', 'DESC'));
-		//проверяем постраничность т.е каждое свойство каждый лимит через 1
-		//добавляем к критерии еще одно свойство или
-		//проверить колличество 3
-		//проверяем по постраничности снова - постраничность уже установленна
-		//убрать постраничность вообще
-		//ставим сортировку по другому свойству codename2 проверить сортировку по всем свойствам - она установленна
-		//установить постраничность снова
-		//и проверить все совйства
+		$new_criteria = new CDbCriteria;
+		$new_criteria->mergeWith($fix_criteria);
+		$new_criteria->mergeWith($criteria2); //(...) AND ($criteria1 AND $criteria2)
+		$this->assertEquals(1, $modelObjects->count($new_criteria));
 	}
 
 	/*

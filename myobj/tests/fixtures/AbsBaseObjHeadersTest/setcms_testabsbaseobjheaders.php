@@ -57,8 +57,6 @@ return array(
 	'TestAbsBaseObjHeaders_sample_id_10'=>array(
 		'id'=>'10',
 		'uclass_id'=>'3',
-
-		'param1'=>'text param1 header 10'
 	),
 
 	'TestAbsBaseObjHeaders_sample_id_11'=>array(
@@ -76,10 +74,14 @@ return array(
 	'TestAbsBaseObjHeaders_sample_id_13'=>array(
 		'id'=>'13',
 		'uclass_id'=>'3',
+
+		'param2'=>'text param2 header 13'
 	),
 
 	'TestAbsBaseObjHeaders_sample_id_14'=>array(
 		'id'=>'14',
 		'uclass_id'=>'3',
+
+		'param1'=>'text param1 header 14'
 	),
 );

@@ -79,12 +79,6 @@ return array(
 	),
 
 	array(
-		'property_id'=>'1',
-		'header_id'=>'13',
-		'upcharfield'=>'c type upcharfield line1 header 13',
-	),
-
-	array(
 		'property_id'=>'2',
 		'header_id'=>'13',
 		'uptextfield'=>'b type uptextfield line2 header 13',
@@ -93,7 +87,7 @@ return array(
 	array(
 		'property_id'=>'1',
 		'header_id'=>'14',
-		'upcharfield'=>'a type upcharfield line1 header 14',
+		'upcharfield'=>'d type upcharfield line1 header 10',
 	),
 
 );
