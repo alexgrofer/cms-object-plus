@@ -32,9 +32,8 @@ foreach($listobjsort as $objarr) {
 	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'"><i class="icon-edit"></i></a>';
 	if($arrayuirow['links']) $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
 
-	$objclass = uClasses::getclass(array('navigation_sys','param_sys','controllersnav_sys'));
+	$objclass = uClasses::getclass(array('navigation_sys','param_sys'));
 	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass['navigation_sys']->primaryKey.'">params</a>';
-	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['controllersnav_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$this->dicturls['paramslist'][1].'">controller</a>';
 	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->primaryKey.'&usercontroller=usernav">template</a>';
 
 	$visibl = ($obj->bp1)?'+':'-';

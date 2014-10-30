@@ -11,7 +11,6 @@ $menu = array(
 			'templates'=>array('label'=>'templates','url'=>array('admin/objects/class/templates_sys')),
 			'views'=>array('label'=>'views','url'=>array('admin/objects/class/views_sys/')),
 			'nav'=>array('label'=>'nav','url'=>array('admin/objects/class/navigation_sys/&usercontroller=usernav')),
-			'controllers'=>array('label'=>'controllers','url'=>array('admin/objects/class/controllersnav_sys/')),
 		),
 	),
 	'conf'=>array(

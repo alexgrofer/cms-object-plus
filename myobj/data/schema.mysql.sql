@@ -194,7 +194,6 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(4,'handle_sys','handle_sys','',2),
 	(5,'navigation_sys','navigation_sys','',2),
 	(6,'param_sys','param_sys','',2),
-	(9,'controllersnav_sys','controllersnav_sys','',2),
 	(10,'db_dump_sys','db_dump_sys','',2),
 	-- modul_example_news
 	(17,'news example','news_example','',1),
@@ -205,7 +204,6 @@ INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) 
 	(5,3), -- [navigation_sys]<>-----templates_sys
 	(5,4), -- [navigation_sys]<>-----handle_sys
 	(5,6), -- [navigation_sys]<>-----param_sys
-	(5,9), -- [navigation_sys]<>-----controllersnav_sys
 	-- modul_example_news classes_association
 	(17,18); -- [news_example]<>-----news_section_example
 INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
@@ -225,8 +223,6 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
 (2,1,'guest','',0,'guestsys','guestsys',0),
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
--- Controller def
-(4,9,'default','default controller',null,'default','',null),
 -- modul_example_news
 -- navigation - Class (navigation_sys) id = 5
 (15,5,'example news list','',0,'','news_list_example',1),
@@ -242,8 +238,6 @@ INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
 (1,1),
 (2,1),
 (3,1),
--- Controller def
-(4,9),
 -- example news
 -- navigation - Class (navigation_sys) id = 5
 (15,5),

@@ -8,7 +8,6 @@ $nonedel = array(
 		'handle_sys',
 		'navigation_sys',
 		'param_sys',
-		'controllersnav_sys',
 		'db_dump_sys',
 	),
 	'objects' => array(

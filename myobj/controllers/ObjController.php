@@ -33,10 +33,7 @@ class ObjController extends \Controller {
 			}
 			Yii::app()->params['OBJNAV'] = $objnav;
 			Yii::app()->params['OBJPARENT_CONTROLLER'] = $this;
-			$conf_site = array();
-			if($namecontroller=$objnav->getobjlinks('controllersnav_sys')->find()) {
-				require(dirname(__FILE__).'/cms/user/'.$namecontroller->vp1);
-			}
+			$conf_site = array(); //task, как то по другому передать
 			$this->layout='/cms/templates/'.$templateobj->vp1;
 			$this->render('/cms/templates/'.$templateobj->vp1.'_content',$conf_site);
 		}

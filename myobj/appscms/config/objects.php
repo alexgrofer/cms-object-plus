@@ -6,7 +6,6 @@ $classes_system = array(
 	'handle'=>'handle_sys',
 	'navigation'=>'navigation_sys',
 	'params'=>'param_sys',
-	'controllersnav'=>'controllersnav_sys',
 	'db_dump'=>'db_dump_sys',
 );
 
@@ -47,12 +46,6 @@ $objects = array(
 	$classes_system['params'] => array(
 		'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
 		'AttributeLabels' => array('vp1'=>'codename'),
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-	),
-	$classes_system['controllersnav'] => array(
-		'cols' => array('id'=>'id','name'=>'name'),
-		'AttributeLabels' => array('vp1'=>'patch', 'content'=>'description'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
