@@ -28,8 +28,12 @@ class AppCMS extends CComponent {
 		$this->config = apicms\utils\importRecursName('MYOBJ.appscms.config',$name_file_config,true,true);
 		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
 		//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
-		if(isset($routeArr[1]) && $routeArr[1]=='admin') {
-			$this->config = array_merge_recursive($this->config,apicms\utils\importRecursName('MYOBJ.appscms.config',$name__admin_file_config,true,true));
+		if(isset($routeArr[1])) {
+			if ($routeArr[1] == 'admin') {
+				$this->config = array_merge_recursive($this->config, apicms\utils\importRecursName('MYOBJ.appscms.config', $name__admin_file_config, true, true));
+			} else {
+				Yii::import('MYOBJ.controllers.cms.AbsSiteController');
+			}
 		}
 
 		//init preload components
