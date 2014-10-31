@@ -18,7 +18,7 @@ $cs->registerCssFile($assetsFolder.'/bootstrap/css/bootstrap.min.css');
 $cs->registerScriptFile($assetsFolder.'/js/main.js');
 $cs->registerCssFile($assetsFolder.'/css/main.css');
 ?>
-<?php $this->beginContent('/layouts/admin/main')?>
+<?php $this->beginContent('/admin/layouts/main')?>
 
 <?php echo $content?>
 

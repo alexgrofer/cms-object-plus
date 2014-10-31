@@ -4,7 +4,7 @@ use \yii as yii;
 use \CActiveRecord as CActiveRecord;
 
 class AdminController extends \Controller {
-	public $layout='/layouts/admin/column1';
+	public $layout='/admin/layouts/column1';
 	public $apcms;
 	public $dicturls = array();
 	/**
@@ -55,7 +55,7 @@ class AdminController extends \Controller {
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
 	public function getMenuhtmlSub() {
-		return $this->renderPartial('/sys/myui_sub');
+		return $this->renderPartial('/admin/views/myui_sub');
 	}
     public function getRoute()
     {
@@ -74,7 +74,7 @@ class AdminController extends \Controller {
 			}
 		}
 		if($noneadmin) {
-			$this->render('/sys/user/autorize');
+			$this->render('/admin/views/user/autorize');
 			Yii::app()->end();
 		}
 		//init urls
@@ -91,7 +91,7 @@ class AdminController extends \Controller {
 		$objectsDelete = array();
 
 		//VARS
-		$view = ($this->dicturls['action']=='edit')?'/sys/obj':'/sys/list';
+		$view = ($this->dicturls['action']=='edit')?'/admin/views/obj':'/admin/views/list';
 		$modelAD = null;
 		switch($this->dicturls['class']) { //switch url
 			case 'objects':
@@ -363,7 +363,7 @@ class AdminController extends \Controller {
 					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time()).'.csv';
 					$typefile = 'text/csv';
 					$this->layout=false;
-					$view = '/sys/sendfile';
+					$view = '/admin/views/sendfile';
 					$paramsrender = array('namefile'=>$namefile,'content'=>$content,'typefile'=>$typefile,'terminate'=>false);
 					$this->renderPartial($view,$paramsrender);
 					Yii::app()->end();
@@ -440,7 +440,7 @@ class AdminController extends \Controller {
 			}
 		}
 		if(isset($this->paramsrender['REND_acces_read']) && $this->paramsrender['REND_acces_read']===false) {
-			$view = '/sys/acces';
+			$view = '/admin/views/acces';
 		}
 		$this->paramsrender['REND_model'] = $modelAD;
 		//USER CONTROLLER
@@ -451,7 +451,7 @@ class AdminController extends \Controller {
 			elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
 				$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
 			}
-			if(isset($namecontroller)) require(dirname(__FILE__).'/cms/sys/'.$namecontroller);
+			if(isset($namecontroller)) require(dirname(__FILE__).'/admin/sys/'.$namecontroller);
 		}
 
 		//delete objects
