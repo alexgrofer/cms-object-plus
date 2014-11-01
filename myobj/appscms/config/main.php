@@ -53,7 +53,6 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'classes_system' => $classes_system,
 'language_def' => 'en',
 'languages' => array('ru', 'en', 'th', 'vi', 'de'),
-'objindexname' => 'index', //id or codename nac obj class
 
 'sys_db_type_InnoDB'=>true, //в случае true не будет делать лишний запрос для удаления ссылок MTM при работе с AbsBaseModel::clearMTMLink
 );

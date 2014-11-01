@@ -1,57 +1,104 @@
 <?php
-namespace MYOBJ\controllers;
-use \yii as yii;
+namespace MYOBJ\controllers\admin;
+use yii;
+use uClasses;
 
 abstract class AbsSiteController extends \Controller {
-	public $apcms;
-	public $layout=false;
-	public $dicturls = array();
-	public function run($actionID) {
-		$this->dicturls['paramslist'] = array_slice((explode('/',Yii::app()->request->getParam('r')) + array('','','','','','','')),2);
-		$this->dicturls['all'] = '/'.Yii::app()->request->getParam('r');
+	public $thisObjNav = null;
+	public $varsRender = null;
 
-		Yii::app()->params['LANGi18n']=Yii::app()->appcms->config['language_def'];
-		$index = Yii::app()->appcms->config['objindexname'];
+	/* в представдение можно передать переменные
+	public function indexAction() {
+		$this->varsRender = ['name'=>'5'];
+	}
+	*/
 
-		if(in_array($this->dicturls['paramslist'][0], Yii::app()->appcms->config['languages'])) {
-			Yii::app()->params['LANGi18n']=$this->dicturls['paramslist'][0];
-			if($this->dicturls['paramslist'][1]) $index = $this->dicturls['paramslist'][1];
-		}
-		elseif($this->dicturls['paramslist'][0]) {
-			$index = $this->dicturls['paramslist'][0];
-		}
-		//насколько важно менять общий язык серды?
-		//Yii::app()->setLanguage(Yii::app()->params['LANGi18n']);
+	final private function renderNavigateContent($navigate, $action) {
+		$findParamNameNav = is_int($navigate)?'id':'vp2';
+		$findParamNameAction = 'vp3';
+		$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findParamNameNav=>$navigate, $findParamNameAction=>$action));
 
-		$findparamname = (preg_match('/\D/', $index))?'vp2':'id';
-		$objnav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findparamname => $index, 'bp1' => true));
-
-		if($objnav) {
-			//если нет объекта шаблона привязанного к этому объекту навигации
-			if(!($templateobj = $objnav->getobjlinks('templates_sys')->find())) {
+		if($objNav) {
+			if(!($templateObj = $objNav->getobjlinks('templates_sys')->find())) {
 				throw new \CException(Yii::t('cms','none object template'));
 			}
-			Yii::app()->params['OBJNAV'] = $objnav;
-			Yii::app()->params['OBJPARENT_CONTROLLER'] = $this;
-			$conf_site = array(); //task, как то по другому передать
-			$this->layout='/cms/templates/'.$templateobj->vp1;
-			$this->render('/cms/templates/'.$templateobj->vp1.'_content',$conf_site);
+			$this->thisObjNav = $objNav;
+
+			$this->layout='/cms/templates/'.$templateObj->vp1;
+			$this->render('/cms/templates/'.$templateObj->vp1.'_content');
 		}
 		else {
 			throw new \CHttpException(404,'page not is find');
 		}
 	}
 
-	public function createUrl($route,$params=array(),$ampersand='&') {
-		$url = parent::createUrl($route,$params,$ampersand);
-
-		$pat = 'index.php?r=myobj';
-		$count = strlen($pat);
-		if(strrpos($url,$pat.'/obj')!==false) {
-			$count = strlen($pat.'/obj');
+	public function renderView($objView, $isPermit, $vars) {
+		if($isPermit && !$this->isPermitRender($objView)) {
+			return '';
 		}
-
-		return substr($url,$count+1);
+		return $this->renderPartial('/../views/site/views/'.$objView->vp1, $vars);//vp1 = path view
 	}
 
+	private $_tempHandleViews=null;
+	public function renderHandle($name, $idHandle, $isPermit=true) {
+		if($this->_tempHandleViews==null) {
+			$this->_tempHandleViews = array();
+			$handles = $this->thisObjNav->getobjlinks('handle_sys')->findAll(); //vp1 = view ID, sort = handle ID
+			$idsView = array();
+			foreach($handles as $handle) {
+				$idsView[] = $handle->vp1;
+			}
+			$CRITERIA = new CDbCriteria();
+			$CRITERIA->addInCondition('t.id', $idsView);
+			$headerModel = uClasses::getclass('views_sys')->objects();
+			$listView = $headerModel->findAll($CRITERIA);
+			$elemsView = [];
+			foreach($listView as $view) {
+				$elemsView[$view->primaryKey] = $view; //task сделать утилиту которая вернет массив ключами которого будут первичные ключи объектов
+			}
+			foreach($handles as $handle) {
+				$this->_tempHandleViews[$handle->sort] = $elemsView[$handle->vp1];
+			}
+		}
+
+		if(!array_key_exists($idHandle, $this->_tempHandleViews)) {
+			return '';
+		}
+
+		return $this->renderView($this->_tempHandleViews[$idHandle], $isPermit, $this->varsRender);
+	}
+
+	protected function afterAction($action) {
+		return $this->renderNavigateContent(yii::app()->getController()->getId(), $action);
+	}
+
+	final private function isPermitRender($objView) {
+		$groupsView = $objView->getobjlinks('groups_sys')->findAll();
+		$access = false;
+
+		if($groupsView) {
+			$group_handle_ids_top_groups = array();
+			foreach($groupsView as $objgroup) {
+				$group_handle_ids_top_groups[] = $objgroup->vp1;
+			}
+
+			if(\Yii::app()->user->isGuest && in_array('guestsys', $group_handle_ids_top_groups)) {
+				$access = true;
+			}
+			elseif(!\Yii::app()->user->isGuest && in_array('authorizedsys', $group_handle_ids_top_groups)) {
+				$access = true;
+			}
+			elseif(!\Yii::app()->user->isGuest) {
+				$groupsuser = \Yii::app()->user->groupsident;
+				foreach($group_handle_ids_top_groups as $idsystemgroup) {
+					if(in_array($idsystemgroup,$groupsuser)) {
+						$access = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return $access;
+	}
 }

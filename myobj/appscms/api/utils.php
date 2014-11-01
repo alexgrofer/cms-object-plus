@@ -29,52 +29,6 @@ function uiparamnav($cont,$name=false,$value=false) {
 	return $newtest;
 }
 
-function URender($idtmplhandl,$listtshihandles) {
-	if(!array_key_exists($idtmplhandl, $listtshihandles)) {
-		return '';
-	}
-
-	$patchview= $listtshihandles[$idtmplhandl]['patchview'];
-
-	$onview = IsPermitRender($listtshihandles[$idtmplhandl]['objview']);
-
-	if($onview) {
-		return $patchview;
-	}
-	else '';
-}
-
-function IsPermitRender($objView) {
-	$groupsView = $objView->getobjlinks('groups_sys')->findAll();
-	//если необходимо(в хендлах) можно сделать кеш руками с помощью static, task
-	$onview = false;
-
-	if($groupsView) {
-		$group_handle_ids_top_groups = array();
-		foreach($groupsView as $objgroup) {
-			$group_handle_ids_top_groups[] = $objgroup->vp1;
-		}
-
-		if(\Yii::app()->user->isGuest && in_array('guestsys', $group_handle_ids_top_groups)) {
-			$onview = true;
-		}
-		elseif(!\Yii::app()->user->isGuest && in_array('authorizedsys', $group_handle_ids_top_groups)) {
-			$onview = true;
-		}
-		elseif(!\Yii::app()->user->isGuest) {
-			$groupsuser = \Yii::app()->user->groupsident;
-			foreach($group_handle_ids_top_groups as $idsystemgroup) {
-				if(in_array($idsystemgroup,$groupsuser)) {
-					$onview = true;
-					break;
-				}
-			}
-		}
-	}
-
-	return $onview;
-}
-
 function arrvaluesmodel($listobjects, $namekey) {
 	if(!is_array($listobjects)) $listobjects = array($listobjects);
 	$arrv = array();

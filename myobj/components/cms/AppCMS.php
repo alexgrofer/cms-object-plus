@@ -56,37 +56,4 @@ class AppCMS extends CComponent {
 		}
 		return false;
 	}
-
-	private $_thisnavhandles = null;
-	public function handle($name, $id) {
-		if($this->_thisnavhandles==null) {
-			$this->_thisnavhandles = array();
-			$handles = Yii::app()->params['OBJNAV']->getobjlinks('handle_sys')->findAll();
-			$idsview = array();
-			foreach($handles as $handle) {
-				$idsview[] = $handle->vp1; //vp1 = idview , sort = handletmplid
-			}
-			$CRITERIA = new CDbCriteria();
-			$CRITERIA->addInCondition('t.id', $idsview);
-			$headerModel = uClasses::getclass('views_sys')->objects();
-			$listview = $headerModel->findAll($CRITERIA);
-			$elemsview = array();
-			foreach($listview as $view) {
-				$elemsview[$view->primaryKey] = array('patchview' => $view->vp1, 'objview' => $view); //vp1 = patchview
-			}
-			foreach($handles as $handle) {
-				$this->_thisnavhandles[$handle->sort] = $elemsview[$handle->vp1];
-			}
-		}
-
-		$patchview = apicms\utils\URender($id,$this->_thisnavhandles);
-		if($patchview!='') {
-			Yii::beginProfile('Loade_handle_v:'.$patchview);
-
-			$render =  Yii::app()->params['OBJPARENT_CONTROLLER']->renderPartial('/../views/cms/views/'.$patchview);
-			Yii::endProfile('Loade_handle_v:'.$patchview);
-			return $render;
-
-		}
-	}
 }
