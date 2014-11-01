@@ -2,10 +2,9 @@
 .pagination input {display:none}
 </style>
 <?php
-//коммент task
 $fix_criteria = clone $REND_model->getDbCriteria();
-
 $new_criteria = new CDbCriteria;
+$new_criteria->mergeWith($fix_criteria, 'AND');
 
 $nextCond=null;
 if(array_key_exists('serach_param',$_POST)) {
@@ -63,7 +62,6 @@ if(array_key_exists('serach_param',$_POST)) {
 			}
 		}
 	}
-	$new_criteria->mergeWith($fix_criteria, 'AND');
 }
 //sort
 if(isset($_POST['order_by']) && $_POST['order_by']!='0') {
