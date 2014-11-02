@@ -1,4 +1,4 @@
--- uclasses system
+--
 CREATE TABLE `setcms_uclasses` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE `setcms_uclasses` (
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`codename`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- (SELF) TABLE uclasses_association
+--
 CREATE TABLE `setcms_uclasses_association` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
@@ -18,13 +18,13 @@ CREATE TABLE `setcms_uclasses_association` (
 	FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- objproperties
+--
 CREATE TABLE `setcms_objproperties` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`codename` varchar(30) NOT NULL,
 	`description` varchar(255) NOT NULL,
-	`myfield` smallint(5) unsigned NOT NULL, -- types field
+	`myfield` smallint(5) unsigned NOT NULL,
 	`minfield` varchar(4) NOT NULL,
 	`maxfield` varchar(4) NOT NULL,
 	`required` tinyint(1) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `setcms_objproperties` (
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`codename`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- uclasses objproperties (relation)
+--
 CREATE TABLE `setcms_uclasses_objproperties` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
@@ -41,9 +41,9 @@ CREATE TABLE `setcms_uclasses_objproperties` (
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- -------------------------------------------------- system objects
--- system_obj_headers
+--
 CREATE TABLE `setcms_systemobjheaders` (
+	-- required
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`uclass_id` int(11) NOT NULL,
 	-- more options
@@ -52,6 +52,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 	`sort` int(11) DEFAULT NULL,
 	`vp1` varchar(255) NULL,
 	`vp2` varchar(255) NULL,
+	`vp3` varchar(255) NULL,
 	`bp1` tinyint(1) NULL,
 	-- end
 	PRIMARY KEY (`id`),
@@ -60,7 +61,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 
 CREATE TABLE `setcms_linessystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`property_id` int(11) NOT NULL, -- models.ForeignKey(objProperties)
+	`property_id` int(11) NOT NULL,
 	`header_id` int(11) NOT NULL,
 	`uptextfield` longtext DEFAULT NULL,
 	`upcharfield` varchar(255) DEFAULT NULL,
@@ -71,10 +72,7 @@ CREATE TABLE `setcms_linessystemobjheaders` (
 	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- -------------------------------------------------- end system objects
-
--- -------------------------------------------------- my objects
--- my_obj_headers
+--
 CREATE TABLE `setcms_myobjheaders` (
 	-- required
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -102,10 +100,7 @@ CREATE TABLE `setcms_linesmyobjheaders` (
 	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- -------------------------------------------------- end my objects
-
--- -------------------------------------------------- links my
--- linksobjectsallmy
+--
 CREATE TABLE `setcms_linksobjectsallmy` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`idobj` int(11) NOT NULL,
@@ -114,7 +109,7 @@ CREATE TABLE `setcms_linksobjectsallmy` (
 	UNIQUE KEY (`idobj`,`uclass_id`),
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- (SELF) TABLE linksobjectssystem_links
+--
 CREATE TABLE `setcms_linksobjectsallmy_links` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_self_id` int(11) NOT NULL,
@@ -124,11 +119,7 @@ CREATE TABLE `setcms_linksobjectsallmy_links` (
 	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- NOR RELATION linksobjectsallmy
--- -------------------------------------------------- ens links all my
-
--- -------------------------------------------------- links system
--- linksobjectsallsystem
+--
 CREATE TABLE `setcms_linksobjectsallsystem` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`idobj` int(11) NOT NULL,
@@ -137,7 +128,7 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
 	UNIQUE KEY (`idobj`,`uclass_id`),
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- (SELF) TABLE linksobjectssystem_links
+--
 CREATE TABLE `setcms_linksobjectsallsystem_links` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_self_id` int(11) NOT NULL,
@@ -147,10 +138,7 @@ CREATE TABLE `setcms_linksobjectsallsystem_links` (
 	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- NOR RELATION linksobjectsallsystem
--- -------------------------------------------------- ens links all system
-
--- User
+--
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`login` VARCHAR(255) NOT NULL,
@@ -183,75 +171,36 @@ CREATE TABLE `setcms_userpasport` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`user_id`) REFERENCES `setcms_user` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- -------------------------------------------------- end User
-
--- assotiation
+--
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
-	-- SYS
 	(1,'groups_sys','groups_sys','',2),
 	(2,'views_sys','views_sys','',2),
 	(3,'templates_sys','templates_sys','',2),
 	(4,'handle_sys','handle_sys','',2),
 	(5,'navigation_sys','navigation_sys','',2),
 	(6,'param_sys','param_sys','',2),
-	(10,'db_dump_sys','db_dump_sys','',2),
-	-- modul_example_news
-	(17,'news example','news_example','',1),
-	(18,'news section example','news_section_example','',1);
+	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
-	(2,1), -- [views_sys]<>-----groups_sys
-	(5,2), -- [navigation_sys]<>-----views_sys
-	(5,3), -- [navigation_sys]<>-----templates_sys
-	(5,4), -- [navigation_sys]<>-----handle_sys
-	(5,6), -- [navigation_sys]<>-----param_sys
-	-- modul_example_news classes_association
-	(17,18); -- [news_example]<>-----news_section_example
-INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
-	-- modul_example_news
-	(1,'Annotation news example','annotation_news_example','',3,'','',0,'',''),
-	(2,'Text news example','text_news_example','',3,'','',0,'',''),
-	(3,'images list obj news example','images_list_obj_news_example','',3,'','',0,'',''),
-	(4,'codename news section example','codename_news_section_example','',3,'','',0,'','');
-INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
-	-- modul_example_news
-	(17,1), -- news_example -> annotation_news_example
-	(17,2), -- news_example -> text_news_example
-	(17,3), -- news_example -> images_list_obj_news_example
-	(18,4); -- news_example -> codename_news_section_example
-INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`bp1`) VALUES -- objects system
--- Class (setcms_uclasses) id = 1
-(1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',0), -- guid outside-id or guid group user
-(2,1,'guest','',0,'guestsys','guestsys',0),
-(3,1,'authorized','',0,'authorizedsys','authorizedsys',0),
--- modul_example_news
--- navigation - Class (navigation_sys) id = 5
-(15,5,'example news list','',0,'','news_list_example',1),
-(17,5,'example news edit object','',0,'','news_edit_object_example',1),
--- templates - Class (templates_sys) id = 3
-(18,3,'example news index','',0,'modul_news_example/index','',0),
--- views - Class (views_sys) id = 2
-(19,2,'example list news','',0,'modul_news_example/listnews','',0),
-(21,2,'example edit object news','',0,'modul_news_example/editobjnews','',0);
--- Object Links
-INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
--- example setcms_systemobjheaders links
-(1,1),
-(2,1),
-(3,1),
--- example news
--- navigation - Class (navigation_sys) id = 5
-(15,5),
-(17,5),
--- templates - Class (templates_sys) id = 3
-(18,3),
--- views - Class (views_sys) id = 2
-(19,2),
-(21,2);
+	(2,1), -- views_sys <> groups_sys
+	(5,2), -- navigation_sys <> views_sys
+	(5,3), -- navigation_sys <> templates_sys
+	(5,4), -- navigation_sys <> handle_sys
+	(5,6); -- navigation_sys <> param_sys
 
--- User
+-- INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
+-- INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
+
+INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`vp3`,`bp1`) VALUES
+(1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms','',0), -- guid outside-id or guid group user
+(2,1,'guest','',0,'guestsys','guestsys','',0),
+(3,1,'authorized','',0,'authorizedsys','authorizedsys','',0);
+
+-- INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
+
+--
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
-INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','ivanov',1);
--- Groups
+INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','',1);
+--
 INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1BF-461A-B1FE-3182B24D2812');
--- (One to M) User -> Groups
+--
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
