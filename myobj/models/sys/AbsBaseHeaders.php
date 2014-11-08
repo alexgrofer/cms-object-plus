@@ -192,6 +192,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->primaryKey,'{nametable}'=>$this->getNameLinksModel())));
 		}
 		$objclass = \uClasses::getclass($class);
+		$modelHeader = $objclass->initobject();
 
 		if(!$this->uclass->hasAssotiation($objclass->codename)) {
 			throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
@@ -201,13 +202,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//сделать путь для сообщений cms-ки, будут ли работать yii
 		//throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
 			//array('{class}'=>get_class($this), '{property}'=>$name)));
-		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');
-		$nameModelHeader = Yii::app()->appcms->config['spacescl'][$objclass->tablespace]['namemodel'];
-		$model = new $nameModelHeader();
-		$model->dbCriteria->addInCondition($model->tableAlias.'.id', $idsheaders);
-		$model->dbCriteria->compare($model->tableAlias.'.uclass_id',$objclass->primaryKey);
-		$model->uclass_id = $objclass->primaryKey;
-		return $model;
+		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');;
+		$modelHeader->dbCriteria->addInCondition($modelHeader->tableAlias.'.id', $idsheaders);
+		$modelHeader->dbCriteria->compare($modelHeader->tableAlias.'.uclass_id',$objclass->primaryKey);
+		$modelHeader->uclass_id = $objclass->primaryKey;
+		return $modelHeader;
 	}
 
 	public function afterSave() {

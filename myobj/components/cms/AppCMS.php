@@ -14,6 +14,7 @@ class AppCMS extends CComponent {
 	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.create
 		//import
 		Yii::import('MYOBJ.models.sys.*');
+		Yii::import('MYOBJ.models.headers.sys.*');
         Yii::import('MYOBJ.components.cms.behaviors.*');
         Yii::import('MYOBJ.components.cms.widgets.*');
 		//import include
