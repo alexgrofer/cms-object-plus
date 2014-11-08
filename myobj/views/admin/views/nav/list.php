@@ -18,7 +18,7 @@ $listobjsort = apicms\utils\treelem($listall,'','vp2','vp1',function($str) {retu
 <td><input class="btn btn-primary" type="submit" name="push_" value="top" /></td>
 <td>id</td>
 <td>name</td>
-<td>codename</td>
+<td>codename</td><td>action</td>
 <td>top</td>
 <td>sort</td>
 <td>visible</td>
@@ -39,7 +39,7 @@ foreach($listobjsort as $objarr) {
 	$visibl = ($obj->bp1)?'+':'-';
 
 	$uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
-	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->vp2.'</td><td>'.$obj->vp1.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
+	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->vp2.'</td><td>'.$obj->vp3.'</td><td>'.$obj->vp1.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
 	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->vp2.'" value="push" /> | '.$uihtml.' </td>
 	</tr>';
 }

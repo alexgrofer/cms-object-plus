@@ -1,19 +1,20 @@
 <?php
 class SystemObjHeaders extends AbsBaseHeaders
 {
-	public $name; //models.CharField(max_length=255)
-	public $content; //models.TextField(blank=True)
-	public $sort; //models.IntegerField(blank=True,null=True,default=0)
-	public $vp1; //models.CharField(max_length=255,blank=True)
-	public $vp2; //models.CharField(max_length=255,blank=True)
-	public $bp1; //models.BooleanField(blank=True) --
+	public $name;
+	public $content;
+	public $sort;
+	public $vp1;
+	public $vp2;
+	public $vp3;
+	public $bp1;
 
 	public function customRules()
 	{
 		return array(
 			array('name', 'required'),
 			array('sort', 'default', 'value'=>0),
-			array('vp1, vp2, content', 'default', 'value'=>''),
+			array('vp1, vp2, vp3, content', 'default', 'value'=>''),
 			array('bp1', 'boolean'),
 			array('bp1', 'default', 'value'=>false),
 
@@ -34,6 +35,9 @@ class SystemObjHeaders extends AbsBaseHeaders
 				'type'=>'text',
 			),
 			'vp2'=>array(
+				'type'=>'text',
+			),
+			'vp3'=>array(
 				'type'=>'text',
 			),
 			'bp1'=>array(
