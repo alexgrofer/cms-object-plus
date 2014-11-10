@@ -79,18 +79,12 @@ if(array_key_exists('submit',$_POST)) {
 </select></p>
 <?php
 if($templates) {
-$handleview = array();
-foreach($currenthandles as $handle) {
-	$view = $handle->getobjlinks('handle_sys')->findAll();
-	$idview = ($view)?$view[0]->primaryKey:'';
-	$handleview[] = array('idtemp'=>$handle->vp1,'idview'=>$idview);
-}
 $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
 
-$contenttmpl=file_get_contents(dirname(__FILE__).'/../../cms/templates/'.$templates[0]->vp1.'_content'.'.php');
+$contenttmpl=file_get_contents(yii::getPathOfAlias('DIR_TEMPLATES_SITE').'/'.$templates[0]->vp1.'_content'.'.php');
 
 $arraypregtmp = array();
-preg_match_all("~appcms->handle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);
+preg_match_all("~->renderHandle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);
 if(count($arraypregtmp)) {
 echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
 foreach($arraypregtmp[1] as $key => $namehand) {
