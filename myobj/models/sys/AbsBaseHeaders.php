@@ -148,7 +148,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param array $idsheaders
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, array $idsheaders=null) {
+	public function editlinks($type, $class, $idsheaders=null) {
 		$objects = null;
 
 		if($idsheaders) {
@@ -159,7 +159,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$classid = $class->primaryKey;
 
 			if(!$this->uclass->hasAssotiation($class->codename)) {
-				throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
+				throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$class->codename));
 			}
 
 			$namelinkallmodel = $this->getNameLinksModel();
@@ -185,17 +185,17 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return AbsBaseHeaders возвращает модель с настроенной criteria
 	 * @throws CException
 	 */
-	public function getobjlinks($class,string $tableSpace=null) {
+	public function getobjlinks($nameAssociationClass, $tableSpace=null) {
 		$objectcurrentlink = $this->toplink;
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
 			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->primaryKey,'{nametable}'=>$this->getNameLinksModel())));
 		}
-		$objclass = \uClasses::getclass($class);
-		$modelHeader = $objclass->initobject();
+		$associationClass = \uClasses::getclass($nameAssociationClass);
+		$modelHeader = $associationClass->initobject();
 
-		if(!$this->uclass->hasAssotiation($objclass->codename)) {
-			throw new CException(Yii::t('cms','Not find assotiation class '.$class->codename));
+		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
 		//проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
@@ -204,8 +204,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			//array('{class}'=>get_class($this), '{property}'=>$name)));
 		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');;
 		$modelHeader->dbCriteria->addInCondition($modelHeader->tableAlias.'.id', $idsheaders);
-		$modelHeader->dbCriteria->compare($modelHeader->tableAlias.'.uclass_id',$objclass->primaryKey);
-		$modelHeader->uclass_id = $objclass->primaryKey;
+		$modelHeader->dbCriteria->compare($modelHeader->tableAlias.'.uclass_id',$associationClass->primaryKey);
+		$modelHeader->uclass_id = $associationClass->primaryKey;
 		return $modelHeader;
 	}
 
@@ -343,6 +343,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		//+++реляция для ссылки возможна только после того как инициализован класс
 		$nameLinksModel = $this->getNameLinksModel();
 		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass->primaryKey));
+		$this->toplink = $this->getRelated('toplink', true);
 
 		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {
