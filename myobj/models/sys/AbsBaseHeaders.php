@@ -312,8 +312,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 *
 	 * @param $values
 	 */
-	public function setAttributes($values) {
-		parent::setAttributes($values);
+	public function setAttributes($values, $safeOnly=true) {
+		parent::setAttributes($values, $safeOnly);
 
 		if(is_array($values) && count($values)) {
 			//SWITCH MY TYPES

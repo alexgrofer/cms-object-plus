@@ -62,7 +62,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function isAddElemClass($name) {
 		return in_array($name,$this->elements_enable_class);
 	}
-	public function setAttributes($values) {
+	public function setAttributes($values, $safeOnly=true) {
 		if(is_array($values) && count($values)) {
 			//SWITCH MY TYPES
 			foreach($values as $nameElem => $val) {
@@ -77,7 +77,7 @@ abstract class AbsBaseModel extends CActiveRecord
 			}
 		}
 
-		parent::setAttributes($values);
+		parent::setAttributes($values, $safeOnly);
 	}
 	public function __set($name, $value) {
 		//init new elements
