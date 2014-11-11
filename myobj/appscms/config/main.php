@@ -1,5 +1,6 @@
 <?php
-yii::setPathOfAlias('DIR_TEMPLATES_SITE', yii::getPathOfAlias('MYOBJ.views.site.templates'));
+defined('DIR_TEMPLATES_SITE') or define('DIR_TEMPLATES_SITE', '/site/templates/');
+defined('DIR_VIEWS_SITE') or define('DIR_VIEWS_SITE', '/site/views/');
 
 list($objects,$set_spaces,$classes_system) = apicms\utils\importRecursName('MYOBJ.appscms.config','objects.php',true,true);
 $models = apicms\utils\importRecursName('MYOBJ.appscms.config','models.php',true,true);

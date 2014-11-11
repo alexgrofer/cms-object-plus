@@ -1,6 +1,4 @@
 <?php
-yii::setPathOfAlias('DIR_TEMPLATES_ADMIN', yii::getPathOfAlias('MYOBJ.views.admin.layouts'));
-
 $tables_db_dump = array(
 	//links
 	'setcms_linksobjectsallmy',

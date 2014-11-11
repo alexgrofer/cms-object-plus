@@ -195,7 +195,11 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (2,1,'guest','',0,'guestsys','guestsys',NULL,0),
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',NULL,0);
 
--- INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
+INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
+-- links for objects groups
+ (1,1),
+ (2,1),
+ (3,1);
 
 --
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');

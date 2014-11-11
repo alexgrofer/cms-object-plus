@@ -9,7 +9,7 @@ use \yii as yii;
  */
 class ObjController extends \MYOBJ\controllers\admin\AbsSiteController {
 	protected function afterAction($action) {
-		$navigate = $action;
+		$navigate = $action->getId();
 		return $this->renderNavigate($navigate, null);
 	}
 }

@@ -81,24 +81,25 @@ if(array_key_exists('submit',$_POST)) {
 if($templates) {
 $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
 
-$contenttmpl=file_get_contents(yii::getPathOfAlias('DIR_TEMPLATES_SITE').'/'.$templates[0]->vp1.'_content'.'.php');
+$contenttmpl=file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE.$templates[0]->vp1.'_content'.'.php');
 
 $arraypregtmp = array();
-preg_match_all("~->renderHandle\((.+),(.+)\)~",$contenttmpl, $arraypregtmp);
+preg_match_all("~->renderHandle\('(.+)',(.+)\)~",$contenttmpl, $arraypregtmp);
 if(count($arraypregtmp)) {
 echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
-foreach($arraypregtmp[1] as $key => $namehand) {
-$namehand = str_replace('\'','',$namehand);
+$array_combine = array_combine($arraypregtmp[2], $arraypregtmp[1]);
+ksort($array_combine);
+foreach($array_combine as $key => $namehand) {
 ?>
 	<tr>
 		<td><?php echo $namehand?></td>
 		<td>
-			<p><select name="<?php echo 'for_handltmp__'.$arraypregtmp[2][$key].'__'.$namehand?>">
+			<p><select name="<?php echo 'for_handltmp__'.$key.'__'.$namehand?>">
 			<?php
 			echo '<option value="0">---</option>';
 			foreach($arrallviews as $objviw) {
 				$select = '';
-				if(array_key_exists($arraypregtmp[2][$key],$keysidhandle) && $keysidhandle[$arraypregtmp[2][$key]]->vp1 == $objviw->primaryKey) {
+				if(array_key_exists($key,$keysidhandle) && $keysidhandle[$key]->vp1 == $objviw->primaryKey) {
 					$select = 'selected="selected"';
 				}
 				echo '<option value="'.$objviw->primaryKey.'" '.$select.'>'.$objviw->name.' - '.$objviw->vp1.'.php</option>';

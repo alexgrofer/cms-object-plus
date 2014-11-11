@@ -24,8 +24,8 @@ abstract class AbsSiteController extends \Controller {
 			}
 			$this->thisObjNav = $objNav;
 
-			$this->layout='/cms/templates/'.$templateObj->vp1;
-			$this->render('/cms/templates/'.$templateObj->vp1.'_content');
+			$this->layout=DIR_TEMPLATES_SITE.$templateObj->vp1;
+			$this->render(DIR_TEMPLATES_SITE.$templateObj->vp1.'_content');
 		}
 		else {
 			throw new \CHttpException(404,'page not is find');
@@ -36,7 +36,8 @@ abstract class AbsSiteController extends \Controller {
 		if($isPermit && !$this->isPermitRender($objView)) {
 			return '';
 		}
-		return $this->renderPartial('/../views/site/views/'.$objView->vp1, $vars);//vp1 = path view
+
+		return $this->renderPartial(DIR_VIEWS_SITE.$objView->vp1, $vars, true);//vp1 = path view
 	}
 
 	private $_tempHandleViews=null;
@@ -48,7 +49,7 @@ abstract class AbsSiteController extends \Controller {
 			foreach($handles as $handle) {
 				$idsView[] = $handle->vp1;
 			}
-			$CRITERIA = new CDbCriteria();
+			$CRITERIA = new \CDbCriteria();
 			$CRITERIA->addInCondition('t.id', $idsView);
 			$headerModel = uClasses::getclass('views_sys')->objects();
 			$listView = $headerModel->findAll($CRITERIA);
@@ -69,7 +70,7 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function afterAction($action) {
-		return $this->renderNavigateContent(yii::app()->getController()->getId(), $action);
+		return $this->renderNavigateContent(yii::app()->getController()->getId(), $action->getId());
 	}
 
 	final private function isPermitRender($objView) {
