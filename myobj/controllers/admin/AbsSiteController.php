@@ -5,15 +5,15 @@ use uClasses;
 
 abstract class AbsSiteController extends \Controller {
 	public $thisObjNav = null;
-	public $varsRender = null;
+	public $varsRender = array();
 
 	/* в представдение можно передать переменные
 	public function indexAction() {
-		$this->varsRender = ['name'=>'5'];
+		$this->varsRender['name'] = 'var name';
 	}
 	*/
 
-	final private function renderNavigateContent($navigate, $action) {
+	final protected function renderNavigateContent($navigate, $action) {
 		$findParamNameNav = is_int($navigate)?'id':'vp2';
 		$findParamNameAction = 'vp3';
 		$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array($findParamNameNav=>$navigate, $findParamNameAction=>$action));
@@ -32,16 +32,16 @@ abstract class AbsSiteController extends \Controller {
 		}
 	}
 
-	public function renderView($objView, $isPermit, $vars) {
-		if($isPermit && !$this->isPermitRender($objView)) {
-			return '';
-		}
-
-		return $this->renderPartial(DIR_VIEWS_SITE.$objView->vp1, $vars, true);//vp1 = path view
-	}
-
 	private $_tempHandleViews=null;
-	public function renderHandle($name, $idHandle, $isPermit=true) {
+	/**
+	 * выводит в поток рендер представления для установленного рендера навигацмм
+	 * @param $name название хендла, нужен только для юзера что бы определить его в настройке шаблона
+	 * @param $idHandle необходим для сортировке для упрощения поиска в настройке шаблона, должен быть уникален для шаблона в навигации
+	 * @param bool $isContent если true экшен сможет передать все переменные в представление, если false переменные пападут в специальную переменную представления varsPrivateSetHandle
+	 * @param bool $isPermit если false не будут использоваться права групп на представления
+	 * @return null|string Вернет null если нет прав или рендер представления
+	 */
+	final public function renderHandle($name, $idHandle, $isContent=false, $isPermit=true) {
 		if($this->_tempHandleViews==null) {
 			$this->_tempHandleViews = array();
 			$handles = $this->thisObjNav->getobjlinks('handle_sys')->findAll(); //vp1 = view ID, sort = handle ID
@@ -63,10 +63,21 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		if(!array_key_exists($idHandle, $this->_tempHandleViews)) {
-			return '';
+			return null;
 		}
 
-		return $this->renderView($this->_tempHandleViews[$idHandle], $isPermit, $this->varsRender);
+		$vars = [];
+		if($isContent) {
+			$vars = $this->varsRender;
+		} else {
+			$vars['varsPrivateSetHandle'] = $this->varsRender;
+		}
+
+		$objView = $this->_tempHandleViews[$idHandle];
+		if($isPermit && !$this->isPermitRender($objView)) {
+			return null;
+		}
+		return $this->renderPartial(DIR_VIEWS_SITE.$objView->vp1, $vars, true);//vp1 = path view
 	}
 
 	protected function afterAction($action) {

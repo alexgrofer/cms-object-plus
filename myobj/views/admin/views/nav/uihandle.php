@@ -84,7 +84,7 @@ $arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
 $contenttmpl=file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE.$templates[0]->vp1.'_content'.'.php');
 
 $arraypregtmp = array();
-preg_match_all("~->renderHandle\('(.+)',(.+)\)~",$contenttmpl, $arraypregtmp);
+preg_match_all('~->renderHandle\(\'(.+)\',(\d+)~',$contenttmpl, $arraypregtmp);
 if(count($arraypregtmp)) {
 echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
 $array_combine = array_combine($arraypregtmp[2], $arraypregtmp[1]);
@@ -99,7 +99,7 @@ foreach($array_combine as $key => $namehand) {
 			echo '<option value="0">---</option>';
 			foreach($arrallviews as $objviw) {
 				$select = '';
-				if(array_key_exists($key,$keysidhandle) && $keysidhandle[$key]->vp1 == $objviw->primaryKey) {
+				if(isset($keysidhandle[$key]) && $keysidhandle[$key]->vp1 == $objviw->primaryKey) {
 					$select = 'selected="selected"';
 				}
 				echo '<option value="'.$objviw->primaryKey.'" '.$select.'>'.$objviw->name.' - '.$objviw->vp1.'.php</option>';

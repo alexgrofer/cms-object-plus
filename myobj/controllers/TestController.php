@@ -7,8 +7,10 @@ use \yii as yii;
  * Class TestController
  */
 class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
-	public function actionList() {
+	public function actionHeader_list() {
+		$this->pageTitle = $this->getAction()->getId();
 
+		$this->varsRender['testvar1'] = 'text var testvar1';
 	}
 
 	public function actionShow() {
