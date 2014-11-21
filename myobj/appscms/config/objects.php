@@ -61,17 +61,17 @@ $objects = array(
  * namelinksmodel - (модель для ссылок) если в классе будут предусмотренны ссылки на другие объекты,
  * если null ссылки для объектов этого табличного пространства не предусмотренны
  */
-$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','namelinksmodel'=>'linksObjectsAllMy'); //пользовательские классы
-$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'); //системные классы
+$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','nameLinkMMTable'=>'linksObjectsAllMy'); //пользовательские классы
+$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameLinkMMTable'=>'linksObjectsAllSystem'); //системные классы
 /*
  * модели можно хранить в отдельных таблицах при необходимости
  */
-$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem');
-$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'namelinksmodel'=>'linksObjectsAllSystem');
-$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'namelinksmodel'=>'linksObjectsAllSystem');
-$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'namelinksmodel'=>'linksObjectsAllSystem');
-$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem');
-$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameLinkMMTable'=>'linksObjectsAllSystem');
+$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'nameLinkMMTable'=>'linksObjectsAllSystem');
+$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameLinkMMTable'=>'linksObjectsAllSystem');
+$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'nameLinkMMTable'=>'linksObjectsAllSystem');
+$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','nameLinkMMTable'=>'linksObjectsAllSystem');
+$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'nameLinkMMTable'=>'linksObjectsAllSystem');
 
 /*
  * ссылки можно хранить в отдельных таблицах при необходимости

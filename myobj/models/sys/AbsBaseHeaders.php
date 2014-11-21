@@ -26,10 +26,13 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public $force_join_props = true;
 
 	/**
-	 * @return string Название модели в которой лежит ссылки , пример linksObjectsAllMy
+	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
+	 * @return string Название дочерней таблицы для ссылок
 	 */
-	public function getNameLinksModel() {
-		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
+	public function getNameLinksMMTable($name_type_link=null) {
+		//просмотр дополнительных реляций
+
+		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['nameLinkMMTable'];
 	}
 
 	/**
@@ -199,10 +202,36 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Получить ссылки на другие объекты
 	 * @param mixed $class класс объекта
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
-	 * @return AbsBaseHeaders возвращает модель с настроенной criteria
+	 * @return CActiveRecord[] - массив заголовков
 	 * @throws CException
 	 */
 	public function getobjlinks($nameAssociationClass, $name_type_link=null) {
+
+		////
+		/* @var $associationClass uClasses */
+		$associationClass = \uClasses::getclass($nameAssociationClass);
+
+		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
+		}
+
+		$name_table_links = $this->getNameLinksMMTable($name_type_link);
+		$name_pref_relation = 'defRelation';
+		if($name_type_link) {
+			$name_pref_relation = $name_type_link;
+		}
+		if(!$this->metaData->hasRelation($name_pref_relation)) {
+			$this->metaData->addRelation($name_pref_relation, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), 'setcms_' . $name_table_links . '(from_obj_id, to_obj_id)', 'on' => 'from_class_id='.$this->uclass_id.' AND to_class_id='.$associationClass->primaryKey));
+			$this->$name_pref_relation = $this->getRelated($name_pref_relation, true);
+		}
+
+		return $this->$name_pref_relation;
+
+
+		//http://www.yiiframework.com/doc/api/1.1/CBaseActiveRelation#condition-detail
+
+		////
+
 		$objectcurrentlink = $this->toplink;
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
@@ -361,11 +390,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->metaData->addRelation('uclass', array(self::BELONGS_TO, 'uClasses', '', 'on'=> 'uclass.id='.$this->uclass_id));
 			$this->uclass = $this->getRelated('uclass', true);
 		}
-
-		//+++реляция для ссылки возможна только после того как инициализован класс
-		$nameLinksModel = $this->getNameLinksModel();
-		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
-		$this->toplink = $this->getRelated('toplink', true);
 
 		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {
