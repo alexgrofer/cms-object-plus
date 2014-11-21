@@ -88,11 +88,10 @@ class uClasses extends AbsBaseModel
 	 */
 	public function initobject() {
 		$nameModelHeaders = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
-		if(@class_exists($this->codename.'_'.$nameModelHeaders)) {
-			$nameModelHeaders = $this->codename.'_'.$nameModelHeaders;
-		}
 		$newobj = new $nameModelHeaders;
-		$newobj->uclass_id = $this->primaryKey;
+		if(!$newobj->is_independent) {
+			$newobj->uclass_id = $this->primaryKey;
+		}
 		$newobj->declareObj();
 		return $newobj;
 	}
@@ -103,8 +102,9 @@ class uClasses extends AbsBaseModel
 	 */
 	public function objects() { //namesvprop left join props lines
 		$modelheaders = $this->initobject();
-		$modelheaders->dbCriteria->compare($modelheaders->getTableAlias().'.uclass_id',$this->primaryKey);
-		$modelheaders->uclass_id = $this->primaryKey;
+		if(!$modelheaders->is_independent) {
+			$modelheaders->dbCriteria->compare($modelheaders->getTableAlias() . '.uclass_id', $this->primaryKey);
+		}
 		return $modelheaders;
 	}
 	//user func classes

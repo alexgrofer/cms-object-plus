@@ -58,7 +58,21 @@ CREATE TABLE `setcms_systemobjheaders` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+--
+CREATE TABLE `setcms_navigatesystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`codename` varchar(255) NULL DEFAULT NULL,
+	`action_name` varchar(255) NULL DEFAULT NULL,
+	`sort` int(11) NOT NULL DEFAULT 0,
+	`parent_id` int(11) NULL DEFAULT NULL,
+	`show` tinyint(1) NOT NULL DEFAULT 0,
+	-- keys
+	`template_default_id` int(11) DEFAULT NULL,
+	--
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
 CREATE TABLE `setcms_linessystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,

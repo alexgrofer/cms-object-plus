@@ -3,7 +3,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	const PRE_PROP='prop_';
 
+	/**
+	 * @var bool - true у текущего галоловка своя таблица
+	 * false - лежит в общей таблице
+	 */
+	public $is_independent=false;
+	/**
+	 * @var int Переменная определяет текущий класс объекта используется если заголовок хранится в своей собственной таблице
+	 */
 	public $uclass_id;
+
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
@@ -36,13 +45,20 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	public function relations() {
 		$relations = [];
-
-		$relations['uclass'] = array(self::BELONGS_TO, 'uClasses', 'uclass_id');
+		if(!$this->is_independent) {
+			$relations['uclass'] = array(self::BELONGS_TO, 'uClasses', 'uclass_id');
+		}
 
 		if($this->isitlines == true) {
 			$relations['lines'] = array(self::HAS_MANY, 'lines'.get_class($this), 'header_id');
 		}
 		return $relations;
+	}
+
+	public function customRules() {
+		return array(
+			array('uclass_id', 'unsafe'),
+		);
 	}
 
 	protected function beforeFind() {
@@ -146,9 +162,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param $type add, remove, clear
 	 * @param $class
 	 * @param array $idsheaders
+	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsheaders=null) {
+	public function editlinks($type, $class, $idsheaders=null, $name_type_link=null) {
 		$objects = null;
 
 		if($idsheaders) {
@@ -181,11 +198,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	/**
 	 * Получить ссылки на другие объекты
 	 * @param mixed $class класс объекта
-	 * @param string $tableSpace табличное пространство
+	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @return AbsBaseHeaders возвращает модель с настроенной criteria
 	 * @throws CException
 	 */
-	public function getobjlinks($nameAssociationClass, $tableSpace=null) {
+	public function getobjlinks($nameAssociationClass, $name_type_link=null) {
 		$objectcurrentlink = $this->toplink;
 		if(!$objectcurrentlink) {
 			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
@@ -340,9 +357,14 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function declareObj() {
 		parent::declareObj();
 
+		if($this->is_independent) {
+			$this->metaData->addRelation('uclass', array(self::BELONGS_TO, 'uClasses', '', 'on'=> 'uclass.id='.$this->uclass_id));
+			$this->uclass = $this->getRelated('uclass', true);
+		}
+
 		//+++реляция для ссылки возможна только после того как инициализован класс
 		$nameLinksModel = $this->getNameLinksModel();
-		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass->primaryKey));
+		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
 		$this->toplink = $this->getRelated('toplink', true);
 
 		//+++необходимо узнать список свойств у этого объекта
@@ -403,7 +425,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 	public function initObj() {
 		parent::initObj();
-		$this->oldProperties = $this->uProperties;
+		if($this->isitlines) {
+			$this->oldProperties = $this->uProperties;
+		}
 		//пройтись по критерии и если там встречается параметр "_uProp" тогда добавить некоторые дополнительные критерии для нормальног опоиска
 	}
 

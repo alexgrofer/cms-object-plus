@@ -11,8 +11,8 @@ $classes_system = array(
 
 $objects = array(
 	$classes_system['handle'] => array(
-		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view'),
-		'AttributeLabels' => array('vp1'=>'idview'),
+		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
+		'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
@@ -63,7 +63,25 @@ $objects = array(
  */
 $set_spaces['1'] = array('namemodel'=>'MyObjHeaders','namelinksmodel'=>'linksObjectsAllMy'); //пользовательские классы
 $set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem'); //системные классы
+/*
+ * модели можно хранить в отдельных таблицах при необходимости
+ */
+$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','namelinksmodel'=>'linksObjectsAllSystem');
+$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'namelinksmodel'=>'linksObjectsAllSystem');
 
+/*
+ * ссылки можно хранить в отдельных таблицах при необходимости
+ */
+$reader_type_relation = array(
+	//space NavigateSystemObjHeaders
+	'3' => array(
+		'templates' => 'linksObjectsAllSystemTemplates'
+	)
+);
 
 Yii::app()->params['api_conf_objects'] = $objects;
 Yii::app()->params['api_conf_spaces'] = $set_spaces;
