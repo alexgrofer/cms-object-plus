@@ -5,17 +5,17 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 		$thisObj = $this->getOwner();
 		$thisTable = $thisObj->tableName();;
 		$thisObjPrimaryKeyVal = $thisObj->primaryKey;
-		$thisRelations = $thisObj->relations();
+		$thisRelations = $thisObj->metaData->relations;
 		$thisRelation = $thisRelations[$namerelation];
-		$typeThisRelation = $thisRelation[0];
-		$nameModelThisRelation = $thisRelation[1];
-		$nameLinkPrimaryKeyThisRelation = $thisRelation[2];
+		$typeThisRelation = get_class($thisRelation);
+		$nameModelThisRelation = $thisRelation->className;
+		$nameLinkPrimaryKeyThisRelation = $thisRelation->foreignKey;
 		$modelThisRelation = new $nameModelThisRelation();
 		$nameTableThisRelation = $modelThisRelation->tableName();
 		$namePrimaryKeyThisRelation = $modelThisRelation->primaryKey();
 
 		if($typeThisRelation==CActiveRecord::MANY_MANY) {
-			$arrDataM = preg_split('/[,()]/', $thisRelation[2]);
+			$arrDataM = preg_split('/[,()]/', $nameLinkPrimaryKeyThisRelation);
 			$mtmNameTable = trim($arrDataM[0]);
 			$mtmFromPrimaryKey = trim($arrDataM[1]);
 			$mtmToPrimaryKey = trim($arrDataM[2]);
