@@ -10,11 +10,9 @@ CREATE TABLE `setcms_uclasses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_uclasses_association` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_uclasses_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_uclasses_id`),
+	PRIMARY KEY (`from_uclasses_id`,`to_uclasses_id`),
 	FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -35,11 +33,10 @@ CREATE TABLE `setcms_objproperties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_uclasses_objproperties` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_objproperties_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`)
+	PRIMARY KEY (`from_uclasses_id`,`to_objproperties_id`),
+	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_systemobjheaders` (
@@ -119,15 +116,17 @@ CREATE TABLE `setcms_linksobjectsallmy` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
-	`to_class_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linksobjectsallsystem` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
-	`to_class_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
