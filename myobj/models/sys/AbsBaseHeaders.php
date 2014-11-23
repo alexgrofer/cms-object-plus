@@ -184,7 +184,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$addparam['to_class_id'] = $associationClass->primaryKey;
 		}
 
-		$this->UserRelated->links_edit($type, $nameRelate, $idsHeader, $addparam);
+		$where=['and'];
+		if($type!='and') {
+			foreach($addparam as $k => $v) $where[] = $k.'='.$v;
+		}
+
+		$this->UserRelated->links_edit($type, $nameRelate, $idsHeader, $addparam, $where);
 	}
 
 	/**
@@ -252,6 +257,13 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
+		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
+			//по сути не важно что за класс поэтому просто get_class($this)
+			$nameRelate = static::PRE_LINKS_MTM.'del'.$nameTypeLink;
+			$objLinkModel = $nameModelLink::model();
+			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, get_class($this), $objLinkModel->tableName().'(from_obj_id, to_obj_id)'));
+			$this->UserRelated->links_edit('clear', $nameRelate, null, array(), ['and', 'from_class_id='.$this->uclass_id]);
+		}
 		return parent::beforeDelete();
 	}
 
