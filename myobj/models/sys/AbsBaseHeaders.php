@@ -2,6 +2,8 @@
 abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	const PRE_PROP='prop_';
+	const PRE_LINKS='links_';
+	const PRE_LINKS_MTM='links_mtm_';
 
 	/**
 	 * @var bool - true у текущего галоловка своя таблица
@@ -26,10 +28,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public $force_join_props = true;
 
 	/**
-	 * @return string Название модели в которой лежит ссылки , пример linksObjectsAllMy
+	 * Список моделий для связки объектов
+	 * @return array
 	 */
-	public function getNameLinksModel() {
-		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['namelinksmodel'];
+	public function getNamesModelLinks() {
+		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['nameModelLinks'];
 	}
 
 	/**
@@ -37,11 +40,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * Данные Свойств лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
 	 */
 	public $isitlines = true;
-	/**
-	 * @var bool Возможность создавать композицию объектов (ссылок объектов друг на друга)
-	 * Если true тогда при каждом добавлении нового элемента для него будет создаваться новый объект класса AbsBaseLinksObjects таблица setcms_linksobjectsallmy
-	 */
-	public $flagAutoAddedLinks = true;
 
 	public function relations() {
 		$relations = [];
@@ -165,85 +163,65 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsheaders=null, $name_type_link=null) {
-		$objects = null;
+	public function editlinks($type, $class, $idsHeader=null, $name_type_link='0') {
+		$addparam = ['from_class_id' => $this->uclass_id];
 
-		if($idsheaders) {
-			if(is_object($idsheaders)) $idsheaders = $idsheaders->primaryKey;
-			if(!is_object($class)) {
-				$class = uClasses::getclass($class);
-			}
-			$classid = $class->primaryKey;
+		$associationClass = \uClasses::getclass($class);
 
-			if(!$this->uclass->hasAssotiation($class->codename)) {
-				throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$class->codename));
-			}
-
-			$namelinkallmodel = $this->getNameLinksModel();
-			$CRITERIA = new CDbCriteria();
-			if(!is_array($idsheaders)) $idsheaders = array($idsheaders);
-			$CRITERIA->addInCondition('idobj', $idsheaders);
-			$CRITERIA->compare('uclass_id',$classid);
-			$linksobjects = $namelinkallmodel::model()->findAll($CRITERIA);
-			if(!$linksobjects) {
-				throw new CException(Yii::t('cms','Not find link id {idlink}, Class {class}, table_links "{nametable}"',
-				array('{class}'=>$class->codename, '{idlink}'=>implode(',',$idsheaders),'{nametable}'=>$this->getNameLinksModel())));
-			}
-			$objects = apicms\utils\arrvaluesmodel($linksobjects,'id');
+		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		$this->toplink->UserRelated->links_edit($type,'links',$objects);
+		$nameRelate = static::PRE_LINKS_MTM.$name_type_link;
+		$arrayModelLinks = $this->getNamesModelLinks();
+		$objLinkModel = $arrayModelLinks[$name_type_link]::model();
+
+		if(!$this->metaData->hasRelation($nameRelate)) {
+			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
+		}
+
+		if($idsHeader) {
+			$addparam['to_class_id'] = $associationClass->primaryKey;
+		}
+
+		$where=['and'];
+		if($type!='and') {
+			foreach($addparam as $k => $v) $where[] = $k.'='.$v;
+		}
+
+		$this->UserRelated->links_edit($type, $nameRelate, $idsHeader, $addparam, $where);
 	}
 
 	/**
 	 * Получить ссылки на другие объекты
 	 * @param mixed $class класс объекта
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
-	 * @return AbsBaseHeaders возвращает модель с настроенной criteria
+	 * @return CActiveRecord[] - массив заголовков
 	 * @throws CException
 	 */
-	public function getobjlinks($nameAssociationClass, $name_type_link=null) {
-		$objectcurrentlink = $this->toplink;
-		if(!$objectcurrentlink) {
-			throw new CException(Yii::t('cms','Not find link id {idlink}, Class "{class}", table_links "{nametable}"',
-			array('{class}'=>$this->uclass_id, '{idlink}'=>$this->primaryKey,'{nametable}'=>$this->getNameLinksModel())));
-		}
+	public function getobjlinks($nameAssociationClass, $name_type_link='0') {
+
+		/* @var $associationClass uClasses */
 		$associationClass = \uClasses::getclass($nameAssociationClass);
-		$modelHeader = $associationClass->initobject();
 
 		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		//проверить вернул ли класс, а то не поймет что за ошибка была даже если выскочит
-		//сделать путь для сообщений cms-ки, будут ли работать yii
-		//throw new CException(Yii::t('cms','Property "{class}.{property}" is not defined.',
-			//array('{class}'=>get_class($this), '{property}'=>$name)));
-		$idsheaders = apicms\utils\arrvaluesmodel($objectcurrentlink->links,'idobj');;
-		$modelHeader->dbCriteria->addInCondition($modelHeader->tableAlias.'.id', $idsheaders);
-		$modelHeader->dbCriteria->compare($modelHeader->tableAlias.'.uclass_id',$associationClass->primaryKey);
-		$modelHeader->uclass_id = $associationClass->primaryKey;
-		return $modelHeader;
+		$nameRelate = static::PRE_LINKS.$name_type_link;
+		$criteria = new CDbCriteria();
+		$criteria->with[$nameRelate] = array(
+			'on' => $nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.$nameRelate.'.from_class_id='.$this->uclass_id,
+		);
+
+		$objectModelAssociationClass = $associationClass->initobject();
+		$objectModelAssociationClass->getDbCriteria()->mergeWith($criteria);
+
+		return $objectModelAssociationClass;
 	}
 
 	public function afterSave() {
 		if(parent::afterSave()!==false) {
-			//Если flagAutoAddedLinks=true, после создания объекта создаем линк в (таблице ссылок для объектов).
-			//С этим параметром можно работать как для нового так и для существующего объекта, т.е если раньше у объекта небыло возможность связки
-			//то эту возможность можно реализовать в любой момент
-			if($this->flagAutoAddedLinks) {
-				if(!$this->toplink) {
-					$namelinkallmodel = $this->getNameLinksModel();
-					$objectcurrentlink = new $namelinkallmodel();
-					$objectcurrentlink->idobj = $this->primaryKey;
-					$objectcurrentlink->uclass_id = $this->uclass_id;
-					$objectcurrentlink->save();
-
-					//toplink это реляционная таблица, будет инициализированна
-					$this->toplink = $this->getRelated('toplink', true);
-				}
-			}
-
 			//если были изменены свойства то сохраняем их
 			if(count($this->_tmpUProperties)) {
 				$this->saveProperties();
@@ -279,14 +257,12 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
-		$objectCurrentLink = $this->toplink;
-		if($objectCurrentLink) {
-			if(count($objectCurrentLink->links)) {
-				//ссылки объектов
-				$objectCurrentLink->UserRelated->links_edit('clear','links');
-			}
-			//удалить ведущую ссылку, благодаря ей возможна привязка объектов разных классов и разных табличных пространств
-			$objectCurrentLink->delete();
+		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
+			//по сути не важно что за класс поэтому просто get_class($this)
+			$nameRelate = static::PRE_LINKS_MTM.'del'.$nameTypeLink;
+			$objLinkModel = $nameModelLink::model();
+			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, get_class($this), $objLinkModel->tableName().'(from_obj_id, to_obj_id)'));
+			$this->UserRelated->links_edit('clear', $nameRelate, null, array(), ['and', 'from_class_id='.$this->uclass_id]);
 		}
 		return parent::beforeDelete();
 	}
@@ -362,10 +338,15 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->uclass = $this->getRelated('uclass', true);
 		}
 
-		//+++реляция для ссылки возможна только после того как инициализован класс
-		$nameLinksModel = $this->getNameLinksModel();
-		$this->metaData->addRelation('toplink', array(self::HAS_ONE, $nameLinksModel, 'idobj', 'on'=> 'uclass_id='.$this->uclass_id));
-		$this->toplink = $this->getRelated('toplink', true);
+		//для работы с ссылками ассоциаций
+		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
+			$this->metaData->addRelation(static::PRE_LINKS.$nameTypeLink, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
+				'on'=> 'to_class_id='.$this->uclass_id,
+				'select' => false,
+				'together' => true,
+				'joinType'=>'INNER JOIN',
+			));
+		}
 
 		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {

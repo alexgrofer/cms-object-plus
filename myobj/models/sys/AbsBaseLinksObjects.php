@@ -1,30 +1,26 @@
 <?php
-abstract class AbsBaseLinksObjects extends AbsBaseModel
-{
+abstract class AbsBaseLinksObjects extends AbsBaseModel {
+	public $from_obj_id;
+	public $from_class_id;
+	public $to_obj_id;
+	public $to_class_id;
+
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
 	}
 
-	/**
-	 * ключ объекта заголовка
-	 * @var int
-	 */
-	public $idobj;
-
-	public function relations()
-	{
-		//привязка ссылок, сами на себя через дочернюю таблицу
-		$namesThisClass = get_class($this);
+	public function relations() {
 		return array(
-			'uclass'=>array(self::BELONGS_TO, 'uClasses', 'uclass_id'),
-
-			'links'=>array(self::MANY_MANY, $namesThisClass,'setcms_'.strtolower($namesThisClass).'_links(from_self_id, to_self_id)'),
+			'uclass_to'=>array(self::BELONGS_TO, 'uClasses', 'from_class_id'),
+			'uclass_from'=>array(self::BELONGS_TO, 'uClasses', 'to_class_id'),
 		);
 	}
 
-	function beforeDelete() {
-		$this->clearMTMLink('links', Yii::app()->appcms->config['sys_db_type_InnoDB']);
-		return parent::beforeDelete();
+	public function customRules()
+	{
+		return array(
+			array('from_obj_id, from_class_id, to_obj_id, to_class_id ', 'unsafe'),
+		);
 	}
 }

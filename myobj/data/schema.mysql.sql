@@ -10,11 +10,9 @@ CREATE TABLE `setcms_uclasses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_uclasses_association` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_uclasses_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_uclasses_id`),
+	PRIMARY KEY (`from_uclasses_id`,`to_uclasses_id`),
 	FOREIGN KEY (`to_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -35,11 +33,10 @@ CREATE TABLE `setcms_objproperties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_uclasses_objproperties` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_objproperties_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`)
+	PRIMARY KEY (`from_uclasses_id`,`to_objproperties_id`),
+	FOREIGN KEY (`from_uclasses_id`) REFERENCES `setcms_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_systemobjheaders` (
@@ -116,42 +113,20 @@ CREATE TABLE `setcms_linesmyobjheaders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linksobjectsallmy` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`idobj` int(11) NOT NULL,
-	`uclass_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`idobj`,`uclass_id`),
-	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---
-CREATE TABLE `setcms_linksobjectsallmy_links` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`from_self_id` int(11) NOT NULL,
-	`to_self_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_self_id`,`to_self_id`),
-	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallmy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`from_obj_id` int(11) NOT NULL,
+	`from_class_id` int(11) NOT NULL,
+	`to_obj_id` int(11) NOT NULL,
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linksobjectsallsystem` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`idobj` int(11) NOT NULL,
-	`uclass_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`idobj`,`uclass_id`),
-	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---
-CREATE TABLE `setcms_linksobjectsallsystem_links` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`from_self_id` int(11) NOT NULL,
-	`to_self_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_self_id`,`to_self_id`),
-	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsallsystem` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`from_obj_id` int(11) NOT NULL,
+	`from_class_id` int(11) NOT NULL,
+	`to_obj_id` int(11) NOT NULL,
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -207,12 +182,6 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 (1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',NULL,0), -- guid outside-id or guid group user
 (2,1,'guest','',0,'guestsys','guestsys',NULL,0),
 (3,1,'authorized','',0,'authorizedsys','authorizedsys',NULL,0);
-
-INSERT INTO `setcms_linksobjectsallsystem` (`idobj`,`uclass_id`) VALUES
--- links for objects groups
- (1,1),
- (2,1),
- (3,1);
 
 --
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
