@@ -49,7 +49,7 @@ class uClasses extends AbsBaseModel
 		$this->clearMTMLink('association', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		return parent::beforeDelete();
 	}
-	public function getTSPACESOptions(){
+	public static function getTSPACESOptions(){
 		$oprion = array();
 		foreach(Yii::app()->appcms->config['spacescl'] as $key => $value) {
 			$oprion[$key] = $value['namemodel'];
@@ -77,7 +77,7 @@ class uClasses extends AbsBaseModel
 			),
 			'tablespace'=>array(
 				'type'=>'dropdownlist',
-				'items'=>$this->getTSPACESOptions(),
+				'items'=>self::getTSPACESOptions(),
 			),
 		);
 	}
