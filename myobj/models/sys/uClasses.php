@@ -87,13 +87,22 @@ class uClasses extends AbsBaseModel
 	 * @return CActiveRecord
 	 */
 	public function initobject() {
-		$nameModelHeaders = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
+		$nameModelHeaders = $this->getNameModelHeaderClass();
 		$newobj = new $nameModelHeaders;
 		if(!$newobj->is_independent) {
 			$newobj->uclass_id = $this->primaryKey;
 		}
 		$newobj->declareObj();
 		return $newobj;
+	}
+
+	/**
+	 * Название модели заголовка этого класса
+	 * @return string
+	 */
+	public function getNameModelHeaderClass() {
+		$nameModelHeaders = Yii::app()->appcms->config['spacescl'][$this->tablespace]['namemodel'];
+		return $nameModelHeaders;
 	}
 
 	/**
