@@ -3,6 +3,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	const PRE_PROP='prop_';
 	const PRE_LINKS='links_';
+	const PRE_LINKS_TEMP='links_temp_';
 
 	/**
 	 * @var bool - true у текущего галоловка своя таблица
@@ -166,30 +167,26 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$objects = null;
 		$addparam = null;
 		if($idsheaders) {
-			if(!is_object($class)) {
-				$class = uClasses::getclass($class);
+			$associationClass = \uClasses::getclass($class);
+
+			if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+				throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 			}
 
-			if(!$this->uclass->hasAssotiation($class->codename)) {
-				throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$class->codename));
-			}
-
-			$name_table_links = $this->getNameModelLinks($name_type_link);
-			$name_pref_relation = 'defRelation';
-			if($name_type_link) {
-				$name_pref_relation = $name_type_link;
-			}
-			if(!$this->metaData->hasRelation($name_pref_relation)) {
-				$this->metaData->addRelation($name_pref_relation, array(self::MANY_MANY, $class->getNameModelHeaderClass(), 'setcms_' . $name_table_links . '(from_obj_id, to_obj_id)', 'on' => 'from_class_id='.$this->uclass_id.' AND to_class_id='.$class->primaryKey));
+			$arrayModelLinks = $this->getNamesModelLinks();
+			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
+			$nameRelate = static::PRE_LINKS_TEMP.$name_type_link;
+			if(!$this->metaData->hasRelation($nameRelate)) {
+				$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
 			}
 
 			$addparam = [
 				'from_class_id' => $this->uclass_id,
-				'to_class_id' => $class->primaryKey,
+				'to_class_id' => $associationClass->primaryKey,
 			];
 		}
 
-		$this->UserRelated->links_edit($type,$name_pref_relation,$idsheaders,$addparam);
+		$this->UserRelated->links_edit($type,$nameRelate,$idsheaders,$addparam);
 	}
 
 	/**
