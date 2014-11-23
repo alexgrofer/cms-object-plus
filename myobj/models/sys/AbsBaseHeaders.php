@@ -3,7 +3,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	const PRE_PROP='prop_';
 	const PRE_LINKS='links_';
-	const PRE_LINKS_TEMP='links_temp_';
+	const PRE_LINKS_MTM='links_mtm_';
 
 	/**
 	 * @var bool - true у текущего галоловка своя таблица
@@ -163,36 +163,29 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsheaders=null, $name_type_link='0') {
-		$objects = null;
-		$addparam = null;
-		if($idsheaders) {
-			$associationClass = \uClasses::getclass($class);
+	public function editlinks($type, $class, $idsHeader=null, $name_type_link='0') {
+		$addparam = ['from_class_id' => $this->uclass_id];
 
-			if(!$this->uclass->hasAssotiation($associationClass->codename)) {
-				throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
-			}
+		$associationClass = \uClasses::getclass($class);
 
-			$arrayModelLinks = $this->getNamesModelLinks();
-			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
-			$nameRelate = static::PRE_LINKS_TEMP.$name_type_link;
-			if(!$this->metaData->hasRelation($nameRelate)) {
-				$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
-			}
-
-			$addparam = [
-				'from_class_id' => $this->uclass_id,
-				'to_class_id' => $associationClass->primaryKey,
-			];
+		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		$this->UserRelated->links_edit($type,$nameRelate,$idsheaders,$addparam);
-	}
+		$nameRelate = static::PRE_LINKS_MTM.$name_type_link;
+		$arrayModelLinks = $this->getNamesModelLinks();
+		$objLinkModel = $arrayModelLinks[$name_type_link]::model();
 
-	/**
-	 * @var array модели для типов ссылок
-	 */
-	private $modelsObjLinks = array();
+		if(!$this->metaData->hasRelation($nameRelate)) {
+			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
+		}
+
+		if($idsHeader) {
+			$addparam['to_class_id'] = $associationClass->primaryKey;
+		}
+
+		$this->UserRelated->links_edit($type, $nameRelate, $idsHeader, $addparam);
+	}
 
 	/**
 	 * Получить ссылки на другие объекты
@@ -333,7 +326,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->uclass = $this->getRelated('uclass', true);
 		}
 
-		//работаем с ссылками
+		//для работы с ссылками ассоциаций
 		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
 			$this->metaData->addRelation(static::PRE_LINKS.$nameTypeLink, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
 				'on'=> 'to_class_id='.$this->uclass_id,
