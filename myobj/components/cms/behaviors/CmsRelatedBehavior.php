@@ -64,7 +64,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 			case 'clear':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->delete($mtmNameTable,$mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $where);
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $where));
 				}
 				elseif($typeThisRelation == CActiveRecord::HAS_MANY) {
 					$command->delete($nameTableThisRelation, $nameLinkPrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
