@@ -1,21 +1,21 @@
 <?php
 class CmsRelatedBehavior extends CActiveRecordBehavior
 {
-	public function links_edit($type, $namerelation, array $idsObj=null, $addparam=null) {
+	public function links_edit($type, $namerelation, array $idsObj=null, $addparam=array(), $where=array()) {
 		$thisObj = $this->getOwner();
 		$thisTable = $thisObj->tableName();;
 		$thisObjPrimaryKeyVal = $thisObj->primaryKey;
-		$thisRelations = $thisObj->relations();
+		$thisRelations = $thisObj->metaData->relations;
 		$thisRelation = $thisRelations[$namerelation];
-		$typeThisRelation = $thisRelation[0];
-		$nameModelThisRelation = $thisRelation[1];
-		$nameLinkPrimaryKeyThisRelation = $thisRelation[2];
+		$typeThisRelation = get_class($thisRelation);
+		$nameModelThisRelation = $thisRelation->className;
+		$nameLinkPrimaryKeyThisRelation = $thisRelation->foreignKey;
 		$modelThisRelation = new $nameModelThisRelation();
 		$nameTableThisRelation = $modelThisRelation->tableName();
 		$namePrimaryKeyThisRelation = $modelThisRelation->primaryKey();
 
 		if($typeThisRelation==CActiveRecord::MANY_MANY) {
-			$arrDataM = preg_split('/[,()]/', $thisRelation[2]);
+			$arrDataM = preg_split('/[,()]/', $nameLinkPrimaryKeyThisRelation);
 			$mtmNameTable = trim($arrDataM[0]);
 			$mtmFromPrimaryKey = trim($arrDataM[1]);
 			$mtmToPrimaryKey = trim($arrDataM[2]);
@@ -28,7 +28,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			case 'add':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
 					foreach($idsObj as $id) {
-						$command->insert($mtmNameTable, array_merge(array($mtmFromPrimaryKey=>$thisObjPrimaryKeyVal, $mtmToPrimaryKey=>$id),((is_array($addparam))?$addparam:array())));
+						$command->insert($mtmNameTable, array_merge(array($mtmFromPrimaryKey=>$thisObjPrimaryKeyVal, $mtmToPrimaryKey=>$id), $addparam));
 					}
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
@@ -53,7 +53,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 			case 'remove':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
 					$command->delete($nameTableThisRelation, array('in', $namePrimaryKeyThisRelation, $idsObj));
@@ -64,7 +64,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 			case 'clear':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->delete($mtmNameTable,$mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal);
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $where));
 				}
 				elseif($typeThisRelation == CActiveRecord::HAS_MANY) {
 					$command->delete($nameTableThisRelation, $nameLinkPrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
