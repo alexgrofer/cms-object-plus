@@ -56,6 +56,22 @@ CREATE TABLE `setcms_systemobjheaders` (
 	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
+CREATE TABLE `setcms_templatesystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`desc` varchar(255) NOT NULL DEFAULT '',
+	`path` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+CREATE TABLE `setcms_viewsystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`desc` varchar(255) NOT NULL DEFAULT '',
+	`path` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
 CREATE TABLE `setcms_navigatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
@@ -67,7 +83,21 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 	-- keys
 	`template_default_id` int(11) DEFAULT NULL,
 	--
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`codename`,`action_name`),
+	FOREIGN KEY (`template_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+CREATE TABLE `setcms_handlesystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	-- keys
+	`view_id` int(11) NOT NULL,
+	`template_id` int(11) NOT NULL,
+	--
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`view_id`) REFERENCES `setcms_viewsystemobjheaders` (`id`) ON UPDATE CASCADE,
+	FOREIGN KEY (`template_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linessystemobjheaders` (
