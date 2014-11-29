@@ -22,7 +22,6 @@ class AdminController extends \Controller {
 			'REND_order_by'=>array(),
 			'REND_AttributeLabels'=>null,
 			'REND_editForm'=>null,
-			'REND_objclass'=>null,
 			'REND_confmodel'=>null,
 			'REND_acces_read'=>true,
 			'REND_acces_write'=>true,
@@ -97,7 +96,6 @@ class AdminController extends \Controller {
 			case 'objects':
 				if($this->dicturls['paramslist'][0]=='class') {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
-					$this->setVarRender('REND_objclass',$actclass);
 						$this->param_contr['current_class_name'] = $actclass->codename;
 					if(!(int)$this->dicturls['paramslist'][1]) {
 						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->primaryKey));
