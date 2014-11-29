@@ -5,6 +5,15 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 	public $to_obj_id;
 	public $to_class_id;
 
+	public function primaryKey() {
+		return array(
+			'from_obj_id',
+			'from_class_id',
+			'to_obj_id',
+			'to_class_id',
+		);
+	}
+
 	public function tableName()
 	{
 		return 'setcms_'.strtolower(get_class($this));
