@@ -39,7 +39,7 @@ class User extends AbsBaseModel
 		}
 		else return parent::beforeSave();
 	}
-	public function customElementsForm() {
+	public function defaultElementsForm() {
 		return array(
 			'login'=>array(
 				'type'=>'text',

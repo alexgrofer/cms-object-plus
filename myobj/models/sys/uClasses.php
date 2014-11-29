@@ -56,7 +56,7 @@ class uClasses extends AbsBaseModel
 		}
 		return $oprion;
 	}
-	public function customAttributeLabels() {
+	public function defaultAttributeLabels() {
 		return array(
 			'name' => 'name',
 			'codename' => 'code name',
@@ -64,7 +64,7 @@ class uClasses extends AbsBaseModel
 			'tablespace' => 'table space',
 	   );
 	}
-	public function customElementsForm() {
+	public function defaultElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

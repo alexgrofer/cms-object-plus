@@ -26,17 +26,22 @@ class MyObjHeaders extends AbsBaseHeaders
 		);
 	}
 
-	public $customElementsForm = array(
-		'name'=>array(
-			'type'=>'text',
-		),
-		'sort'=>array(
-			'type'=>'text',
-		),
-		'bpublic'=>array(
-			'type'=>'checkbox',
-		),
-	);
+	public function defaultElementsForm() {
+		return array(
+			'name'=>array(
+				'type'=>'text',
+			),
+			'sort'=>array(
+				'type'=>'text',
+			),
+			'bpublic'=>array(
+				'type'=>'checkbox',
+			),
+			'content'=>array(
+				'type'=>'textarea',
+			),
+		);
+	}
 
 	/**
 	 * Возможность хранить массивы в базе.

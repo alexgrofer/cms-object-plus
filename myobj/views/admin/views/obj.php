@@ -9,7 +9,7 @@ $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
 if($REND_AttributeLabels) {
-	$REND_model->customAttributeLabels = array_merge($REND_model->customAttributeLabels, $REND_AttributeLabels);
+	$REND_model->customAttributeLabels = array_merge($REND_model->defaultAttributeLabels(), $REND_AttributeLabels);
 }
 
 if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {

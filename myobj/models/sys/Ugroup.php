@@ -19,7 +19,7 @@ class Ugroup extends AbsBaseModel
 			array('name', 'required'),
 		);
 	}
-	public function customElementsForm() {
+	public function defaultElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',
