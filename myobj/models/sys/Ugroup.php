@@ -19,13 +19,6 @@ class Ugroup extends AbsBaseModel
 			array('name', 'required'),
 		);
 	}
-	public function defaultElementsForm() {
-		return array(
-			'name'=>array(
-				'type'=>'text',
-			),
-		);
-	}
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {
 			if($this->isNewRecord) {

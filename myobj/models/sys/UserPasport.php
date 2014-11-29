@@ -20,14 +20,4 @@ class UserPasport extends AbsBaseModel
 			array('firstname, lastname', 'required'),
 		);
 	}
-	public function defaultElementsForm() {
-		return array(
-			'firstname'=>array(
-				'type'=>'text',
-			),
-			'lastname'=>array(
-				'type'=>'text',
-			),
-		);
-	}
 }
