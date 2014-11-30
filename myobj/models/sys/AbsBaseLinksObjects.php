@@ -26,7 +26,7 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 		);
 	}
 
-	public function defaultRules()
+	protected function defaultRules()
 	{
 		return array(
 			array('from_obj_id, from_class_id, to_obj_id, to_class_id ', 'unsafe'),

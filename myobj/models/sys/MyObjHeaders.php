@@ -15,7 +15,7 @@ class MyObjHeaders extends AbsBaseHeaders
 		return array_merge($relations, $thisRelations);
 	}
 
-	public function defaultRules() {
+	protected function defaultRules() {
 		return array(
 			array('name', 'required'),
 			array('name', 'type', 'type'=>'string'),
@@ -26,7 +26,7 @@ class MyObjHeaders extends AbsBaseHeaders
 		);
 	}
 
-	public function defaultElementsForm() {
+	protected function defaultElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

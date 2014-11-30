@@ -229,7 +229,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public $customRules=array();
-	public function defaultRules() {
+	protected function defaultRules() {
 		return array();
 	}
 
@@ -243,7 +243,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public $customElementsForm=array();
-	public function defaultElementsForm() {
+	protected function defaultElementsForm() {
 		return array_fill_keys($this->attributeNames(), ['type'=>'text']);
 	}
 	final public function elementsForm() {
@@ -251,7 +251,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public $customAttributeLabels=array();
-	public function defaultAttributeLabels() {
+	protected function defaultAttributeLabels() {
 		return array();
 	}
 	final public function attributeLabels() {

@@ -19,7 +19,7 @@ class uClasses extends AbsBaseModel
 			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
 		);
 	}
-	public function defaultRules()
+	protected function defaultRules()
 	{
 		return array(
 			array('name,  codename', 'required'),
@@ -56,7 +56,7 @@ class uClasses extends AbsBaseModel
 		}
 		return $oprion;
 	}
-	public function defaultAttributeLabels() {
+	protected function defaultAttributeLabels() {
 		return array(
 			'name' => 'name',
 			'codename' => 'code name',
@@ -64,7 +64,7 @@ class uClasses extends AbsBaseModel
 			'tablespace' => 'table space',
 	   );
 	}
-	public function defaultElementsForm() {
+	protected function defaultElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

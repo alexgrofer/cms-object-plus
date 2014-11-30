@@ -9,7 +9,7 @@ class SystemObjHeaders extends AbsBaseHeaders
 	public $vp3;
 	public $bp1;
 
-	public function defaultRules()
+	protected function defaultRules()
 	{
 		return array(
 			array('name', 'required'),
@@ -20,7 +20,7 @@ class SystemObjHeaders extends AbsBaseHeaders
 
 		);
 	}
-	public function defaultElementsForm() {
+	protected function defaultElementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

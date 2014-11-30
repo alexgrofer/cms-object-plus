@@ -16,7 +16,7 @@ class User extends AbsBaseModel
 			'groups'=>array(self::MANY_MANY, 'Ugroup', 'setcms_user_ugroup(user_id, group_id)'),
 		);
 	}
-	public function defaultRules() {
+	protected function defaultRules() {
 		return array(
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>128),
@@ -39,7 +39,7 @@ class User extends AbsBaseModel
 		}
 		else return parent::beforeSave();
 	}
-	public function defaultElementsForm() {
+	protected function defaultElementsForm() {
 		return array(
 			'login'=>array(
 				'type'=>'text',
