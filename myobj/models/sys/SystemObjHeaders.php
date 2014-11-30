@@ -9,7 +9,7 @@ class SystemObjHeaders extends AbsBaseHeaders
 	public $vp3;
 	public $bp1;
 
-	public function customRules()
+	public function defaultRules()
 	{
 		return array(
 			array('name', 'required'),

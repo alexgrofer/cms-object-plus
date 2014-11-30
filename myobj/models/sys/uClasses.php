@@ -19,7 +19,7 @@ class uClasses extends AbsBaseModel
 			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
 		);
 	}
-	public function customRules()
+	public function defaultRules()
 	{
 		return array(
 			array('name,  codename', 'required'),

@@ -15,7 +15,7 @@ class UserPasport extends AbsBaseModel
 			'user'=>array(self::BELONGS_TO, 'User', 'user_id'),
 		);
 	}
-	public function customRules() {
+	public function defaultRules() {
 		return array(
 			array('firstname, lastname', 'required'),
 		);

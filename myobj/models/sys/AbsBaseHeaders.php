@@ -53,7 +53,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $relations;
 	}
 
-	public function customRules() {
+	public function defaultRules() {
 		return array(
 			array('uclass_id', 'unsafe'),
 		);

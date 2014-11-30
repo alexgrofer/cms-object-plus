@@ -16,7 +16,7 @@ class User extends AbsBaseModel
 			'groups'=>array(self::MANY_MANY, 'Ugroup', 'setcms_user_ugroup(user_id, group_id)'),
 		);
 	}
-	public function customRules() {
+	public function defaultRules() {
 		return array(
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>128),

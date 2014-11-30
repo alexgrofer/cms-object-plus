@@ -14,7 +14,7 @@ class Ugroup extends AbsBaseModel
 			'users'=>array(self::MANY_MANY, 'User', 'setcms_user_ugroup(group_id,user_id)'),
 		);
 	}
-	public function customRules() {
+	public function defaultRules() {
 		return array(
 			array('name', 'required'),
 		);

@@ -15,7 +15,7 @@ class MyObjHeaders extends AbsBaseHeaders
 		return array_merge($relations, $thisRelations);
 	}
 
-	public function customRules() {
+	public function defaultRules() {
 		return array(
 			array('name', 'required'),
 			array('name', 'type', 'type'=>'string'),

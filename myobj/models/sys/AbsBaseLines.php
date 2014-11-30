@@ -26,7 +26,7 @@ abstract class AbsBaseLines extends AbsBaseModel
 		return $arr_relationsdef;
 	}
 
-	public function rules()
+	public function defaultRules()
 	{
 		return array(
 			array('upcharfield', 'length', 'max'=>255),
