@@ -246,7 +246,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function defaultElementsForm() {
 		return array_fill_keys($this->attributeNames(), ['type'=>'text']);
 	}
-	public function elementsForm() {
+	final public function elementsForm() {
 		return array_merge($this->defaultElementsForm(), $this->customElementsForm);
 	}
 
@@ -254,7 +254,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function defaultAttributeLabels() {
 		return array();
 	}
-	public function attributeLabels() {
+	final public function attributeLabels() {
 		return array_merge($this->defaultAttributeLabels(), $this->customAttributeLabels);
 	}
 
