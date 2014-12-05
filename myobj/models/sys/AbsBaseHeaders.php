@@ -43,7 +43,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	public function relations() {
 		$relations = [];
-		if(!$this->is_independent) {
+		if($this->is_independent) {
+			$relations['uclass'] = array(self::BELONGS_TO, 'uClasses',  '', 'on'=> 'uclass.id='.$this->uclass_id);
+		}
+		else {
 			$relations['uclass'] = array(self::BELONGS_TO, 'uClasses', 'uclass_id');
 		}
 
@@ -332,11 +335,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	public function declareObj() {
 		parent::declareObj();
-
-		if($this->is_independent) {
-			$this->metaData->addRelation('uclass', array(self::BELONGS_TO, 'uClasses', '', 'on'=> 'uclass.id='.$this->uclass_id));
-			$this->uclass = $this->getRelated('uclass', true);
-		}
 
 		//для работы с ссылками ассоциаций
 		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
