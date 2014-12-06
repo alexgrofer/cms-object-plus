@@ -1,5 +1,5 @@
 <?php
-$listall = $REND_model->findAll();
+$objectsNavigate = $REND_model->findAll();
 
 $urladmclass = $this->dicturls['admin'];
 $arrayuirow['edit'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/';
@@ -9,7 +9,8 @@ $arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['
 $arrayuirow['remove'] = $urladmclass.'/'.$this->dicturls['class'].'/class/'.$this->dicturls['paramslist'][1].'/action/remove/';
 
 
-$listobjsort = apicms\utils\treelem($listall,'','vp2','vp1',function($str) {return $str.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';});
+$listobjsort = apicms\utils\treelem($objectsNavigate,null,'id','parent_id',function($str) {return $str.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';});
+
 ?>
 <a class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
 <form method="post">
@@ -36,11 +37,11 @@ foreach($listobjsort as $objarr) {
 	$uihtml .= ' | <a href="'.$urladmclass.'/objects/class/'.$objclass['param_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass['navigation_sys']->primaryKey.'">params</a>';
 	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$arrayuirow['edittempl'].$obj->primaryKey.'&usercontroller=usernav">template</a>';
 
-	$visibl = ($obj->bp1)?'+':'-';
+	$visibl = ($obj->show)?'+':'-';
 
 	$uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
-	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->vp2.'</td><td>'.$obj->vp3.'</td><td>'.$obj->vp1.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
-	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->vp2.'" value="push" /> | '.$uihtml.' </td>
+	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->parent_id.'</td><td>'.$obj->action_name.'</td><td>'.$obj->parent_id.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
+	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->codename.'" value="push" /> | '.$uihtml.' </td>
 	</tr>';
 }
 ?>

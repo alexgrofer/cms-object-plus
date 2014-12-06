@@ -2,145 +2,88 @@
 if(!$REND_acces_write) {
 	echo '<p class="alert">not acces edit</p>';
 }
-Yii::import('MYOBJ.appscms.api.utils',true);
-$classtemplate = uClasses::getclass('templates_sys');
-$classhandle = uClasses::getclass('handle_sys');
-$templates = $REND_model->getobjlinks('templates_sys')->findAll();
-$currenthandles = $REND_model->getobjlinks('handle_sys')->findAll();
-$keysidhandle = array();
-foreach($currenthandles as $objhandle) {
-	$keysidhandle[$objhandle->sort] = $objhandle;
+/** @var $objRequest CHttpRequest */
+$objRequest = Yii::app()->request;
+
+/** @var $THIS_NAVIGATE NavigateSystemObjHeaders */
+$THIS_NAVIGATE = $REND_model;
+
+/** @var $classTemplate uClasses */
+$classTemplate = uClasses::getclass('templates_sys');
+/** @var $classHandle uClasses */
+$classHandle = uClasses::getclass('handle_sys');
+/** @var $classView uClasses */
+$classView = uClasses::getclass('views_sys');
+
+//показать юзеру текущий шаблон по умолчанию или выбранный шаблон в селекте
+/** @var $currentObjectTemplate TemplateSystemObjHeaders */
+$currentObjectTemplate = $THIS_NAVIGATE->templateDefault;
+if(($select_template_id = $objRequest->getPost('select_template_id', null))) {
+	$currentObjectTemplate = $classTemplate->initobject()->findByPk($select_template_id);
 }
 
-$alltemolates = $classtemplate->objects();
-if(array_key_exists('submit',$_POST)) {
+//все хендлы для выбранного или текущего шаблона шаблоона
+$arrayObjectsHandles = $THIS_NAVIGATE->getobjlinks('handle_sys')->findAllByAttributes(['template_id'=>$select_template_id]);
 
-	if(($templates && $templates[0]->primaryKey != $_POST['settemplid']) || !$templates) {
-		if($templates) {
-			$REND_model->editlinks('remove','templates_sys',$templates[0]);
-		}
-		if($_POST['settemplid']!='0') {
-			$REND_model->editlinks('add','templates_sys',$_POST['settemplid']);
-		}
-	}
-
-
-	foreach($_POST as $key => $idview) {
-		if(strpos($key, 'for_handltmp')!==false) {
-			list($tmplhandl,$tmplhandl_name) = array_slice(explode('__',$key),1);
-
-			if(array_key_exists($tmplhandl,$keysidhandle)) {
-				if($keysidhandle[$tmplhandl]->vp1 != $idview) {
-					if($keysidhandle[$tmplhandl]->name!=$tmplhandl_name) {
-						$keysidhandle[$tmplhandl]->name=$tmplhandl_name;
-					}
-					if($idview==0 && $keysidhandle[$tmplhandl]->vp1) {
-
-						//автоматически если удаляем ссылки есть такая задача
-						$keysidhandle[$tmplhandl]->delete();
-						//task можно не удалять а только отвязывать и ставить vp1 = 0 потом при создании искать свободный
-						//$REND_model->editlinks('remove','handle_sys',$keysidhandle[$tmplhandl]->primaryKey);
-					}
-					else {
-						$keysidhandle[$tmplhandl]->vp1 = $idview;
-						$keysidhandle[$tmplhandl]->save();
-					}
-				}
-			}
-			elseif($idview!='0') {
-				$newhandle = $classhandle->initobject();
-				$newhandle->name=$tmplhandl_name;
-				$newhandle->content='';
-				$newhandle->sort = $tmplhandl;
-				$newhandle->vp1=$idview;
-				$newhandle->save();
-				$REND_model->editlinks('add','handle_sys',$newhandle);
-			}
-
-		}
-	}
-	if($this->dicturls['actionid']=='0') {
-		$this->redirect($this->getUrlBeforeAction());
-	}
-	else {
-		$this->redirect(Yii::app()->request->url);
-	}
-
-}
+//выбрать шаблон для настройки
 ?>
-<form method="post">
-<p> <code>template <b>default</b>: </code> <select name="settemplid"><option value="0">---</option>'
+<form id="handle_config" name="handle_config" method="post">
+<p>
+	<code>template:</code>
+	<select name="select_template_id" onselect="$('#handle_config').submit()">
+		<?
+		//в случае если нет шаблона по умолчанию и не выбран в select показываем пустой
+		if(!$currentObjectTemplate) {?>
+			<option value="0">none</option>
+		<?php
+		}
+		foreach ($classTemplate->initobject()->findAll() as $objTemplate) {
+			$selected = ($currentObjectTemplate)?($select_template_id == $currentObjectTemplate->primaryKey):false?'selected="selected"':'';
+			echo '<option value="'.$objTemplate->primaryKey.'" '.$selected.'>'.$objTemplate->name.'</option>';
+		}
+		?>
+	</select>
+</p>
+
+
 <?php
-	foreach($alltemolates->findAll() as $objtmpl) {
-		$select = ($templates && $templates[0]->primaryKey == $objtmpl->primaryKey)?'selected="selected"':'';
-		echo '<option value="'.$objtmpl->primaryKey.'" '.$select.'>'.$objtmpl->name.'</option>';
-	}
-?>
-</select></p>
-<?php
-if($templates) {
-$arrallviews = uClasses::getclass('views_sys')->objects()->findAll();
+if(isset($_POST['submit_handle_config'])) {
+	$contentTemplate = file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE .$currentObjectTemplate->path.'_content'.'.php');
 
-$contenttmpl=file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE.$templates[0]->vp1.'_content'.'.php');
-
-$arraypregtmp = array();
-preg_match_all('~->renderHandle\(\'(.+)\',(\d+)~',$contenttmpl, $arraypregtmp);
-if(count($arraypregtmp)) {
-echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
-$array_combine = array_combine($arraypregtmp[2], $arraypregtmp[1]);
-ksort($array_combine);
-foreach($array_combine as $key => $namehand) {
-?>
-	<tr>
-		<td><?php echo $namehand?></td>
-		<td>
-			<p><select name="<?php echo 'for_handltmp__'.$key.'__'.$namehand?>">
-			<?php
-			echo '<option value="0">---</option>';
-			foreach($arrallviews as $objviw) {
-				$select = '';
-				if(isset($keysidhandle[$key]) && $keysidhandle[$key]->vp1 == $objviw->primaryKey) {
-					$select = 'selected="selected"';
-				}
-				echo '<option value="'.$objviw->primaryKey.'" '.$select.'>'.$objviw->name.' - '.$objviw->vp1.'.php</option>';
-			}
+	$arrayPreg_Match = array();
+	preg_match_all('~->renderHandle\(\'(.+)\',(\d+)~', $contentTemplate, $arrayPreg_Match);
+	if (count($arrayPreg_Match)) {
+		echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
+		$array_combine = array_combine($arrayPreg_Match[2], $arrayPreg_Match[1]);
+		ksort($array_combine);
+		foreach ($array_combine as $key => $nameHandle) {
 			?>
-			</select></p>
-		</td>
-	</tr>
-<?php
-}
-echo '</table>';
-}
-}
-?>
-<p><input name="submit" type="submit" value="save desing"/></p>
-</form>
-<hr/>
-<?php
-if(array_key_exists('savep',$_POST)) {
-	$contentsav = $REND_model->content;
-	foreach($_POST['paramsnav'] as $key => $val) {
-		$contentsav = apicms\utils\uiparamnav($contentsav,$key,$val);
+			<tr>
+				<td><?php echo $nameHandle ?></td>
+				<td>
+					<p><select name="<?='for_handltmp__'.$key.'__'.$nameHandle ?>">
+						<?php
+						//всегда даем возможность удалить хендлер
+						echo '<option value="0">none</option>';
+						/** @var $objView ViewSystemObjHeaders */
+						foreach ($classView->initobject()->findAll() as $objView) {
+							$select = '';
+							if (isset($arrayThisHandle[$key]) && $arrayThisHandle[$key]->view_id == $objView->primaryKey) {
+								$select = 'selected="selected"';
+							}
+							echo '<option value="'.$objView->primaryKey.'" '. $select.'>'.$objView->name.' - '.$objView->path.'.php</option>';
+						}
+						?>
+					</select></p>
+				</td>
+			</tr>
+		<?php
+		}
+		echo '</table>';
 	}
-	$REND_model->content = $contentsav;
-	$REND_model->save();
-}
-$params = $REND_model->getobjlinks('param_sys')->findAll();
-if(count($params)) {
-$valuesparam = apicms\utils\uiparamnav($REND_model->content);
 
-?>
-<form method="post">
-<p>params:</p>
-<?php
-foreach($params as $objparam) {
-	$value=(array_key_exists($objparam->vp1, $valuesparam))?$valuesparam[$objparam->vp1]:'';
-	echo '<p>'.$objparam->name.': <textarea type="text" name="paramsnav['.$objparam->vp1.']" >'.$value.'</textarea></p>';
+	?>
+	<p><input name="submit_handle_config" type="submit" value="save"/></p>
+	</form>
+<?
 }
-?>
-<p><input name="savep" type="submit" value="save param"/></p>
-</form>
-<?php
-}
-?>

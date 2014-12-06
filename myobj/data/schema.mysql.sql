@@ -193,10 +193,10 @@ CREATE TABLE `setcms_userpasport` (
 --
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
 	(1,'groups_sys','groups_sys','',2),
-	(2,'views_sys','views_sys','',2),
-	(3,'templates_sys','templates_sys','',2),
-	(4,'handle_sys','handle_sys','',2),
-	(5,'navigation_sys','navigation_sys','',2),
+	(2,'views_sys','views_sys','',6),
+	(3,'templates_sys','templates_sys','',7),
+	(4,'handle_sys','handle_sys','',5),
+	(5,'navigation_sys','navigation_sys','',3),
 	(6,'param_sys','param_sys','',2),
 	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
