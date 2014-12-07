@@ -212,6 +212,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 
 		$nameRelate = static::PRE_LINKS.$name_type_link;
+		if(!$this->metaData->hasRelation($nameRelate)) {
+			throw new CException(Yii::t('cms','space "'.$name_type_link.'" not declare relations'));
+		}
 		$criteria = new CDbCriteria();
 		$criteria->with[$nameRelate] = array(
 			'on' => $nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.$nameRelate.'.from_class_id='.$this->uclass_id,
