@@ -9,7 +9,7 @@ class HandleSystemObjHeaders extends AbsBaseHeaders {
 	public $is_independent = true;
 	public $uclass_id=4;
 	//columns DB
-	public $name;
+	public $codename;
 	//key
 	public $template_id;
 	public $view_id;
@@ -19,11 +19,11 @@ class HandleSystemObjHeaders extends AbsBaseHeaders {
 
 	protected function defaultRules() {
 		return array(
-			array('name', 'required'),
-			array('name', 'length', 'max'=>255),
+			array('codename', 'required'),
+			array('codename', 'length', 'max'=>255),
 
-			array('template_id', 'exist', 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>false),
-			array('view_id', 'exist', 'className' => 'ViewSystemObjHeaders', 'allowEmpty'=>false),
+			array('template_id', 'exist', 'className' => 'TemplateSystemObjHeaders', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
+			array('view_id', 'exist', 'className' => 'ViewSystemObjHeaders', 'attributeName'=>ViewSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
 		);
 	}
 

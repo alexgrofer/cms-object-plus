@@ -90,7 +90,7 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 --
 CREATE TABLE `setcms_handlesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
+	`codename` varchar(255) NOT NULL,
 	-- keys
 	`view_id` int(11) NOT NULL,
 	`template_id` int(11) NOT NULL,
@@ -158,6 +158,14 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
 	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 --
+CREATE TABLE `setcms_linksobjectsallsystemhandle` (
+	`from_obj_id` int(11) NOT NULL,
+	`from_class_id` int(11) NOT NULL,
+	`to_obj_id` int(11) NOT NULL,
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+--
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`login` VARCHAR(255) NOT NULL,
@@ -201,7 +209,6 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
 	(2,1), -- views_sys <> groups_sys
-	(5,3), -- navigation_sys <> templates_sys
 	(5,4), -- navigation_sys <> handle_sys
 	(5,6); -- navigation_sys <> param_sys
 

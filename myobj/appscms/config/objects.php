@@ -11,14 +11,14 @@ $classes_system = array(
 
 $objects = array(
 	$classes_system['handle'] => array(
-		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
-		'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
+		//'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
+		//'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['navigation'] => array(
-		'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
-		'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','vp3'=>'controller action','bp1'=>'visible'),
+		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
+		//'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','vp3'=>'controller action','bp1'=>'visible'),
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
@@ -30,22 +30,22 @@ $objects = array(
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['template'] => array(
-		'cols' => array('id'=>'id','name'=>'name template','vp1'=>'patch'),
-		'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
-		'editForm' => array('name','vp1','content'), //в админке видим только поля
+		//'cols' => array('id'=>'id','name'=>'name template','vp1'=>'patch'),
+		//'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
+		//'editForm' => array('name','vp1','content'), //в админке видим только поля
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['view'] => array(
-		'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),
-		'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
-		'editForm' => array('name','vp1','content','edit_file_template'),
+		//'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),
+		//'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
+		//'editForm' => array('name','vp1','content','edit_file_template'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	$classes_system['params'] => array(
-		'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
-		'AttributeLabels' => array('vp1'=>'codename'),
+		//'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
+		//'AttributeLabels' => array('vp1'=>'codename'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
@@ -66,9 +66,9 @@ $set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['lin
 /*
  * модели можно хранить в отдельных таблицах при необходимости
  */
-$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['linksObjectsAllSystem']);
+$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['linksObjectsAllSystem', 'handle' => 'linksObjectsAllSystemHandle']);
 $set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'nameModelLinks'=>['linksObjectsAllSystem']);
-$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['linksObjectsAllSystem', 'templates' => 'linksObjectsAllSystemTemplates']);
+$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['linksObjectsAllSystem']);
 $set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['linksObjectsAllSystem']);
 $set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['linksObjectsAllSystem']);
 $set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['linksObjectsAllSystem']);
