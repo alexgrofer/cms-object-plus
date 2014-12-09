@@ -21,7 +21,8 @@ class uClasses extends AbsBaseModel
 	}
 	protected function defaultRules()
 	{
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name,  codename', 'required'),
 			array('name', 'length', 'max'=>255),
 			array('codename', 'length', 'max'=>30),

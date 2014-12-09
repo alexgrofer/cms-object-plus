@@ -15,7 +15,8 @@ class Ugroup extends AbsBaseModel
 		);
 	}
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name', 'required'),
 		);
 	}

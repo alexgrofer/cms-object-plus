@@ -21,7 +21,8 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public $isitlines = false;
 
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name', 'required'),
 			array('name, codename, action_name', 'length', 'max'=>255),
 			array('codename, action_name', 'default', 'value'=>null),

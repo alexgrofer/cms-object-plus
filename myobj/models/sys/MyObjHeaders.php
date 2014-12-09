@@ -16,7 +16,8 @@ class MyObjHeaders extends AbsBaseHeaders
 	}
 
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name', 'required'),
 			array('name', 'type', 'type'=>'string'),
 			array('sort', 'default', 'value'=>0),

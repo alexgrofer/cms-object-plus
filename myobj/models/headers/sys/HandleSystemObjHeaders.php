@@ -18,7 +18,8 @@ class HandleSystemObjHeaders extends AbsBaseHeaders {
 	public $isitlines = false;
 
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('codename', 'required'),
 			array('codename', 'length', 'max'=>255),
 

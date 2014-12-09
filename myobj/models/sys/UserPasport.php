@@ -16,7 +16,8 @@ class UserPasport extends AbsBaseModel
 		);
 	}
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('firstname, lastname', 'required'),
 		);
 	}

@@ -17,7 +17,8 @@ class User extends AbsBaseModel
 		);
 	}
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>128),
 			array('email', 'email'),

@@ -23,7 +23,8 @@ class objProperties extends AbsBaseModel
 	}
 	protected function defaultRules()
 	{
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name, codename, myfield', 'required'),
 			array('name, description, udefault', 'length', 'max'=>255),
 

@@ -11,7 +11,8 @@ class SystemObjHeaders extends AbsBaseHeaders
 
 	protected function defaultRules()
 	{
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name', 'required'),
 			array('sort', 'default', 'value'=>0),
 			array('vp1, vp2, vp3, content', 'default', 'value'=>''),

@@ -28,7 +28,8 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 
 	protected function defaultRules()
 	{
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('from_obj_id, from_class_id, to_obj_id, to_class_id ', 'unsafe'),
 		);
 	}

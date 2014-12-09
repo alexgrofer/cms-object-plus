@@ -17,7 +17,8 @@ class TemplateSystemObjHeaders extends AbsBaseHeaders {
 	public $isitlines = false;
 
 	protected function defaultRules() {
-		return array(
+		$rules = parent::defaultRules();
+		return $rules + array(
 			array('name, path', 'required'),
 			array('name, path, desc', 'length', 'max'=>255),
 		);
