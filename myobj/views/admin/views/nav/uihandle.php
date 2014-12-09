@@ -25,9 +25,9 @@ if(($select_template_id = $objRequest->getPost('select_template_id', null))) {
 if($currentObjectTemplate) {
 	//все хендлы навигации для выбранного или текущего шаблона
 	$arrayObjectsHandles = $THIS_NAVIGATE->getobjlinks('handle_sys', 'handle')->findAllByAttributes(['template_id'=>$currentObjectTemplate->primaryKey]);
-	$arrayObjectsHandlesKeysCodenameHandle = $arrayObjectsHandlesKeysViewId =[];
+	$arrayObjectsHandlesKeysCodenameHandle = [];
 	foreach($arrayObjectsHandles as $objHandle) {
-		$arrayObjectsHandlesKeysCodenameHandle[$objHandle->codename] = $arrayObjectsHandlesKeysViewId[$objHandle->view_id] = $objHandle;
+		$arrayObjectsHandlesKeysCodenameHandle[$objHandle->codename] = $objHandle;
 	}
 	unset($arrayObjectsHandles);
 }
@@ -40,14 +40,13 @@ if($objRequest->getPost('submit_handle_config')) {
 			//если есть хендл для этого шаблона
 			if(isset($arrayObjectsHandlesKeysCodenameHandle[$handleName])) {
 				$objHandle = $arrayObjectsHandlesKeysCodenameHandle[$handleName];
-				//если представление изменилось
-				if(false==isset($arrayObjectsHandlesKeysViewId[$idView])) {
-					$objHandle->view_id = $idView;
-					$objHandle->save();
-				}
-				elseif($idView==0) { //если установил пустой нужно удалить
+				if($idView==0) { //если установил пустой нужно удалить весь хендл
 					$THIS_NAVIGATE->editlinks('remove', 'handle_sys', array($objHandle->primaryKey), 'handle');
 					$objHandle->delete();
+				}
+				elseif($objHandle->view_id!=$idView) { //или изменить представление на другое
+					$objHandle->view_id = $idView;
+					$objHandle->save();
 				}
 			}
 			elseif($idView!=0) { //создаем новый хендл если нет такого
