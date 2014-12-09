@@ -211,16 +211,25 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		$nameRelate = static::PRE_LINKS.$name_type_link;
-		if(!$this->metaData->hasRelation($nameRelate)) {
-			throw new CException(Yii::t('cms','space "'.$name_type_link.'" not declare relations'));
+		$objectModelAssociationClass = $associationClass->initobject();
+
+		$allRelateLinks = $this->getNamesModelLinks();
+		if(!isset($allRelateLinks[$name_type_link])) {
+			throw new CException(Yii::t('cms','not space links key '.$name_type_link));
 		}
+		$nameModelLink = $allRelateLinks[$name_type_link];
+		$nameRelate = static::PRE_LINKS.$name_type_link;
+		$objectModelAssociationClass->metaData->addRelation($nameRelate, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
+			'on'=> 'to_class_id='.$this->uclass_id,
+			'select' => false,
+			'together' => true,
+		));
+
 		$criteria = new CDbCriteria();
 		$criteria->with[$nameRelate] = array(
 			'on' => $nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.$nameRelate.'.from_class_id='.$this->uclass_id,
 		);
 
-		$objectModelAssociationClass = $associationClass->initobject();
 		$objectModelAssociationClass->getDbCriteria()->mergeWith($criteria);
 
 		return $objectModelAssociationClass;
@@ -338,16 +347,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	public function declareObj() {
 		parent::declareObj();
-
-		//для работы с ссылками ассоциаций
-		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
-			$this->metaData->addRelation(static::PRE_LINKS.$nameTypeLink, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
-				'on'=> 'to_class_id='.$this->uclass_id,
-				'select' => false,
-				'together' => true,
-				'joinType'=>'INNER JOIN',
-			));
-		}
 
 		//+++необходимо узнать список свойств у этого объекта
 		foreach($this->uclass->properties as $prop) {

@@ -37,7 +37,7 @@ $savedHandle = false;
 if($objRequest->getPost('submit_handle_config')) {
 	foreach($objRequest->getRestParams() as $nameParamHandleName => $idView) {
 		if($handleName = strstr($nameParamHandleName, '_select_config_handle_name', true)) {
-						//если есть хендл для этого шаблона
+			//если есть хендл для этого шаблона
 			if(isset($arrayObjectsHandlesKeysCodenameHandle[$handleName])) {
 				$objHandle = $arrayObjectsHandlesKeysCodenameHandle[$handleName];
 				//если представление изменилось
@@ -46,7 +46,7 @@ if($objRequest->getPost('submit_handle_config')) {
 					$objHandle->save();
 				}
 				elseif($idView==0) { //если установил пустой нужно удалить
-					$THIS_NAVIGATE->editlinks('remove', 'handle_sys', $objHandle->primaryKey, 'handle');
+					$THIS_NAVIGATE->editlinks('remove', 'handle_sys', array($objHandle->primaryKey), 'handle');
 					$objHandle->delete();
 				}
 			}
@@ -58,14 +58,18 @@ if($objRequest->getPost('submit_handle_config')) {
 					'view_id'=>$idView,
 				]);
 				$objHandle->save();
-				$THIS_NAVIGATE->editlinks('add', 'handle_sys', $objHandle->primaryKey, 'handle');
+				$THIS_NAVIGATE->editlinks('add', 'handle_sys', array($objHandle->primaryKey), 'handle');
 			}
 		}
 	}
-	//редирект если нет ошибок и есть объект или нет объекта
+	if($THIS_NAVIGATE->validate()) {
+		$this->redirect(Yii::app()->request->url);
+	}
 }
 
-//выбрать шаблон для настройки
+if(empty($objHandle)) {
+	echo CHtml::errorSummary($REND_model, '<div class="alert alert-danger">', '</p>');
+}
 ?>
 <form id="handle_config" name="handle_config" method="post">
 <p>
