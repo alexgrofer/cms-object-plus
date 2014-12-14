@@ -10,7 +10,7 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 	public function actionHeader_list() {
 		$this->pageTitle = $this->getAction()->getId();
 
-		$this->varsRender['testvar1'] = 'text var testvar1';
+		$this->varsRender['test_var_1'] = 'test var 1';
 	}
 
 	public function actionShow() {
