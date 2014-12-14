@@ -22,7 +22,7 @@ class uClasses extends AbsBaseModel
 	protected function defaultRules()
 	{
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('name,  codename', 'required'),
 			array('name', 'length', 'max'=>255),
 			array('codename', 'length', 'max'=>30),
@@ -31,7 +31,7 @@ class uClasses extends AbsBaseModel
 			array('description', 'default', 'value'=>''),
 			array('tablespace', 'numerical'),
 
-		);
+		));
 	}
 	public function getobjectCount() {
 		return $this->objects()->count();

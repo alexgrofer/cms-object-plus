@@ -17,14 +17,14 @@ class MyObjHeaders extends AbsBaseHeaders
 
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('name', 'required'),
 			array('name', 'type', 'type'=>'string'),
 			array('sort', 'default', 'value'=>0),
 			array('bpublic', 'boolean'),
 			array('bpublic', 'default', 'value'=>false),
 			array('content', 'safe'),
-		);
+		));
 	}
 
 	protected function defaultElementsForm() {

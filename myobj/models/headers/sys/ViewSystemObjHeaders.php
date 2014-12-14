@@ -18,10 +18,10 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('name, path', 'required'),
 			array('name, path, desc', 'length', 'max'=>255),
-		);
+		));
 	}
 }
 

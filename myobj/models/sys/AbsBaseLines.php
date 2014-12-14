@@ -29,10 +29,10 @@ abstract class AbsBaseLines extends AbsBaseModel
 	protected function defaultRules()
 	{
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('upcharfield', 'length', 'max'=>255),
 			array('uptextfield, upcharfield', 'default', 'value'=>''),
 			array('uptimefield, updatefield, upintegerfield, upfloatfield', 'default', 'value'=>null),
-		);
+		));
 	}
 }

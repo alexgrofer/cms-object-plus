@@ -18,12 +18,12 @@ class User extends AbsBaseModel
 	}
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>128),
 			array('email', 'email'),
 			array('login, email', 'unique',  'on'=>'insert', 'className'=>get_class($this),'caseSensitive' =>'false'),
-		);
+		));
 	}
 	protected function beforeSave() {
 		if(parent::beforeSave()!==false) {

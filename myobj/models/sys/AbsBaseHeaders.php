@@ -58,9 +58,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('uclass_id', 'unsafe'),
-		);
+		));
 	}
 
 	protected function beforeFind() {

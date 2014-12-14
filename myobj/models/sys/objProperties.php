@@ -24,7 +24,7 @@ class objProperties extends AbsBaseModel
 	protected function defaultRules()
 	{
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('name, codename, myfield', 'required'),
 			array('name, description, udefault', 'length', 'max'=>255),
 
@@ -38,7 +38,7 @@ class objProperties extends AbsBaseModel
 			array('myfield, minfield, ,maxfield', 'numerical'),
 			array('udefault', 'default', 'value'=>false),
 			array('setcsv', 'default', 'value'=>''),
-		);
+		));
 	}
 	public function beforeSave() {
 		if(parent::beforeSave()!==false) {

@@ -19,13 +19,13 @@ class HandleSystemObjHeaders extends AbsBaseHeaders {
 
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
+		return array_merge($rules, array(
 			array('codename', 'required'),
 			array('codename', 'length', 'max'=>255),
 
 			array('template_id', 'exist', 'className' => 'TemplateSystemObjHeaders', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
 			array('view_id', 'exist', 'className' => 'ViewSystemObjHeaders', 'attributeName'=>ViewSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
-		);
+		));
 	}
 
 	public function relations() {
