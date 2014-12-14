@@ -10,11 +10,11 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public $uclass_id=5;
 	//columns DB
 	public $name;
-	public $codename;
-	public $action_name;
+	public $controller;
+	public $action;
 	public $sort;
-	public $parent_id;
 	//key
+	public $parent_id;
 	public $template_default_id;
 	// end
 
@@ -22,18 +22,18 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 	protected function defaultRules() {
 		$rules = parent::defaultRules();
-		return $rules + array(
-			array('name', 'required'),
-			array('name, codename, action_name', 'length', 'max'=>255),
-			array('codename, action_name', 'default', 'value'=>null),
+		return array_merge($rules, array(
+			array('name, controller', 'required'),
+			array('name, controller, action', 'length', 'max'=>255),
+			array('action', 'default', 'value'=>null),
 			array('sort', 'default', 'value'=>0),
 
-			array('parent_id', 'exist', 'className' => get_class($this), 'allowEmpty'=>true),
+			array('parent_id', 'exist', 'className' => get_class($this), 'attributeName'=>'id', 'allowEmpty'=>true),
 			array('parent_id', 'default', 'value'=>null),
 
-			array('template_default_id', 'exist', 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>true),
+			array('template_default_id', 'exist', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>true),
 			array('template_default_id', 'default', 'value'=>null),
-		);
+		));
 	}
 
 	public function relations() {

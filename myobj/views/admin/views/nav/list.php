@@ -19,7 +19,7 @@ $listobjsort = apicms\utils\treelem($objectsNavigate,null,'id','parent_id',funct
 <td><input class="btn btn-primary" type="submit" name="push_" value="top" /></td>
 <td>id</td>
 <td>name</td>
-<td>codename</td><td>action</td>
+<td>controller</td><td>action</td>
 <td>top</td>
 <td>sort</td>
 <td>visible</td>
@@ -40,8 +40,8 @@ foreach($listobjsort as $objarr) {
 	$visibl = ($obj->show)?'+':'-';
 
 	$uihtml .= ' | --- <a onclick="return confirm(\'remove id - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
-	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->parent_id.'</td><td>'.$obj->action_name.'</td><td>'.$obj->parent_id.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
-	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->codename.'" value="push" /> | '.$uihtml.' </td>
+	echo '<tr><td><input type="checkbox" name="elemch_'.$obj->primaryKey.'" /></td><td>'.$obj->primaryKey.'</td><td><span class="label label-info">'.$objarr['left'].$obj->name.'</span></td><td>'.$obj->controller.'</td><td>'.$obj->action.'</td><td>'.$obj->parent_id.'</td><td>'.$obj->sort.'</td><td>'.$visibl.'</td>
+	<td><input class="btn btn-small btn-info" type="submit" name="push_'.$obj->id.'" value="push" /> | '.$uihtml.' </td>
 	</tr>';
 }
 ?>

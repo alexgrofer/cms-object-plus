@@ -75,16 +75,17 @@ CREATE TABLE `setcms_viewsystemobjheaders` (
 CREATE TABLE `setcms_navigatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`codename` varchar(255) NULL DEFAULT NULL,
-	`action_name` varchar(255) NULL DEFAULT NULL,
+	`controller` varchar(255) NOT NULL,
+	`action` varchar(255) NULL DEFAULT NULL,
 	`sort` int(11) NOT NULL DEFAULT 0,
-	`parent_id` int(11) NULL DEFAULT NULL,
 	`show` tinyint(1) NOT NULL DEFAULT 0,
 	-- keys
+	`parent_id` int(11) NULL DEFAULT NULL,
 	`template_default_id` int(11) DEFAULT NULL,
 	--
 	PRIMARY KEY (`id`),
-	UNIQUE KEY (`codename`,`action_name`),
+	UNIQUE KEY (`controller`,`action`),
+	FOREIGN KEY (`parent_id`) REFERENCES `setcms_navigatesystemobjheaders` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`template_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
