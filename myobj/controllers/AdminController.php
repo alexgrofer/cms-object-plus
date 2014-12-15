@@ -7,13 +7,7 @@ class AdminController extends \Controller {
 	public $layout='/admin/layouts/column1';
 	public $apcms;
 	public $dicturls = array();
-	/**
-	 * Некоторые переменные которые могут понадобится в представлении, в представлении не желательно что то вычислять
-	 * @var array
-	 */
-	public $param_contr = array(
-		'current_class_name'=>null,
-	);
+
 	public $paramsrender = array(
 			'REND_thisparamsui'=>null,
 			'REND_thispropsui'=>null,
@@ -96,7 +90,6 @@ class AdminController extends \Controller {
 			case 'objects':
 				if($this->dicturls['paramslist'][0]=='class') {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
-						$this->param_contr['current_class_name'] = $actclass->codename;
 					if(!(int)$this->dicturls['paramslist'][1]) {
 						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->primaryKey));
 					}
@@ -133,7 +126,6 @@ class AdminController extends \Controller {
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
 						$actclass = $modelAD->findByPk($this->dicturls['paramslist'][2]);
-							$this->param_contr['current_class_name'] = $actclass->codename;
 						$objctsassociation = $actclass->association;
 						$modelAD->dbCriteria->addInCondition('id', \apicms\utils\arrvaluesmodel($objctsassociation,'id'));
 					}
@@ -260,7 +252,6 @@ class AdminController extends \Controller {
 							}
 							$modelAD->dbCriteria->addInCondition('tablespace', $ids_spaces_equal);
 							}
-							$this->param_contr['current_class_name'] = $objrelated->codename;
 						}
 
 						if($this->dicturls['action'] == 'relationobjonly') {

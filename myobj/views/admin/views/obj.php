@@ -31,20 +31,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
 }
-//редактирование представлений и шаблонов
-//опять же перенести все в контроллер, или создать отдельный контроллер еси нужно и присоеденить к текущему контроллеру возможно присоединять контроллеры?
-if(in_array($this->param_contr['current_class_name'],array('templates_sys','views_sys'))) {
-	$namefilderfile = ($this->param_contr['current_class_name']=='templates_sys')?'templates':'views';
-	$namefile = dirname(__FILE__).'/../cms/'.$namefilderfile.'/'.$REND_model->path.'.php';
-	if(file_exists($namefile)) {
-		$contenttext=file_get_contents($namefile);
-	}
-	$snamefile = 'edit_file_template';
 
-	$REND_model->addElemClass($snamefile, isset($contenttext)?$contenttext:'');
-	$REND_model->customElementsForm[$snamefile] = array('type'=>'textarea');
-	$REND_model->customRules[] = array($snamefile, 'safe');
-}
 //work EArray  Добавляем в ручную только если это множественный массив
 $typesEArray = $REND_model->typesEArray();
 if(count($typesEArray)) {
@@ -118,10 +105,6 @@ if(count($_POST) && $form->validate()) {
 			if(($pos = strpos($key,$nameps_mtm)) && array_key_exists(($name_norm = substr($key,0,$pos)),$array_names_v_mtm) && (array_key_exists($name_norm, $array_names_v_mtm) && $array_names_v_mtm[$name_norm]!=$val)) {
 				$array_edit_post_mtmparam[$name_norm] = trim($val);
 			}
-		}
-		//редактирование файлов task так надоли это ?
-		if(isset($namefile) && strpos($key,$snamefile)!==false) {
-			//file_put_contents($namefile, $val);
 		}
 
 	}
