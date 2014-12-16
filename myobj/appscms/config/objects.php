@@ -22,6 +22,10 @@ $objects = array(
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
+		'relation' => array('templateDefault'=>array('templates_sys', 'navigations', true)), //typeClass ссылка не на модель а другой класс
+		//array('название в реляции'=>array('псевдоним название модели(или класса)', 'название обратной реляции')
+		'namemodel' => 'NavigateSystemObjHeaders',
 	),
 	$classes_system['group'] => array(
 		'cols' => array('id'=>'id','name'=>'name','vp1'=>'outside identifier','vp2'=>'codename',),
@@ -35,6 +39,9 @@ $objects = array(
 		//'editForm' => array('name','vp1','content'), //в админке видим только поля
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		//'relation' => array('myobjheader'=>array('news_example','test_relat_objcts')),
+		'relation' => array('navigations'=>array('navigation_sys','templateDefault', true)), //typeClass ссылка не на модель а другой класс
+		'namemodel' => 'TemplateSystemObjHeaders',
 	),
 	$classes_system['view'] => array(
 		//'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),

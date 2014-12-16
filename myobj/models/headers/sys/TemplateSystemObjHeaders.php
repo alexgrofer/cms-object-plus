@@ -23,5 +23,13 @@ class TemplateSystemObjHeaders extends AbsBaseHeaders {
 			array('name, path, desc', 'length', 'max'=>255),
 		));
 	}
+
+	public function relations() {
+		$relations = parent::relations();
+
+		$relations['navigations'] = array(self::HAS_MANY, 'NavigateSystemObjHeaders', 'template_default_id');
+
+		return $relations;
+	}
 }
 
