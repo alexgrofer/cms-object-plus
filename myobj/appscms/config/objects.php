@@ -1,22 +1,12 @@
 <?php
-$classes_system = array(
-	'group'=>'groups_sys',
-	'template'=>'templates_sys',
-	'view'=>'views_sys',
-	'handle'=>'handle_sys',
-	'navigation'=>'navigation_sys',
-	'params'=>'param_sys',
-	'db_dump'=>'db_dump_sys',
-);
-
 $objects = array(
-	$classes_system['handle'] => array(
+	'handle_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
 		//'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
-	$classes_system['navigation'] => array(
+	'navigation_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
 		//'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','vp3'=>'controller action','bp1'=>'visible'),
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
@@ -27,13 +17,13 @@ $objects = array(
 		//array('название в реляции'=>array('псевдоним название модели(или класса)', 'название обратной реляции')
 		'namemodel' => 'NavigateSystemObjHeaders',
 	),
-	$classes_system['group'] => array(
+	'groups_sys' => array(
 		'cols' => array('id'=>'id','name'=>'name','vp1'=>'outside identifier','vp2'=>'codename',),
 		'AttributeLabels' => array('vp1'=>'outside-id_group', 'content'=>'description', 'vp2'=>'codename'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
-	$classes_system['template'] => array(
+	'templates_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name template','vp1'=>'patch'),
 		//'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
 		//'editForm' => array('name','vp1','content'), //в админке видим только поля
@@ -43,20 +33,20 @@ $objects = array(
 		'relation' => array('navigations'=>array('navigation_sys','templateDefault', true)), //typeClass ссылка не на модель а другой класс
 		'namemodel' => 'TemplateSystemObjHeaders',
 	),
-	$classes_system['view'] => array(
+	'views_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),
 		//'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
 		//'editForm' => array('name','vp1','content','edit_file_template'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
-	$classes_system['params'] => array(
+	'param_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
 		//'AttributeLabels' => array('vp1'=>'codename'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
-	$classes_system['db_dump'] => array(
+	'db_dump_sys' => array(
 		'cols' => array('id'=>'id','name'=>'name'),
 		'AttributeLabels' => array('vp1'=>'patch'),
 		'groups_read' => null,
@@ -87,4 +77,4 @@ apicms\utils\importRecursName('MYOBJ.appscms.config.user','objects_*',true);
 $objects = Yii::app()->params['api_conf_objects'];
 $set_spaces = Yii::app()->params['api_conf_spaces'];
 unset(Yii::app()->params['api_conf_objects']);
-return array($objects,$set_spaces,$classes_system);
+return array($objects,$set_spaces);
