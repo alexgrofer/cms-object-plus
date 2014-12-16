@@ -4,8 +4,8 @@ use yii;
 use uClasses;
 
 abstract class AbsSiteController extends \Controller {
-	public $thisObjNav = null;
-	public $varsRender = array();
+	protected $thisObjNav = null;
+	protected $varsRender = array();
 
 	/**
 	 * @var null
