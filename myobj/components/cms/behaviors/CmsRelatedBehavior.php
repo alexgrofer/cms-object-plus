@@ -3,7 +3,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 {
 	public function links_edit($type, $namerelation, array $idsObj=null, $addparam=array(), $where=array()) {
 		$thisObj = $this->getOwner();
-		$thisTable = $thisObj->tableName();;
+		$thisTable = $thisObj->tableName();
 		$thisObjPrimaryKeyVal = $thisObj->primaryKey;
 		$thisRelations = $thisObj->metaData->relations;
 		$thisRelation = $thisRelations[$namerelation];
@@ -59,7 +59,8 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 					$command->delete($nameTableThisRelation, array('in', $namePrimaryKeyThisRelation, $idsObj));
 				}
 				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
-					$command->delete($thisTable, $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation=>null), array('and', $thisObj->primaryKey().'='.$thisObjPrimaryKeyVal));
+					//$command->delete($thisTable, $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
 				}
 			break;
 			case 'clear':
