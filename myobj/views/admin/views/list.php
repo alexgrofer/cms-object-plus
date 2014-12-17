@@ -338,13 +338,13 @@ foreach($listall as $obj) {
 	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'').'"><i class="icon-edit"></i></a>';
 
 	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/">
-	<i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
+	<i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->codename.'">objects</a>';
 	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
 
 	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
 
 	if($arrayuirow['editlinksclass']) $uihtml .= ' |
-	<a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
+	<a href="'.$arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
 
 
 	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);

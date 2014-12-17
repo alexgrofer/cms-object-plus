@@ -90,9 +90,6 @@ class AdminController extends \Controller {
 			case 'objects':
 				if($this->dicturls['paramslist'][0]=='class') {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
-					if(!(int)$this->dicturls['paramslist'][1]) {
-						$this->redirect(Yii::app()->createUrl('myobj/admin/objects/class/'.$actclass->primaryKey));
-					}
 					$modelAD = $actclass->objects();
 					$settui = array();
 					if(isset(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename])) {
@@ -125,7 +122,7 @@ class AdminController extends \Controller {
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
-						$actclass = $modelAD->findByPk($this->dicturls['paramslist'][2]);
+						$actclass = \uClasses::getclass($this->dicturls['paramslist'][2]);
 						$objctsassociation = $actclass->association;
 						$modelAD->dbCriteria->addInCondition('id', \apicms\utils\arrvaluesmodel($objctsassociation,'id'));
 					}
@@ -216,9 +213,7 @@ class AdminController extends \Controller {
 					case 'lenksobjedit':
 						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1]);
-						if($getlinks) {
-							$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
-						}
+						$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
 						break;
 					case 'relationobj':
 					case 'relationobjonly':
