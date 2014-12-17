@@ -212,7 +212,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		$objectModelAssociationClass = $associationClass->initobject();
+		$objectModelAssociationClass = $associationClass->objects();
 
 		$allRelateLinks = $this->getNamesModelLinks();
 		if(!isset($allRelateLinks[$name_type_link])) {
@@ -221,19 +221,15 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$nameModelLink = $allRelateLinks[$name_type_link];
 		$nameRelate = static::PRE_LINKS.$name_type_link;
 		$objectModelAssociationClass->metaData->addRelation($nameRelate, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
-			'on'=> 'to_class_id='.$this->uclass_id,
+			'on'=> $nameRelate.'.to_class_id='.$associationClass->primaryKey.' AND '.
+				$nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.
+				$nameRelate.'.from_class_id='.$this->uclass_id,
 			'select' => false,
 			'together' => true,
+			'joinType'=>'INNER JOIN'
 		));
 
-		$criteria = new CDbCriteria();
-		$criteria->with[$nameRelate] = array(
-			'on' => $nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.$nameRelate.'.from_class_id='.$this->uclass_id,
-		);
-
-		$objectModelAssociationClass->getDbCriteria()->mergeWith($criteria);
-
-		return $objectModelAssociationClass;
+		return $objectModelAssociationClass->with($nameRelate);
 	}
 
 	public function afterSave() {
