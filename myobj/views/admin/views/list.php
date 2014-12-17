@@ -132,13 +132,6 @@ elseif($this->dicturls['class']=='objects') {
 	if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
 		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
 	}
-
-	if($this->dicturls['action']=='lenksobjedit') {
-		/* @todo совершенно не понятно для чего это было сделанно
-		 * закомментировал для того что бы если я перехожу с editlinksclass нв объекты и в них нажимаю links то замем то это условие подменяет класс
-		 * */
-		//$arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][6].'/links/';
-	}
 }
 ?>
 <form method="post" enctype="multipart/form-data">
@@ -344,12 +337,14 @@ foreach($listall as $obj) {
 	$uihtml = '';
 	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'').'"><i class="icon-edit"></i></a>';
 
-		if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/"><i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
-		if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
+	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/">
+	<i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'">objects</a>';
+	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
 
-		if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
+	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
 
-		if($arrayuirow['editlinksclass']) $uihtml .= ' | <a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
+	if($arrayuirow['editlinksclass']) $uihtml .= ' |
+	<a href="'.$arrayuirow['editlinksclass'].$obj->primaryKey.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
 
 
 	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
