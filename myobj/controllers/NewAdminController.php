@@ -10,6 +10,24 @@ use \CActiveRecord as CActiveRecord;
  */
 class NewAdminController extends \Controller {
 	/**
+	 * Просмотр объекта модели
+	 * @param $nameModel - название модели
+	 * @param $idObject - id объекта
+	 */
+	public function actionShowObjectModel($nameModel,$idObject) {
+		//
+	}
+
+	/**
+	 * Просмотр объекта класса
+	 * @param $nameClass
+	 * @param $idObject
+	 */
+	public function actionShowObjectClass($nameClass,$idObject) {
+		//
+	}
+
+	/**
 	 * Редактирование объекта модели
 	 * @param $nameModel - название модели
 	 * @param $idObject - id объекта
