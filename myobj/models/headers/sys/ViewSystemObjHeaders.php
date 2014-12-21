@@ -23,5 +23,13 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 			array('name, path, desc', 'length', 'max'=>255),
 		));
 	}
+
+	public function relations() {
+		$relations = parent::relations();
+
+		$relations['handles'] = array(self::HAS_MANY, 'HandleSystemObjHeaders', 'view_id');
+
+		return $relations;
+	}
 }
 

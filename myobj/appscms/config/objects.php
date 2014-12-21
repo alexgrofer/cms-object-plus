@@ -5,6 +5,11 @@ $objects = array(
 		//'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'relation' => array(
+			'template'=>array('templates_sys', 'handles', true),
+			'view'=>array('views_sys', 'handles', true),
+		),
+		'namemodel' => 'HandleSystemObjHeaders',
 	),
 	'navigation_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
@@ -13,8 +18,8 @@ $objects = array(
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
-		'relation' => array('templateDefault'=>array('templates_sys', 'navigations', true)), //typeClass ссылка не на модель а другой класс
-		//array('название в реляции'=>array('псевдоним название модели(или класса)', 'название обратной реляции')
+		'relation' => array('templateDefault'=>array('templates_sys', 'navigations', true)),
+		//array('название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас)
 		'namemodel' => 'NavigateSystemObjHeaders',
 	),
 	'groups_sys' => array(
@@ -30,7 +35,10 @@ $objects = array(
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('myobjheader'=>array('news_example','test_relat_objcts')),
-		'relation' => array('navigations'=>array('navigation_sys','templateDefault', true)), //typeClass ссылка не на модель а другой класс
+		'relation' => array(
+			'navigations'=>array('navigation_sys','templateDefault', true),
+			'handles'=>array('handle_sys','template', true),
+		),
 		'namemodel' => 'TemplateSystemObjHeaders',
 	),
 	'views_sys' => array(
@@ -39,6 +47,10 @@ $objects = array(
 		//'editForm' => array('name','vp1','content','edit_file_template'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'relation' => array(
+			'handles'=>array('handle_sys','view', true),
+		),
+		'namemodel' => 'ViewSystemObjHeaders',
 	),
 	'param_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
