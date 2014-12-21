@@ -292,10 +292,13 @@ $rel_arr_vis = $relconfsetting['relation'];
 
 if(count($rel_arr_vis)) {
 	foreach($REND_model->relations() as $namerelat => $val) {
-		if($keyfindname = array_search($namerelat,array_keys($rel_arr_vis)) !== false) {
+		if(isset($rel_arr_vis[$namerelat])) {
 			$namemodelconf = $rel_arr_vis[$namerelat];
 
-			$print_link = ' | <a href="'.$urladmclass.'/objects/models/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/models/'.$namemodelconf[1].'">%s</a>';
+			//это ссылка на модель или класс
+			$modelORclass = (isset($rel_arr_vis[$namerelat][2]) && $rel_arr_vis[$namerelat][2])?'class':'models';
+
+			$print_link = ' | <a href="'.$urladmclass.'/objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1].'">%s</a>';
 			$relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
 			if($REND_model::HAS_MANY) $relations_links_model .= sprintf($print_link,'relationobjonly','<');
 			unset($print_link);
@@ -305,15 +308,10 @@ if(count($rel_arr_vis)) {
 
 }
 
-
 foreach($listall as $obj) {
 	$strchecked=(in_array($obj->primaryKey, $selectorsids)!==false || (in_array($obj->primaryKey,$arrchecked)!==false && in_array($obj->primaryKey,$selectorsids_excluded)===false) || array_key_exists('allsetchecked',$_POST))?'checked="checked"':'';
 
 	$pkeys_all[] = $obj->primaryKey;
-
-
-
-
 
 	echo '<tr><td><input name="elemch_'.$obj->primaryKey.'" type="checkbox" '.$strchecked.' /></td>';
 	foreach(array_keys($REND_thisparamsui) as $colname) {
