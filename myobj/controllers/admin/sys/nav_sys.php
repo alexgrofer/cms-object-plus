@@ -18,7 +18,7 @@ if($idindexpage!==false && count($idelemspush)) {
 	$modelCRITERIA = new CDbCriteria();
 	$modelCRITERIA->addInCondition('id', $idelemspush);
 	if(in_array($idindexpage,$idelemspush)===false) {
-		$modelAD->updateAll(array('vp1' => $idindexpage),$modelCRITERIA);
+		$modelAD->updateAll(array('parent_id' => $idindexpage),$modelCRITERIA);
 	}
 	if($this->dicturls['actionid']=='0') {
 		$this->redirect($this->getUrlBeforeAction());
