@@ -170,17 +170,17 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function editlinks($type, $class, $idsHeader=null, $name_type_link='0') {
 		$addparam = ['from_class_id' => $this->uclass_id];
 
-		$associationClass = \uClasses::getclass($class);
+		$associationClass = (is_object($class))?$class:\uClasses::getclass($class);
 
 		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
 		$nameRelate = static::PRE_LINKS_MTM.$name_type_link;
-		$arrayModelLinks = $this->getNamesModelLinks();
-		$objLinkModel = $arrayModelLinks[$name_type_link]::model();
 
 		if(!$this->metaData->hasRelation($nameRelate)) {
+			$arrayModelLinks = $this->getNamesModelLinks();
+			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
 			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
 		}
 
@@ -269,12 +269,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
 		}
 		//del links
-		foreach($this->getNamesModelLinks() as $nameTypeLink => $nameModelLink) {
-			//по сути не важно что за класс поэтому просто get_class($this)
-			$nameRelate = static::PRE_LINKS_MTM.'del'.$nameTypeLink;
-			$objLinkModel = $nameModelLink::model();
-			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, get_class($this), $objLinkModel->tableName().'(from_obj_id, to_obj_id)'));
-			$this->UserRelated->links_edit('clear', $nameRelate, null, array(), ['and', 'from_class_id='.$this->uclass_id]);
+		foreach($this->uclass->association as $objClass) {
+			$this->editlinks('clear', $objClass);
 		}
 		return parent::beforeDelete();
 	}
