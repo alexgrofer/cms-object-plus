@@ -28,14 +28,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public $force_join_props = true;
 
 	/**
-	 * Список моделий для связки объектов
-	 * @return array
-	 */
-	public function getNamesModelLinks() {
-		return Yii::app()->appcms->config['spacescl'][$this->uclass->tablespace]['nameModelLinks'];
-	}
-
-	/**
 	 * @var bool
 	 * Данные Свойств лежат в объектах модели AbsBaseLines, если мы не собираемся использовать свойства то нужно поставить этот параметр false
 	 */
@@ -167,7 +159,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsHeader=null, $name_type_link='0') {
+	public function editlinks($type, $class, $idsHeader=null, $name_type_link='base') {
 		$addparam = ['from_class_id' => $this->uclass_id];
 
 		$associationClass = (is_object($class))?$class:\uClasses::getclass($class);
@@ -179,7 +171,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$nameRelate = static::PRE_LINKS_MTM.$name_type_link;
 
 		if(!$this->metaData->hasRelation($nameRelate)) {
-			$arrayModelLinks = $this->getNamesModelLinks();
+			$arrayModelLinks = $this->uclass->getNamesModelLinks();
 			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
 			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
 		}
@@ -203,7 +195,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return CActiveRecord[] - массив заголовков
 	 * @throws CException
 	 */
-	public function getobjlinks($nameAssociationClass, $name_type_link='0') {
+	public function getobjlinks($nameAssociationClass, $name_type_link='base') {
 
 		/* @var $associationClass uClasses */
 		$associationClass = \uClasses::getclass($nameAssociationClass);
@@ -214,7 +206,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		$objectModelAssociationClass = $associationClass->objects();
 
-		$allRelateLinks = $this->getNamesModelLinks();
+		$allRelateLinks = $this->uclass->getNamesModelLinks();
 		if(!isset($allRelateLinks[$name_type_link])) {
 			throw new CException(Yii::t('cms','not space links key '.$name_type_link));
 		}

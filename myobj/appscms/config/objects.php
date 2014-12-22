@@ -10,6 +10,14 @@ $objects = array(
 			'view'=>array('views_sys', 'handles', true),
 		),
 		'namemodel' => 'HandleSystemObjHeaders',
+		//список ссылок в списке классов
+		'AddNamesModelLinks' => array(
+			//ведущий класс в асоциации
+			'navigation_sys' => array(
+				//возможные типы моделей ссылок
+				'handle'
+			),
+		),
 	),
 	'navigation_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
@@ -75,12 +83,12 @@ $set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['lin
 /*
  * модели можно хранить в отдельных таблицах при необходимости
  */
-$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['linksObjectsAllSystem', 'handle' => 'linksObjectsAllSystemHandle']);
-$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'nameModelLinks'=>['linksObjectsAllSystem']);
-$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['linksObjectsAllSystem']);
-$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['linksObjectsAllSystem']);
-$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['linksObjectsAllSystem']);
-$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['linksObjectsAllSystem']);
+$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsAllSystem', 'handle' => 'linksObjectsAllSystemHandle']);
+$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
+$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
+$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
+$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
+$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
 
 Yii::app()->params['api_conf_objects'] = $objects;
 Yii::app()->params['api_conf_spaces'] = $set_spaces;

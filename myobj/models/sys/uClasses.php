@@ -107,6 +107,14 @@ class uClasses extends AbsBaseModel
 	}
 
 	/**
+	 * Список типов ссылок этого класса
+	 * @return array
+	 */
+	public function getNamesModelLinks(){
+		return Yii::app()->appcms->config['spacescl'][$this->tablespace]['nameModelLinks'];
+	}
+
+	/**
 	 * Вытаскивает ссылку на объект класса с установленной критерией для поиска объектов
 	 * @return CActiveRecord
 	 */
