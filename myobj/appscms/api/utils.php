@@ -27,13 +27,20 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
 			$NAMEMODEL_get = \apicms\utils\normalAliasModel($params_modelget['relation'][$paramslist[7]][0]);
 
 			$obj = $NAMEMODEL_get['namemodel']::model()->findByPk($this_id);
+			$nameRelation = $params_modelget['relation'][$paramslist[7]][1];
 
 			if(count($listsetexcluded)) {
-				$obj->UserRelated->links_edit('remove',$params_modelget['relation'][$paramslist[7]][1],$listsetexcluded);
+				$objRelations = $obj->relations();
+				$addparam = array();
+				//если ключ внейний и юзер пытается установить ключу null(отвязывает элемент) нежно заапдейтить новый
+				if(count($listset) && $objRelations[$nameRelation][0]==\CActiveRecord::BELONGS_TO) {
+					$addparam = array($listset[0]);
+				}
+				$obj->UserRelated->links_edit('remove',$nameRelation,$listsetexcluded,$addparam);
 			}
 
 			if(count($listset)) {
-				$obj->UserRelated->links_edit('add',$params_modelget['relation'][$paramslist[7]][1],$listset);
+				$obj->UserRelated->links_edit('add',$nameRelation,$listset);
 			}
 	}
 }

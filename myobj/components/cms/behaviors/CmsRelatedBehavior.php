@@ -21,6 +21,8 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			$mtmToPrimaryKey = trim($arrDataM[2]);
 		}
 
+		$newId = isset($addparam[0])?$addparam[0]:null;
+
 		$command = Yii::app()->db->createCommand();
 		$transaction=Yii::app()->db->beginTransaction();
 		try {
@@ -39,27 +41,26 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 				}
 			break;
 			case 'edit':
-				$newId = $addparam;
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
 					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
-					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => $newId?:null), array('in', $namePrimaryKeyThisRelation, $idsObj));
+					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => $newId), array('in', $namePrimaryKeyThisRelation, $idsObj));
 				}
 				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
-					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => $newId?:null), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation => $newId), $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
 				}
 			break;
 			case 'remove':
-				$newId = $addparam;
+				$newId = isset($addparam[0])?$addparam[0]:null;
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
 					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
-					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation=>$newId?:null), array('in', $namePrimaryKeyThisRelation, $idsObj));
+					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation=>$newId), array('in', $namePrimaryKeyThisRelation, $idsObj));
 				}
 				elseif($typeThisRelation == CActiveRecord::BELONGS_TO) {
-					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation=>$newId?:null), array('and', $thisObj->primaryKey().'='.$thisObjPrimaryKeyVal));
+					$command->update($thisTable, array($nameLinkPrimaryKeyThisRelation=>$newId), array('and', $thisObj->primaryKey().'='.$thisObjPrimaryKeyVal));
 					//$command->delete($thisTable, $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal);
 				}
 			break;
