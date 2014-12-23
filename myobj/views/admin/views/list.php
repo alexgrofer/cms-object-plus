@@ -95,19 +95,18 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-$urladmclass = $this->dicturls['admin'];
 $relationLinkOnly='';
 if($this->dicturls['action']=='relationobjonly') {
 	$relationLinkOnly = $this->dicturls['paramslist'][3].'/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
 }
 $arrayuirow = array(
-	'edit' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',
-	'remove' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/remove/',
+	'edit' => 'objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',
+	'remove' => 'objects/models/'.$this->dicturls['paramslist'][1].'/action/remove/',
 	'objects' => '',
 	'links' => '',
 	'editlinksclass' => '',
 	'navgroup' => '',
-	'new' => $urladmclass.'/objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly,
+	'new' => 'objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly,
 );
 $headershtml = '';
 
@@ -116,21 +115,21 @@ if($REND_thispropsui) {
 	$headershtml .= '<td>'.(implode('</td><td>',array_values($REND_thispropsui)));
 }
 if($this->dicturls['class']=='objects' && $this->dicturls['paramslist'][0]=='models' && ($this->dicturls['paramslist'][1]=='classes')) {
-	$arrayuirow['objects'] = $urladmclass.'/objects/class/';
+	$arrayuirow['objects'] = 'objects/class/';
 	if($this->dicturls['paramslist'][3]=='links') {
-		$arrayuirow['editlinksclass'] = $urladmclass.'/objects/class/';
+		$arrayuirow['editlinksclass'] = 'objects/class/';
 	}
 }
 
 elseif($this->dicturls['class']=='objects') {
-	$arrayuirow['edit'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/';
-	$arrayuirow['new'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly;
-	$arrayuirow['links'] = $urladmclass.'/objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
-	$arrayuirow['remove'] = $urladmclass.'/'.$this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
+	$arrayuirow['edit'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/';
+	$arrayuirow['new'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly;
+	$arrayuirow['links'] = 'objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
+	$arrayuirow['remove'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
 	//groups views
 	$objclass = uClasses::getclass(array('views_sys','groups_sys'));
 	if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
-		$arrayuirow['navgroup'] = $urladmclass.'/objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
+		$arrayuirow['navgroup'] = 'objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
 	}
 }
 ?>
@@ -194,7 +193,7 @@ printf($htmlinput,'hidden','selectorsids',implode(',',$selectorsids),'');
 printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_excluded),'');
 
 ?>
-<a  class="btn" href="<?php echo $arrayuirow['new'];?>">new object</a>
+<a  class="btn" href="<?=$this->createUrl($arrayuirow['new'])?>">new object</a>
 <p>
 <input name="exportcsv" type="file" /><input name="exportcsv_ispk" type="checkbox" />resave_pk создаст с таким id
 <input onclick="return confirm(\'export CSV file\')" class="btn btn-danger" type="submit" value="export" />
@@ -298,7 +297,7 @@ if(count($rel_arr_vis)) {
 			//это ссылка на модель или класс
 			$modelORclass = (isset($rel_arr_vis[$namerelat][2]) && $rel_arr_vis[$namerelat][2])?'class':'models';
 
-			$print_link = ' | <a href="'.$urladmclass.'/objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1].'">%s</a>';
+			$print_link = ' | <a href="'.$this->createUrl('objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1]).'">%s</a>';
 			$relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
 			if($REND_model::HAS_MANY) $relations_links_model .= sprintf($print_link,'relationobjonly','<');
 			unset($print_link);
@@ -333,21 +332,21 @@ foreach($listall as $obj) {
 		}
 	}
 	$uihtml = '';
-	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'').'"><i class="icon-edit"></i></a>';
+	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$this->createUrl($arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'')).'"><i class="icon-edit"></i></a>';
 
-	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/">
-	<i class="icon-plus-sign"></i></a> | <a href="'.$arrayuirow['objects'].$obj->codename.'">objects</a>';
-	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$arrayuirow['links'].$obj->primaryKey.'">links</a>';
+	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$this->createUrl($arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/').'">
+	<i class="icon-plus-sign"></i></a> | <a href="'.$this->createUrl($arrayuirow['objects'].$obj->codename).'">objects</a>';
+	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$this->createUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
 
-	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.sprintf($arrayuirow['navgroup'],$obj->primaryKey).'">group_permission</a>';
+	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
 
 	if($arrayuirow['editlinksclass']) $uihtml .= ' |
-	<a href="'.$arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2].'">editlinksclass</a>';
+	<a href="'.$this->createUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2]).'">editlinksclass</a>';
 
 
 	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
 
-	$uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$arrayuirow['remove'].$obj->primaryKey.'"><i class="icon-remove"></i></a>';
+	$uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$this->createUrl($arrayuirow['remove'].$obj->primaryKey).'"><i class="icon-remove"></i></a>';
 	echo '<td>'.$uihtml.' </td></tr>';
 }
 

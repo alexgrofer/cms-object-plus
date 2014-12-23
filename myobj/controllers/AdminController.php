@@ -54,6 +54,11 @@ class AdminController extends \Controller {
     {
         return implode('/',array_slice(explode('/',Yii::app()->request->getParam('r')),1));
     }
+
+	public function createUrl($route,$params=array(),$ampersand='&') {
+		return parent::createUrl('admin/'.$route, $params=array(),$ampersand='&');
+	}
+
 	public function run($actionID) {
 		//login
         if(defined('YII_DEBUG') && YII_DEBUG){
@@ -73,7 +78,6 @@ class AdminController extends \Controller {
 		//init urls
 		$paramslisturl = explode('/',Yii::app()->request->getParam('r'));
 		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
-		$this->dicturls['admin'] = $this->createUrl($paramslisturl[1].'/');
 		$this->dicturls['class'] = $paramslisturl[2];
 		$this->dicturls['all'] = $this->getRoute();
 		$this->dicturls['paramslist'] = array_merge(array_slice($paramslisturl,3), array('','','','','','',''));
