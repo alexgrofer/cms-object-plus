@@ -44,35 +44,7 @@ function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array
 			}
 	}
 }
-/*
-$idpage = 0;
-if(strpos(implode('',array_keys($_GET)),'goin_')!==false) {
-	foreach($_GET as $key => $value) {
-		if($key == 'goin_') {
-			$idpage = $value;
-		}
-	}
-}
-//normal url
-$tamplate = array(
-		'action'=>' class="active"',
-		'nextleft'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&laquo;</a></li>',
-		'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&larr; �����</a></li>',
-		'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">������ &rarr;</a></li>',
-		'nextright'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&raquo;</a></li>',
-		'elem'=>'<li%s><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">%s</a></li>',
-		'pagination' => '
-		<div id="pagination" class="pagination">
-			<ul class="pager">
-				%s
-			</ul>
-			<p class="pagin-lenks"><ul>%s</ul></p>
-		</div>
-<script>
-$(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if($("#prevpg").length){$("#prevpg")[0].click()}}else if(event.keyCode == 39){if($("#nextpg").length){$("#nextpg")[0].click()}}}});
-</script>
-');
-*/
+
 function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flagpro,$tamplate,$countleft=5) {
 	$func_getlink = function($linkstr,$index) {
 		$str = str_replace('T_ID_PAGE',$index,$linkstr);

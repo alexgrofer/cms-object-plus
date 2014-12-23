@@ -50,13 +50,25 @@ class AdminController extends \Controller {
 	public function getMenuhtmlSub() {
 		return $this->renderPartial('/admin/views/myui_sub');
 	}
-    public function getRoute()
-    {
-        return implode('/',array_slice(explode('/',Yii::app()->request->getParam('r')),1));
-    }
 
-	public function createUrl($route,$params=array(),$ampersand='&') {
-		return parent::createUrl('admin/'.$route, $params=array(),$ampersand='&');
+	/**
+	 * Так как на данный момент я НЕ работаю через нормальную схему controller/action пишу в рут всю строку
+	 * что бы узнать полный путь без параметро GET Yii::app()->createUrl($this->route);
+	 * @return string
+	 */
+	public function getRoute() {
+		return Yii::app()->request->getParam('r');
+	}
+
+	/**
+	 * Так как в основном все реализованно на одном экшене admin, проще получать ссылку через метод createAdminUrl
+	 * @param $route
+	 * @param array $params
+	 * @param string $ampersand
+	 * @return string
+	 */
+	public function createAdminUrl($route,$params=array(),$ampersand='&') {
+		return parent::createUrl('admin/'.$route, $params,$ampersand);
 	}
 
 	public function run($actionID) {
@@ -79,7 +91,6 @@ class AdminController extends \Controller {
 		$paramslisturl = explode('/',Yii::app()->request->getParam('r'));
 		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
 		$this->dicturls['class'] = $paramslisturl[2];
-		$this->dicturls['all'] = $this->getRoute();
 		$this->dicturls['paramslist'] = array_merge(array_slice($paramslisturl,3), array('','','','','','',''));
 		$indexaction = array_search('action',$this->dicturls['paramslist']);
 		$this->dicturls['action'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+1)]:'';

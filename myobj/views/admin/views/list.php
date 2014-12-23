@@ -193,7 +193,7 @@ printf($htmlinput,'hidden','selectorsids',implode(',',$selectorsids),'');
 printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_excluded),'');
 
 ?>
-<a  class="btn" href="<?=$this->createUrl($arrayuirow['new'])?>">new object</a>
+<a  class="btn" href="<?=$this->createAdminUrl($arrayuirow['new'])?>">new object</a>
 <p>
 <input name="exportcsv" type="file" /><input name="exportcsv_ispk" type="checkbox" />resave_pk создаст с таким id
 <input onclick="return confirm(\'export CSV file\')" class="btn btn-danger" type="submit" value="export" />
@@ -297,7 +297,7 @@ if(count($rel_arr_vis)) {
 			//это ссылка на модель или класс
 			$modelORclass = (isset($rel_arr_vis[$namerelat][2]) && $rel_arr_vis[$namerelat][2])?'class':'models';
 
-			$print_link = ' | <a href="'.$this->createUrl('objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1]).'">%s</a>';
+			$print_link = ' | <a href="'.$this->createAdminUrl('objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1]).'">%s</a>';
 			$relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
 			if($REND_model::HAS_MANY) $relations_links_model .= sprintf($print_link,'relationobjonly','<');
 			unset($print_link);
@@ -332,21 +332,21 @@ foreach($listall as $obj) {
 		}
 	}
 	$uihtml = '';
-	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$this->createUrl($arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'')).'"><i class="icon-edit"></i></a>';
+	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$this->createAdminUrl($arrayuirow['edit'].$obj->primaryKey.'/'.(($relationLinkOnly && $strchecked)?$relationLinkOnly:'')).'"><i class="icon-edit"></i></a>';
 
-	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$this->createUrl($arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/').'">
-	<i class="icon-plus-sign"></i></a> | <a href="'.$this->createUrl($arrayuirow['objects'].$obj->codename).'">objects</a>';
-	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$this->createUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
+	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/').'">
+	<i class="icon-plus-sign"></i></a> | <a href="'.$this->createAdminUrl($arrayuirow['objects'].$obj->codename).'">objects</a>';
+	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
 
-	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
+	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createAdminUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
 
 	if($arrayuirow['editlinksclass']) $uihtml .= ' |
-	<a href="'.$this->createUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2]).'">editlinksclass</a>';
+	<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2]).'">editlinksclass</a>';
 
 
 	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
 
-	$uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$this->createUrl($arrayuirow['remove'].$obj->primaryKey).'"><i class="icon-remove"></i></a>';
+	$uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$this->createAdminUrl($arrayuirow['remove'].$obj->primaryKey).'"><i class="icon-remove"></i></a>';
 	echo '<td>'.$uihtml.' </td></tr>';
 }
 
@@ -358,11 +358,11 @@ if($COUNT_P>$COUNTVIEWELEMS) {
 /*
 $tamplate = array(
 		'action'=>' class="active"',
-		'nextleft'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&laquo;</a></li>',
-		'prevpg'=>'<li class="previous"><a id="prevpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&larr; Назад</a></li>',
-		'nextpg'=>'<li class="next"><a id="nextpg" href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">Вперед &rarr;</a></li>',
-		'nextright'=>'<li><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">&raquo;</a></li>',
-		'elem'=>'<li%s><a href="'.$this->createUrl($this->dicturls['all'],array('goin_'=>'')).'%s">%s</a></li>',
+		'nextleft'=>'<li><a href="'.Yii::app()->createUrl($this->route,array('goin_'=>'')).'%s">&laquo;</a></li>',
+		'prevpg'=>'<li class="previous"><a id="prevpg" href="'.Yii::app()->createUrl($this->route,array('goin_'=>'')).'%s">&larr; Назад</a></li>',
+		'nextpg'=>'<li class="next"><a id="nextpg" href="'.Yii::app()->createUrl($this->route,array('goin_'=>'')).'%s">Вперед &rarr;</a></li>',
+		'nextright'=>'<li><a href="'.Yii::app()->createUrl($this->route,array('goin_'=>'')).'%s">&raquo;</a></li>',
+		'elem'=>'<li%s><a href="'.Yii::app()->createUrl($this->route,array('goin_'=>'')).'%s">%s</a></li>',
 		'pagination' => '
 		<div id="pagination" class="pagination">
 			<ul class="pager">
