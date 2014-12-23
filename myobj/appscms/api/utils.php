@@ -9,41 +9,6 @@ function arrvaluesmodel($listobjects, $namekey) {
 	}
 	return $arrv;
 }
-function action_job($nameaction,$this_id,$listset=array(),$listsetexcluded=array(),$paramslist) {
-	switch($nameaction) {
-		case 'lenksobjedit':
-			$ObjHeader = \uClasses::getclass($paramslist[6])->objects()->findByPk($this_id);
-			if(count($listset)) {
-				$ObjHeader->editlinks('add',$paramslist[1],$listset);
-			}
-			if(count($listsetexcluded)) {
-				$ObjHeader->editlinks('remove',$paramslist[1],$listsetexcluded);
-			}
-			break;
-		case 'relationobj':
-		case 'relationobjonly';
-			$params_modelget = \apicms\utils\normalAliasModel($paramslist[1]);
-
-			$NAMEMODEL_get = \apicms\utils\normalAliasModel($params_modelget['relation'][$paramslist[7]][0]);
-
-			$obj = $NAMEMODEL_get['namemodel']::model()->findByPk($this_id);
-			$nameRelation = $params_modelget['relation'][$paramslist[7]][1];
-
-			if(count($listsetexcluded)) {
-				$objRelations = $obj->relations();
-				$addparam = array();
-				//если ключ внейний и юзер пытается установить ключу null(отвязывает элемент) нежно заапдейтить новый
-				if(count($listset) && $objRelations[$nameRelation][0]==\CActiveRecord::BELONGS_TO) {
-					$addparam = array($listset[0]);
-				}
-				$obj->UserRelated->links_edit('remove',$nameRelation,$listsetexcluded,$addparam);
-			}
-
-			if(count($listset)) {
-				$obj->UserRelated->links_edit('add',$nameRelation,$listset);
-			}
-	}
-}
 
 function pagination($indexpage,$countlinks,$count_elems,$count_pages,$urlp,$flagpro,$tamplate,$countleft=5) {
 	$func_getlink = function($linkstr,$index) {

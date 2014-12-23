@@ -340,8 +340,18 @@ foreach($listall as $obj) {
 
 	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createAdminUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
 
-	if($arrayuirow['editlinksclass']) $uihtml .= ' |
-	<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2]).'">editlinksclass</a>';
+	if($arrayuirow['editlinksclass']) {
+		$uihtml .= ' | link types: ';
+		$templatLinkType = '<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2], array('type_link'=>'LINK_TYPE')).'">LINK_TYPE</a>';
+		$arrayTypes = array('base'); //по умолчанию у всех есть base
+		$params_modelget = \apicms\utils\normalAliasModel($obj->codename);
+		if(isset($params_modelget['AddNamesModelLinks']) && isset($params_modelget['AddNamesModelLinks'][$this->dicturls['paramslist'][2]])) {
+			$arrayTypes = $params_modelget['AddNamesModelLinks'][$this->dicturls['paramslist'][2]];
+		}
+		foreach($arrayTypes as $typeName) {
+			$uihtml .= ' - '.str_replace('LINK_TYPE', $typeName, $templatLinkType);
+		}
+	}
 
 
 	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);

@@ -227,7 +227,7 @@ class AdminController extends \Controller {
 						break;
 					case 'lenksobjedit':
 						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
-						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1]);
+						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1], Yii::app()->request->getParam('type_link'));
 						$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
 						break;
 					case 'relationobj':
@@ -316,7 +316,7 @@ class AdminController extends \Controller {
 			$selectorsids_excluded = (array_key_exists('selectorsids_excluded',$_POST) && trim($_POST['selectorsids_excluded'])!='')?explode(',',$_POST['selectorsids_excluded']):array();
 
 			if(array_key_exists('saveaction',$_POST)) {
-				\apicms\utils\action_job($this->dicturls['action'],$this->dicturls['actionid'],$selectorsids_post, $selectorsids_excluded, $this->dicturls['paramslist']);
+				$this->actionLinkHelper($selectorsids_post, $selectorsids_excluded);
 
 				$this->redirect(Yii::app()->request->url);
 			}
@@ -462,5 +462,41 @@ class AdminController extends \Controller {
 		}
 
 		$this->render($view, $this->paramsrender);
+	}
+
+	function actionLinkHelper($listset=array(),$listsetexcluded=array()) {
+		switch($this->dicturls['action']) {
+			case 'lenksobjedit':
+				$ObjHeader = \uClasses::getclass($this->dicturls['paramslist'][6])->objects()->findByPk($this->dicturls['actionid']);
+				if(count($listset)) {
+					$ObjHeader->editlinks('add',$this->dicturls['paramslist'][1],$listset,Yii::app()->request->getParam('type_link'));
+				}
+				if(count($listsetexcluded)) {
+					$ObjHeader->editlinks('remove',$this->dicturls['paramslist'][1],$listsetexcluded,Yii::app()->request->getParam('type_link'));
+				}
+				break;
+			case 'relationobj':
+			case 'relationobjonly';
+				$params_modelget = \apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
+
+				$NAMEMODEL_get = \apicms\utils\normalAliasModel($params_modelget['relation'][$this->dicturls['paramslist'][7]][0]);
+
+				$obj = $NAMEMODEL_get['namemodel']::model()->findByPk($this->dicturls['actionid']);
+				$nameRelation = $params_modelget['relation'][$this->dicturls['paramslist'][7]][1];
+
+				if(count($listsetexcluded)) {
+					$objRelations = $obj->relations();
+					$addparam = array();
+					//если ключ внейний и юзер пытается установить ключу null(отвязывает элемент) нежно заапдейтить новый
+					if(count($listset) && $objRelations[$nameRelation][0]==\CActiveRecord::BELONGS_TO) {
+						$addparam = array($listset[0]);
+					}
+					$obj->UserRelated->links_edit('remove',$nameRelation,$listsetexcluded,$addparam);
+				}
+
+				if(count($listset)) {
+					$obj->UserRelated->links_edit('add',$nameRelation,$listset);
+				}
+		}
 	}
 }
