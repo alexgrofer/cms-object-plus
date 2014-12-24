@@ -244,7 +244,7 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	public $customElementsForm=array();
 	protected function defaultElementsForm() {
-		return array_fill_keys($this->attributeNames(), ['type'=>'text']);
+		return array();
 	}
 	final public function elementsForm() {
 		return array_merge($this->defaultElementsForm(), $this->customElementsForm);
