@@ -89,6 +89,17 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 	FOREIGN KEY (`template_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
+CREATE TABLE `setcms_paramsystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`content` longtext NOT NULL DEFAULT '',
+	-- keys
+	`navigate_id` int(11) NOT NULL,
+	--
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`navigate_id`) REFERENCES `setcms_navigatesystemobjheaders` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
 CREATE TABLE `setcms_handlesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`codename` varchar(255) NOT NULL,
@@ -212,12 +223,10 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(3,'templates_sys','templates_sys','',7),
 	(4,'handle_sys','handle_sys','',5),
 	(5,'navigation_sys','navigation_sys','',3),
-	(6,'param_sys','param_sys','',2),
+	(6,'param_sys','param_sys','',4),
 	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
-	(2,1), -- views_sys <> groups_sys
-	(5,4), -- navigation_sys <> handle_sys
-	(5,6); -- navigation_sys <> param_sys
+	(5,4); -- navigation_sys <> handle_sys
 
 -- INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
 -- INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES

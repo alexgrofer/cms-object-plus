@@ -26,7 +26,10 @@ $objects = array(
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
-		'relation' => array('templateDefault'=>array('templates_sys', 'navigations', true)),
+		'relation' => array(
+			'templateDefault'=>array('templates_sys', 'navigations', true),
+			'params'=>array('param_sys', 'navigate', true),
+		),
 		//array('название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас)
 		'namemodel' => 'NavigateSystemObjHeaders',
 	),
@@ -61,10 +64,10 @@ $objects = array(
 		'namemodel' => 'ViewSystemObjHeaders',
 	),
 	'param_sys' => array(
-		//'cols' => array('id'=>'id','name'=>'name','vp1'=>'codename'),
-		//'AttributeLabels' => array('vp1'=>'codename'),
 		'groups_read' => null,
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'namemodel' => 'ParamSystemObjHeaders',
+		'relation' => array('navigate'=>array('navigation_sys', 'params', true)),
 	),
 	'db_dump_sys' => array(
 		'cols' => array('id'=>'id','name'=>'name'),

@@ -40,6 +40,7 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 		$relations = parent::relations();
 
 		$relations['templateDefault'] = array(self::BELONGS_TO, 'TemplateSystemObjHeaders', 'template_default_id');
+		$relations['params'] = array(self::HAS_MANY, 'ParamSystemObjHeaders', 'navigate_id');
 
 		return $relations;
 	}
