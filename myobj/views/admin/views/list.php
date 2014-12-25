@@ -97,7 +97,7 @@ $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
 $relationLinkOnly='';
 if($this->dicturls['action']=='relationobjonly') {
-	$relationLinkOnly = $this->dicturls['paramslist'][3].'/'.$this->dicturls['paramslist'][4].'/model/'.$this->dicturls['paramslist'][7];
+	$relationLinkOnly = $this->dicturls['paramslist'][3].'/'.$this->dicturls['paramslist'][4].'/relation_name/'.$this->dicturls['paramslist'][7];
 }
 $arrayuirow = array(
 	'edit' => 'objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/',
