@@ -162,13 +162,12 @@ class AdminController extends \Controller {
 					}
 					unset($result);
 				}
-				///// set setting
-				if(array_key_exists('cols',$settui) && $settui['cols']) {
-					$this->setVarRender('REND_thisparamsui',$settui['cols']);
-				}
-				elseif($modelAD) {
-					$this->setVarRender('REND_thisparamsui',array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes)));
-				}
+
+				$this->setVarRender('REND_thisparamsui',isset($settui['cols']) ?
+					$settui['cols']:
+					array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes))
+				);
+
 				if(array_key_exists('cols_props',$settui) && $settui['cols_props']) {
 					$this->setVarRender('REND_thispropsui',$settui['cols_props']);
 				}
