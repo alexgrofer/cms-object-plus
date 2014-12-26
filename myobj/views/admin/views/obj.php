@@ -63,7 +63,7 @@ if($paramsQueryPostModel) {
 }
 
 //если есть настройка то только по ней
-$elementsForm = $REND_model->elementsForm() ?: array_fill_keys($REND_model->attributeNames(), ['type'=>'text']);
+$elementsForm = $REND_model->elementsForm() ?: array_fill_keys($REND_model->getSafeAttributeNames(), ['type'=>'text']);
 if($REND_editForm) {
 	foreach($REND_model->elementsForm() as $nameElem => $nameAlias) {
 		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
