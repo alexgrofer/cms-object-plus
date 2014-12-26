@@ -107,7 +107,7 @@ echo $form->renderEnd();
 if(count($_POST) && $form->validate()) {
 	$REND_model->save();
 
-	if($relation_relationobjonly_one_m==false) {
+	if(isset($relation_relationobjonly_one_m) && $relation_relationobjonly_one_m==false) {
 		$objrelated->links_edit('add', $nameRelatThis, array($REND_model->primaryKey));
 	}
 
