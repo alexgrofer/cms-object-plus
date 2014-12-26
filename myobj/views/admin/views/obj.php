@@ -70,6 +70,25 @@ if($REND_editForm) {
 	}
 }
 
+if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
+	$relation_relationobjonly_one_m = false;
+
+	$params_modelget = apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
+	$nameRelatConfModel = $params_modelget['relation'][$this->dicturls['paramslist'][8]][0];
+	$nameRelatThis = $params_modelget['relation'][$this->dicturls['paramslist'][8]][1];
+	$params_modelgetRelat = apicms\utils\normalAliasModel($nameRelatConfModel);
+	$objrelated = $params_modelgetRelat['namemodel']::model()->findByPk($this->dicturls['paramslist'][6]);
+
+	$thisRelations = $objrelated->metaData->relations;
+	$thisRelation = $thisRelations[$nameRelatThis];
+	$typeThisRelation = get_class($thisRelation);
+
+	if(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
+		$relation_relationobjonly_one_m = true;
+		$REND_model->{$thisRelation->foreignKey} = $this->dicturls['paramslist'][6];
+	}
+}
+
 $form = new CForm(array('elements'=>$elementsForm), $REND_model);
 $form->attributes = array('enctype' => 'multipart/form-data');
 echo $form->renderBegin();
@@ -88,16 +107,9 @@ echo $form->renderEnd();
 if(count($_POST) && $form->validate()) {
 	$REND_model->save();
 
-	if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actionid']=='0') {
-		$params_modelget = apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
-		$nameRelatConfModel = $params_modelget['relation'][$this->dicturls['paramslist'][8]][0];
-		$nameRelatThis = $params_modelget['relation'][$this->dicturls['paramslist'][8]][1];
-		$params_modelgetRelat = apicms\utils\normalAliasModel($nameRelatConfModel);
-
-		$objrelated = $params_modelgetRelat['namemodel']::model()->findByPk($this->dicturls['paramslist'][6]);
+	if($relation_relationobjonly_one_m==false) {
 		$objrelated->links_edit('add', $nameRelatThis, array($REND_model->primaryKey));
 	}
-
 
 	foreach($paramsQueryPostModel as $key => $val) {
 		if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
@@ -111,8 +123,6 @@ if(count($_POST) && $form->validate()) {
 	if(isset($array_edit_post_mtmparam) && count($array_edit_post_mtmparam)) {
 		$REND_model->setMTMcol($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$array_edit_post_mtmparam);
 	}
-
-
 
 	if($this->dicturls['actionid']=='0') {
 		$urlRedirect = $this->getUrlBeforeAction();
