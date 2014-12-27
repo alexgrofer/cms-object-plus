@@ -27,7 +27,8 @@ class TemplateSystemObjHeaders extends AbsBaseHeaders {
 	public function relations() {
 		$relations = parent::relations();
 
-		$relations['navigations'] = array(self::HAS_MANY, 'NavigateSystemObjHeaders', 'template_default_id');
+		$relations['navigationsDef'] = array(self::HAS_MANY, 'NavigateSystemObjHeaders', 'template_default_id');
+		$relations['navigationsMobileDef'] = array(self::HAS_MANY, 'NavigateSystemObjHeaders', 'template_mobile_default_id');
 		$relations['handles'] = array(self::HAS_MANY, 'HandleSystemObjHeaders', 'template_id');
 
 		return $relations;

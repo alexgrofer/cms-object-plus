@@ -82,11 +82,13 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 	-- keys
 	`parent_id` int(11) NULL DEFAULT NULL,
 	`template_default_id` int(11) DEFAULT NULL,
+	`template_mobile_default_id` int(11) DEFAULT NULL,
 	--
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`controller`,`action`),
 	FOREIGN KEY (`parent_id`) REFERENCES `setcms_navigatesystemobjheaders` (`id`) ON UPDATE CASCADE,
-	FOREIGN KEY (`template_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
+	FOREIGN KEY (`template_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE,
+	FOREIGN KEY (`template_mobile_default_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_paramsystemobjheaders` (

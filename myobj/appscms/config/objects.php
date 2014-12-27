@@ -19,7 +19,8 @@ $objects = array(
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
 		'relation' => array(
-			'templateDefault'=>array('templates_sys', 'navigations', true),
+			'templateDefault'=>array('templates_sys', 'navigationsDef', true),
+			'templateMobileDefault'=>array('templates_sys', 'navigationsMobileDef', true),
 			'params'=>array('param_sys', 'navigate', true),
 		),
 		//array('название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас)
@@ -39,7 +40,8 @@ $objects = array(
 		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('myobjheader'=>array('news_example','test_relat_objcts')),
 		'relation' => array(
-			'navigations'=>array('navigation_sys','templateDefault', true),
+			'navigationsDef'=>array('navigation_sys','templateDefault', true),
+			'navigationsMobileDef'=>array('navigation_sys','templateMobileDefault', true),
 			'handles'=>array('handle_sys','template', true),
 		),
 		'namemodel' => 'TemplateSystemObjHeaders',
