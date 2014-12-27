@@ -3,7 +3,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	const PRE_PROP='prop_';
 	const PRE_LINKS='links_';
+	const PRE_LINKS_BACK='links_back_';
 	const PRE_LINKS_MTM='links_mtm_';
+	const PRE_LINKS_MTM_BACK='links_mtm_back_';
 
 	/**
 	 * @var bool - true у текущего галоловка своя таблица
@@ -159,8 +161,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsHeader=null, $name_type_link='base') {
-		$addparam = ['from_class_id' => $this->uclass_id];
+	public function editlinks($type, $class, $idsHeader=null, $name_type_link='base', $is_back=false) {
+		$type_FROM = ($is_back==false)?'from':'to';
+		$type_TO = ($is_back==false)?'to':'from';
+
+		$addparam = [$type_FROM.'_class_id' => $this->uclass_id];
 
 		$associationClass = (is_object($class))?$class:\uClasses::getclass($class);
 
@@ -168,16 +173,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
-		$nameRelate = static::PRE_LINKS_MTM.$name_type_link;
+		$nameRelate = (($is_back==false)?static::PRE_LINKS_MTM:static::PRE_LINKS_MTM_BACK).$name_type_link;
 
 		if(!$this->metaData->hasRelation($nameRelate)) {
 			$arrayModelLinks = $this->uclass->getNamesModelLinks();
 			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
-			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '(from_obj_id, to_obj_id)'));
+			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '('.$type_FROM.'_obj_id, '.$type_TO.'_obj_id)'));
 		}
 
 		if($idsHeader) {
-			$addparam['to_class_id'] = $associationClass->primaryKey;
+			$addparam[$type_TO.'_class_id'] = $associationClass->primaryKey;
 		}
 
 		$where=['and'];
@@ -195,7 +200,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return CActiveRecord[] - массив заголовков
 	 * @throws CException
 	 */
-	public function getobjlinks($nameAssociationClass, $name_type_link='base') {
+	public function getobjlinks($nameAssociationClass, $name_type_link='base', $is_back=false) {
+		$type_FROM = ($is_back==false)?'from':'to';
+		$type_TO = ($is_back==false)?'to':'from';
 
 		/* @var $associationClass uClasses */
 		$associationClass = \uClasses::getclass($nameAssociationClass);
@@ -211,15 +218,19 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			throw new CException(Yii::t('cms','not space links key '.$name_type_link));
 		}
 		$nameModelLink = $allRelateLinks[$name_type_link];
-		$nameRelate = static::PRE_LINKS.$name_type_link;
-		$objectModelAssociationClass->metaData->addRelation($nameRelate, array(CActiveRecord::HAS_ONE, $nameModelLink, 'to_obj_id',
-			'on'=> $nameRelate.'.to_class_id='.$associationClass->primaryKey.' AND '.
-				$nameRelate.'.from_obj_id='.$this->primaryKey.' AND '.
-				$nameRelate.'.from_class_id='.$this->uclass_id,
-			'select' => false,
-			'together' => true,
-			'joinType'=>'INNER JOIN'
-		));
+
+		$nameRelate = (($is_back==false)?static::PRE_LINKS:static::PRE_LINKS_BACK).$name_type_link;
+
+		if(!$this->metaData->hasRelation($nameRelate)) {
+			$objectModelAssociationClass->metaData->addRelation($nameRelate, array(CActiveRecord::HAS_ONE, $nameModelLink, $type_TO . '_obj_id',
+				'on' => $nameRelate . '.' . $type_TO . '_class_id=' . $associationClass->primaryKey . ' AND ' .
+					$nameRelate . '.' . $type_FROM . '_obj_id=' . $this->primaryKey . ' AND ' .
+					$nameRelate . '.' . $type_FROM . '_class_id=' . $this->uclass_id,
+				'select' => false,
+				'together' => true,
+				'joinType' => 'INNER JOIN'
+			));
+		}
 
 		return $objectModelAssociationClass->with($nameRelate);
 	}
