@@ -282,9 +282,14 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 		//del links
 		foreach($this->uclass->association as $objClass) {
-			foreach($objClass->getNamesModelLinks() as $typeLink) {
-				$this->editlinks('clear', $objClass, $typeLink);
-				$this->editlinks('clear', $objClass, $typeLink, true); //если есть обратные ссылки удалим и их
+			foreach(array_keys($this->uclass->getNamesModelLinks()) as $typeLink) {
+				$this->editlinks('clear', $objClass, null, $typeLink);
+			}
+		}
+		//если есть обратные ссылки удалим и их
+		foreach($this->uclass->association_back as $objClass) {
+			foreach(array_keys($objClass->getNamesModelLinks()) as $typeLink) {
+				$this->editlinks('clear', $objClass, null, $typeLink, true);
 			}
 		}
 		return parent::beforeDelete();
