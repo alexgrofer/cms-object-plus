@@ -336,17 +336,30 @@ foreach($listall as $obj) {
 
 	if($arrayuirow['objects']) $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['objects'].$obj->primaryKey.'/action/edit/0/').'">
 	<i class="icon-plus-sign"></i></a> | <a href="'.$this->createAdminUrl($arrayuirow['objects'].$obj->codename).'">objects</a>';
-	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
+	if($arrayuirow['links'] && $this->dicturls['paramslist'][0]=='class') {
+		$uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
+		$uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey, array('is_bask_link'=>1)).'">back links</a>';
+	}
 
 	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createAdminUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
 
 	if($arrayuirow['editlinksclass']) {
 		$uihtml .= ' | link types: ';
-		$templatLinkType = '<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2], array('type_link'=>'LINK_TYPE')).'">LINK_TYPE</a>';
+		if(Yii::app()->request->getParam('is_bask_link')) {
+			$uihtml .= ' <b>BACK</b> ';
+		}
+		$addParamLinkBack = Yii::app()->request->getParam('is_bask_link')==false?array():array('is_bask_link'=>1);
+		$templatLinkType = '<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2], array_merge(array('type_link'=>'LINK_TYPE'),$addParamLinkBack)).'">LINK_TYPE</a>';
 		$arrayTypes = array('base'); //по умолчанию у всех есть base
-		$params_modelget = \apicms\utils\normalAliasModel($obj->codename);
-		if(isset($params_modelget['AddNamesModelLinks']) && isset($params_modelget['AddNamesModelLinks'][$this->dicturls['paramslist'][2]])) {
-			$arrayTypes = $params_modelget['AddNamesModelLinks'][$this->dicturls['paramslist'][2]];
+		$classFindLink = $obj->codename;
+		$relatClassName = $this->dicturls['paramslist'][2];
+		if(Yii::app()->request->getParam('is_bask_link')) {
+			$classFindLink = $this->dicturls['paramslist'][2];
+			$relatClassName = $obj->codename;
+		}
+		$params_modelget = \apicms\utils\normalAliasModel($classFindLink);
+		if(isset($params_modelget['AddNamesModelLinks']) && isset($params_modelget['AddNamesModelLinks'][$relatClassName])) {
+			$arrayTypes = $params_modelget['AddNamesModelLinks'][$relatClassName];
 		}
 		foreach($arrayTypes as $typeName) {
 			$uihtml .= ' - '.str_replace('LINK_TYPE', $typeName, $templatLinkType);

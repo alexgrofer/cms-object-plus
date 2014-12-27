@@ -138,7 +138,8 @@ class AdminController extends \Controller {
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
 						$actclass = \uClasses::getclass($this->dicturls['paramslist'][2]);
-						$objctsassociation = $actclass->association;
+						$name_relat_association = Yii::app()->request->getParam('is_bask_link')==false?'association':'association_back';
+						$objctsassociation = $actclass->$name_relat_association;
 						$modelAD->dbCriteria->addInCondition('id', \apicms\utils\arrvaluesmodel($objctsassociation,'id'));
 					}
 				}
@@ -226,7 +227,7 @@ class AdminController extends \Controller {
 						break;
 					case 'lenksobjedit':
 						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
-						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1], Yii::app()->request->getParam('type_link'));
+						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1], Yii::app()->request->getParam('type_link'), Yii::app()->request->getParam('is_bask_link',false));
 						$this->paramsrender['REND_selectedarr'] = \apicms\utils\arrvaluesmodel($getlinks->findAll(),'id');
 						break;
 					case 'relationobj':
@@ -468,10 +469,10 @@ class AdminController extends \Controller {
 			case 'lenksobjedit':
 				$ObjHeader = \uClasses::getclass($this->dicturls['paramslist'][6])->objects()->findByPk($this->dicturls['actionid']);
 				if(count($listset)) {
-					$ObjHeader->editlinks('add',$this->dicturls['paramslist'][1],$listset,Yii::app()->request->getParam('type_link'));
+					$ObjHeader->editlinks('add',$this->dicturls['paramslist'][1],$listset,Yii::app()->request->getParam('type_link'),Yii::app()->request->getParam('is_bask_link',false));
 				}
 				if(count($listsetexcluded)) {
-					$ObjHeader->editlinks('remove',$this->dicturls['paramslist'][1],$listsetexcluded,Yii::app()->request->getParam('type_link'));
+					$ObjHeader->editlinks('remove',$this->dicturls['paramslist'][1],$listsetexcluded,Yii::app()->request->getParam('type_link'),Yii::app()->request->getParam('is_bask_link',false));
 				}
 				break;
 			case 'relationobj':

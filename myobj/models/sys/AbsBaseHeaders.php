@@ -173,10 +173,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
+		$relatClass = ($is_back==false)?$this->uclass:$associationClass;
+
+		$arrayModelLinks = $relatClass->getNamesModelLinks();
+		if(!isset($arrayModelLinks[$name_type_link])) {
+			throw new CException(Yii::t('cms','not space links key '.$name_type_link));
+		}
+
 		$nameRelate = (($is_back==false)?static::PRE_LINKS_MTM:static::PRE_LINKS_MTM_BACK).$name_type_link;
 
 		if(!$this->metaData->hasRelation($nameRelate)) {
-			$arrayModelLinks = $this->uclass->getNamesModelLinks();
 			$objLinkModel = $arrayModelLinks[$name_type_link]::model();
 			$this->metaData->addRelation($nameRelate, array(self::MANY_MANY, $associationClass->getNameModelHeaderClass(), $objLinkModel->tableName() . '('.$type_FROM.'_obj_id, '.$type_TO.'_obj_id)'));
 		}
@@ -213,7 +219,9 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		$objectModelAssociationClass = $associationClass->objects();
 
-		$allRelateLinks = $this->uclass->getNamesModelLinks();
+		$relatClass = ($is_back==false)?$this->uclass:$associationClass;
+
+		$allRelateLinks = $relatClass->getNamesModelLinks();
 		if(!isset($allRelateLinks[$name_type_link])) {
 			throw new CException(Yii::t('cms','not space links key '.$name_type_link));
 		}
