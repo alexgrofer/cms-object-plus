@@ -97,7 +97,7 @@ CREATE TABLE `setcms_paramsystemobjheaders` (
 	`navigate_id` int(11) NOT NULL,
 	--
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`navigate_id`) REFERENCES `setcms_navigatesystemobjheaders` (`id`) ON UPDATE CASCADE
+	FOREIGN KEY (`navigate_id`) REFERENCES `setcms_navigatesystemobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_handlesystemobjheaders` (
