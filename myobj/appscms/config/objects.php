@@ -10,14 +10,6 @@ $objects = array(
 			'view'=>array('views_sys', 'handles', true),
 		),
 		'namemodel' => 'HandleSystemObjHeaders',
-		//список ссылок в списке классов
-		'AddNamesModelLinks' => array(
-			//ведущий класс в асоциации
-			'navigation_sys' => array(
-				//возможные типы моделей ссылок
-				'handle'
-			),
-		),
 	),
 	'navigation_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),

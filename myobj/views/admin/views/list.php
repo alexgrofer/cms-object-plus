@@ -350,18 +350,12 @@ foreach($listall as $obj) {
 		}
 		$addParamLinkBack = Yii::app()->request->getParam('is_bask_link')==false?array():array('is_bask_link'=>1);
 		$templatLinkType = '<a href="'.$this->createAdminUrl($arrayuirow['editlinksclass'].$obj->codename.'/action/lenksobjedit/'.$this->dicturls['paramslist'][4].'/class/'.$this->dicturls['paramslist'][2], array_merge(array('type_link'=>'LINK_TYPE'),$addParamLinkBack)).'">LINK_TYPE</a>';
-		$arrayTypes = array('base'); //по умолчанию у всех есть base
-		$classFindLink = $obj->codename;
-		$relatClassName = $this->dicturls['paramslist'][2];
+
+		$classConfLink = uClasses::getclass($this->dicturls['paramslist'][2]);
 		if(Yii::app()->request->getParam('is_bask_link')) {
-			$classFindLink = $this->dicturls['paramslist'][2];
-			$relatClassName = $obj->codename;
+			$classConfLink = $obj;
 		}
-		$params_modelget = \apicms\utils\normalAliasModel($classFindLink);
-		if(isset($params_modelget['AddNamesModelLinks']) && isset($params_modelget['AddNamesModelLinks'][$relatClassName])) {
-			$arrayTypes = $params_modelget['AddNamesModelLinks'][$relatClassName];
-		}
-		foreach($arrayTypes as $typeName) {
+		foreach(array_keys($classConfLink->getNamesModelLinks()) as $typeName) {
 			$uihtml .= ' - '.str_replace('LINK_TYPE', $typeName, $templatLinkType);
 		}
 	}

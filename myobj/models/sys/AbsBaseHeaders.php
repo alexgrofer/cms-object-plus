@@ -6,6 +6,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	const PRE_LINKS_BACK='links_back_';
 	const PRE_LINKS_MTM='links_mtm_';
 	const PRE_LINKS_MTM_BACK='links_mtm_back_';
+	const NAME_TYPE_LINK_BASE='base';
 
 	/**
 	 * @var bool - true у текущего галоловка своя таблица
@@ -161,7 +162,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @param string $name_type_link - название типа ссылки (ссылка может хранится в другой таблице)
 	 * @throws CException
 	 */
-	public function editlinks($type, $class, $idsHeader=null, $name_type_link='base', $is_back=false) {
+	public function editlinks($type, $class, $idsHeader=null, $name_type_link=self::NAME_TYPE_LINK_BASE, $is_back=false) {
 		$type_FROM = ($is_back==false)?'from':'to';
 		$type_TO = ($is_back==false)?'to':'from';
 
@@ -206,7 +207,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return CActiveRecord[] - массив заголовков
 	 * @throws CException
 	 */
-	public function getobjlinks($nameAssociationClass, $name_type_link='base', $is_back=false) {
+	public function getobjlinks($nameAssociationClass, $name_type_link=self::NAME_TYPE_LINK_BASE, $is_back=false) {
 		$type_FROM = ($is_back==false)?'from':'to';
 		$type_TO = ($is_back==false)?'to':'from';
 
@@ -281,7 +282,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		}
 		//del links
 		foreach($this->uclass->association as $objClass) {
-			$this->editlinks('clear', $objClass);
+			foreach($objClass->getNamesModelLinks() as $typeLink) {
+				$this->editlinks('clear', $objClass, $typeLink);
+				$this->editlinks('clear', $objClass, $typeLink, true); //если есть обратные ссылки удалим и их
+			}
 		}
 		return parent::beforeDelete();
 	}
