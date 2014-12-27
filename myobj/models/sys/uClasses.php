@@ -14,8 +14,9 @@ class uClasses extends AbsBaseModel
 	public function relations()
 	{
 		return array(
-			'properties'=>array(self::MANY_MANY, 'objProperties', 'setcms_uclasses_objproperties(from_uclasses_id, to_objproperties_id)'), //properties = models.ManyToManyField(objProperties,blank=True)
-			'association'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(from_uclasses_id, to_uclasses_id)'), //association = models.ManyToManyField("self",blank=True))
+			'properties'=>array(self::MANY_MANY, 'objProperties', 'setcms_uclasses_objproperties(from_uclasses_id, to_objproperties_id)'),
+			'association'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(from_uclasses_id, to_uclasses_id)'),
+			'association_back'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(to_uclasses_id, from_uclasses_id)'),
 			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
 		);
 	}
@@ -147,9 +148,10 @@ class uClasses extends AbsBaseModel
 		return $objclass;
 	}
 
-	public function hasAssotiation($codeName) {
+	public function hasAssotiation($codeName, $is_back=false) {
 		$criteria = new CDbCriteria();
-		return (bool) $this->association($criteria->compare('association.codename', $codeName));
+		$ass_type = $is_back==false?'association':'association_back';
+		return (bool) $this->$ass_type($criteria->compare($ass_type.'.codename', $codeName));
 	}
 }
 

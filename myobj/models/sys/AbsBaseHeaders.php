@@ -169,7 +169,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 		$associationClass = (is_object($class))?$class:\uClasses::getclass($class);
 
-		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+		if(!$this->uclass->hasAssotiation($associationClass->codename,$is_back)) {
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
@@ -207,7 +207,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		/* @var $associationClass uClasses */
 		$associationClass = \uClasses::getclass($nameAssociationClass);
 
-		if(!$this->uclass->hasAssotiation($associationClass->codename)) {
+		if(!$this->uclass->hasAssotiation($associationClass->codename,$is_back)) {
 			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not association class '.$associationClass->codename));
 		}
 
