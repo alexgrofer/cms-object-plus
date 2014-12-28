@@ -362,16 +362,20 @@ abstract class AbsBaseModel extends CActiveRecord
 		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
 			//удаление привязанных объектов из реляции
 			foreach($this->foreign_on_delete_cascade() as $nameRelation) {
-				$relation = $this->metaData->relations[$nameRelation];
-				$className = $relation->className;
-				$namePRKey = $className::model()->primaryKey();
-				$criteria = new CDbCriteria();
-				$criteria->addInCondition($namePRKey, \apicms\utils\arrvaluesmodel($this->$nameRelation(new CDbCriteria(array('select'=>$namePRKey))),$namePRKey));
-				$className::model()->deleteAll($criteria);
+				if(isset($this->metaData->relations[$nameRelation])) {
+					$relation = $this->metaData->relations[$nameRelation];
+					$className = $relation->className;
+					$namePRKey = $className::model()->primaryKey();
+					$criteria = new CDbCriteria();
+					$criteria->addInCondition($namePRKey, \apicms\utils\arrvaluesmodel($this->$nameRelation(new CDbCriteria(array('select' => $namePRKey))), $namePRKey));
+					$className::model()->deleteAll($criteria);
+				}
 			}
 			//удаление в дочерних таблицих
 			foreach($this->foreign_on_delete_cascade_MTM() as $nameRelation) {
-				$this->UserRelated->links_edit('clear',$nameRelation);
+				if(isset($this->metaData->relations[$nameRelation])) {
+					$this->UserRelated->links_edit('clear', $nameRelation);
+				}
 			}
 		}
 	}

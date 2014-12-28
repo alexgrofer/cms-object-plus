@@ -275,11 +275,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				}
 			}
 		}
-		//del lines
-		if($this->isitlines == true && count($this->lines)) {
-			//удалим строки
-			$this->clearMTMLink('lines', Yii::app()->appcms->config['sys_db_type_InnoDB']);
-		}
 		//del links
 		foreach($this->uclass->association as $objClass) {
 			foreach(array_keys($this->uclass->getNamesModelLinks()) as $typeLink) {
@@ -506,5 +501,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			return $criteria;
 		}
 
+	}
+
+	protected function foreign_on_delete_cascade_MTM() {
+		return array(
+			'lines',
+		);
 	}
 }
