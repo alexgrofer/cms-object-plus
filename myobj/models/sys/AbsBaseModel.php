@@ -29,8 +29,9 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function setMTMcol($model,$array_elems,$array_value) {
 		return $this->UserRelated->links_edit('edit',$model,$array_elems,$array_value);
 	}
-	public function clearMTMLink($nameRelation, $isDELETE_CASCADE) { //использовать только для MTM, для HAS_MANY нет смысла так как поля не удаляются а апдейтятся
-		if($isDELETE_CASCADE==false) {
+
+	public function clearMTMLinkNotInnoDB($nameRelation) {
+		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
 			$this->UserRelated->links_edit('clear',$nameRelation);
 		}
 	}
@@ -361,8 +362,8 @@ abstract class AbsBaseModel extends CActiveRecord
 		parent::afterDelete();
 		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
 			//удаление привязанных объектов из реляции
-			foreach($this->foreign_on_delete_cascade() as $nameRelation) {
-				if(isset($this->metaData->relations[$nameRelation])) {
+			foreach ($this->foreign_on_delete_cascade() as $nameRelation) {
+				if (isset($this->metaData->relations[$nameRelation])) {
 					$relation = $this->metaData->relations[$nameRelation];
 					$className = $relation->className;
 					$namePRKey = $className::model()->primaryKey();
@@ -371,11 +372,11 @@ abstract class AbsBaseModel extends CActiveRecord
 					$className::model()->deleteAll($criteria);
 				}
 			}
-			//удаление в дочерних таблицих
-			foreach($this->foreign_on_delete_cascade_MTM() as $nameRelation) {
-				if(isset($this->metaData->relations[$nameRelation])) {
-					$this->UserRelated->links_edit('clear', $nameRelation);
-				}
+		}
+		//удаление в дочерних таблицих
+		foreach($this->foreign_on_delete_cascade_MTM() as $nameRelation) {
+			if(isset($this->metaData->relations[$nameRelation])) {
+				$this->clearMTMLinkNotInnoDB($nameRelation);
 			}
 		}
 	}
