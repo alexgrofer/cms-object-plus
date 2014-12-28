@@ -37,19 +37,15 @@ class uClasses extends AbsBaseModel
 	public function getobjectCount() {
 		return $this->objects()->count();
 	}
-	//именно перед удалением beforeDelete - удалить объекты класса Перед его удалением, иначе невозможно будет узнать параметры класса при их удалении
 	public function beforeDelete() {
-		//запрет на удаление отдельных объектов системы
-		if(array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes'])!==false) return false;
-
-		foreach($this->objects()->findAll() as $obj) {
-			$obj->delete();
+		if(parent::beforeDelete()) {
+			//запрет на удаление отдельных классов системы
+			if (array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes']) !== false) {
+				return false;
+			}
+			return true;
 		}
-		//очистить ссылки его свойств
-		$this->clearMTMLink('properties', Yii::app()->appcms->config['sys_db_type_InnoDB']);
-		//очистить ссылки асоциации с другими классами
-		$this->clearMTMLink('association', Yii::app()->appcms->config['sys_db_type_InnoDB']);
-		return parent::beforeDelete();
+		return false;
 	}
 	public static function getTSPACESOptions(){
 		$oprion = array();
@@ -152,6 +148,13 @@ class uClasses extends AbsBaseModel
 		$criteria = new CDbCriteria();
 		$ass_type = $is_back==false?'association':'association_back';
 		return (bool) $this->$ass_type($criteria->compare($ass_type.'.codename', $codeName));
+	}
+
+	protected function foreign_on_delete_cascade_MTM() {
+		return array(
+			'properties',
+			'association',
+		);
 	}
 }
 
