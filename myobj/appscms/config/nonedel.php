@@ -1,23 +1,30 @@
 <?php
 //запрет на удаление определенных классов и объектов, свойств
 $nonedel = array(
-	'classes' => array(
-		'groups_sys',
-		'templates_sys',
-		'views_sys',
-		'handle_sys',
-		'navigation_sys',
-		'param_sys',
-		'db_dump_sys',
+	'uClasses' => array(
+		//array('codename'=>'8', 'tablespace'=>'1'),
+		array('codename'=>'groups_sys'),
+		array('codename'=>'templates_sys'),
+		array('codename'=>'views_sys'),
+		array('codename'=>'handle_sys'),
+		array('codename'=>'navigation_sys'),
+		array('codename'=>'param_sys'),
+		array('codename'=>'db_dump_sys'),
 	),
-	'objects' => array(
+	'objProperties' => array(
+
+	),
+	//для классов - в одной таблице могут быть объекты разных классов
+	'$objects$' => array(
 		'groups_sys' => array(
-			'vp2'=>'admincms',
-			'vp2'=>'guestsys',
-			'vp2'=>'authorizedsys',
+			array('vp2'=>'admincms'),
+			array('vp2'=>'guestsys'),
+			array('vp2'=>'authorizedsys'),
 		),
+		//'za' => array(
+			//array('name'=>'sdf', 'sort'=>'33'),
+		//),
 	),
-	'prop' => array(),
 );
 
 Yii::app()->params['api_conf_nonedel'] = $nonedel;

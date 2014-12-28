@@ -98,12 +98,5 @@ class objProperties extends AbsBaseModel
 			)
 		);
 	}
-	public function beforeDelete() {
-		if(!parent::beforeDelete()) return false;
-		//запрет на удаление отдельных объектов системы
-		if(array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['prop'])!==false) return false;
-
-		return true;
-	}
 }
 

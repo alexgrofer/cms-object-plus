@@ -257,25 +257,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
 	public function beforeDelete() {
 		if(!parent::beforeDelete()) return false;
-		//запрет на удаление отдельных объектов системы
-		if(isset(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
-			foreach(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
-				if(is_array($val)) {
-					$delCount=0;
-					foreach($val as $kkey => $vval) {
-						if($this->$kkey==$vval) {
-							$delCount++;
-						}
-					}
-					if($delCount=count($vval)) {
-						return false;
-					}
-				}
-				elseif($this->$key==$val) {
-					return false;
-				}
-			}
-		}
+
 		//del links
 		foreach($this->uclass->association as $objClass) {
 			foreach(array_keys($this->uclass->getNamesModelLinks()) as $typeLink) {

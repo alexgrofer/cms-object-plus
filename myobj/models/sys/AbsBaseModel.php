@@ -396,4 +396,32 @@ abstract class AbsBaseModel extends CActiveRecord
 	protected function foreign_on_delete_cascade_MTM() {
 		return array();
 	}
+
+	public function beforeDelete() {
+		if(!parent::beforeDelete()) return false;
+
+		if($this instanceof AbsBaseHeaders) {
+			$thisFindName = '$objects$';
+			if(isset(Yii::app()->appcms->config['controlui']['none_del']['$objects$'][$this->uclass->codename])) {
+				$confNoneDel = Yii::app()->appcms->config['controlui']['none_del']['$objects$'][$this->uclass->codename];
+			}
+		}
+		else {
+			$thisFindName = get_class($this);
+			if(isset(Yii::app()->appcms->config['controlui']['none_del'][$thisFindName])) {
+				$confNoneDel = Yii::app()->appcms->config['controlui']['none_del'][$thisFindName];
+			}
+		}
+		//запрет на удаление отдельных объектов системы
+		foreach($confNoneDel as $arrConf) {
+			$resultCompareOk=true;
+			foreach($arrConf as $papam => $val) {
+				if($this->$papam!=$val) $resultCompareOk = false;
+			}
+			if($resultCompareOk) break;
+		}
+		if($resultCompareOk) return false;
+
+		return true;
+	}
 }

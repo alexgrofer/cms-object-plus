@@ -37,14 +37,7 @@ class uClasses extends AbsBaseModel
 	public function getobjectCount() {
 		return $this->objects()->count();
 	}
-	public function beforeDelete() {
-		if(!parent::beforeDelete()) return false;
-		//запрет на удаление отдельных классов системы
-		if (array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes']) !== false) {
-			return false;
-		}
-		return true;
-	}
+
 	public static function getTSPACESOptions(){
 		$oprion = array();
 		foreach(Yii::app()->appcms->config['spacescl'] as $key => $value) {
