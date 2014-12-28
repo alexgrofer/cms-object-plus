@@ -361,7 +361,6 @@ abstract class AbsBaseModel extends CActiveRecord
 	protected function afterDelete() {
 		parent::afterDelete();
 		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
-			//удаление привязанных объектов из реляции
 			foreach ($this->foreign_on_delete_cascade() as $nameRelation) {
 				if (isset($this->metaData->relations[$nameRelation])) {
 					$relation = $this->metaData->relations[$nameRelation];
@@ -397,8 +396,26 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array();
 	}
 
+	/**
+	 * Для RESTRICT ссылок
+	 * @return array
+	 */
+	protected function foreign_on_restrict_cascade() {
+		return array();
+	}
+
 	public function beforeDelete() {
 		if(!parent::beforeDelete()) return false;
+
+		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
+			foreach ($this->foreign_on_restrict_cascade() as $nameRelation) {
+				if (isset($this->metaData->relations[$nameRelation])) {
+					if ($this->$nameRelation(new CDbCriteria(array('limit' => 1)))) {
+						throw new CException('CMS problem restrict cascade relation' . $nameRelation);
+					}
+				}
+			}
+		}
 
 		if($this instanceof AbsBaseHeaders) {
 			$thisFindName = '$objects$';
@@ -413,14 +430,16 @@ abstract class AbsBaseModel extends CActiveRecord
 			}
 		}
 		//запрет на удаление отдельных объектов системы
-		foreach($confNoneDel as $arrConf) {
-			$resultCompareOk=true;
-			foreach($arrConf as $papam => $val) {
-				if($this->$papam!=$val) $resultCompareOk = false;
+		if(isset($confNoneDel)) {
+			foreach($confNoneDel as $arrConf) {
+				$resultCompareOk = true;
+				foreach($arrConf as $papam => $val) {
+					if($this->$papam != $val) $resultCompareOk = false;
+				}
+				if($resultCompareOk) break;
 			}
-			if($resultCompareOk) break;
+			if($resultCompareOk) return false;
 		}
-		if($resultCompareOk) return false;
 
 		return true;
 	}
