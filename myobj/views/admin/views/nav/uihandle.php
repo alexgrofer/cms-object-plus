@@ -81,7 +81,7 @@ if(empty($objHandle)) {
 		<?php
 		}
 		foreach ($classTemplate->initobject()->findAll() as $objTemplate) {
-			$selected = ($currentObjectTemplate)?($select_template_id == $currentObjectTemplate->primaryKey):false?'selected="selected"':'';
+			$selected = ($currentObjectTemplate && $currentObjectTemplate->primaryKey==$objTemplate->primaryKey)?'selected="selected"':'';
 			echo '<option value="'.$objTemplate->primaryKey.'" '.$selected.'>'.$objTemplate->name.'</option>';
 		}
 		?>
