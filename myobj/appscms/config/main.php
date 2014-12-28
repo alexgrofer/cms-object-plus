@@ -56,7 +56,7 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'language_def' => 'en',
 'languages' => array('ru', 'en', 'th', 'vi', 'de'),
 
-'sys_db_type_InnoDB'=>true, //в случае true не будет делать лишний запрос для удаления ссылок MTM при работе с AbsBaseModel::clearMTMLink
+'sys_db_type_InnoDB'=>true, //использовать если в системе нет поддержки внешних ключей
 );
 
 //возможно дополнение конфигурации $main дополнительными пользовательскими параметрами

@@ -48,5 +48,11 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 		return $relations;
 	}
+
+	protected function foreign_on_delete_cascade() {
+		return array(
+			'params',
+		);
+	}
 }
 
