@@ -24,13 +24,7 @@ class AdminController extends \Controller {
 			'REND_find'=>null,
 			'REND_selfobjrelationElements'=>null,
 		);
-	public function redirect($url,$terminate=true,$statusCode=302) {
-		if(isset($this->actionParams['usercontroller'])) {
-			$url = substr($url,strpos($url,'r=')+2);
-			$url=$this->createUrl('/'.$url,array('usercontroller'=>'usernav'));
-		}
-		parent::redirect($url,$terminate,$statusCode);
-	}
+
 	public function setVarRender($name,$value) {
 		$this->paramsrender[$name] = $value;
 	}
