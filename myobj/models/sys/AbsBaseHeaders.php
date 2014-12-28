@@ -256,6 +256,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 	//именно перед удалением beforeDelete объекта нужно удалить его строки + доч.табл, ссылки + доч.табл
 	public function beforeDelete() {
+		if(!parent::beforeDelete()) return false;
 		//запрет на удаление отдельных объектов системы
 		if(isset(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename])) {
 			foreach(Yii::app()->appcms->config['controlui']['none_del']['objects'][$this->uclass->codename] as $key => $val) {
@@ -287,7 +288,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				$this->editlinks('clear', $objClass, null, $typeLink, true);
 			}
 		}
-		return parent::beforeDelete();
+		return true;
 	}
 
 	public function beforeSave() {

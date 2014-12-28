@@ -56,7 +56,7 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'language_def' => 'en',
 'languages' => array('ru', 'en', 'th', 'vi', 'de'),
 
-'sys_db_type_InnoDB'=>true, //использовать если в системе нет поддержки внешних ключей
+'sys_db_type_InnoDB'=>false, //использовать если в системе нет поддержки внешних ключей
 );
 
 //возможно дополнение конфигурации $main дополнительными пользовательскими параметрами

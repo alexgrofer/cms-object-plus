@@ -38,14 +38,12 @@ class uClasses extends AbsBaseModel
 		return $this->objects()->count();
 	}
 	public function beforeDelete() {
-		if(parent::beforeDelete()) {
-			//запрет на удаление отдельных классов системы
-			if (array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes']) !== false) {
-				return false;
-			}
-			return true;
+		if(!parent::beforeDelete()) return false;
+		//запрет на удаление отдельных классов системы
+		if (array_search($this->codename, Yii::app()->appcms->config['controlui']['none_del']['classes']) !== false) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	public static function getTSPACESOptions(){
 		$oprion = array();
