@@ -113,26 +113,11 @@ class uClasses extends AbsBaseModel
 		}
 		return $modelheaders;
 	}
-	//user func classes
-	//comment doc
-	//поиск класса по codename или id
-	static function getclass($classidorname) {
-		$papamfind = ((int)$classidorname)?'id':'codename';
-		if(is_array($classidorname)) {
-			$papamfind = ((int)$classidorname[0])?'id':'codename';
-			$objclass = uClasses::model()->findAllByAttributes(array($papamfind => $classidorname));
-			$keysarray = array();
-			foreach($objclass as $objclass) {
-				$keysarray[$objclass->codename] = $objclass;
-			}
-			if(count($keysarray)) {
-				$objclass = $keysarray;
-			}
-		}
-		else {
-			$objclass = uClasses::model()->findByAttributes(array($papamfind => $classidorname));
-		}
-		return $objclass;
+
+	static function getclass($class_Id_Or_CodeName) {
+		$param = preg_match('/^[0-9]+$/', $class_Id_Or_CodeName)?'id':'codename';
+		$objClass = uClasses::model()->findByAttributes(array($param => $class_Id_Or_CodeName));
+		return $objClass;
 	}
 
 	public function hasAssotiation($codeName, $is_back=false) {

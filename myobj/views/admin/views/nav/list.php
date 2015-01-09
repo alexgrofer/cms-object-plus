@@ -32,8 +32,9 @@ foreach($listobjsort as $objarr) {
 	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$this->createAdminUrl($arrayuirow['edit'].$obj->primaryKey).'"><i class="icon-edit"></i></a>';
 	if($arrayuirow['links']) $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
 
-	$objclass = uClasses::getclass(array('navigation_sys','param_sys'));
-	$uihtml .= ' | <a href="'.$this->createAdminUrl('objects/class/'.$objclass['param_sys']->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass['navigation_sys']->primaryKey).'">params</a>';
+	$objclass_navigation_sys = uClasses::getclass('navigation_sys');
+	$objclass_param_sys = uClasses::getclass('param_sys');
+	$uihtml .= ' | <a href="'.$this->createAdminUrl('objects/class/'.$objclass_param_sys->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass_navigation_sys->primaryKey).'">params</a>';
 	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$this->createAdminUrl($arrayuirow['edittempl'].$obj->primaryKey, array('usercontroller'=>'usernav')).'">template</a>';
 
 	$visibl = ($obj->show)?'+':'-';

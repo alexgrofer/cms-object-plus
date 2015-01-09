@@ -127,9 +127,10 @@ elseif($this->dicturls['class']=='objects') {
 	$arrayuirow['links'] = 'objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
 	$arrayuirow['remove'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
 	//groups views
-	$objclass = uClasses::getclass(array('views_sys','groups_sys'));
-	if($objclass['views_sys']->id==$this->dicturls['paramslist'][1]) {
-		$arrayuirow['navgroup'] = 'objects/class/'.$objclass['groups_sys']->id.'/action/lenksobjedit/%s/class/'.$objclass['views_sys']->id;
+	$objclass_views_sys = uClasses::getclass('views_sys');
+	$objclass_groups_sys = uClasses::getclass('groups_sys');
+	if($objclass_views_sys->id==$this->dicturls['paramslist'][1]) {
+		$arrayuirow['navgroup'] = 'objects/class/'.$objclass_groups_sys->id.'/action/lenksobjedit/%s/class/'.$objclass_views_sys->id;
 	}
 }
 ?>
