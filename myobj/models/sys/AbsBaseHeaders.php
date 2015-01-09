@@ -244,7 +244,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $objectModelAssociationClass->with($nameRelate);
 	}
 
-	public function afterSave() {
+	protected function afterSave() {
 		if(parent::afterSave()!==false) {
 			//если были изменены свойства то сохраняем их
 			if(count($this->_tmpUProperties)) {
