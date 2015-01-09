@@ -164,7 +164,7 @@ CREATE TABLE `setcms_linksobjectsallmy` (
 	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linksobjectsallsystem` (
 	`from_obj_id` int(11) NOT NULL,
@@ -174,7 +174,7 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
 	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_linksobjectsallsystemhandle` (
 	`from_obj_id` int(11) NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE `setcms_linksobjectsallsystemhandle` (
 	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
