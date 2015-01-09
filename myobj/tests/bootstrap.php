@@ -1,5 +1,5 @@
 <?php
-$path_folder_framework = '/../../../../../frameworks/yii-1.1.16.bca042/framework';
+$path_folder_framework = '/../../../../../frameworks/yii/framework';
 
 // change the following paths if necessary
 $yiit=dirname(__FILE__).$path_folder_framework.'/yiit.php'; //your patch framework
