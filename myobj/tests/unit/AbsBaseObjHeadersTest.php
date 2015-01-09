@@ -34,7 +34,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//добавляем тестовое табличное пространство
 		$spacescl = Yii::app()->appcms->config['spacescl'];
 		if(isset($spacescl['777'])===false) {
-			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
+			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsSystem']);
 			self::editTestConfig($spacescl, 'spacescl');
 		}
 	}

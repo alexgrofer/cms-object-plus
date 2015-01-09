@@ -156,7 +156,7 @@ CREATE TABLE `setcms_linesmyobjheaders` (
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
-CREATE TABLE `setcms_linksobjectsallmy` (
+CREATE TABLE `setcms_linksobjectsmy` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
@@ -166,7 +166,7 @@ CREATE TABLE `setcms_linksobjectsallmy` (
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
-CREATE TABLE `setcms_linksobjectsallsystem` (
+CREATE TABLE `setcms_linksobjectssystem` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE `setcms_linksobjectsallsystem` (
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
-CREATE TABLE `setcms_linksobjectsallsystemhandle` (
+CREATE TABLE `setcms_linksobjectssystemhandle` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,

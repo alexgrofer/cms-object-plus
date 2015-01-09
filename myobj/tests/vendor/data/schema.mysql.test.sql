@@ -21,7 +21,7 @@ CREATE TABLE `setcms_linestestabsbaseobjheaders` (
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_testabsbaseobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `setcms_linksobjectsalltestabsbase` (
+CREATE TABLE `setcms_linksobjectstestabsbase` (
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
