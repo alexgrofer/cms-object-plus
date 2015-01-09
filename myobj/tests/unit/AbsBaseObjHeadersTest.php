@@ -117,7 +117,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OktestGetUProperties() {
+	public function testGetUProperties() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_2');
 		$this->assertEquals($objHeader->uProperties['codename1'], 'type upcharfield line1 header 2');
@@ -138,7 +138,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	 * @return TestAbsBaseObjHeaders
 	 *
 	 */
-	public function OktestSetUProperties() {
+	public function testSetUProperties() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_3');
 
@@ -156,7 +156,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/**
 	 * @depends testSetUProperties
 	 */
-	public function OktestSaveProperties(TestAbsBaseObjHeaders $objHeader) {
+	public function testSaveProperties(TestAbsBaseObjHeaders $objHeader) {
 		//нужно узнать какими были свойства до того как из изменили
 		$this->assertEquals($objHeader->getOldProperties(), ['codename1'=>'type upcharfield line3 header 3', 'codename2'=>'type uptextfield line4 header 3']);
 
@@ -169,7 +169,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$this->assertEquals($findObjHeader->uProperties, ['codename1'=>'type upcharfield line3 header 3new', 'codename2'=>'type uptextfield line4 header 3new']);
 	}
 
-	public function OktestEditlinks() {
+	public function testEditlinks() {
 		/* @var $objHeader4 TestAbsBaseObjHeaders */
 		/*
 		 * при созданении нового объекта для него создается общая ссылка
@@ -225,7 +225,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/**
 	 * @depends testEditlinks
 	 */
-	public function OktestGetobjlinks(array $objHeader) {
+	public function testGetobjlinks(array $objHeader) {
 		$objHeaderS = $objHeader[0]->getobjlinks('codename2')->findAll();
 		//у объекта должно быть 2 ссылки
 		$this->assertCount(2, $objHeaderS);
@@ -242,19 +242,10 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	 * добавление нового свойства
 	 * проверка на остаток старых свойств если понадобятся
 	 */
-	public function OktestAfterSave() {
+	public function testAfterSave() {
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_7');
-		$objHeader->flagAutoAddedLinks=false;
-		$objHeader->afterSave();
-		$objectcurrentlink = $objHeader->toplink;
-		//ссылка не должна быть созданна
-		$this->assertNull($objectcurrentlink);
 
-		$objHeader->flagAutoAddedLinks=true;
-		$objHeader->afterSave();
-		$objectcurrentlink = $objHeader->toplink;
-		//ссылка создалась
-		$this->assertNotNull($objectcurrentlink);
+		//task
 	}
 
 	/*
