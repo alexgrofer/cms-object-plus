@@ -21,6 +21,7 @@ class TemplateSystemObjHeaders extends AbsBaseHeaders {
 		return array_merge($rules, array(
 			array('name, path', 'required'),
 			array('name, path, desc', 'length', 'max'=>255),
+			array('path', 'match', 'not' => true, 'pattern' => '/\.php\s*$/'),
 		));
 	}
 
