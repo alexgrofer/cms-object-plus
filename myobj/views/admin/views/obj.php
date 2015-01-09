@@ -18,8 +18,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 
 	//смотрим в конфиге какие колонки из дочерней таблице показываем при selfobjrelation
 	foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
-		//убрать из цикла
-		$SelectArr = $REND_model->getMTMcol($this->dicturls['paramslist'][8],$this->dicturls['paramslist'][6],$namer);
+		$SelectArr = $REND_model->links_edit('select',$this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$namer);
 
 		$nameElem = $namer.$nameps_mtm;
 		if(!$REND_model->isAddElemClass($nameElem)) {
@@ -114,12 +113,13 @@ if(count($_POST) && $form->validate()) {
 	foreach($paramsQueryPostModel as $key => $val) {
 		if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
 			$array_edit_post_mtmparam = array();
-			if(($pos = strpos($key,$nameps_mtm)) && array_key_exists(($name_norm = substr($key,0,$pos)),$array_names_v_mtm) && (array_key_exists($name_norm, $array_names_v_mtm) && $array_names_v_mtm[$name_norm]!=$val)) {
+			if(($pos = strpos($key,$nameps_mtm))) {
+				$name_norm = substr($key,0,$pos);
 				$array_edit_post_mtmparam[$name_norm] = trim($val);
 			}
 		}
-
 	}
+
 	if(isset($array_edit_post_mtmparam) && count($array_edit_post_mtmparam)) {
 		$REND_model->setMTMcol($this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$array_edit_post_mtmparam);
 	}
