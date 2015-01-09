@@ -34,7 +34,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//добавляем тестовое табличное пространство
 		$spacescl = Yii::app()->appcms->config['spacescl'];
 		if(isset($spacescl['777'])===false) {
-			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders','namelinksmodel'=>'linksObjectsAllTestAbsBase');
+			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsAllSystem']);
 			self::editTestConfig($spacescl, 'spacescl');
 		}
 	}
@@ -60,15 +60,17 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$conf->setValue(Yii::app()->appcms,$newConfig);
 	}
 
-	public function OktestGetNameLinksModel() {
-		/* @var $objHeader TestAbsBaseObjHeaders */
-		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
-
-		//название ссылки на модель в которой хранятся ссылки объектов (цепляются друг на друга с помощью дочерней таблицы)
-		$this->assertEquals('linksObjectsAllTestAbsBase', $objHeader->getNameLinksModel());
+	/**
+	 * Вызвать приватный метод объекта
+	 * @param array $newConfig
+	 */
+	static function accessibleMethod($obj, $nameMethod) {
+		$method = new ReflectionMethod(get_class($obj), $nameMethod);
+		$method->setAccessible(true);
+		return $method->invoke($obj);
 	}
 
-	public function OktestRelations() {
+	public function testRelations() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 
@@ -84,7 +86,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OktestBeforeFind() {
+	public function testBeforeFind() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 		unset($objHeader->dbCriteria->with['lines.property']);
@@ -93,7 +95,9 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$objHeader->isitlines = true;
 		//джойнить в запросе таблицу строй всегда
 		$objHeader->force_join_props = true;
-		$objHeader->beforeFind();
+
+		self::accessibleMethod($objHeader, 'beforeFind');
+
 		$this->assertArrayHasKey('lines.property', $objHeader->dbCriteria->with);
 		$this->assertArrayHasKey('uclass.properties', $objHeader->dbCriteria->with);
 
@@ -103,7 +107,9 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//если строки в этом классе отключенны значит нельзя их использовать также
 		$objHeader->isitlines = false;
 		$objHeader->force_join_props = true;
-		$objHeader->beforeFind();
+
+		self::accessibleMethod($objHeader, 'beforeFind');
+
 		$this->assertArrayNotHasKey('lines.property', $objHeader->dbCriteria->with);
 		$this->assertArrayNotHasKey('uclass.properties', $objHeader->dbCriteria->with);
 	}

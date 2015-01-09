@@ -22,34 +22,11 @@ CREATE TABLE `setcms_linestestabsbaseobjheaders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `setcms_linksobjectsalltestabsbase` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`idobj` int(11) NOT NULL,
-	`uclass_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`idobj`,`uclass_id`),
-	FOREIGN KEY (`uclass_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+	`from_obj_id` int(11) NOT NULL,
+	`from_class_id` int(11) NOT NULL,
+	`to_obj_id` int(11) NOT NULL,
+	`to_class_id` int(11) NOT NULL,
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
+	FOREIGN KEY (`from_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
+	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `setcms_linksobjectsalltestabsbase_links` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`from_self_id` int(11) NOT NULL,
-	`to_self_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_self_id`,`to_self_id`),
-	FOREIGN KEY (`to_self_id`) REFERENCES `setcms_linksobjectsalltestabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (`from_self_id`) REFERENCES `setcms_linksobjectsalltestabsbase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `setcms_testabsbasemodel` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	PRIMARY KEY (`id`)
-);
-
--- для объектов также возможно цеплять таблицы, пример с HAS_MANY
-CREATE TABLE `setcms_testtablehm` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`text` varchar(255) NOT NULL,
-	`obj_id` int(11) NULL,
-	PRIMARY KEY (`id`),
-	KEY (`obj_id`)
-);
