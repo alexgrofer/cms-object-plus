@@ -22,6 +22,7 @@ class HandleSystemObjHeaders extends AbsBaseHeaders {
 		return array_merge($rules, array(
 			array('codename', 'required'),
 			array('codename', 'length', 'max'=>255),
+			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
 
 			array('template_id', 'exist', 'className' => 'TemplateSystemObjHeaders', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
 			array('view_id', 'exist', 'className' => 'ViewSystemObjHeaders', 'attributeName'=>ViewSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),

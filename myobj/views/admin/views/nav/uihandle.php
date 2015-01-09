@@ -61,7 +61,7 @@ if($objRequest->getPost('submit_handle_config')) {
 			}
 		}
 	}
-	if($THIS_NAVIGATE->validate()) {
+	if($objHandle->validate()) {
 		$this->redirect(Yii::app()->request->url);
 	}
 }
