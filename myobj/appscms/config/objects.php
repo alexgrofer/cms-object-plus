@@ -72,11 +72,12 @@ $objects = array(
 );
 /*
  * namemodel -название модели таблицы в которой лежат объекты
- * namelinksmodel - (модель для ссылок) если в классе будут предусмотренны ссылки на другие объекты,
- * если null ссылки для объектов этого табличного пространства не предусмотренны
+ * --обобщенные классы
+ * Класс в пространстве Header которого могут храниться разные классы (т.е в одной таблице)
+ * nameModelLinks - модель типов ссылок, может быть несколько, по умолчанию AbsBaseHeaders::NAME_TYPE_LINK_BASE
  */
-$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','nameModelLinks'=>['linksObjectsMy']); //пользовательские классы
-$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['linksObjectsSystem']); //системные классы
+$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','nameModelLinks'=>['base'=>'linksObjectsMy']); //пользовательские обобщенные классы
+$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']); //системные обобщенные классы
 /*
  * модели можно хранить в отдельных таблицах при необходимости
  */
