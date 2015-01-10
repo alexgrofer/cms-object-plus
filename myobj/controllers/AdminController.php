@@ -70,14 +70,7 @@ class AdminController extends \Controller {
         if(defined('YII_DEBUG') && YII_DEBUG){
             //Yii::app()->assetManager->forceCopy = true;
         }
-		$noneadmin = true;
-		if(!Yii::app()->user->isGuest) {
-			$objectadmingroup = \uClasses::getclass('groups_sys')->objects()->findByAttributes(array('vp2' => 'admincms'));
-			if(in_array($objectadmingroup->vp1, Yii::app()->user->groupsident)) {
-				$noneadmin = false;
-			}
-		}
-		if($noneadmin) {
+		if(Yii::app()->user->isGuest) {
 			$this->render('/admin/views/user/autorize');
 			Yii::app()->end();
 		}
@@ -91,6 +84,13 @@ class AdminController extends \Controller {
 		$this->dicturls['actionid'] = (is_int($indexaction))?$this->dicturls['paramslist'][($indexaction+2)]:'';
 
 		$objectsDelete = array();
+
+		$auth=Yii::app()->authManager;
+
+		$auth->createOperation('createObj','создание записи');
+		$auth->createOperation('readObj','просмотр записи');
+		$auth->createOperation('updateObj','редактирование записи');
+		$auth->createOperation('deleteObj','удаление записи');
 
 		//VARS
 		$view = ($this->dicturls['action']=='edit')?'/admin/views/obj':'/admin/views/list';

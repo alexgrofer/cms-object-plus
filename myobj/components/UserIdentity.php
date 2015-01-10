@@ -9,16 +9,9 @@ class UserIdentity extends CUserIdentity {
 		elseif($record->password!==md5($this->password)) {
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		}
-		else
-		{
+		else {
 			$this->_id=$record->primaryKey;
-			// WORK groupsident CMS SYSTEM GROUPS array USER
-			$groupsident = array();
-			foreach($record->groups as $objgroup) {
-				$groupsident[] = $objgroup->guid; // id group - admincms, Vp1 = 1 - value of the group user
-			}
-			$this->setState('groupsident', $groupsident);
-			/***********************************/
+			$this->setState('title', ''); //https://ru.wikipedia.org/wiki/HMAC
 			$this->errorCode=self::ERROR_NONE;
 		}
 		return !$this->errorCode;

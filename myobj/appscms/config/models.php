@@ -8,6 +8,9 @@ $models = array(
 		'order_by_def' => array('id desc'),
 		//название дополнительных колонок в дочерней таблице MANY_MANY
 		//'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
+
+		'groups_read' =>  array('admin'),
+		'groups_write' => array('admin'),
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
