@@ -110,13 +110,7 @@ class AdminController extends \Controller {
 					if(get_class($modelAD)=='uClasses') {
 						$show_none_permission_classes = array();
 						foreach(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'] as $key =>$class_conf) {
-							if(
-								isset($class_conf['groups_read']) &&
-								$class_conf['groups_read'] &&
-								!count(array_intersect(Yii::app()->user->groupsident,$class_conf['groups_read']))
-							) {
-								$show_none_permission_classes[] = $key;
-							}
+							//task group list view class
 						}
 						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
 					}
