@@ -16,7 +16,6 @@ class AdminController extends \Controller {
 			'REND_order_by'=>array(),
 			'REND_AttributeLabels'=>null,
 			'REND_editForm'=>null,
-			'REND_confmodel'=>null,
 			'REND_acces_read'=>true,
 			'REND_acces_write'=>true,
 			'REND_relation'=>null,
@@ -100,16 +99,10 @@ class AdminController extends \Controller {
 				if($this->dicturls['paramslist'][0]=='class') {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
 					$modelAD = $actclass->objects();
-					$settui = array();
-					if(isset(Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename])) {
-						$settui = Yii::app()->appcms->config['controlui'][$this->dicturls['class']]['conf_ui_classes'][$actclass->codename];
-					}
-					$this->setVarRender('REND_confmodel',$settui);
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//alias model
 					$params_modelget = \apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
-					$this->setVarRender('REND_confmodel',$params_modelget);
 					$NAMEMODEL_get = $params_modelget['namemodel'];
 
 					$modelAD =  new $NAMEMODEL_get();

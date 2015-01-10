@@ -283,20 +283,14 @@ if($COUNT_P) {
 <td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
 </tr>
 <?php
-$relations_links_model = '';
-
-$relconfsetting = $REND_confmodel;
-
-if($relconfsetting && array_key_exists('relation', $relconfsetting)) {
-$rel_arr_vis = $relconfsetting['relation'];
-
-if(count($rel_arr_vis)) {
+if($REND_relation) {
+	$relations_links_model = '';
 	foreach($REND_model->relations() as $namerelat => $val) {
-		if(isset($rel_arr_vis[$namerelat])) {
-			$namemodelconf = $rel_arr_vis[$namerelat];
+		if(isset($REND_relation[$namerelat])) {
+			$namemodelconf = $REND_relation[$namerelat];
 
 			//это ссылка на модель или класс
-			$modelORclass = (isset($rel_arr_vis[$namerelat][2]) && $rel_arr_vis[$namerelat][2])?'class':'models';
+			$modelORclass = (isset($REND_relation[$namerelat][2]) && $REND_relation[$namerelat][2])?'class':'models';
 
 			$print_link = ' | <a href="'.$this->createAdminUrl('objects/'.$modelORclass.'/'.$namemodelconf[0].'/action/%s/IDELEMENT/add/relation_name/'.$namemodelconf[1]).'">%s</a>';
 			$relations_links_model .= sprintf($print_link,'relationobj',$namerelat);
@@ -304,8 +298,6 @@ if(count($rel_arr_vis)) {
 			unset($print_link);
 		}
 	}
-}
-
 }
 
 foreach($listall as $obj) {
@@ -362,7 +354,9 @@ foreach($listall as $obj) {
 	}
 
 
-	if($relations_links_model) $uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
+	if(isset($relations_links_model)) {
+		$uihtml .= ' | ---relation <i class="icon-arrow-right"></i>'.str_replace('IDELEMENT',$obj->primaryKey,$relations_links_model);
+	}
 
 	$uihtml .= ' | --- <a onclick="return confirm(\'remove pk - '.$obj->primaryKey.'\')" href="'.$this->createAdminUrl($arrayuirow['remove'].$obj->primaryKey).'"><i class="icon-remove"></i></a>';
 	echo '<td>'.$uihtml.' </td></tr>';
