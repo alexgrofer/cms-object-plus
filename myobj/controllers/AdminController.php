@@ -128,21 +128,12 @@ class AdminController extends \Controller {
 					$settui = Yii::app()->appcms->config['controlui']['ui'][$this->dicturls['paramslist'][1]];
 				}
 
-				if(isset($settui)) {
-				/// acces
+			if(isset($settui)) {
 				if(array_key_exists('groups_read',$settui) && $settui['groups_read']) {
-					$result = array_intersect(Yii::app()->user->groupsident, $settui['groups_read']);
-					if(count($result)==0) {
-						$this->setVarRender('REND_acces_read',false);
-					}
-					unset($result);
+					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess('readObj'));
 				}
 				if(array_key_exists('groups_write',$settui) && $settui['groups_write']) {
-					$result = array_intersect(Yii::app()->user->groupsident, $settui['groups_write']);
-					if(count($result)==0) {
-						$this->setVarRender('REND_acces_write',false);
-					}
-					unset($result);
+					$this->setVarRender('REND_acces_write',Yii::app()->user->checkAccess('updateObj'));
 				}
 
 				$this->setVarRender('REND_thisparamsui',isset($settui['cols']) ?
@@ -185,9 +176,8 @@ class AdminController extends \Controller {
 					$this->setVarRender('REND_selfobjrelationElements',$settui['selfobjrelationElements']);
 				}
 
-				}
-				/////
-				// acces
+			}
+
 				switch($this->dicturls['action']) {
 					case 'edit':
 					case 'edittempl':
