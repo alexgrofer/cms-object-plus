@@ -7,6 +7,18 @@ abstract class AbsSiteController extends \Controller {
 	protected $thisObjNav = null;
 	protected $varsRender = array();
 
+	private $_params=null;
+
+	public function getParams() {
+		if($this->_params===null && $this->thisObjNav) {
+			$this->_params = array();
+			foreach($this->thisObjNav->params as $objParam) {
+				$this->_params[$objParam->name] = $objParam->content;
+			}
+		}
+		return $this->_params;
+	}
+
 	/**
 	 * @var null
 	 * Если необходима особая логия шаблон всегда можно изменить в контроллере.
