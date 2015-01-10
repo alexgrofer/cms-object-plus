@@ -62,7 +62,7 @@ class uClasses extends AbsBaseModel
 				'type'=>'text',
 			),
 			'description'=>array(
-				'type'=>'text',
+				'type'=>'textarea',
 			),
 			'tablespace'=>array(
 				'type'=>'dropdownlist',

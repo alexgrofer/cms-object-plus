@@ -32,5 +32,19 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 
 		return $relations;
 	}
+
+	protected function defaultElementsForm() {
+		return array(
+			'name'=>array(
+				'type'=>'text',
+			),
+			'path'=>array(
+				'type'=>'text',
+			),
+			'desc'=>array(
+				'type'=>'textarea',
+			),
+		);
+	}
 }
 
