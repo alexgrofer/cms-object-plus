@@ -228,7 +228,8 @@ INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`
 	(6,'param_sys','param_sys','',4),
 	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
-	(5,4); -- navigation_sys <> handle_sys
+	(5,4), -- navigation_sys <> handle_sys
+	(2,1); -- views_sys <> groups_sys
 
 -- INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
 -- INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
