@@ -35,4 +35,18 @@ class ParamSystemObjHeaders extends AbsBaseHeaders {
 
 		return $relations;
 	}
+
+	protected function defaultElementsForm() {
+		return array(
+			'name'=>array(
+				'type'=>'text',
+			),
+			'content'=>array(
+				'type'=>'textarea',
+			),
+			'navigate_id'=>array(
+				'type'=>'text',
+			),
+		);
+	}
 }

@@ -4,7 +4,6 @@ $objectsNavigate = $REND_model->findAll();
 $arrayuirow['edit'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/';
 $arrayuirow['edittempl'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edittempl/';
 $arrayuirow['new'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/';
-$arrayuirow['links'] = 'objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
 $arrayuirow['remove'] = $this->dicturls['class'].'/class/'.$this->dicturls['paramslist'][1].'/action/remove/';
 
 
@@ -30,11 +29,13 @@ foreach($listobjsort as $objarr) {
 	$obj = $objarr['obj'];
 	$uihtml = '';
 	if($arrayuirow['edit']) $uihtml .= ' <a href="'.$this->createAdminUrl($arrayuirow['edit'].$obj->primaryKey).'"><i class="icon-edit"></i></a>';
-	if($arrayuirow['links']) $uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
 
 	$objclass_navigation_sys = uClasses::getclass('navigation_sys');
-	$objclass_param_sys = uClasses::getclass('param_sys');
-	$uihtml .= ' | <a href="'.$this->createAdminUrl('objects/class/'.$objclass_param_sys->primaryKey.'/action/lenksobjedit/'.$obj->primaryKey.'/class/'.$objclass_navigation_sys->primaryKey).'">params</a>';
+	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/param_sys/action/relationobjonly/'.$obj->primaryKey.'/add/relation_name/navigate').'">edit params</a>';
+
+	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/templates_sys/action/relationobj/'.$obj->primaryKey.'/add/relation_name/navigationsDef').'">template</a>';
+	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/templates_sys/action/relationobj/'.$obj->primaryKey.'/add/relation_name/navigationsMobileDef').'">template mobile</a>';
+
 	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$this->createAdminUrl($arrayuirow['edittempl'].$obj->primaryKey, array('usercontroller'=>'usernav')).'">template</a>';
 
 	$visibl = ($obj->show)?'+':'-';
