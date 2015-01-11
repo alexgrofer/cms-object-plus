@@ -402,9 +402,7 @@ class AdminController extends \Controller {
 				$this->redirect(Yii::app()->request->url);
 			}
 		}
-		if(isset($this->paramsrender['REND_acces_read']) && $this->paramsrender['REND_acces_read']===false) {
-			$view = '/admin/views/acces';
-		}
+
 		$this->paramsrender['REND_model'] = $modelAD;
 		//USER CONTROLLER
 		if(isset($settui['controller']) && is_array($settui['controller'])) {
