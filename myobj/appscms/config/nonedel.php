@@ -17,9 +17,10 @@ $nonedel = array(
 	//для классов - в одной таблице могут быть объекты разных классов
 	'$objects$' => array(
 		'groups_sys' => array(
-			array('vp2'=>'admincms'),
-			array('vp2'=>'guestsys'),
-			array('vp2'=>'authorizedsys'),
+			array('identifier_role'=>'guest'),
+			array('identifier_role'=>'user'),
+			array('identifier_role'=>'moderator'),
+			array('identifier_role'=>'administrator'),
 		),
 		//'za' => array(
 			//array('name'=>'sdf', 'sort'=>'33'),

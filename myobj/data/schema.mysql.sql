@@ -114,6 +114,14 @@ CREATE TABLE `setcms_handlesystemobjheaders` (
 	FOREIGN KEY (`template_id`) REFERENCES `setcms_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
+CREATE TABLE `setcms_groupsystemobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`identifier_role` varchar(255) NOT NULL,
+	--
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
 CREATE TABLE `setcms_linessystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
@@ -220,7 +228,7 @@ CREATE TABLE `setcms_userpasport` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
-	(1,'groups_sys','groups_sys','',2),
+	(1,'groups_sys','groups_sys','',8),
 	(2,'views_sys','views_sys','',6),
 	(3,'templates_sys','templates_sys','',7),
 	(4,'handle_sys','handle_sys','',5),
@@ -234,14 +242,15 @@ INSERT INTO `setcms_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) 
 -- INSERT INTO `setcms_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
 -- INSERT INTO `setcms_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 
-INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,`vp1`,`vp2`,`vp3`,`bp1`) VALUES
-(1,1,'Admin CMS','',0,'CC99CD08-A1BF-461A-B1FE-3182B24D2812','admincms',NULL,0), -- guid outside-id or guid group user
-(2,1,'guest','',0,'guestsys','guestsys',NULL,0),
-(3,1,'authorized','',0,'authorizedsys','authorizedsys',NULL,0);
+INSERT INTO `setcms_groupsystemobjheaders` (`id`,`name`,`identifier_role`) VALUES
+(1,'guest cms','guest'),
+(2,'user cms','user'),
+(3,'moderator cms','moderator'),
+(4,'administrator cms','administrator');
 
 --
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
-INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','',1);
+INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','gro',1);
 --
 INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'superAdmin');
 --

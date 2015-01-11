@@ -27,8 +27,7 @@ $objects = array(
 		'group_write' => 'administrator',
 	),
 	'groups_sys' => array(
-		'cols' => array('id'=>'id','name'=>'name','vp1'=>'outside identifier','vp2'=>'codename',),
-		'AttributeLabels' => array('vp1'=>'outside-id_group', 'content'=>'description', 'vp2'=>'codename'),
+		'namemodel' => 'GroupSystemObjHeaders',
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),

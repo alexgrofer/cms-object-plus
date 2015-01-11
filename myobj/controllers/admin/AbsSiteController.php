@@ -87,7 +87,7 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$objView = $this->_tempHandleViews[$name];
-		if($isPermit && !$this->isPermitRender($objView)) {
+		if($isPermit && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
 		return $this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars, true);
@@ -97,33 +97,13 @@ abstract class AbsSiteController extends \Controller {
 		return $this->renderNavigateContent(yii::app()->getController()->getId(), $action->getId());
 	}
 
-	final private function isPermitRender($objView) {
+	final private function isShowAccessRender($objView) {
 		$groupsView = $objView->getobjlinks('groups_sys')->findAll();
-		$access = false;
 
-		if($groupsView) {
-			$group_handle_ids_top_groups = array();
-			foreach($groupsView as $objgroup) {
-				$group_handle_ids_top_groups[] = $objgroup->vp1;
-			}
-
-			if(\Yii::app()->user->isGuest && in_array('guestsys', $group_handle_ids_top_groups)) {
-				$access = true;
-			}
-			elseif(!\Yii::app()->user->isGuest && in_array('authorizedsys', $group_handle_ids_top_groups)) {
-				$access = true;
-			}
-			elseif(!\Yii::app()->user->isGuest) {
-				$groupsuser = \Yii::app()->user->groupsident;
-				foreach($group_handle_ids_top_groups as $idsystemgroup) {
-					if(in_array($idsystemgroup,$groupsuser)) {
-						$access = true;
-						break;
-					}
-				}
-			}
+		foreach($groupsView as $objgroup) {
+			if(Yii::app()->user->checkAccess($objgroup->identifier_role)) return true;
 		}
 
-		return $access;
+		return false;
 	}
 }
