@@ -1,7 +1,10 @@
 <?php
 if(!$REND_acces_write) {
-	//должно делаться в контроллере - или добавить мини контроллер ?
 	echo '<p class="alert">not acces edit</p>';
+}
+if(!$REND_acces_read) {
+	echo '<p class="alert">not acces read</p>';
+	return;
 }
 $htmldiv = '<div%s>%s</div>';
 $htmlp='<p class="%s">%s</p>';

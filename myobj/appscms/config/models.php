@@ -24,16 +24,22 @@ $models = array(
 		'namemodel' => 'User',
 		'relation' => array('groups'=>array('group','users'),'userpasport'=>array('userpasport','user')),
 		'cols' => array('id'=>'id','login'=>'user name'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'group' => array(
 		'namemodel' => 'Ugroup',
 		'relation' => array('users'=>array('user','groups')), // реляция => [название модели B, реляция в которой обратная ссылка модели B]
 		'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'userpasport' => array(
 		'namemodel' => 'UserPasport',
 		'relation' => array('user'=>array('user','userpasport')),
 		'cols' => array('id'=>'id','lastname'=>'last name','firstname'=>'first name', 'user_id'=>'user_id'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	//example models
 	'testtablehm' => array(

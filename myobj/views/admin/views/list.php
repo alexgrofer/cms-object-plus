@@ -2,6 +2,11 @@
 .pagination input {display:none}
 </style>
 <?php
+if(!$REND_acces_read) {
+	echo '<p class="alert">not acces read</p>';
+	return;
+}
+
 $fix_criteria = clone $REND_model->getDbCriteria();
 $new_criteria = new CDbCriteria;
 $new_criteria->mergeWith($fix_criteria, 'AND');
