@@ -243,6 +243,6 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','',1);
 --
-INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'test');
+INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'superAdmin');
 --
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);

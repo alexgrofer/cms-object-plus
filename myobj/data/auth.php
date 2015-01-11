@@ -34,9 +34,9 @@ return array(
 		'data' => null
 	),
 
-	'test' => array(
+	'superAdmin' => array(
 		'type' => CAuthItem::TYPE_ROLE,
-		'description' => 'test',
+		'description' => 'super admin',
 		'children' => array(
 			'administrator',
 		),

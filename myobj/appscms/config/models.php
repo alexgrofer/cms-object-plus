@@ -8,30 +8,27 @@ $models = array(
 		'order_by_def' => array('id desc'),
 		//название дополнительных колонок в дочерней таблице MANY_MANY
 		//'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
-
-		'groups_read' =>  array('administrator'),
-		'groups_write' => array('administrator'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
 		'relation' => array('classes'=>array('classes','properties')),
 		//'selfobjrelationElements' => array('classes'=>array('test', 'test2')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
-		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	//USER
 	'user' => array(
 		'namemodel' => 'User',
 		'relation' => array('groups'=>array('group','users'),'userpasport'=>array('userpasport','user')),
 		'cols' => array('id'=>'id','login'=>'user name'),
-		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	'group' => array(
 		'namemodel' => 'Ugroup',
 		'relation' => array('users'=>array('user','groups')), // реляция => [название модели B, реляция в которой обратная ссылка модели B]
 		'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'),
-		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 	),
 	'userpasport' => array(
 		'namemodel' => 'UserPasport',

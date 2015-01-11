@@ -3,20 +3,18 @@ $objects = array(
 	'handle_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
 		//'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
-		'groups_read' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'relation' => array(
 			'template'=>array('templates_sys', 'handles', true),
 			'view'=>array('views_sys', 'handles', true),
 		),
 		'namemodel' => 'HandleSystemObjHeaders',
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'navigation_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
 		//'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','vp3'=>'controller action','bp1'=>'visible'),
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
 		'relation' => array(
 			'templateDefault'=>array('templates_sys', 'navigationsDef', true),
@@ -25,19 +23,19 @@ $objects = array(
 		),
 		//array('название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас)
 		'namemodel' => 'NavigateSystemObjHeaders',
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'groups_sys' => array(
 		'cols' => array('id'=>'id','name'=>'name','vp1'=>'outside identifier','vp2'=>'codename',),
 		'AttributeLabels' => array('vp1'=>'outside-id_group', 'content'=>'description', 'vp2'=>'codename'),
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'templates_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name template','vp1'=>'patch'),
 		//'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
 		//'editForm' => array('name','vp1','content'), //в админке видим только поля
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		//'relation' => array('myobjheader'=>array('news_example','test_relat_objcts')),
 		'relation' => array(
 			'navigationsDef'=>array('navigation_sys','templateDefault', true),
@@ -45,29 +43,31 @@ $objects = array(
 			'handles'=>array('handle_sys','template', true),
 		),
 		'namemodel' => 'TemplateSystemObjHeaders',
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'views_sys' => array(
 		//'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),
 		//'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
 		//'editForm' => array('name','vp1','content','edit_file_template'),
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'relation' => array(
 			'handles'=>array('handle_sys','view', true),
 		),
 		'namemodel' => 'ViewSystemObjHeaders',
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'param_sys' => array(
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
 		'namemodel' => 'ParamSystemObjHeaders',
 		'relation' => array('navigate'=>array('navigation_sys', 'params', true)),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 	'db_dump_sys' => array(
 		'cols' => array('id'=>'id','name'=>'name'),
 		'AttributeLabels' => array('vp1'=>'patch'),
-		'groups_read' => null,
-		'groups_write' => array('CC99CD08-A1BF-461A-B1FE-3182B24D2812'),
+		'group_read' => 'administrator',
+		'group_write' => 'administrator',
 	),
 );
 /*

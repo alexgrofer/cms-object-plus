@@ -84,13 +84,6 @@ class AdminController extends \Controller {
 
 		$objectsDelete = array();
 
-		$auth=Yii::app()->authManager;
-
-		$auth->createOperation('createObj','создание записи');
-		$auth->createOperation('readObj','просмотр записи');
-		$auth->createOperation('updateObj','редактирование записи');
-		$auth->createOperation('deleteObj','удаление записи');
-
 		//VARS
 		$view = ($this->dicturls['action']=='edit')?'/admin/views/obj':'/admin/views/list';
 		$modelAD = null;
@@ -129,11 +122,11 @@ class AdminController extends \Controller {
 				}
 
 			if(isset($settui)) {
-				if(array_key_exists('groups_read',$settui) && $settui['groups_read']) {
-					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess('readObj'));
+				if(array_key_exists('group_read',$settui) && $settui['group_read']) {
+					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess($settui['group_read']));
 				}
-				if(array_key_exists('groups_write',$settui) && $settui['groups_write']) {
-					$this->setVarRender('REND_acces_write',Yii::app()->user->checkAccess('updateObj'));
+				if(array_key_exists('group_write',$settui) && $settui['group_write']) {
+					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess($settui['group_write']));
 				}
 
 				$this->setVarRender('REND_thisparamsui',isset($settui['cols']) ?
