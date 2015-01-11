@@ -126,7 +126,7 @@ class AdminController extends \Controller {
 					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess($settui['group_read']));
 				}
 				if(array_key_exists('group_write',$settui) && $settui['group_write']) {
-					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess($settui['group_write']));
+					$this->setVarRender('REND_acces_write',Yii::app()->user->checkAccess($settui['group_write']));
 				}
 
 				$this->setVarRender('REND_thisparamsui',isset($settui['cols']) ?
