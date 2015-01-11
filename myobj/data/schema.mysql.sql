@@ -197,9 +197,9 @@ CREATE TABLE `setcms_user` (
 CREATE TABLE `setcms_ugroup` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255) NOT NULL,
-	`guid` VARCHAR(36) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `setcms_user_ugroup` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
@@ -243,6 +243,6 @@ INSERT INTO `setcms_systemobjheaders` (`id`,`uclass_id`,`name`,`content`,`sort`,
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
 INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','',1);
 --
-INSERT INTO `setcms_ugroup` (`id`,`name`,`guid`) VALUES (1,'admin','CC99CD08-A1BF-461A-B1FE-3182B24D2812');
+INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'test');
 --
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);

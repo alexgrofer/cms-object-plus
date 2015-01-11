@@ -9,8 +9,8 @@ $models = array(
 		//название дополнительных колонок в дочерней таблице MANY_MANY
 		//'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
 
-		'groups_read' =>  array('admin'),
-		'groups_write' => array('admin'),
+		'groups_read' =>  array('administrator'),
+		'groups_write' => array('administrator'),
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',

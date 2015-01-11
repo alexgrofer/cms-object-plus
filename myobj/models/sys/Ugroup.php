@@ -1,8 +1,6 @@
 <?php
-class Ugroup extends AbsBaseModel
-{
+class Ugroup extends AbsBaseModel {
 	public $name;
-	public $guid;
 
 	public function tableName()
 	{
@@ -20,14 +18,4 @@ class Ugroup extends AbsBaseModel
 			array('name', 'required'),
 		));
 	}
-	protected function beforeSave() {
-		if(parent::beforeSave()!==false) {
-			if($this->isNewRecord) {
-				$this->guid = apicms\utils\GUID();
-			}
-			return true;
-		}
-		else return parent::beforeSave();
-	}
-
 }
