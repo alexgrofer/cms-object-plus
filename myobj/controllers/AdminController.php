@@ -89,15 +89,16 @@ class AdminController extends \Controller {
 		$modelAD = null;
 		switch($this->dicturls['class']) { //switch url
 			case 'objects':
+				$params_modelget = \apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
+				$settui = $params_modelget;
+
 				if($this->dicturls['paramslist'][0]=='class') {
 					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
 					$modelAD = $actclass->objects();
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//alias model
-					$params_modelget = \apicms\utils\normalAliasModel($this->dicturls['paramslist'][1]);
 					$NAMEMODEL_get = $params_modelget['namemodel'];
-
 					$modelAD =  new $NAMEMODEL_get();
 					//permission show classes
 					if(get_class($modelAD)=='uClasses') {
@@ -107,7 +108,6 @@ class AdminController extends \Controller {
 						}
 						$modelAD->dbCriteria->addNotInCondition('codename', $show_none_permission_classes);
 					}
-					$settui = $params_modelget;
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
