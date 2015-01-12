@@ -61,10 +61,9 @@ abstract class AbsSiteController extends \Controller {
 	 * @param $name название хендла, используется для поиска, для каждого шаблона должен быть уникален
 	 * @param $idHandle необходим для сортировке в панели редиктирования шаблона, не должен быть уникален
 	 * @param bool $isContent если true все переменные попадут в контент только этого представления
-	 * @param bool $isPermit если false не будут использоваться права групп на представления
 	 * @return null|string Вернет null если нет прав или поток представления
 	 */
-	final public function renderHandle($name, $idHandle, $isContent=false, $isPermit=true) {
+	final public function renderHandle($name, $idHandle, $isContent=false) {
 		if($this->_tempHandleViews === null) {
 			$this->_tempHandleViews = array();
 			$template_id = $this->template_id ?: $this->thisObjNav->template_default_id;
@@ -87,7 +86,7 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$objView = $this->_tempHandleViews[$name];
-		if($isPermit && !$this->isShowAccessRender($objView)) {
+		if($isContent==false && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
 		return $this->$nameMethodRender(DIR_VIEWS_SITE.$objView->path, $vars, true);
