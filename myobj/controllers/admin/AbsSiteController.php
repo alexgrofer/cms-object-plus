@@ -60,7 +60,7 @@ abstract class AbsSiteController extends \Controller {
 	 * выводит в поток рендер представления для установленного рендера навигацмм
 	 * @param $name название хендла, используется для поиска, для каждого шаблона должен быть уникален
 	 * @param $idHandle необходим для сортировке в панели редиктирования шаблона, не должен быть уникален
-	 * @param bool $isContent если true все переменные попадут в контент представления, если false переменные пападут в специальную переменную представления varsPrivateSetHandle
+	 * @param bool $isContent если true все переменные попадут в контент только этого представления
 	 * @param bool $isPermit если false не будут использоваться права групп на представления
 	 * @return null|string Вернет null если нет прав или поток представления
 	 */
@@ -80,17 +80,17 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$vars = [];
+		$nameMethodRender = 'renderPartial';
 		if($isContent) {
 			$vars = $this->varsRender;
-		} else {
-			$vars['varsPrivateSetHandle'] = $this->varsRender;
+			$nameMethodRender = 'render';
 		}
 
 		$objView = $this->_tempHandleViews[$name];
 		if($isPermit && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
-		return $this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars, true);
+		return $this->$nameMethodRender(DIR_VIEWS_SITE.$objView->path, $vars, true);
 	}
 
 	protected function afterAction($action) {
