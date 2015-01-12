@@ -131,12 +131,6 @@ elseif($this->dicturls['class']=='objects') {
 	$arrayuirow['new'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly;
 	$arrayuirow['links'] = 'objects/models/classes/'.$this->dicturls['paramslist'][1].'/links/';
 	$arrayuirow['remove'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][0].'/'.$this->dicturls['paramslist'][1].'/action/remove/';
-	//groups views
-	$objclass_views_sys = uClasses::getclass('views_sys');
-	$objclass_groups_sys = uClasses::getclass('groups_sys');
-	if($objclass_views_sys->id==$this->dicturls['paramslist'][1]) {
-		$arrayuirow['navgroup'] = 'objects/class/'.$objclass_groups_sys->id.'/action/lenksobjedit/%s/class/'.$objclass_views_sys->id;
-	}
 }
 ?>
 <form method="post" enctype="multipart/form-data">
