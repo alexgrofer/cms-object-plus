@@ -1,4 +1,8 @@
 <?php
+//selenium
+$_SERVER['SCRIPT_FILENAME'] = realpath(__DIR__.'/../../../../index.php');
+$_SERVER['SCRIPT_NAME'] = basename($_SERVER['SCRIPT_FILENAME']);
+
 $path_folder_framework = '/../../../../../frameworks/yii/framework';
 
 // change the following paths if necessary
