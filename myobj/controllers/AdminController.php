@@ -120,56 +120,44 @@ class AdminController extends \Controller {
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
 					$settui = Yii::app()->appcms->config['controlui']['ui'][$this->dicturls['paramslist'][1]];
 				}
-
-			if(isset($settui)) {
+				//conf
 				if(array_key_exists('group_read',$settui) && $settui['group_read']) {
 					$this->setVarRender('REND_acces_read',Yii::app()->user->checkAccess($settui['group_read']));
 				}
 				if(array_key_exists('group_write',$settui) && $settui['group_write']) {
 					$this->setVarRender('REND_acces_write',Yii::app()->user->checkAccess($settui['group_write']));
 				}
-
 				$this->setVarRender('REND_thisparamsui',isset($settui['cols']) ?
 					$settui['cols']:
 					array_combine(array_keys($modelAD->attributes),array_keys($modelAD->attributes))
 				);
-
 				if(array_key_exists('cols_props',$settui) && $settui['cols_props']) {
 					$this->setVarRender('REND_thispropsui',$settui['cols_props']);
 				}
-
 				if(array_key_exists('order_by_def',$settui) && $settui['order_by_def']) {
 					$this->setVarRender('REND_order_by_def',$settui['order_by_def']);
 				}
-
 				if(array_key_exists('order_by',$settui) && $settui['order_by']) {
 					$this->setVarRender('REND_order_by',$settui['order_by']);
 				}
-
 				if(array_key_exists('AttributeLabels', $settui) && $settui['AttributeLabels'] && count($settui['AttributeLabels'])) {
 					$this->setVarRender('REND_AttributeLabels',$settui['AttributeLabels']);
 				}
-
 				if(isset($settui['editForm']) && count($settui['editForm'])) {
 					$this->setVarRender('REND_editForm',$settui['editForm']);
 				}
-
 				if(array_key_exists('relation',$settui) && $settui['relation']) {
 					$this->setVarRender('REND_relation',$settui['relation']);
 				}
-
 				$this->setVarRender('REND_find',(array_key_exists('find',$settui) && $settui['find'])?$settui['find']:$this->paramsrender['REND_thisparamsui']);
-
 				if(array_key_exists('witch', $settui) && $settui['witch']) {
 					$this->setVarRender('REND_witch',$settui['witch']);
 					$modelAD->dbCriteria->with = $settui['witch'];
 				}
-
 				if(array_key_exists('selfobjrelationElements', $settui) && $settui['selfobjrelationElements']) {
 					$this->setVarRender('REND_selfobjrelationElements',$settui['selfobjrelationElements']);
 				}
-
-			}
+				//end config
 
 				switch($this->dicturls['action']) {
 					case 'edit':

@@ -102,6 +102,12 @@ function importRecursName($alias,$mask=false,$forceInclude=false,$isreturn=false
 }
 
 function normalAliasModel($name_ModelORClass) {
-	$params_modelget = \Yii::app()->appcms->config['controlui']['objects'][isset(\Yii::app()->appcms->config['controlui']['objects']['models'][$name_ModelORClass])?'models':'conf_ui_classes'][$name_ModelORClass];
-	return $params_modelget;
+	$arrConfObj = \Yii::app()->appcms->config['controlui']['objects'];
+	if(isset($arrConfObj['models'][$name_ModelORClass])) {
+		return $arrConfObj['models'][$name_ModelORClass];
+	}
+	if(isset($arrConfObj['conf_ui_classes'][$name_ModelORClass])) {
+		return $arrConfObj['conf_ui_classes'][$name_ModelORClass];
+	}
+	return array();
 }
