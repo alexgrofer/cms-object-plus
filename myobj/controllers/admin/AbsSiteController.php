@@ -80,17 +80,15 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$vars = [];
-		$nameMethodRender = 'renderPartial';
 		if($isContent) {
 			$vars = $this->varsRender;
-			$nameMethodRender = 'render';
 		}
 
 		$objView = $this->_tempHandleViews[$name];
 		if($isContent==false && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
-		return $this->$nameMethodRender(DIR_VIEWS_SITE.$objView->path, $vars, true);
+		return $this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars, true);
 	}
 
 	protected function afterAction($action) {
