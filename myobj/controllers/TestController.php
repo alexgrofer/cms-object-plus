@@ -44,7 +44,7 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 
 			if(isset($array_attributes_edit['validate_params'])) {
 				$validate_params_value = $array_attributes_edit['validate_params'];
-				$validate_params = \CJavaScript::jsonDecode($validate_params_value);
+				$validate_params = explode(',', $validate_params_value);
 			}
 			//параметр отвечает за сохранение объета AR в онлайне
 			if(isset($array_attributes_edit['save_event'])) {

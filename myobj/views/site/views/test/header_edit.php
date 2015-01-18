@@ -6,19 +6,26 @@ $nameClassObjEdit = get_class($objEdit);
 
 //conf
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
-$is_save_event = false;
+$is_save_event = true;
 
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
+	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
+	isBeforeValidateAttribute = '.$orherIsDisabled.';
+
 	//если необходимо отправить при ajax поля по отдельности
 	if(1) {
-		attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
 		form.find("input, select, textarea").each(function() {
 			//только если это не текущий элемент
 			//ищем только по safe параметрам
-			if(this.name != attributeName && spaceMyFormEdit_'.$nameClassObjEdit.'.startParamsForm[this.name] != undefined) {
-				$(this).prop("disabled", '.$orherIsDisabled.');
+			if(this.name != attributeName) {
+				if(spaceMyFormEdit_'.$nameClassObjEdit.'.startParamsForm[this.name] != undefined) {
+					$(this).prop("disabled", '.$orherIsDisabled.');
+				}
+			}
+			else{ //добавить в массив поле которое должно уйти в редактирование - ЭТО текущее поле
+				$("#TestObjHeaders_validate_params").val(attribute.name);
 			}
 		});
 	}
@@ -52,6 +59,9 @@ $configForm = array(
 			}',
 
 			'beforeValidate'=>'js:function(form) {
+				//все поля что не изменились отметить disable
+				//arr = [attribute.name];
+				//$("#TestObjHeaders_validate_params").val(arr);
 				return true;
 			}',
 
