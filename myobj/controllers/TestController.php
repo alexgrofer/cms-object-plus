@@ -46,35 +46,37 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 				$validate_params_value = $array_attributes_edit['validate_params'];
 				$validate_params = \CJavaScript::jsonDecode($validate_params_value);
 			}
-
+			//параметр отвечает за сохранение объета AR в онлайне
 			if(isset($array_attributes_edit['save_event'])) {
 				$is_save_event = $array_attributes_edit['save_event'];
 			}
 
 			$objEdit->attributes = $array_attributes_edit;
 			$isValidate = $objEdit->validate($validate_params);
+			//для объектов AR
 			$function_save = function() use($objEdit, $validate_params) {
 				return $objEdit->save(
 					false, //не проверять снова данные т.е сделали это выше
 					$validate_params //обновить только отдельные сталбцы а не все данные
 				);
 			};
+
 			//ajax
 			if(Yii::app()->request->isAjaxRequest) {
+				//проверка атрибуте в онлайне
 				$strJson = \CActiveForm::validate($objEdit, $validate_params);
-				if($is_save_event) {
-					if($objEdit->validate()==false) { //проверить весь объект так как идет сохранение а не проверка отдельного поля
-						$strJson = \CJSON::encode($objEdit->getErrors());
-					}
-					else {
-						$function_save();
-					}
+
+				//сохранение объектов AR в онлайне
+				if($objEdit->isNewRecord==false && $is_save_event && !\CJSON::decode($strJson)) {//если это существующий объект и нет ошибок
+					$function_save();
 				}
+				//вернем данные об ошибках
 				yii::app()->end($strJson);
 			}
 
 			//base
 			if($isValidate) {
+				//для объектов AR
 				$function_save();
 				if($id) {
 					$this->refresh();

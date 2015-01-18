@@ -4,6 +4,10 @@ echo CHtml::link('create new obj', yii::app()->createUrl('myobj/test/header_edit
 
 $nameClassObjEdit = get_class($objEdit);
 
+//conf
+//сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
+$is_save_event = false;
+
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
@@ -72,14 +76,16 @@ foreach($form->getElements() as $element) {
 
 //start user edit form
 echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_value);
-/**
- * данные будут сохраняться сразе при редактировании люблго поля объекта
- * по сути submit не нужен в таких формах, к примеру при редактировании личных данных
- */
-echo CHtml::textField($nameClassObjEdit.'[save_event]', 1);
-//end
 
-echo '<p>'.CHtml::submitButton('save').'</p>';
+//для объектов AR
+if($is_save_event && $objEdit->isNewRecord==false) {
+	echo CHtml::textField($nameClassObjEdit . '[save_event]', 1);
+}
+//если объект сохранятся в онлайне ему не нужна кнопка уже, но это не принципиально можно и оставить
+if($is_save_event==false) {
+	echo '<p>' . CHtml::submitButton('save') . '</p>';
+}
+//end
 
 echo $form->renderEnd();
 ?>
