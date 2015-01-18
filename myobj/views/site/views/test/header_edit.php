@@ -7,11 +7,17 @@ $nameClassObjEdit = get_class($objEdit);
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
-	//при ajax отправляю только значение текущего редакрируемого поля
-	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
-	form.find("input, select, textarea").each(function() {
-		if(this.name!=attributeName) $(this).prop("disabled", '.$orherIsDisabled.');
-	});
+	//если необходимо отправить при ajax поля по отдельности
+	if(1) {
+		attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
+		form.find("input, select, textarea").each(function() {
+			//только если это не текущий элемент
+			//ищем только по safe параметрам
+			if(this.name != attributeName && spaceMyFormEdit_'.$nameClassObjEdit.'.startParamsForm[this.name] != undefined) {
+				$(this).prop("disabled", '.$orherIsDisabled.');
+			}
+		});
+	}
 	';
 };
 $idForm = 'form'.$nameClassObjEdit;
@@ -66,6 +72,11 @@ foreach($form->getElements() as $element) {
 
 //start user edit form
 echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_value);
+/**
+ * данные будут сохраняться сразе при редактировании люблго поля объекта
+ * по сути submit не нужен в таких формах, к примеру при редактировании личных данных
+ */
+echo CHtml::textField($nameClassObjEdit.'[save_event]', 1);
 //end
 
 echo '<p>'.CHtml::submitButton('save').'</p>';
@@ -78,7 +89,7 @@ var spaceMyFormEdit_<?php echo $nameClassObjEdit?> = {};
 <?php
 foreach($objEdit->attributes as $k=>$v) {
 	if($objEdit->isAttributeSafe($k)) {
-		$arrJS_StartParamsForm[] = $k.":'".$v."'";
+		$arrJS_StartParamsForm[] = "'".$nameClassObjEdit."[".$k."]':'".$v."'";
 	}
 }
 ?>

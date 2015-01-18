@@ -88,6 +88,5 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 
 		$this->varsRender['objEdit'] = $objEdit;
 		$this->varsRender['validate_params_value'] = $validate_params_value;
-		$this->varsRender['is_save_event'] = $is_save_event;
 	}
 }
