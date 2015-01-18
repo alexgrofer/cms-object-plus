@@ -255,3 +255,15 @@ INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex',
 INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'superAdmin');
 --
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
+
+//test потом удалить
+CREATE TABLE `setcms_testobjheaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`param1` varchar(255),
+	`param2` varchar(255),
+	`param3` text,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `setcms_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
+	(11,'test_header','test_header','',9);
