@@ -7,18 +7,11 @@ $nameClassObjEdit = get_class($objEdit);
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
-	//обработчик только для поля которое должно работать с ajax
-	if($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxFieldsEvent)) {
-		//при ajax отправляю только значение текущего редакрируемого поля
-		attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
-		form.find("input, select, textarea").each(function() {
-			if(this.name!=attributeName) $(this).prop("disabled", '.$orherIsDisabled.');
-		});
-		//на сервере в vilidate должно проверятся только данное поле т.е только оно ушло в запросе
-
-		//нормальная обработка validate
-
-	}
+	//при ajax отправляю только значение текущего редакрируемого поля
+	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
+	form.find("input, select, textarea").each(function() {
+		if(this.name!=attributeName) $(this).prop("disabled", '.$orherIsDisabled.');
+	});
 	';
 };
 $idForm = 'form'.$nameClassObjEdit;
@@ -73,8 +66,6 @@ foreach($form->getElements() as $element) {
 
 //start user edit form
 echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_value);
-//параметры которые изменялись (Для существующих объектов)
-echo CHtml::textField($nameClassObjEdit.'[edit_params]', '');
 //end
 
 echo '<p>'.CHtml::submitButton('save').'</p>';
@@ -85,18 +76,12 @@ echo $form->renderEnd();
 //start user edit form
 var spaceMyFormEdit_<?php echo $nameClassObjEdit?> = {};
 <?php
-//поля которые необходимо проверять ajax при событиях type, change
-$ajaxFieldsEvent = array(
-	"'param2'",
-);
-
 foreach($objEdit->attributes as $k=>$v) {
 	if($objEdit->isAttributeSafe($k)) {
 		$arrJS_StartParamsForm[] = $k.":'".$v."'";
 	}
 }
 ?>
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxFieldsEvent = [<?php echo implode(', ', $ajaxFieldsEvent)?>];
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startParamsForm = {<?php echo implode(', ', $arrJS_StartParamsForm)?>};
 //end
 </script>

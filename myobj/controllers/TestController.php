@@ -35,26 +35,47 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 
 		$nameModel = get_class($objEdit);
 
-		$validate_params = null;
 		$validate_params_value = '';
-		if(isset($_POST[$nameModel]) && isset($_POST[$nameModel]['validate_params'])) {
-			$validate_params_value = $_POST[$nameModel]['validate_params'];
-			$validate_params = \CJavaScript::jsonDecode($validate_params_value);
-		}
-
-		if(Yii::app()->request->isAjaxRequest) {
-			echo \CActiveForm::validate($objEdit, $validate_params);
-			yii::app()->end();
-		}
+		$is_save_event = false; //сохранять объект при событиях type, change
 
 		if(isset($_POST[$nameModel])) {
-			$objEdit->attributes = $_POST[$nameModel];
+			$array_attributes_edit = $_POST[$nameModel];
+			$validate_params = null; //параметры которые нужно валидировать
+
+			if(isset($array_attributes_edit['validate_params'])) {
+				$validate_params_value = $array_attributes_edit['validate_params'];
+				$validate_params = \CJavaScript::jsonDecode($validate_params_value);
+			}
+
+			if(isset($array_attributes_edit['save_event'])) {
+				$is_save_event = $array_attributes_edit['save_event'];
+			}
+
+			$objEdit->attributes = $array_attributes_edit;
 			$isValidate = $objEdit->validate($validate_params);
-			if($isValidate) {
-				$objEdit->save(
+			$function_save = function() use($objEdit, $validate_params) {
+				return $objEdit->save(
 					false, //не проверять снова данные т.е сделали это выше
 					$validate_params //обновить только отдельные сталбцы а не все данные
 				);
+			};
+			//ajax
+			if(Yii::app()->request->isAjaxRequest) {
+				$strJson = \CActiveForm::validate($objEdit, $validate_params);
+				if($is_save_event) {
+					if($objEdit->validate()==false) { //проверить весь объект так как идет сохранение а не проверка отдельного поля
+						$strJson = \CJSON::encode($objEdit->getErrors());
+					}
+					else {
+						$function_save();
+					}
+				}
+				yii::app()->end($strJson);
+			}
+
+			//base
+			if($isValidate) {
+				$function_save();
 				if($id) {
 					$this->refresh();
 				}
@@ -67,5 +88,6 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 
 		$this->varsRender['objEdit'] = $objEdit;
 		$this->varsRender['validate_params_value'] = $validate_params_value;
+		$this->varsRender['is_save_event'] = $is_save_event;
 	}
 }
