@@ -66,8 +66,8 @@ class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
 				//проверка атрибуте в онлайне
 				$strJson = \CActiveForm::validate($objEdit, $validate_params);
 
-				//сохранение объектов AR в онлайне
-				if($objEdit->isNewRecord==false && $is_save_event && !\CJSON::decode($strJson)) {//если это существующий объект и нет ошибок
+				//сохранение объектов AR в онлайне только если если это существующий объект и нет ошибок
+				if($objEdit->isNewRecord==false && $is_save_event && !\CJSON::decode($strJson)) {
 					$function_save();
 				}
 				//вернем данные об ошибках

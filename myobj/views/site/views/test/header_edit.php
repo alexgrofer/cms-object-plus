@@ -14,15 +14,21 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
 	isBeforeValidateAttribute = '.$orherIsDisabled.';
 
-	//
+	//не отправлять каждый раз ajax
+	this.enableAjaxValidation = false;
 
-	//если необходимо отправить при ajax
-	if(1) {
+	//если есть ограничение на поля которые точно работают ajax
+	if(spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1) {
+		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
+		if(isBeforeValidateAttribute==true) {
+			this.enableAjaxValidation = true;
+		}
+
 		form.find("input, select, textarea").each(function() {
-			//только если это не текущий элемент делаем его disabled
-			//ищем только по safe параметрам
+			//только если это текущее свойство
 			if(this.name != attributeName) {
-				if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
+				//только для safe свойств
+				if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
 					$(this).prop("disabled", '.$orherIsDisabled.');
 				}
 			}
@@ -50,22 +56,26 @@ $configForm = array(
 
 			//events
 			'beforeValidateAttribute'=>'js:function(form, attribute) {
+				//событие на свойстве (type или change) до отправки submit
 				'.$functionSetStrJS_AJAX_FIELD_EDIT('true').'
 				return true;
 			}',
 
 			'afterValidateAttribute'=>'js:function(form, attribute, data, hasError) {
+				//событие на свойстве (type или change) после нажатия, получаем результат
 				'.$functionSetStrJS_AJAX_FIELD_EDIT('false').'
 
 				return true;
 			}',
 
 			'beforeValidate'=>'js:function(form) {
+				//событие до отправки submit
 				arr = [];
 				form.find("input, select, textarea").each(function() {
-					//если это safe поле и изменилось добавить его в список на валидацию(отправку)
-					if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
-						if($.inArray(this.value, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm)==false) {
+					//только для safe свойств
+					if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
+						//если значение поля отлично от ранее сохраненного
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=this.value) {
 							normalName = str.replace("'.$nameClassObjEdit.'[", ""); normalName = str.replace("]", "");
 							arr.push(normalName);
 						}
@@ -81,20 +91,21 @@ $configForm = array(
 			}',
 
 			'afterValidate'=>'js:function(form, data, hasError) {
+				//событие после нажатия сабмита, получаем результат
 				form.find("input, select, textarea").each(function() {
 					//вернем все поля к disabled=false
 					$(this).prop("disabled", false);
 
-					//если ошибок нет обновить стартовые параметры новыми данными ()
+					//если ошибок нет обновить стартовые параметры новыми данными
 					if(hasError==false) {
-						//если это safe поле
-						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
+						//только для safe свойств
+						if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value;
 						}
 					}
 				});
 
-				return true;
+				return true; //если false порма не будет перезагруженна на контроллер
 			}',
 		),
 	),
@@ -138,5 +149,8 @@ foreach($objEdit->attributes as $k=>$v) {
 }
 ?>
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
+//-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
+//--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxPropValidate = [<?php echo implode(', ', array("'param2'"))?>];
 //end
 </script>
