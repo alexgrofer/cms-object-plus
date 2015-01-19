@@ -14,7 +14,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
 	isBeforeValidateAttribute = '.$orherIsDisabled.';
 
-	//не отправлять каждый раз ajax
+	//не отправлять каждый раз ajax для этого свойства
 	if(isBeforeValidateAttribute==true) { //beforeValidateAttribute
 		this.enableAjaxValidation = false;
 	}
@@ -28,7 +28,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 	//отправляем данные на сервер ЕСЛИ это старый объект (для онлайн сохранения)
 	//ИЛИ в случае с новым объектом параметры которые точно указаны в списке или если списк ajaxPropValidate пуст
 	if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false
-		|| (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)
+		|| (spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true && spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)
 	) {
 		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
 		if(isBeforeValidateAttribute==true) {
@@ -47,11 +47,6 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 				$("#TestObjHeaders_validate_params").val(attribute.name);
 			}
 		});
-	}
-
-	//после проверки ставить на место, так как submit в конечном этоге отправить все данные для сохранения на сервере
-	if(isBeforeValidateAttribute==false) { //afterValidateAttribute
-		this.enableAjaxValidation = true;
 	}
 	';
 };
@@ -89,13 +84,14 @@ $configForm = array(
 				arr = [];
 				form.find("input, select, textarea").each(function() {
 					//только для safe свойств
-					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
+					if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
 						//если значение поля отлично от ранее сохраненного
-						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=this.value) {
-							normalName = str.replace("'.$nameClassObjEdit.'[", ""); normalName = str.replace("]", "");
+						normalName = this.name.replace("'.$nameClassObjEdit.'[", ""); normalName = normalName.replace("]", "");
+						if((spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=this.value)
+							|| (spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true && (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1))) {
 							arr.push(normalName);
 						}
-						//поля которые не изменились не уходять и не проверяются на сервере
+						//поля которые проверяются на сервере
 						else {
 							$(this).prop("disabled", true);
 						}
