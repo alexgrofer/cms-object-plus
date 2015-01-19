@@ -73,7 +73,7 @@ $configForm = array(
 				arr = [];
 				form.find("input, select, textarea").each(function() {
 					//только для safe свойств
-					if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
+					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && $.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
 						//если значение поля отлично от ранее сохраненного
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=this.value) {
 							normalName = str.replace("'.$nameClassObjEdit.'[", ""); normalName = str.replace("]", "");
@@ -130,10 +130,9 @@ echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_va
 if($objEdit->isNewRecord==false) {
 	echo CHtml::textField($nameClassObjEdit . '[save_event]', 1);
 }
-//если объект сохранятся в онлайне ему не нужна кнопка уже, но это не принципиально можно и оставить
-if($is_save_event==false) {
-	echo '<p>' . CHtml::submitButton('save') . '</p>';
-}
+//если объект сохранятся при событии на свойстве формы type, change то ему не нужна кнопка уже, но это не принципиально можно и оставить при желании
+//
+echo '<p>' . CHtml::submitButton('save') . '</p>';
 //end
 
 echo $form->renderEnd();
@@ -148,6 +147,7 @@ foreach($objEdit->attributes as $k=>$v) {
 	}
 }
 ?>
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isNewObj = <?php echo ($objEdit->isNewRecord) ?'true':'false'; ?>;
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
