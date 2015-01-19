@@ -7,7 +7,7 @@ $nameClassObjEdit = get_class($objEdit);
 //conf
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = false;
-
+$is_validate_save_ajax = true;
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit, $is_save_event) {
 	return '
@@ -15,7 +15,9 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 	isBeforeValidateAttribute = '.$orherIsDisabled.';
 
 	//не отправлять каждый раз ajax
-	this.enableAjaxValidation = false;
+	if(isBeforeValidateAttribute==true) { //beforeValidateAttribute
+		this.enableAjaxValidation = false;
+	}
 
 	//после валидации нужно
 	if(isBeforeValidateAttribute==false) {
@@ -23,8 +25,11 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 		$("#TestObjHeaders_validate_params").val("");
 	}
 
-	//если есть ограничение на поля которые точно работают ajax
-	if(spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1) {
+	//отправляем данные на сервер ЕСЛИ это старый объект (для онлайн сохранения)
+	//ИЛИ в случае с новым объектом параметры которые точно указаны в списке или если списк ajaxPropValidate пуст
+	if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false
+		|| (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)
+	) {
 		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
 		if(isBeforeValidateAttribute==true) {
 			this.enableAjaxValidation = true;
@@ -43,6 +48,11 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 			}
 		});
 	}
+
+	//после проверки ставить на место, так как submit в конечном этоге отправить все данные для сохранения на сервере
+	if(isBeforeValidateAttribute==false) { //afterValidateAttribute
+		this.enableAjaxValidation = true;
+	}
 	';
 };
 $idForm = 'form'.$nameClassObjEdit;
@@ -51,7 +61,7 @@ $configForm = array(
 	'activeForm' => array(
 		//'class' => 'CActiveForm',
 		'id'=>$idForm,
-		'enableAjaxValidation' => true,
+		'enableAjaxValidation' => $is_validate_save_ajax,
 		'enableClientValidation' => true,
 		'clientOptions'=>array(
 			//event submit form
