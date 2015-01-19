@@ -17,6 +17,12 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 	//не отправлять каждый раз ajax
 	this.enableAjaxValidation = false;
 
+	//после валидации нужно
+	if(isBeforeValidateAttribute==false) {
+		//сделать поле с валидаторым пустым т.к при validate может уйти при сабмите, так как при событии валидации ajax предыдущего поля прописало туда свой параметр
+		$("#TestObjHeaders_validate_params").val("");
+	}
+
 	//если есть ограничение на поля которые точно работают ajax
 	if(spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1) {
 		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
@@ -128,7 +134,7 @@ echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_va
 
 //для объектов AR
 if($objEdit->isNewRecord==false) {
-	echo CHtml::textField($nameClassObjEdit . '[save_event]', 1);
+	echo CHtml::hiddenField($nameClassObjEdit . '[save_event]', 1);
 }
 //если объект сохранятся при событии на свойстве формы type, change то ему не нужна кнопка уже, но это не принципиально можно и оставить при желании
 //
