@@ -114,6 +114,10 @@ $configForm = array(
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value;
 						}
+						//если объект новый нужно очистить параметры для сохранения так как все параметры должны уйти для нового объекта
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) {
+							$("#TestObjHeaders_validate_params").val("");
+						}
 					}
 				});
 
