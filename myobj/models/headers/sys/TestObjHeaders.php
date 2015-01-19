@@ -28,6 +28,8 @@ class TestObjHeaders extends AbsBaseHeaders {
 	}
 
 	public function checkParam2($attributeName, $paramsConf) {
+		Yii::trace('checkParam2', 'MYOBJ_CMS_PLUS');
+
 		if(strlen($this->$attributeName) < 7) {
 			$this->addError($attributeName, 'error checkParam2 func');
 		}
