@@ -28,7 +28,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 			//только если это текущее свойство
 			if(this.name != attributeName) {
 				//только для safe свойств
-				if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
+				if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
 					$(this).prop("disabled", '.$orherIsDisabled.');
 				}
 			}
@@ -73,7 +73,7 @@ $configForm = array(
 				arr = [];
 				form.find("input, select, textarea").each(function() {
 					//только для safe свойств
-					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && $.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
+					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
 						//если значение поля отлично от ранее сохраненного
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=this.value) {
 							normalName = str.replace("'.$nameClassObjEdit.'[", ""); normalName = str.replace("]", "");
@@ -99,7 +99,7 @@ $configForm = array(
 					//если ошибок нет обновить стартовые параметры новыми данными
 					if(hasError==false) {
 						//только для safe свойств
-						if($.inArray(this.name, spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm, true)!=-1) {
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value;
 						}
 					}
