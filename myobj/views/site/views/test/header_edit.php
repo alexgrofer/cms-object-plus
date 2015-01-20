@@ -7,9 +7,9 @@ $nameClassObjEdit = get_class($objEdit);
 //conf
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = false;
-$is_validate_save_ajax = true;
+$is_validate_save_ajax = false;
 
-$functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit, $is_save_event) {
+$functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
 	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
 	isBeforeValidateAttribute = '.$orherIsDisabled.';
@@ -31,7 +31,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 		|| (spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true && spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)
 	) {
 		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
-		if(isBeforeValidateAttribute==true) {
+		if(isBeforeValidateAttribute==true && spaceMyFormEdit_'.$nameClassObjEdit.'.is_validate_save_ajax==true) {
 			this.enableAjaxValidation = true;
 		}
 
@@ -64,6 +64,10 @@ $configForm = array(
 			//event field
 			'validateOnType'=>true,
 			'validateOnChange'=>false,
+
+			/**
+			 * Все событийный скрипты работают только в случае если включен enableClientValidation !!!!!!!!!!!!
+			 */
 
 			//events
 			'beforeValidateAttribute'=>'js:function(form, attribute) {
@@ -164,6 +168,8 @@ foreach($objEdit->attributes as $k=>$v) {
 }
 ?>
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isNewObj = <?php echo ($objEdit->isNewRecord) ?'true':'false'; ?>;
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isSaveEvent = <?php echo ($is_save_event) ?'true':'false'; ?>;
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.is_validate_save_ajax = <?php echo ($is_validate_save_ajax) ?'true':'false'; ?>;
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
