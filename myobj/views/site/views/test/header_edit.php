@@ -6,8 +6,8 @@ $nameClassObjEdit = get_class($objEdit);
 
 //conf
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
-$is_save_event = false;
-$is_validate_save_ajax = false;
+$is_save_event = true;
+$is_validate_save_ajax = true;
 
 $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
 	return '
@@ -109,8 +109,11 @@ $configForm = array(
 			'afterValidate'=>'js:function(form, data, hasError) {
 				//событие после нажатия сабмита, получаем результат
 				form.find("input, select, textarea").each(function() {
-					//вернем все поля к disabled=false
-					$(this).prop("disabled", false);
+					//если были ошибки вернем свойства к нормальному состоянию disabled false, или всегда если это ajax валидация
+					if(hasError==true || spaceMyFormEdit_'.$nameClassObjEdit.'.is_validate_save_ajax==true) {
+						//вернем все поля к disabled=false если это ajax т.е форма не перегружается
+						$(this).prop("disabled", false);
+					}
 
 					//если ошибок нет обновить стартовые параметры новыми данными
 					if(hasError==false) {
