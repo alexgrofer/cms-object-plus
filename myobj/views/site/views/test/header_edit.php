@@ -32,9 +32,11 @@ $configForm = array(
 				this.enableAjaxValidation = false; //отключим аякс со свойства, так как НЕ на каждое это может быть нужно
 				//если включен enableAjaxValidation И (если свойство отмеченно в настройке ajaxPropValidate для валидации ajax ИЛИ если необходимо онлайн сохранение то для всех)
 				if(
-					spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true
+					spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true //только если включен enableAjaxValidation
 						&&
-					($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1 || spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true)
+					($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1 //если свойство есть в списке проверок ajax
+						||
+					spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) //если работаем в ражиме онлайн сохранения
 				) {
 					this.enableAjaxValidation = true; //установим аякс на свойство
 					attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
@@ -69,13 +71,13 @@ $configForm = array(
 						normalName = this.name.replace("'.$nameClassObjEdit.'[", ""); normalName = normalName.replace("]", "");
 
 						if(
-							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false //старый объект
 								&&
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=$.trim(this.value)) //значение свойства отличается от ранее сохраненного
 						||
-							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true //новый объект
 								&&
-							(spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true && spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1))
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true && (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)))
 						) {
 							arr.push(normalName); //добавить свойство в список на отправку в запросе
 						}
@@ -95,11 +97,12 @@ $configForm = array(
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value; //обновить стартовые параметры новыми данными
 						}
-						if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) { //если объект НОВЫЙ
-							$("#TestObjHeaders_validate_params").val(""); //будет полная валидация всех свойств на сервере
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) {
+							$(this).prop("disabled", false); //все данные уходят уже на сохранение
+							$("#TestObjHeaders_validate_params").val(""); //все проверяется вместе
 						}
 					}
-					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) {
+					else { //если были ошибки
 						$(this).prop("disabled", false);
 					}
 				});
