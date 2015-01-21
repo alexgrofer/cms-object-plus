@@ -54,7 +54,6 @@ $configForm = array(
 						$(this).prop("disabled", false); //вернем свойства к нормальному состоянию
 					}
 				});
-				this.enableAjaxValidation = true; //вернем аякс на свойство
 
 				return true;
 			}',
@@ -87,12 +86,9 @@ $configForm = array(
 
 			'afterValidate'=>'js:function(form, data, hasError) { //событие после отправки submit, получили результат
 				form.find("input, select, textarea").each(function() {
-					$(this).prop("disabled", false); //вернем свойства к нормальному состоянию
-					$("#TestObjHeaders_validate_params").val(""); //очистим поле свойств для выборочной валидации
-
-					if(hasError==false) { //если ошибок нет обновить стартовые параметры новыми данными
+					if(hasError==false && spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) { //если ошибок нет И это онлайн сохранение
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
-							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value;
+							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value; //обновить стартовые параметры новыми данными
 						}
 					}
 				});
