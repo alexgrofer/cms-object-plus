@@ -7,21 +7,21 @@ $nameClassObjEdit = get_class($objEdit);
 //conf
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = false;
-//валидация по отдельным полям ajax
-$is_validate_save_ajax = false;
+//включить ajax
+$enableAjaxValidation = false;
 
-$functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObjEdit) {
+$functionSetStrJS_AJAX_FIELD_EDIT = function($isBefore) use($nameClassObjEdit) {
 	return '
 	attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
-	isBeforeValidateAttribute = '.$orherIsDisabled.';
+	isBefore = '.$isBefore.';
 
 	//не отправлять каждый раз ajax для этого свойства
-	if(isBeforeValidateAttribute==true && spaceMyFormEdit_'.$nameClassObjEdit.'.is_validate_save_ajax==true) { //beforeValidateAttribute
+	if(isBefore==true && spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true) { //beforeValidateAttribute
 		this.enableAjaxValidation = false;
 	}
 
 	//после валидации нужно
-	if(isBeforeValidateAttribute==false) {
+	if(isBefore==false) {
 		//сделать поле с валидаторым пустым т.к при validate может уйти при сабмите, так как при событии валидации ajax предыдущего поля прописало туда свой параметр
 		$("#TestObjHeaders_validate_params").val("");
 	}
@@ -32,7 +32,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 		|| (spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true && spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)
 	) {
 		//установим признак что поле должно отправлятся ajax всегда, достаточно делать в beforeValidateAttribute
-		if(isBeforeValidateAttribute==true && spaceMyFormEdit_'.$nameClassObjEdit.'.is_validate_save_ajax==true) {
+		if(isBefore==true && spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true) {
 			this.enableAjaxValidation = true;
 		}
 
@@ -41,7 +41,7 @@ $functionSetStrJS_AJAX_FIELD_EDIT = function($orherIsDisabled) use($nameClassObj
 			if(this.name != attributeName) {
 				//только для safe свойств
 				if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) {
-					$(this).prop("disabled", '.$orherIsDisabled.');
+					$(this).prop("disabled", '.$isBefore.');
 				}
 			}
 			else{ //добавить в массив поле которое должно уйти в редактирование - ЭТО текущее поле
@@ -57,7 +57,7 @@ $configForm = array(
 	'activeForm' => array(
 		//'class' => 'CActiveForm',
 		'id'=>$idForm,
-		'enableAjaxValidation' => $is_validate_save_ajax,
+		'enableAjaxValidation' => $enableAjaxValidation,
 		'enableClientValidation' => true,
 		'clientOptions'=>array(
 			//event submit form
@@ -73,13 +73,14 @@ $configForm = array(
 			//events
 			'beforeValidateAttribute'=>'js:function(form, attribute) {
 				//событие на свойстве (type или change) до валидации
+				'.($enableAjaxValidation)?$functionSetStrJS_AJAX_FIELD_EDIT('true'):''.'
 
 				return true;
 			}',
 
 			'afterValidateAttribute'=>'js:function(form, attribute, data, hasError) {
 				//событие на свойстве (type или change) после валидации, получаем результат
-
+				'.($enableAjaxValidation)?$functionSetStrJS_AJAX_FIELD_EDIT('false'):''.'
 
 				return true;
 			}',
@@ -165,7 +166,6 @@ foreach($objEdit->attributes as $k=>$v) {
 }
 ?>
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isNewObj = <?php echo ($objEdit->isNewRecord) ?'true':'false'; ?>;
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.is_validate_save_ajax = <?php echo ($is_validate_save_ajax) ?'true':'false'; ?>;
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
