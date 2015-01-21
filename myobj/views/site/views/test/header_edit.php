@@ -7,7 +7,7 @@ $nameClassObjEdit = get_class($objEdit);
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = true;
 //включить ajax
-$enableAjaxValidation = true;
+$enableAjaxValidation = false;
 
 $idForm = 'form'.$nameClassObjEdit;
 $configForm = array(
@@ -21,7 +21,7 @@ $configForm = array(
 			//event submit form
 			'validateOnSubmit'=>true,
 			//event field
-			'validateOnType'=>true,
+			'validateOnType'=>false,
 			'validateOnChange'=>false,
 
 			/**
@@ -101,11 +101,21 @@ $configForm = array(
 							$(this).prop("disabled", false); //все данные уходят уже на сохранение
 							$("#TestObjHeaders_validate_params").val(""); //все проверяется вместе
 						}
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) {
+							$(this).prop("disabled", false);
+						}
 					}
 					else { //если были ошибки
 						$(this).prop("disabled", false);
 					}
 				});
+
+				if(hasError==false) {
+					if(spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) {
+						alert("save ok");
+						return false;
+					}
+				}
 
 				return true; //если false не будет отправленна на контроллер
 			}',
