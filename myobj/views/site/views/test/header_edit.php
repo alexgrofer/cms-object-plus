@@ -30,8 +30,8 @@ $configForm = array(
 
 			'beforeValidateAttribute'=>'js:function(form, attribute) { //событие на свойстве (type или change) до валидации
 				this.enableAjaxValidation = false; //отключим аякс со свойства, так как НЕ на каждое это может быть нужно
-				//если свойство отмеченно в настройке ajaxPropValidate для валидации ajax
-				if($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1) {
+				//если свойство отмеченно в настройке ajaxPropValidate для валидации ajax ИЛИ если необходимо онлайн сохранение
+				if($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1 || spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) {
 					this.enableAjaxValidation = true; //установим аякс на свойство
 				}
 				attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
@@ -117,8 +117,10 @@ foreach($form->getElements() as $element) {
 
 //start user edit form
 echo CHtml::textField($nameClassObjEdit.'[validate_params]', $validate_params_value);
-
-
+//защита от неправильной настройки is_save_event в случае если это новый объект
+if($is_save_event && $objEdit->isNewRecord) {
+	$is_save_event = false;
+}
 echo CHtml::hiddenField($nameClassObjEdit . '[save_event]', (int)$is_save_event);
 //если объект сохранятся при событии на свойстве формы type, change то ему не нужна кнопка уже, но это не принципиально можно и оставить при желании
 //
@@ -138,6 +140,7 @@ foreach($objEdit->attributes as $k=>$v) {
 }
 ?>
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isNewObj = <?php echo ($objEdit->isNewRecord) ?'true':'false'; ?>;
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.is_save_event = <?php echo ($is_save_event) ?'true':'false'; ?>;
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
