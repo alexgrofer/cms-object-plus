@@ -5,9 +5,9 @@ echo CHtml::link('create new obj', yii::app()->createUrl('myobj/test/header_edit
 $nameClassObjEdit = get_class($objEdit);
 
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
-$is_save_event = false;
+$is_save_event = true;
 //включить ajax
-$enableAjaxValidation = false;
+$enableAjaxValidation = true;
 
 $idForm = 'form'.$nameClassObjEdit;
 $configForm = array(
@@ -68,17 +68,18 @@ $configForm = array(
 					if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
 						normalName = this.name.replace("'.$nameClassObjEdit.'[", ""); normalName = normalName.replace("]", "");
 
-						if( //Отправим только определенные свойства на сервер в запросе
-						//если объект СУЩЕСТВУЕТ в базе И значение свойства отличается от ранее сохраненного
-						(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false && spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=$.trim(this.value))
-							||
-						//если объект НОВЫЙ И свойство должно быть проверенно ajax-ом
-						//--после проверки будет получен результат и уже все данные уйдут на сохранение
-						(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true && (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1))
+						if(
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==false
+								&&
+							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name]!=$.trim(this.value)) //значение свойства отличается от ранее сохраненного
+						||
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true
+								&&
+							(spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true && spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1))
 						) {
 							arr.push(normalName); //добавить свойство в список на отправку в запросе
 						}
-						else { //остальные сделаем disabled
+						else {
 							$(this).prop("disabled", true);
 						}
 					}
@@ -90,7 +91,6 @@ $configForm = array(
 
 			'afterValidate'=>'js:function(form, data, hasError) { //событие после отправки submit, получили результат
 				form.find("input, select, textarea").each(function() {
-					$(this).prop("disabled", false); //вернем свойства к нормальному состоянию
 					if(hasError==false) { //если ошибок нет
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
 							spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] = this.value; //обновить стартовые параметры новыми данными
@@ -98,6 +98,9 @@ $configForm = array(
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) { //если объект НОВЫЙ
 							$("#TestObjHeaders_validate_params").val(""); //будет полная валидация всех свойств на сервере
 						}
+					}
+					if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) {
+						$(this).prop("disabled", false);
 					}
 				});
 
