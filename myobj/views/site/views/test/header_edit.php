@@ -7,7 +7,7 @@ $nameClassObjEdit = get_class($objEdit);
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = true;
 //включить ajax
-$enableAjaxValidation = false;
+$enableAjaxValidation = true;
 
 $idForm = 'form'.$nameClassObjEdit;
 $configForm = array(
@@ -21,7 +21,7 @@ $configForm = array(
 			//event submit form
 			'validateOnSubmit'=>true,
 			//event field
-			'validateOnType'=>false,
+			'validateOnType'=>true,
 			'validateOnChange'=>false,
 
 			/**
@@ -55,6 +55,25 @@ $configForm = array(
 			}',
 
 			'afterValidateAttribute'=>'js:function(form, attribute, data, hasError) { //событие на свойстве (type или change) после валидации, получаем результат
+				if(spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) { //при онлайн редактировании
+					if(hasError==true) { //если была ошибка
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'["errors_save_event"] == undefined) { //определим массив ошибок онлайн редактирования
+							spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event = {};
+						}
+						spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name] = 1; //добавим в массив ошибоку
+						$("#TestObjHeaders_save_event").val(0); // запретим онлайн редактирование
+					}
+					else if(spaceMyFormEdit_'.$nameClassObjEdit.'["errors_save_event"] != undefined) { //если ошибки нет И были на других полях
+						if(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name] != undefined) { //если на этом поле была ошибка
+							delete(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name]); // удалим ее из массива
+						}
+						if($.isEmptyObject(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event)) { //если ошибок больше нет
+							$("#TestObjHeaders_save_event").val(1); // включим онлайн редактировани
+							$(form).trigger("submit"); //отправим форму целиком по сабмиту
+							delete(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event); //удалим сам массив
+						}
+					}
+				}
 				form.find("input, select, textarea").each(function() {
 					if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
 						$(this).prop("disabled", false); //вернем свойства к нормальному состоянию
@@ -80,6 +99,8 @@ $configForm = array(
 							(spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true && (spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate.length == 0 || $.inArray(normalName, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1)))
 						) {
 							arr.push(normalName); //добавить свойство в список на отправку в запросе
+
+							$(this).prop("disabled", false); //если при онлайн валидации происходили ошибки может быть disabled, нужно сделать видимым
 						}
 						else {
 							$(this).prop("disabled", true);
