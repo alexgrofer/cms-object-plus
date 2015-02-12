@@ -1,8 +1,29 @@
 <?php
+/*
+// как для моделей так и для объектов одинаково
+$objects = array(
+	'кодовое название класса или алиас модели' => array(
+		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
+		'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
+		'relation' => array(
+			'название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас),
+		),
+		'namemodel' => 'название модели даже если это заголовок',
+		'group_read' => 'группа для чтения',
+		'group_write' => 'группа для записи',
+		'controller' => array('usernav'=>'nav_sys.php','default'=>''), //возмодные контроллеры require
+		'editForm' => array('name','vp1','content'), //в админке видим только эти поля
+		//название дополнительных колонок в дочерней таблице MANY_MANY которые можем править при редактировании связанного объекта
+		'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
+		'witch' => array('relattest', 'relattest.relattest2'), @todo сделать возможность witch
+		'cols_props' => array('text_news_example'=>'text_news_example','annotation_news_example'=>'annotation_news_example'), //колонки-свойства объектов
+		'find' => array('id', 'text_news_example__prop', 'annotation_news_example__prop'), //поиска в меню
+		'order_by' => array('id','name', 'text_news_example__prop', 'annotation_news_example__prop'), //сортировка в меню
+		'order_by_def' => array('text_news_example__prop desc'), //сортировка по умолчанию
+	),
+*/
 $objects = array(
 	'handle_sys' => array(
-		//'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
-		//'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'relation' => array(
 			'template'=>array('templates_sys', 'handles', true),
 			'view'=>array('views_sys', 'handles', true),
@@ -12,16 +33,12 @@ $objects = array(
 		'group_write' => 'administrator',
 	),
 	'navigation_sys' => array(
-		//'cols' => array('id'=>'id','name'=>'name','vp2'=>'codename','vp3'=>'action','vp1'=>'top','bp1'=>'visible','sort'=>'sort'),
-		//'AttributeLabels' => array('vp2'=>'codename','content'=>'description','vp1'=>'top','vp3'=>'controller action','bp1'=>'visible'),
 		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
-		//'relation' => array('test_relat_objcts'=>array('testtablehm','myobjheader')),
 		'relation' => array(
 			'templateDefault'=>array('templates_sys', 'navigationsDef', true),
 			'templateMobileDefault'=>array('templates_sys', 'navigationsMobileDef', true),
 			'params'=>array('param_sys', 'navigate', true),
 		),
-		//array('название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас)
 		'namemodel' => 'NavigateSystemObjHeaders',
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
@@ -32,10 +49,6 @@ $objects = array(
 		'group_write' => 'administrator',
 	),
 	'templates_sys' => array(
-		//'cols' => array('id'=>'id','name'=>'name template','vp1'=>'patch'),
-		//'AttributeLabels' => array('vp1'=>'patch_template', 'content'=>'description'),
-		//'editForm' => array('name','vp1','content'), //в админке видим только поля
-		//'relation' => array('myobjheader'=>array('news_example','test_relat_objcts')),
 		'relation' => array(
 			'navigationsDef'=>array('navigation_sys','templateDefault', true),
 			'navigationsMobileDef'=>array('navigation_sys','templateMobileDefault', true),
@@ -46,9 +59,6 @@ $objects = array(
 		'group_write' => 'administrator',
 	),
 	'views_sys' => array(
-		//'cols' => array('id'=>'id','name'=>'name view','content'=>'description','vp1'=>'patch',),
-		//'AttributeLabels' => array('vp1'=>'patch_view', 'content'=>'description'),
-		//'editForm' => array('name','vp1','content','edit_file_template'),
 		'relation' => array(
 			'handles'=>array('handle_sys','view', true),
 		),

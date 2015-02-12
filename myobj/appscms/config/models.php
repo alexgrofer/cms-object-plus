@@ -2,19 +2,15 @@
 $models = array(
 	'classes' => array(
 		'namemodel' => 'uClasses',
-		//'witch' => array('relattest', 'relattest.relattest2'), @todo сделать возможность witch
 		'relation' => array('properties'=>array('properties','classes'), 'association'=>array('classes','association')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','tablespace'=>'tablespace','objectCount'=>'countObj',),
 		'order_by_def' => array('id desc'),
-		//название дополнительных колонок в дочерней таблице MANY_MANY
-		//'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),
 	'properties' => array(
 		'namemodel' => 'objProperties',
 		'relation' => array('classes'=>array('classes','properties')),
-		//'selfobjrelationElements' => array('classes'=>array('test', 'test2')),
 		'cols' => array('id'=>'id','name'=>'name','codename'=>'codename','myfield'=>'type'),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
