@@ -26,8 +26,10 @@ class uClasses extends AbsBaseModel
 		return array_merge($rules, array(
 			array('name,  codename', 'required'),
 			array('name', 'length', 'max'=>255),
-			array('codename', 'length', 'max'=>30),
-			array('codename', 'unique', 'on'=>'insert', 'attributeName'=>'codename', 'className'=>get_class($this),'caseSensitive' =>'false'),
+
+			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
+			array('codename', 'unique', 'attributeName'=>'codename', 'className'=>get_class($this), 'allowEmpty'=>false, 'allowEmpty'=>false),
+
 			array('tablespace', 'default', 'value'=>1),
 			array('description', 'default', 'value'=>''),
 			array('tablespace', 'numerical'),

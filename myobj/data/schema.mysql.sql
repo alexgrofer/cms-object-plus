@@ -2,7 +2,7 @@
 CREATE TABLE `setcms_uclasses` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`codename` varchar(30) NOT NULL,
+	`codename` varchar(255) NOT NULL,
 	`description` varchar(255) NOT NULL,
 	`tablespace` smallint(5) unsigned NOT NULL,
 	PRIMARY KEY (`id`),
@@ -20,7 +20,7 @@ CREATE TABLE `setcms_uclasses_association` (
 CREATE TABLE `setcms_objproperties` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`codename` varchar(30) NOT NULL,
+	`codename` varchar(255) NOT NULL,
 	`description` varchar(255) NOT NULL,
 	`myfield` smallint(5) unsigned NOT NULL,
 	`minfield` varchar(4) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 	`uclass_id` int(11) NOT NULL,
 	-- more options
 	`name` varchar(255) NOT NULL,
-	`content` longtext NOT NULL,
+	`content` text NOT NULL,
 	`sort` int(11) DEFAULT NULL,
 	`vp1` varchar(255) NULL,
 	`vp2` varchar(255) NULL,
@@ -197,7 +197,7 @@ CREATE TABLE `setcms_linksobjectssystemhandle` (
 CREATE TABLE `setcms_user` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`login` VARCHAR(255) NOT NULL,
-	`password` VARCHAR(32) NOT NULL,
+	`password` VARCHAR(255) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

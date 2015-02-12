@@ -28,8 +28,8 @@ class objProperties extends AbsBaseModel
 			array('name, codename, myfield', 'required'),
 			array('name, description, udefault', 'length', 'max'=>255),
 
-			array('codename', 'length', 'max'=>30),
-			array('codename', 'unique', 'on'=>'insert', 'attributeName'=>'codename', 'className'=>get_class($this),'caseSensitive' =>'false'),
+			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
+			array('codename', 'unique', 'on'=>'insert', 'attributeName'=>'codename', 'className'=>get_class($this), 'allowEmpty'=>false, 'allowEmpty'=>false),
 			array('minfield, maxfield', 'length', 'max'=>4),
 
 			array('description, minfield, maxfield, setcsv', 'default', 'value'=>''),

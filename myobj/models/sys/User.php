@@ -20,9 +20,9 @@ class User extends AbsBaseModel
 		$rules = parent::defaultRules();
 		return array_merge($rules, array(
 			array('login, password, email', 'required'),
-			array('login, password, email', 'length', 'max'=>128),
+			array('login, password, email', 'length', 'max'=>255),
 			array('email', 'email'),
-			array('login, email', 'unique',  'on'=>'insert', 'className'=>get_class($this),'caseSensitive' =>'false'),
+			array('login, email', 'unique', 'className'=>get_class($this), 'allowEmpty'=>false, 'allowEmpty'=>false),
 		));
 	}
 	protected function beforeSave() {
