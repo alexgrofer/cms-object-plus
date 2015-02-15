@@ -12,10 +12,17 @@ class AppCMS extends CComponent {
 		return $this->config;
 	}
 	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.create
+		Yii::import('MYOBJ.appscms.api.utils', true);
+
+		//import
+		apicms\utils\importRecursName('MYOBJ.appscms.config.admin','import_*',true);
+
 		//buils main cms config
 		$name_file_config = YII_DEBUG ? 'main.php' : 'main_debug.php';
 		$name__admin_file_config = YII_DEBUG ? 'main_admin.php' : 'main_admin_debug.php';
+
 		$this->config = apicms\utils\importRecursName('MYOBJ.appscms.config',$name_file_config,true,true);
+
 		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
 		//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
 		if(isset($routeArr[1])) {
