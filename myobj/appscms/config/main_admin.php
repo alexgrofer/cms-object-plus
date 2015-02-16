@@ -20,9 +20,9 @@ $tables_db_dump = array(
 	'setcms_uclasses_objproperties',
 );
 
-$ui = apicms\utils\importRecursName('MYOBJ.appscms.config','UI.php',true,true);
-$menu = apicms\utils\importRecursName('MYOBJ.appscms.config','menu.php',true,true);
-$none_del = apicms\utils\importRecursName('MYOBJ.appscms.config','nonedel.php',true,true);
+$ui = SysUtils::importRecursName('MYOBJ.appscms.config','UI.php',true,true);
+$menu = SysUtils::importRecursName('MYOBJ.appscms.config','menu.php',true,true);
+$none_del = SysUtils::importRecursName('MYOBJ.appscms.config','nonedel.php',true,true);
 
 $main_admin = array(
 	'controlui' => array(
@@ -40,7 +40,7 @@ $main_admin = array(
 
 //возможно дополнение конфигурации $main_admin дополнительными пользовательскими параметрами
 Yii::app()->params['api_conf_main_user_admin'] = array();
-apicms\utils\importRecursName('MYOBJ.appscms.config.user','main_admin_*',true);
+SysUtils::importRecursName('MYOBJ.appscms.config.user','main_admin_*',true);
 $main_user = Yii::app()->params['api_conf_main_user_admin'];
 $main_admin['user_conf_admin'] = $main_user;
 unset(Yii::app()->params['api_conf_main_user_admin']);

@@ -7,7 +7,7 @@ $arrayuirow['new'] = $this->dicturls['class'].'/'.$this->dicturls['paramslist'][
 $arrayuirow['remove'] = $this->dicturls['class'].'/class/'.$this->dicturls['paramslist'][1].'/action/remove/';
 
 
-$listobjsort = apicms\utils\treelem($objectsNavigate,null,'id','parent_id',function($str) {return $str.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';});
+$listobjsort = SysUtils::treelem($objectsNavigate,null,'id','parent_id',function($str) {return $str.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';});
 
 ?>
 <a class="btn" href="<?=$this->createAdminUrl($arrayuirow['new'])?>">new object</a>

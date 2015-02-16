@@ -1,6 +1,13 @@
 <?php
-list($objects,$set_spaces) = apicms\utils\importRecursName('MYOBJ.appscms.config','objects.php',true);
-$models = apicms\utils\importRecursName('MYOBJ.appscms.config','models.php',true);
+$objects = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','objects_*',true)
+);
+$models = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','models_*',true)
+);
+$spaces = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','spaces_obj_*',true)
+);
 
 $main = array(
 	'controlui' => array(
@@ -9,7 +16,7 @@ $main = array(
 			'models' => $models,
 		),
 	),
-	'spacescl' => $set_spaces,
+	'spacescl' => $spaces,
 	'TYPES_MYFIELDS_CHOICES' => array(
 		'1'=>'str',
 		'2'=>'text',
@@ -56,10 +63,4 @@ datetimeFormat=>yyyy-MM-dd hh:mm:ss
 'sys_db_type_InnoDB'=>false, //использовать если в системе нет поддержки внешних ключей
 );
 
-//возможно дополнение конфигурации $main дополнительными пользовательскими параметрами
-Yii::app()->params['api_conf_main_user'] = array();
-apicms\utils\importRecursName('MYOBJ.appscms.config.user','main_*',true);
-$main_user = Yii::app()->params['api_conf_main_user'];
-$main['user_conf'] = $main_user;
-unset(Yii::app()->params['api_conf_main_user']);
 return $main;

@@ -10,10 +10,12 @@ class MyobjModule extends CWebModule
 
 		Yii::setPathOfAlias('MYOBJ', dirname(__FILE__));
 
+		$isAdminUI = true;
+
 		yii::app()->setComponents(array(
 			'appcms'=>array(
 				'class' =>'MYOBJ.components.cms.AppCMS',
-				'isTest'=>false,
+				'isAdminUI'=>$isAdminUI,
 			)
 		));
 		yii::app()->appcms->init();

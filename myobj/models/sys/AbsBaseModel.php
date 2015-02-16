@@ -364,7 +364,7 @@ abstract class AbsBaseModel extends CActiveRecord
 					$className = $relation->className;
 					$namePRKey = $className::model()->primaryKey();
 					$criteria = new CDbCriteria();
-					$criteria->addInCondition($namePRKey, \apicms\utils\arrvaluesmodel($this->$nameRelation(new CDbCriteria(array('select' => $namePRKey))), $namePRKey));
+					$criteria->addInCondition($namePRKey, \SysUtils::arrvaluesmodel($this->$nameRelation(new CDbCriteria(array('select' => $namePRKey))), $namePRKey));
 					$className::model()->deleteAll($criteria);
 				}
 			}
