@@ -1,6 +1,5 @@
 <?php
-//sys
-$menu = array(
+return array(
 	'classes'=>array('label'=>'classes', 'url'=>array('admin/objects/models/classes'),
 		'items'=>array(
 			'properties'=>array('label'=>'properties', 'url'=>array('admin/objects/models/properties')),
@@ -27,10 +26,3 @@ $menu = array(
 	),
 	'logout'=>array('label'=>'logout ('.Yii::app()->user->name.')', 'url'=>array('admin/logout/')),
 );
-
-
-Yii::app()->params['api_conf_menu'] = $menu;
-apicms\utils\importRecursName('MYOBJ.appscms.config.user','menu_*',true);
-$menu = Yii::app()->params['api_conf_menu'];
-unset(Yii::app()->params['api_conf_menu']);
-return $menu;

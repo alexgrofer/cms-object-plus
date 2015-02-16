@@ -1,9 +1,6 @@
 <?php
-defined('DIR_TEMPLATES_SITE') or define('DIR_TEMPLATES_SITE', '/site/templates/');
-defined('DIR_VIEWS_SITE') or define('DIR_VIEWS_SITE', '/site/views/');
-
-list($objects,$set_spaces) = apicms\utils\importRecursName('MYOBJ.appscms.config','objects.php',true,true);
-$models = apicms\utils\importRecursName('MYOBJ.appscms.config','models.php',true,true);
+list($objects,$set_spaces) = apicms\utils\importRecursName('MYOBJ.appscms.config','objects.php',true);
+$models = apicms\utils\importRecursName('MYOBJ.appscms.config','models.php',true);
 
 $main = array(
 	'controlui' => array(

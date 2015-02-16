@@ -1,5 +1,5 @@
 <?php
-$menu_user = array(
+return array(
 	'catalog'=>array('label'=>'catalog',
 		'items'=>array(
 			'category'=>array('label'=>'category', 'url'=>array('admin/objects/models/catalog_category')),
@@ -12,5 +12,3 @@ $menu_user = array(
 		),
 	),
 );
-
-Yii::app()->params['api_conf_menu'] =  array_merge(Yii::app()->params['api_conf_menu'],$menu_user);

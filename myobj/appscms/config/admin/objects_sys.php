@@ -1,8 +1,10 @@
 <?php
-/*
-// как для моделей так и для объектов одинаково
-$objects = array(
-	'кодовое название класса или алиас модели' => array(
+return array(
+	/*
+	 * objects
+	// как для моделей так и для объектов одинаково
+	array(
+		'кодовое название класса или алиас модели' => array(
 		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
 		'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'relation' => array(
@@ -21,90 +23,82 @@ $objects = array(
 		'order_by' => array('id','name', 'text_news_example__prop', 'annotation_news_example__prop'), //сортировка в меню
 		'order_by_def' => array('text_news_example__prop desc'), //сортировка по умолчанию
 	),
-*/
-$objects = array(
-	'handle_sys' => array(
-		'relation' => array(
-			'template'=>array('templates_sys', 'handles', true),
-			'view'=>array('views_sys', 'handles', true),
+	*/
+	'objects' => array(
+		'handle_sys' => array(
+			'relation' => array(
+				'template'=>array('templates_sys', 'handles', true),
+				'view'=>array('views_sys', 'handles', true),
+			),
+			'namemodel' => 'HandleSystemObjHeaders',
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
 		),
-		'namemodel' => 'HandleSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'navigation_sys' => array(
-		'controller' => array('usernav'=>'nav_sys.php','default'=>''),
-		'relation' => array(
-			'templateDefault'=>array('templates_sys', 'navigationsDef', true),
-			'templateMobileDefault'=>array('templates_sys', 'navigationsMobileDef', true),
-			'params'=>array('param_sys', 'navigate', true),
+		'navigation_sys' => array(
+			'controller' => array('usernav'=>'nav_sys.php','default'=>''),
+			'relation' => array(
+				'templateDefault'=>array('templates_sys', 'navigationsDef', true),
+				'templateMobileDefault'=>array('templates_sys', 'navigationsMobileDef', true),
+				'params'=>array('param_sys', 'navigate', true),
+			),
+			'namemodel' => 'NavigateSystemObjHeaders',
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
 		),
-		'namemodel' => 'NavigateSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'groups_sys' => array(
-		'namemodel' => 'GroupSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'templates_sys' => array(
-		'relation' => array(
-			'navigationsDef'=>array('navigation_sys','templateDefault', true),
-			'navigationsMobileDef'=>array('navigation_sys','templateMobileDefault', true),
-			'handles'=>array('handle_sys','template', true),
+		'groups_sys' => array(
+			'namemodel' => 'GroupSystemObjHeaders',
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
 		),
-		'namemodel' => 'TemplateSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'views_sys' => array(
-		'relation' => array(
-			'handles'=>array('handle_sys','view', true),
+		'templates_sys' => array(
+			'relation' => array(
+				'navigationsDef'=>array('navigation_sys','templateDefault', true),
+				'navigationsMobileDef'=>array('navigation_sys','templateMobileDefault', true),
+				'handles'=>array('handle_sys','template', true),
+			),
+			'namemodel' => 'TemplateSystemObjHeaders',
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
 		),
-		'namemodel' => 'ViewSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
+		'views_sys' => array(
+			'relation' => array(
+				'handles'=>array('handle_sys','view', true),
+			),
+			'namemodel' => 'ViewSystemObjHeaders',
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
+		),
+		'param_sys' => array(
+			'namemodel' => 'ParamSystemObjHeaders',
+			'relation' => array('navigate'=>array('navigation_sys', 'params', true)),
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
+		),
+		'db_dump_sys' => array(
+			'cols' => array('id'=>'id','name'=>'name'),
+			'AttributeLabels' => array('vp1'=>'patch'),
+			'group_read' => 'administrator',
+			'group_write' => 'administrator',
+		),
 	),
-	'param_sys' => array(
-		'namemodel' => 'ParamSystemObjHeaders',
-		'relation' => array('navigate'=>array('navigation_sys', 'params', true)),
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'db_dump_sys' => array(
-		'cols' => array('id'=>'id','name'=>'name'),
-		'AttributeLabels' => array('vp1'=>'patch'),
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
+	/*
+	 * spaces
+	 * namemodel -название модели таблицы в которой лежат объекты
+	 * --обобщенные классы
+	 * Класс в пространстве Header которого могут храниться разные классы (т.е в одной таблице)
+	 * nameModelLinks - модель типов ссылок, может быть несколько, по умолчанию AbsBaseHeaders::NAME_TYPE_LINK_BASE
+	 */
+	'spaces' => array(
+		'1' => array('namemodel'=>'MyObjHeaders','nameModelLinks'=>['base'=>'linksObjectsMy']), //пользовательские обобщенные классы
+		'2' => array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']), //системные обобщенные классы
+		//модели можно хранить в отдельных таблицах при необходимости
+		'3' => array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem', 'handle' => 'linksObjectsSystemHandle']),
+		'4' => array('namemodel'=>'ParamSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsSystem']),
+		'5' => array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['base'=>'linksObjectsSystem']),
+		'6' => array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['base'=>'linksObjectsSystem']),
+		'7' => array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']),
+		'8' => array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsSystem']),
+		//test
+		'9' => array('namemodel'=>'TestObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsMy']),
 	),
 );
-/*
- * namemodel -название модели таблицы в которой лежат объекты
- * --обобщенные классы
- * Класс в пространстве Header которого могут храниться разные классы (т.е в одной таблице)
- * nameModelLinks - модель типов ссылок, может быть несколько, по умолчанию AbsBaseHeaders::NAME_TYPE_LINK_BASE
- */
-$set_spaces['1'] = array('namemodel'=>'MyObjHeaders','nameModelLinks'=>['base'=>'linksObjectsMy']); //пользовательские обобщенные классы
-$set_spaces['2'] = array('namemodel'=>'SystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']); //системные обобщенные классы
-/*
- * модели можно хранить в отдельных таблицах при необходимости
- */
-$set_spaces['3'] = array('namemodel'=>'NavigateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem', 'handle' => 'linksObjectsSystemHandle']);
-$set_spaces['4'] = array('namemodel'=>'ParamSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsSystem']);
-$set_spaces['5'] = array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['base'=>'linksObjectsSystem']);
-$set_spaces['6'] = array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['base'=>'linksObjectsSystem']);
-$set_spaces['7'] = array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']);
-$set_spaces['8'] = array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsSystem']);
-
-//test
-$set_spaces['9'] = array('namemodel'=>'TestObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsMy']);
-
-Yii::app()->params['api_conf_objects'] = $objects;
-Yii::app()->params['api_conf_spaces'] = $set_spaces;
-
-apicms\utils\importRecursName('MYOBJ.appscms.config.user','objects_*',true);
-$objects = Yii::app()->params['api_conf_objects'];
-$set_spaces = Yii::app()->params['api_conf_spaces'];
-unset(Yii::app()->params['api_conf_objects']);
-return array($objects,$set_spaces);

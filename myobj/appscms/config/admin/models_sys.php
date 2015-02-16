@@ -1,5 +1,5 @@
 <?php
-$models = array(
+return array(
 	'classes' => array(
 		'namemodel' => 'uClasses',
 		'relation' => array('properties'=>array('properties','classes'), 'association'=>array('classes','association')),
@@ -38,10 +38,3 @@ $models = array(
 		'group_write' => 'administrator',
 	),
 );
-
-Yii::app()->params['api_conf_models'] = $models;
-
-apicms\utils\importRecursName('MYOBJ.appscms.config.user','models_*',true);
-$models = Yii::app()->params['api_conf_models'];
-unset(Yii::app()->params['api_conf_models']);
-return $models;

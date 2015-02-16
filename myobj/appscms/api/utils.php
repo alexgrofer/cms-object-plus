@@ -89,16 +89,14 @@ function GUID()
 
 	return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 }
-function importRecursName($alias,$mask=false,$forceInclude=false,$isreturn=false) {
-	$path=\Yii::getPathOfAlias($alias);
-	$path_find=$path.DIRECTORY_SEPARATOR.$mask;
-	$func = function($normal_name) use($forceInclude) {\Yii::import($normal_name,$forceInclude);};
-	$array = ($mask)?glob($path_find):array($alias);
-	foreach ($array as $filename) {
-		$normal_name = substr($filename,0,strrpos($filename, '.'));
-		if($isreturn) return require($filename);
-		$func($normal_name);
+function importRecursName($alias,$fileName=false,$isReturn=false) {
+	$path = \yii::getPathOfAlias($alias);
+	$arr_glob_files = glob($path.DIRECTORY_SEPARATOR.$fileName);$r_a=array();
+	foreach($arr_glob_files as $file) {
+		$out = require($file);
+		if($isReturn) $r_a[] = $out;
 	}
+	if($r_a) return (count($r_a)>1)?$r_a:$r_a[0];
 }
 
 function normalAliasModel($name_ModelORClass) {
