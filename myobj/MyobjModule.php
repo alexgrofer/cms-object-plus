@@ -10,7 +10,9 @@ class MyobjModule extends CWebModule
 
 		Yii::setPathOfAlias('MYOBJ', dirname(__FILE__));
 
-		$isAdminUI = true;
+		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
+		//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
+		$isAdminUI = ($routeArr[1] == 'admin')?true:false;
 
 		yii::app()->setComponents(array(
 			'appcms'=>array(

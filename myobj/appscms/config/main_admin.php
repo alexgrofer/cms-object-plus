@@ -20,26 +20,36 @@ $tables_db_dump = array(
 	'setcms_uclasses_objproperties',
 );
 
+$objects = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','objects_*',true)
+);
+
+$models = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','models_*',true)
+);
+
 $ui = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.admin','UI_*',true)
 );
+
 $menu = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.admin','menu_*',true)
 );
+
 $none_del = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.admin','nonedel_*',true)
-);
-$spaces = SysUtils::array_array_merge(
-	SysUtils::importRecursName('MYOBJ.appscms.config.all','spaces_obj_*',true)
 );
 
 $main_admin = array(
 	'controlui' => array(
+		'objects' => array( //columns header type model, controller inside myobj/controllers/cms
+			'conf_ui_classes' => $objects,
+			'models' => $models,
+		),
 		'ui' => $ui,
 		'menu' => $menu,
 		'none_del' => $none_del,
 	),
-	'spacescl' => $spaces,
 
 	'path_db_dump_files' => 'dbdump',
 	'path_db_dump_tables' => $tables_db_dump,

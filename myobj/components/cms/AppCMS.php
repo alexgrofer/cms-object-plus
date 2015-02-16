@@ -1,8 +1,8 @@
 <?php
 class AppCMS extends CComponent {
 	private $isAdminUI;
-	public function setIsAdminUI() {
-		if(is_null($this->isAdminUI)) $this->isAdminUI;
+	public function setIsAdminUI($isAdminUI) {
+		if(is_null($this->isAdminUI)) $this->isAdminUI = $isAdminUI;
 	}
 	public function getIsAdminUI() {
 		return $this->isAdminUI;
@@ -24,12 +24,8 @@ class AppCMS extends CComponent {
 
 		$this->config = SysUtils::importRecursName('MYOBJ.appscms.config','main_all.php',true,true);
 
-		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
-		//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
-		if(isset($routeArr[1])) {
-			if ($routeArr[1] == 'admin') {
-					$this->config = array_merge_recursive($this->config, SysUtils::importRecursName('MYOBJ.appscms.config', 'main_admin.php', true, true));
-			}
+		if($this->isAdminUI) {
+			$this->config = array_merge_recursive($this->config, SysUtils::importRecursName('MYOBJ.appscms.config', 'main_admin.php', true, true));
 		}
 	}
 }
