@@ -1,7 +1,6 @@
 <?php
 Yii::import('MYOBJ.appscms.src.*');
 
-Yii::import('MYOBJ.appscms.core.base.*');
 Yii::import('MYOBJ.appscms.core.business.sys.*');
 Yii::import('MYOBJ.appscms.core.business.user.*');
 

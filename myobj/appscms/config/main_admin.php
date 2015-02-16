@@ -20,9 +20,18 @@ $tables_db_dump = array(
 	'setcms_uclasses_objproperties',
 );
 
-$ui = SysUtils::importRecursName('MYOBJ.appscms.config','UI.php',true,true);
-$menu = SysUtils::importRecursName('MYOBJ.appscms.config','menu.php',true,true);
-$none_del = SysUtils::importRecursName('MYOBJ.appscms.config','nonedel.php',true,true);
+$ui = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','UI_*',true)
+);
+$menu = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','menu_*',true)
+);
+$none_del = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.admin','nonedel_*',true)
+);
+$spaces = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.all','spaces_obj_*',true)
+);
 
 $main_admin = array(
 	'controlui' => array(
@@ -30,18 +39,13 @@ $main_admin = array(
 		'menu' => $menu,
 		'none_del' => $none_del,
 	),
+	'spacescl' => $spaces,
 
 	'path_db_dump_files' => 'dbdump',
 	'path_db_dump_tables' => $tables_db_dump,
 
-	'countelements' => 50,
+	'countelements' => 20,
 	'countpage' => 10,
 );
 
-//возможно дополнение конфигурации $main_admin дополнительными пользовательскими параметрами
-Yii::app()->params['api_conf_main_user_admin'] = array();
-SysUtils::importRecursName('MYOBJ.appscms.config.user','main_admin_*',true);
-$main_user = Yii::app()->params['api_conf_main_user_admin'];
-$main_admin['user_conf_admin'] = $main_user;
-unset(Yii::app()->params['api_conf_main_user_admin']);
 return $main_admin;

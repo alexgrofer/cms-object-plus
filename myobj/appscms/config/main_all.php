@@ -5,9 +5,6 @@ $objects = SysUtils::array_array_merge(
 $models = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.admin','models_*',true)
 );
-$spaces = SysUtils::array_array_merge(
-	SysUtils::importRecursName('MYOBJ.appscms.config.admin','spaces_obj_*',true)
-);
 
 $main = array(
 	'controlui' => array(
@@ -16,7 +13,6 @@ $main = array(
 			'models' => $models,
 		),
 	),
-	'spacescl' => $spaces,
 	'TYPES_MYFIELDS_CHOICES' => array(
 		'1'=>'str',
 		'2'=>'text',

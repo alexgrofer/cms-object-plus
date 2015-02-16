@@ -107,6 +107,13 @@ class SysUtils
 		return array();
 	}
 
+	/**
+	 * @param $alias алиас директория в которой будет находиться искомый файл-ы
+	 * @param bool $fileName название файла file.php или маска для файлов inc_*
+	 * @param bool $isReturn необходимо получить из файла данные в нем должно быть return
+	 * @param bool $one если это не маска а один файл нужно установить это значение в true иначе вернет вложенный массив
+	 * @return array вернет массив если был установлен параметр $isReturn, если $one то только return контент
+	 */
 	public static function importRecursName($alias, $fileName = false, $isReturn = false, $one=false) {
 		$path = \yii::getPathOfAlias($alias);
 		$arr_glob_files = glob($path . DIRECTORY_SEPARATOR . $fileName);

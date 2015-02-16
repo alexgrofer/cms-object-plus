@@ -7,3 +7,4 @@ return array(
 	),
 );
 */
+return array();
