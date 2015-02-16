@@ -14,8 +14,8 @@ class AppCMS extends CComponent {
 		return $this->config;
 	}
 
-	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.create
-		Yii::import('MYOBJ.appscms.api.utils', true);
+	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.crea;
+		Yii::import('MYOBJ.appscms.config.import', true);
 
 		$folder_conf = $this->isAdminUI?'admin':'user';
 		//import
