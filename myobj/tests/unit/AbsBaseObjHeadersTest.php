@@ -258,9 +258,9 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$objHeader9 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_9');
 		$objHeader9->save();
 
-		//изменим конфиг приложения
+		//изменим конфиг приложения (task перенести в тест AbsModelTest)
 		$config = [];
-		$config['none_del_id']['$objects$']['codename1'] = array($objHeader8->primaryKey);
+		$config['none_del_id']['TestAbsBaseObjHeaders'] = array($objHeader8->primaryKey);
 		self::editTestConfig(array_merge_recursive(Yii::app()->appcms->config, $config));
 
 		$objHeader8->delete();
@@ -269,7 +269,8 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		$findObjHeader = $objHeader8::model()->findByPk($objHeader8->primaryKey);
 		$this->assertNotNull($findObjHeader);
 
-		//а тут уже нужн опеределать возможно дельше еще нужно убрать так как ссылки переделывал
+		//удалить ссылки
+		//удалить обратные ссылки
 
 		$objHeader9->editlinks('add','codename1',array(
 				$objHeader8->primaryKey,

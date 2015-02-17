@@ -407,9 +407,8 @@ abstract class AbsBaseModel extends CActiveRecord
 		//none_del_id
 		$thisFindName = get_class($this);
 		if(isset(Yii::app()->appcms->config['none_del_id'][$thisFindName])) {
-			$confNoneDel = Yii::app()->appcms->config['none_del_id'][$thisFindName];
-			if($this->none_del_id_result_conf($confNoneDel)==false) {
-				return false;
+			foreach(Yii::app()->appcms->config['none_del_id'][$thisFindName] as $primaryKey) {
+				if($this->primaryKey == $primaryKey) return false;
 			}
 		}
 
@@ -423,13 +422,6 @@ abstract class AbsBaseModel extends CActiveRecord
 			}
 		}
 
-		return true;
-	}
-
-	protected function none_del_id_result_conf($confNoneDel) {
-		foreach($confNoneDel as $primaryKey) {
-			if($this->primaryKey == $primaryKey) return false;
-		}
 		return true;
 	}
 }
