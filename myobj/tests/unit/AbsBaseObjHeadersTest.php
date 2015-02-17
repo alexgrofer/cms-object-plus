@@ -86,7 +86,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function otestBeforeFind() {
+	public function testBeforeFind() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 		unset($objHeader->dbCriteria->with['lines.property']);
@@ -171,16 +171,9 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 
 	public function testEditlinks() {
 		/* @var $objHeader4 TestAbsBaseObjHeaders */
-		/*
-		 * при созданении нового объекта для него создается общая ссылка
-		 * это возможность ссылать на другие объекты
-		 */
 		$objHeader4 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_4');
-		$objHeader4->save();
 		$objHeader5 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_5');
-		$objHeader5->save();
 		$objHeader6 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_6');
-		$objHeader6->save();
 
 		//привяжем два объекта(3,4) класса "codename2" к TestAbsBaseObjHeaders_sample_id_4
 		$objHeader4->editlinks('add','codename2',array(
