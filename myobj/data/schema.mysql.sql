@@ -250,13 +250,13 @@ INSERT INTO `setcms_groupsystemobjheaders` (`id`,`name`,`identifier_role`) VALUE
 
 --
 INSERT INTO `setcms_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
-INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`) VALUES (1,'alex','gro',1);
+INSERT INTO `setcms_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','gro',1);
 --
 INSERT INTO `setcms_ugroup` (`id`,`name`) VALUES (1,'superAdmin');
 --
 INSERT INTO `setcms_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
 
-//test потом удалить
+-- test потом удалить
 CREATE TABLE `setcms_testobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`param1` varchar(255),
