@@ -34,6 +34,6 @@ Yii::getLogger()->autoDump = true;
 yii::app()->setComponents(array(
 	'appcms'=>array(
 		'class' =>'MYOBJ.components.cms.AppCMS',
-		'isTest'=>true
+		'isAdminUI'=>false //тестируем не админку
 	)
 ));

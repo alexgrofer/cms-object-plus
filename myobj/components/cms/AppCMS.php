@@ -25,6 +25,11 @@ class AppCMS extends CComponent {
 		$this->config = SysUtils::importRecursName('MYOBJ.appscms.config','main_all.php',true,true);
 
 		if($this->isAdminUI) {
+			//import
+			SysUtils::importRecursName('MYOBJ.appscms.config.admin','import_*');
+			//const
+			SysUtils::importRecursName('MYOBJ.appscms.config.admin','const_*');
+
 			$this->config = array_merge_recursive($this->config, SysUtils::importRecursName('MYOBJ.appscms.config', 'main_admin.php', true, true));
 		}
 	}

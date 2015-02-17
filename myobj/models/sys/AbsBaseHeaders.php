@@ -258,6 +258,14 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function beforeDelete() {
 		if(!parent::beforeDelete()) return false;
 
+		//none_del_id
+		if(isset(Yii::app()->appcms->config['none_del_id']['$objects$'][$this->uclass->codename])) {
+			$confNoneDel = Yii::app()->appcms->config['none_del_id']['$objects$'][$this->uclass->codename];
+			if($this->none_del_id_result_conf($confNoneDel)==false) {
+				return false;
+			}
+		}
+
 		//del links
 		foreach($this->uclass->association as $objClass) {
 			foreach(array_keys($this->uclass->getNamesModelLinks()) as $typeLink) {
@@ -270,6 +278,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				$this->editlinks('clear', $objClass, null, $typeLink, true);
 			}
 		}
+
 		return true;
 	}
 

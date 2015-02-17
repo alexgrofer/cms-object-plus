@@ -36,10 +36,6 @@ $menu = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.admin','menu_*',true)
 );
 
-$none_del = SysUtils::array_array_merge(
-	SysUtils::importRecursName('MYOBJ.appscms.config.admin','nonedel_*',true)
-);
-
 $main_admin = array(
 	'controlui' => array(
 		'objects' => array( //columns header type model, controller inside myobj/controllers/cms
@@ -48,7 +44,6 @@ $main_admin = array(
 		),
 		'ui' => $ui,
 		'menu' => $menu,
-		'none_del' => $none_del,
 	),
 
 	'path_db_dump_files' => 'dbdump',

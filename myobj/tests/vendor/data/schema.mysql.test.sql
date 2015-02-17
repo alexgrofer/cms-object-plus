@@ -17,7 +17,7 @@ CREATE TABLE `setcms_linestestabsbaseobjheaders` (
 	`upintegerfield` int(11) DEFAULT NULL,
 	`upfloatfield` double DEFAULT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_testabsbaseobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

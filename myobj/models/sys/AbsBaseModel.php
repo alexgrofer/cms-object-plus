@@ -404,6 +404,15 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function beforeDelete() {
 		if(!parent::beforeDelete()) return false;
 
+		//none_del_id
+		$thisFindName = get_class($this);
+		if(isset(Yii::app()->appcms->config['none_del_id'][$thisFindName])) {
+			$confNoneDel = Yii::app()->appcms->config['none_del_id'][$thisFindName];
+			if($this->none_del_id_result_conf($confNoneDel)==false) {
+				return false;
+			}
+		}
+
 		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
 			foreach ($this->foreign_on_restrict_cascade() as $nameRelation) {
 				if (isset($this->metaData->relations[$nameRelation])) {
@@ -414,30 +423,13 @@ abstract class AbsBaseModel extends CActiveRecord
 			}
 		}
 
-		if($this instanceof AbsBaseHeaders) {
-			$thisFindName = '$objects$';
-			if(isset(Yii::app()->appcms->config['controlui']['none_del']['$objects$'][$this->uclass->codename])) {
-				$confNoneDel = Yii::app()->appcms->config['controlui']['none_del']['$objects$'][$this->uclass->codename];
-			}
-		}
-		else {
-			$thisFindName = get_class($this);
-			if(isset(Yii::app()->appcms->config['controlui']['none_del'][$thisFindName])) {
-				$confNoneDel = Yii::app()->appcms->config['controlui']['none_del'][$thisFindName];
-			}
-		}
-		//запрет на удаление отдельных объектов системы
-		if(isset($confNoneDel)) {
-			foreach($confNoneDel as $arrConf) {
-				$resultCompareOk = true;
-				foreach($arrConf as $papam => $val) {
-					if($this->$papam != $val) $resultCompareOk = false;
-				}
-				if($resultCompareOk) break;
-			}
-			if($resultCompareOk) return false;
-		}
+		return true;
+	}
 
+	protected function none_del_id_result_conf($confNoneDel) {
+		foreach($confNoneDel as $primaryKey) {
+			if($this->primaryKey == $primaryKey) return false;
+		}
 		return true;
 	}
 }

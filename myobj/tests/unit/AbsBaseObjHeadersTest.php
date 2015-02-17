@@ -251,7 +251,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	function OktestBeforeDelete() {
+	function testBeforeDelete() {
 		//создать объекты двух ранных классов
 		$objHeader8 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_8');
 		$objHeader8->save();
@@ -260,7 +260,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 
 		//изменим конфиг приложения
 		$config = [];
-		$config['controlui']['none_del']['objects']['codename1'] = array('id'=>8);
+		$config['none_del_id']['$objects$']['codename1'] = array($objHeader8->primaryKey);
 		self::editTestConfig(array_merge_recursive(Yii::app()->appcms->config, $config));
 
 		$objHeader8->delete();
@@ -268,6 +268,8 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 		//объект небыл удален так как это запрещено в конфигурации
 		$findObjHeader = $objHeader8::model()->findByPk($objHeader8->primaryKey);
 		$this->assertNotNull($findObjHeader);
+
+		//а тут уже нужн опеределать возможно дельше еще нужно убрать так как ссылки переделывал
 
 		$objHeader9->editlinks('add','codename1',array(
 				$objHeader8->primaryKey,
@@ -292,7 +294,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OktestHasProperty() {
+	public function testHasProperty() {
 		//проверить существование свойств по одному
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
@@ -304,7 +306,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OktestPropertyNames() {
+	public function testPropertyNames() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 		$this->assertEquals($objHeader->propertyNames(), ['codename1', 'codename2']);
@@ -313,7 +315,7 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 	/*
 	 *
 	 */
-	public function OktestSetAttributes() {
+	public function testSetAttributes() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
 		$nameClass = get_class($objHeader);

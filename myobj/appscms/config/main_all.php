@@ -3,8 +3,13 @@ $spaces = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.all','spaces_obj_*',true)
 );
 
+$none_del_id = SysUtils::array_array_merge(
+	SysUtils::importRecursName('MYOBJ.appscms.config.all','nonedelid_*',true)
+);
+
 $main = array(
 	'spacescl' => $spaces,
+	'none_del_id' => $none_del_id,
 
 	'TYPES_MYFIELDS_CHOICES' => array(
 		'1'=>'str',
