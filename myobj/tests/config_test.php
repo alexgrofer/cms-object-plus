@@ -1,7 +1,7 @@
 <?php
 
 $config =  CMap::mergeArray(
-	require(dirname(__FILE__).'/../../../config/main.php'),
+	require(dirname(__FILE__).'/../../../config/test.php'),
 	array(
 		'components'=>array(
 			'fixture'=>array(

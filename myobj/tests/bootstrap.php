@@ -18,6 +18,7 @@ Yii::import('MYOBJ.models.sys.*');
 Yii::import('MYOBJ.components.cms.behaviors.*');
 
 Yii::import('MYOBJ.tests.vendor.models.*');
+Yii::import('MYOBJ.tests.vendor.src.*');
 
 Yii::$enableIncludePath = false; //problem phpunit.phar - PHP Warning:  include(PHPUnit_Extensions_Story_TestCase.php)
 require_once(dirname(__FILE__).'/WebTestCase.php');

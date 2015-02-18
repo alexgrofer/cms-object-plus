@@ -1,35 +1,16 @@
 <?php
-/*
- * Класс для тестирования класса предка TestAbsBaseObjHeaders
- *
- * ВАЖНО! при Разработки класса TestAbsBaseObjHeaders всегда вначале описывать метод тут!!!
- * 		проверяем что он не работает
- * 		создаем тест
- * 		реализовываем метод в классе
- * 		проверяем тест
- * ВАЖНО! после Разработки      TestAbsBaseObjHeaders всегда проверять этот тест!!!
- * ВАЖНО! каждое УТВЕРЖДЕНИЕ необходимо конмментаровать для лучшего понимания и отладки!!!
- * ВАЖНО! необходимо описывать только утверждения свойственные для работы метода и не больше!!!!
- * ВАЖНО! если в методе теста происходит обновление данных в базе тогда нужно каждый раз использовать разные объекты
- *
- * приставка testPRPT, это тест приватного или защищенного метрода метода
- *
- *
- */
-class AbsBaseObjHeadersTest extends CDbTestCase {
-	/*
-	 * необходимые фикстуры моделей:
-	 * TestAbsBaseObjHeaders
-	 *
-	 * необходимые фикстуры таблиц:
-	 *
-	 */
+class AbsBaseObjHeadersTest extends AbsDbTestCase {
 
-	protected function setUp()
-	{
-		Yii::app()->assetManager->basePath = yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
-		parent::setUp();
+	public $fixtures=array(
+		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
+		'objProperty'=>'objProperties', //объекты objProperties
+	);
 
+	protected function getBasePathFixtures() {
+		return yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
+	}
+
+	protected function setConfig() {
 		//изменим конфиг приложения
 		//добавляем тестовое табличное пространство
 		$spacescl = Yii::app()->appcms->config['spacescl'];
@@ -37,37 +18,6 @@ class AbsBaseObjHeadersTest extends CDbTestCase {
 			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsSystem']);
 			self::editTestConfig($spacescl, 'spacescl');
 		}
-	}
-
-	public $fixtures=array(
-		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
-		'objProperty'=>'objProperties', //объекты objProperties
-	);
-
-	/**
-	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
-	 * @param array $newConfig
-	 */
-	static function editTestConfig(array $newConfig, $nameElem=null) {
-		$class = new ReflectionClass(Yii::app()->appcms);
-		$conf = $class->getProperty('config');
-		$conf->setAccessible(true);
-		if($nameElem) {
-			$arrayConfig = Yii::app()->appcms->config;
-			$arrayConfig[$nameElem] = $newConfig;
-			$newConfig = $arrayConfig;
-		}
-		$conf->setValue(Yii::app()->appcms,$newConfig);
-	}
-
-	/**
-	 * Вызвать приватный метод объекта
-	 * @param array $newConfig
-	 */
-	static function accessibleMethod($obj, $nameMethod) {
-		$method = new ReflectionMethod(get_class($obj), $nameMethod);
-		$method->setAccessible(true);
-		return $method->invoke($obj);
 	}
 
 	public function testRelations() {
