@@ -13,7 +13,9 @@
  */
 abstract class AbsDbTestCase extends CDbTestCase
 {
-	protected abstract function getBasePathFixtures();
+	protected function getBasePathFixtures() {
+		return yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
+	}
 
 	protected function setConfig() {}
 

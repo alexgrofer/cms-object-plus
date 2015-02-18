@@ -6,10 +6,6 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 		'objProperty'=>'objProperties', //объекты objProperties
 	);
 
-	protected function getBasePathFixtures() {
-		return yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
-	}
-
 	protected function setConfig() {
 		//изменим конфиг приложения
 		//добавляем тестовое табличное пространство
@@ -197,20 +193,7 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 	function testBeforeDelete() {
 		//создать объекты двух ранных классов
 		$objHeader8 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_8');
-		$objHeader8->save();
 		$objHeader9 = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_9');
-		$objHeader9->save();
-
-		//изменим конфиг приложения (task перенести в тест AbsModelTest)
-		$config = [];
-		$config['none_del_id']['TestAbsBaseObjHeaders'] = array($objHeader8->primaryKey);
-		self::editTestConfig(array_merge_recursive(Yii::app()->appcms->config, $config));
-
-		$objHeader8->delete();
-
-		//объект небыл удален так как это запрещено в конфигурации
-		$findObjHeader = $objHeader8::model()->findByPk($objHeader8->primaryKey);
-		$this->assertNotNull($findObjHeader);
 
 		$objHeader9->editlinks('add','codename1',array(
 				$objHeader8->primaryKey,

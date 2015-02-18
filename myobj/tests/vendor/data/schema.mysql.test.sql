@@ -1,3 +1,5 @@
+-- AbsBaseObjHeadersTest
+
 CREATE TABLE `setcms_testabsbaseobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`uclass_id` int(11) NOT NULL,
@@ -29,4 +31,13 @@ CREATE TABLE `setcms_linksobjectstestabsbase` (
 	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `setcms_uclasses` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- AbsBaseModelTest
+
+CREATE TABLE `setcms_testabsbasemodel` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`param1` varchar(255) DEFAULT NULL,
+	`param2` varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
