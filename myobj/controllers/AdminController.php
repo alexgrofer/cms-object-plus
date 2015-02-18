@@ -2,6 +2,7 @@
 namespace MYOBJ\controllers;
 use \yii as yii;
 use \CActiveRecord as CActiveRecord;
+use MYOBJ\appscms\core\base\SysUtils;
 
 class AdminController extends \Controller {
 	public $layout='/admin/layouts/column1';
@@ -89,7 +90,7 @@ class AdminController extends \Controller {
 		$modelAD = null;
 		switch($this->dicturls['class']) { //switch url
 			case 'objects':
-				$params_modelget = \SysUtils::normalAliasModel($this->dicturls['paramslist'][1]);
+				$params_modelget = SysUtils::normalAliasModel($this->dicturls['paramslist'][1]);
 				$settui = $params_modelget;
 
 				if($this->dicturls['paramslist'][0]=='class') {
@@ -114,7 +115,7 @@ class AdminController extends \Controller {
 						$actclass = \uClasses::getclass($this->dicturls['paramslist'][2]);
 						$name_relat_association = Yii::app()->request->getParam('is_bask_link')==false?'association':'association_back';
 						$objctsassociation = $actclass->$name_relat_association;
-						$modelAD->dbCriteria->addInCondition('id', \SysUtils::arrvaluesmodel($objctsassociation,'id'));
+						$modelAD->dbCriteria->addInCondition('id', SysUtils::arrvaluesmodel($objctsassociation,'id'));
 					}
 				}
 				elseif($this->dicturls['paramslist'][0]=='ui' && $this->dicturls['paramslist'][1]!='') {
@@ -180,7 +181,7 @@ class AdminController extends \Controller {
 					case 'lenksobjedit':
 						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1], Yii::app()->request->getParam('type_link'), Yii::app()->request->getParam('is_bask_link',false));
-						$this->paramsrender['REND_selectedarr'] = \SysUtils::arrvaluesmodel($getlinks->findAll(),'id');
+						$this->paramsrender['REND_selectedarr'] = SysUtils::arrvaluesmodel($getlinks->findAll(),'id');
 						break;
 					case 'relationobj':
 					case 'relationobjonly':
@@ -189,7 +190,7 @@ class AdminController extends \Controller {
 						$subnamemodel = $this->dicturls['paramslist'][7];
 						$namemodelthis = $this->dicturls['paramslist'][1];
 						//selectedarr
-						$params_modelget = \SysUtils::normalAliasModel($namemodelthis);
+						$params_modelget = SysUtils::normalAliasModel($namemodelthis);
 
 						$NAMEMODEL_get = $params_modelget['namemodel'];
 						$modelAD_LINK =  new $NAMEMODEL_get();
@@ -198,7 +199,7 @@ class AdminController extends \Controller {
 						$nameConfModelSelf = $this->dicturls['paramslist'][7];
 
 						$namemodelrelationtop = $params_modelget['relation'][$nameConfModelSelf][0];
-						$params_modelgettop = \SysUtils::normalAliasModel($namemodelrelationtop);
+						$params_modelgettop = SysUtils::normalAliasModel($namemodelrelationtop);
 						$objrelated = $params_modelgettop['namemodel']::model()->findByPk($this->dicturls['actionid']);
 
 						$nameRelatModelSelf = $params_modelget['relation'][$nameConfModelSelf][1];
@@ -224,22 +225,22 @@ class AdminController extends \Controller {
 							}
 							else {
 								if($type_relation_self  == CActiveRecord::MANY_MANY) {
-									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, \SysUtils::arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableSchema->primaryKey, SysUtils::arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
 								}
 								elseif($type_relation_self==CActiveRecord::HAS_ONE || $type_relation_self==CActiveRecord::HAS_MANY) {
 									//тут переделать причем равняять на USER in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))
 									//показываем
-									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->tableSchema->primaryKey, \SysUtils::arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$modelAD->tableSchema->primaryKey, SysUtils::arrvaluesmodel($objrelself,$modelAD->tableSchema->primaryKey));
 								}
 								elseif($type_relation_self  == CActiveRecord::BELONGS_TO) {
-									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$relation_model[$nameConfModelSelf][2], \SysUtils::arrvaluesmodel($objrelself,$relation_model[$nameConfModelSelf][2]));
+									$modelAD->dbCriteria->addInCondition($modelAD->tableAlias.'.'.$relation_model[$nameConfModelSelf][2], SysUtils::arrvaluesmodel($objrelself,$relation_model[$nameConfModelSelf][2]));
 								}
 							}
 						}
 
 						if($objrelself) {
 							if(is_array($objrelself)) {
-								$this->paramsrender['REND_selectedarr'] = \SysUtils::arrvaluesmodel($objrelself,'id');
+								$this->paramsrender['REND_selectedarr'] = SysUtils::arrvaluesmodel($objrelself,'id');
 							}
 							else {
 								$this->paramsrender['REND_selectedarr'] = array($objrelself->primaryKey);
@@ -427,9 +428,9 @@ class AdminController extends \Controller {
 				break;
 			case 'relationobj':
 			case 'relationobjonly';
-				$params_modelget = \SysUtils::normalAliasModel($this->dicturls['paramslist'][1]);
+				$params_modelget = SysUtils::normalAliasModel($this->dicturls['paramslist'][1]);
 
-				$NAMEMODEL_get = \SysUtils::normalAliasModel($params_modelget['relation'][$this->dicturls['paramslist'][7]][0]);
+				$NAMEMODEL_get = SysUtils::normalAliasModel($params_modelget['relation'][$this->dicturls['paramslist'][7]][0]);
 
 				$obj = $NAMEMODEL_get['namemodel']::model()->findByPk($this->dicturls['actionid']);
 				$nameRelation = $params_modelget['relation'][$this->dicturls['paramslist'][7]][1];

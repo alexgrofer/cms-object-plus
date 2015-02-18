@@ -1,4 +1,6 @@
 <?php
+use MYOBJ\appscms\core\base\SysUtils;
+
 class AppCMS extends CComponent {
 	private $isAdminUI;
 	public function setIsAdminUI($isAdminUI) {
@@ -15,8 +17,6 @@ class AppCMS extends CComponent {
 	}
 
 	public function init() { //http://yiiframework.ru/doc/guide/ru/extension.crea;
-		Yii::import('MYOBJ.appscms.core.base.*');
-
 		//import
 		SysUtils::importRecursName('MYOBJ.appscms.config.all','import_*');
 		//const

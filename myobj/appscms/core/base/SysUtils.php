@@ -1,4 +1,6 @@
 <?php
+namespace MYOBJ\appscms\core\base;
+
 class SysUtils
 {
 	public static function arrvaluesmodel($listobjects, $namekey)

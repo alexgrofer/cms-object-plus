@@ -1,4 +1,6 @@
 <?php
+use MYOBJ\appscms\core\base\SysUtils;
+
 $spaces = SysUtils::array_array_merge(
 	SysUtils::importRecursName('MYOBJ.appscms.config.all','spaces_obj_*',true)
 );

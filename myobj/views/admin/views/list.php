@@ -412,7 +412,7 @@ $("#pagination a").bind("click", function(){
 $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if($("#prevpg").length){$("#prevpg")[0].click()}}else if(event.keyCode == 39){if($("#nextpg").length){$("#nextpg")[0].click()}}}});
 </script>
 ');
-echo '<div style="padding-bottom: 60px">'.SysUtils::pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate).'</div>';
+echo '<div style="padding-bottom: 60px">'.MYOBJ\appscms\core\base\SysUtils::pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate).'</div>';
 }
 ?>
 <input name="pkeys_all" type="hidden" value="<?php echo implode(',',$pkeys_all);?>" />

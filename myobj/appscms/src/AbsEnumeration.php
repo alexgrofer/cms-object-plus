@@ -1,4 +1,6 @@
 <?php
+namespace MYOBJ\appscms\src;
+
 abstract class AbsEnumeration extends CComponent {
 	//const PARAM_1 = 0;
 

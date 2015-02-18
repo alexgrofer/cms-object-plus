@@ -1,4 +1,6 @@
 <?php
+use MYOBJ\appscms\core\base\SysUtils;
+
 $tables_db_dump = array(
 	//links
 	'setcms_linksobjectsallmy',
