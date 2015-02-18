@@ -37,7 +37,8 @@ CREATE TABLE `setcms_linksobjectstestabsbase` (
 
 CREATE TABLE `setcms_testabsbasemodel` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`param1` varchar(255) DEFAULT NULL,
-	`param2` varchar(255) DEFAULT NULL,
+	`param1` varchar(255) NULL,
+	`param2` varchar(255) NULL,
+	`content_e_array_1` text NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
