@@ -86,7 +86,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	protected function beforeSave() {
-		if(parent::beforeSave()!==false) {
+		if($beforeSave = parent::beforeSave()) {
 			//сбрасываем ключи для того что бы ключи всегда шли по порядку, т.к возможно удаление элемента массива
 			$typesEArray = $this->typesEArray();
 			if(count($typesEArray)) {
@@ -114,7 +114,8 @@ abstract class AbsBaseModel extends CActiveRecord
 			}
 			return true;
 		}
-		else return parent::beforeSave();
+
+		return $beforeSave;
 	}
 
 	/**

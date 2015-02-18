@@ -41,7 +41,7 @@ class objProperties extends AbsBaseModel
 		));
 	}
 	public function beforeSave() {
-		if(parent::beforeSave()!==false) {
+		if($beforeSave = parent::beforeSave()) {
 			if(trim($this->setcsv)=='') {
 				$arrconfcms = Yii::app()->appcms->config;
 				if(array_key_exists($arrconfcms['TYPES_MYFIELDS_CHOICES'][$this->myfield],$arrconfcms['rulesvalidatedef'])) {
@@ -51,7 +51,7 @@ class objProperties extends AbsBaseModel
 			}
 			return true;
 		}
-		else return parent::beforeSave();
+		return $beforeSave;
 	}
 	public function getTYPES_MYFIELDSOptions() {
 		return Yii::app()->appcms->config['TYPES_MYFIELDS_CHOICES'];
