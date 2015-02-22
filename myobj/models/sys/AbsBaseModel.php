@@ -85,8 +85,22 @@ abstract class AbsBaseModel extends CActiveRecord
 		parent::__set($name, $value);
 	}
 
+	private $_isValidated;
+	public function beforeValidate() {
+		if(parent::beforeValidate()) {
+			$this->_isValidated = true;
+		}
+		else return false;
+	}
+
 	protected function beforeSave() {
 		if($beforeSave = parent::beforeSave()) {
+			if($this->_isValidated==fales && $this->validate()==false) {
+				throw new CException(
+					Yii::t('cms','this class errors: '.print_r($this->getErrors(),true))
+				);
+			}
+
 			//сбрасываем ключи для того что бы ключи всегда шли по порядку, т.к возможно удаление элемента массива
 			$typesEArray = $this->typesEArray();
 			if(count($typesEArray)) {

@@ -1,7 +1,6 @@
 <?php
 abstract class AbsBaseHeaders extends AbsBaseModel
 {
-	const PRE_PROP='prop_';
 	const PRE_LINKS='links_';
 	const PRE_LINKS_BACK='links_back_';
 	const PRE_LINKS_MTM='links_mtm_';
@@ -131,9 +130,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$arraylinesvalue[$objline->property->codename] = array('objline' =>$objline, 'value' => $objline->$namecolumn, 'namecol' => $namecolumn);
 		}
 		foreach($classproperties as $objprop) {
-			//если не изменял свойство не нужно каждый раз делать запрос,??? тут могут быть большие текстровые строки может быть проблема со скоростью
-			//лучше использовать какие то возможности клиента
-			if(!$this->isNewRecord && ($this->oldProperties[$objprop->codename]==$this->_tmpUProperties[$objprop->codename])) continue;
 			if(array_key_exists($objprop->codename, $this->_tmpUProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
 					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpUProperties[$objprop->codename];
@@ -149,9 +145,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 				}
 			}
 		}
-
-		//теперь старые данные полностью переписанны
-		$this->oldProperties = $this->uProperties;
 	}
 
 	/**
@@ -299,42 +292,20 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			);
 		}
 		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[1];
-		$this->{$arrayName_Value[0].self::PRE_PROP} = $arrayName_Value[1];
 	}
 
-	/**
-	 * Добавление сеттера
-	 *
-	 * //CASE type Prop
-	 * Из формы hrml $obj->attributes = $_POST свайства попадают в аттрибуты (пример name_string_1.self::PRE_PROP) тут мы их ловим и передаем в $this->uProperties для дальнейшей
-	 * бработки и сохранения.
-	 * В ручном режиме конечно можно работать и на прямую через uProperties или setUProperties
-	 *
-	 * @param $values
-	 */
-	public function setAttributes($values, $safeOnly=true) {
-		parent::setAttributes($values, $safeOnly);
-
-		if(is_array($values) && count($values)) {
-			//SWITCH MY TYPES
-			foreach($values as $nameElem => $val) {
-				//CASE type Prop
-				if(($pos = strpos($nameElem,self::PRE_PROP))!==false) {
-					$this->uProperties = [substr($nameElem,0,$pos), $val];
-				}
-				//CASE type new type
-				//if(...)
+	private $_formPropValid=null;
+	public function beforeValidate() {
+		if(parent::beforeValidate()) {
+			if($this->_formPropValid->validate()==false) {
+				throw new CException(
+					Yii::t('cms','userProp errors: '.print_r($this->_formPropValid->getErrors(),true))
+				);
 			}
 		}
-	}
-
-	/**
-	 * При изменении свойств до записи, иногда необходимо знать что было раньше до изменения
-	 * @var array
-	 */
-	protected $oldProperties=array();
-	public function getOldProperties() {
-		return $this->oldProperties;
+		else {
+			return false;
+		}
 	}
 
 	public function declareObj() {
@@ -346,62 +317,46 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->_tmpUPropertiesNames[] = $prop->codename;
 		}
 
-		//+++добавляем свойтсва к модели
 		if($this->isitlines) {
 			$arrconfcms = Yii::app()->appcms->config;
 			$currentproperties = $this->uProperties;
+			$objFormProp = MYOBJ\appscms\core\base\form\DForm::create();
 			foreach($this->uclass->properties as $prop) {
-				$nameelem = $prop->codename.self::PRE_PROP;
-				//инициализируем свойство
-				$valProp = (isset($currentproperties[$prop->codename]))?$currentproperties[$prop->codename]:null;
-				$this->addElemClass($nameelem,$valProp);
-				//устанавливаем правила валидации
-				if($prop->minfield) $this->customRules[] = array($nameelem, 'length', 'min'=>$prop->minfield);
-				if($prop->maxfield) $this->customRules[] = array($nameelem, 'length', 'max'=>$prop->maxfield);
-				if($prop->required) $this->customRules[] = array($nameelem, 'required');
-				if($prop->udefault) $this->customRules[] = array($nameelem, 'default', 'value'=>$prop->udefault);
+				$nameelem = $prop->codename;
+				$valProp = (isset($currentproperties[$prop->codename])) ? $currentproperties[$prop->codename] : null;
+				$objFormProp->addAttributeRule($nameelem, array('safe'), $valProp);
+				if ($prop->minfield) $objFormProp->addAttributeRule($nameelem, array('length', 'min' => $prop->minfield));
+				if ($prop->maxfield) $objFormProp->addAttributeRule($nameelem, array('length', 'max' => $prop->maxfield));
+				if ($prop->required) $objFormProp->addAttributeRule($nameelem, array('required'));
+				if ($prop->udefault) $objFormProp->addAttributeRule($nameelem, array('default', 'value' => $prop->udefault));
 
 				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				/*
-				 * для некоторый свойство возможна тонкая настройка type=>string
-				 */
-				if(array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
-					$addarrsett = array($nameelem);
-					$parsecvs = str_getcsv($prop->setcsv,"\n");
-					foreach($parsecvs as $keyval) {
-						if(trim($keyval)=='') continue;
-						if(strpos($keyval,'us_set')===false) {
-							if(strpos($keyval,'=>')===false) {
-								array_push($addarrsett,$keyval);
-							}
-							else {
-								list($typeval,$val) = explode('=>',trim($keyval));
+				if (array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
+					$addarrsett = array();
+					$parsecvs = str_getcsv($prop->setcsv, "\n");
+					foreach ($parsecvs as $keyval) {
+						if (trim($keyval) == '') continue;
+						if (strpos($keyval, 'us_set') === false) {
+							if (strpos($keyval, '=>') === false) {
+								array_push($addarrsett, $keyval);
+							} else {
+								list($typeval, $val) = explode('=>', trim($keyval));
 								$addarrsett[$typeval] = $val;
 							}
 						}
 					}
-					$this->customRules[] = (count($addarrsett)==1) ? array($nameelem, 'safe') : $addarrsett;
+					if($addarrsett) $objFormProp->addAttributeRule($nameelem, $addarrsett);
 				}
-				//для остальных нужно прописать safe иначе не будут отображаться в редактировании объекта
-				else {
-					$this->customRules[] = array($nameelem, 'safe');
-				}
-				if($nametypef=='bool') $this->customRules[] = array($nameelem, 'boolean');
-				if($nametypef=='url') $this->customRules[] = array($nameelem, 'url');
-				if($nametypef=='email') $this->customRules[] = array($nameelem, 'email');
+				if ($nametypef == 'bool') $objFormProp->addAttributeRule($nameelem, array('boolean'));
+				if ($nametypef == 'url') $objFormProp->addAttributeRule($nameelem, array('url'));
+				if ($nametypef == 'email') $objFormProp->addAttributeRule($nameelem, array('email'));
 
-				//добавить в типы полей формы элементы для свойств
-				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				$this->customElementsForm[$nameelem] = array('type' => $arrconfcms['TYPES_MYFIELDS'][$nametypef]);
+				$this->_formPropValid = $objFormProp;
 			}
 		}
 	}
 	public function initObj() {
 		parent::initObj();
-		if($this->isitlines) {
-			$this->oldProperties = $this->uProperties;
-		}
-		//пройтись по критерии и если там встречается параметр "_uProp" тогда добавить некоторые дополнительные критерии для нормальног опоиска
 	}
 
 	/**
