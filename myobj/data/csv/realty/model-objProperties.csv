@@ -1,0 +1,2 @@
+id,name,codename,description,myfield,minfield,maxfield,required,udefault,setcsv
+1,"Inform Flow Text",inform_flow_text,"Общий текст статьи",3,,,0,,

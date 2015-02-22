@@ -78,7 +78,7 @@ class NewAdminController extends \Controller {
 	public function actions()
 	{
 		return array(
-			'editLinkClass'=>'MYOBJ.controllers.newAdmin.EditLinkClassAction',
+			'editLinkClass'=>'MYOBJ.controllers.newAdminActions.EditLinkClassAction',
 		);
 	}
 }
