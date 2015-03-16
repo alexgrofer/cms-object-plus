@@ -12,6 +12,10 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
+$addForm = MYOBJ\appscms\core\base\form\DForm::create();
+//заполняем форму доп параметрами
+$htmlElementsAddForm = array();
+
 if($REND_AttributeLabels) {
 	$REND_model->customAttributeLabels = array_merge($REND_model->attributeLabels(), $REND_AttributeLabels);
 }
@@ -25,27 +29,26 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 		$SelectArr = $REND_model->links_edit('select',$this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$namer);
 
 		$nameElem = $namer.$nameps_mtm;
-		if(!$REND_model->isAddElemClass($nameElem)) {
-			$REND_model->addElemClass($nameElem, $SelectArr[$namer]);
-			$REND_model->customElementsForm[$nameElem] = array('type'=>'text');
-			$REND_model->customRules[] = array($nameElem, 'safe');
-		}
+		$addForm->addAttributeRule($nameElem, array('safe'), $SelectArr[$namer]);
+		$htmlElementsAddForm[$nameElem] = array('type'=>'text');
 
 		$array_names_v_mtm[$namer] = $SelectArr[$namer];
 	}
 }
-
-//может и выше надо
-$addForm = MYOBJ\appscms\core\base\form\DForm::create();
-//заполняем форму доп параметрами
-$elementsDFOrm = array();
 
 $isValidated=false;
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
 	$addForm->attributes = yii::app()->getRequest()->getPost(get_class($addForm));
 	if($addForm->validate()) {
-		//дополняем свойства и т.д $REND_model в случае необходимости
+
+		if($REND_model instanceof AbsBaseHeaders) {
+			//UProperties
+			foreach($REND_model->propertyNames() as $nameUProp) {
+
+			}
+			//EArray
+		}
 
 		$REND_model->attributes = $paramsQueryPostModel;
 		$isValidated = $REND_model->validate();
@@ -53,7 +56,7 @@ if($paramsQueryPostModel) {
 }
 
 //если есть настройка то только по ней
-$elementsForm = $REND_model->elementsForm() ?: array_fill_keys($REND_model->getSafeAttributeNames(), ['type'=>'text']);
+$htmlElementsModel = $REND_model->elementsForm() ?: array_fill_keys($REND_model->getSafeAttributeNames(), ['type'=>'text']);
 if($REND_editForm) {
 	foreach($REND_model->elementsForm() as $nameElem => $nameAlias) {
 		if(!in_array($nameElem,$REND_editForm)) unset($elementsForm[$nameElem]);
@@ -83,14 +86,14 @@ $form = new CForm(array('elements'=>array(
 	'model'=>array(
 		'type'=>'form',
 		'title'=>'model',
-		'elements'=>$REND_model->elementsForm(),
+		'elements'=>$htmlElementsModel,
 	),
 
 	'DForm'=>array(
 		'type'=>'form',
 		'title'=>'additionally',
 		'elements'=>array(
-			$elementsDFOrm
+			$htmlElementsAddForm
 		),
 	),
 )));
