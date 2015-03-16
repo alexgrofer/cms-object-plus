@@ -34,7 +34,7 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	}
 }
 
-$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
+$paramsQueryPostModel = yii::app()->getRequest()->getPost('MYOBJ_appscms_core_base_form_DForm');
 if($paramsQueryPostModel) {
 	$REND_model->attributes = $paramsQueryPostModel;
 	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
@@ -69,12 +69,12 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actio
 }
 $objForm = MYOBJ\appscms\core\base\form\DForm::createOfModel($REND_model); //может все же метод сделать может на простом сайте кто заюзает ну путь только тут вначале сделай
 
-$form = new CForm(array('elements'=>$elementsForm), $objForm);
+$form = new CForm(array('elements'=>$elementsForm));
 $form->attributes = array('enctype' => 'multipart/form-data');
-$form->setModel($REND_model);
+$form->setModel($objForm);
 echo $form->renderBegin();
 
-echo CHtml::errorSummary($objForm,'<div class="alert alert-danger">','</p>');
+echo CHtml::errorSummary(array($objForm, $REND_model),'<div class="alert alert-danger">','</p>');
 
 foreach($form->getElements() as $element) {
 	echo $element->render();
