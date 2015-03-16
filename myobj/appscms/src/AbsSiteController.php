@@ -1,5 +1,5 @@
 <?php
-namespace MYOBJ\controllers\admin;
+namespace MYOBJ\appscms\src;
 use yii;
 use uClasses;
 

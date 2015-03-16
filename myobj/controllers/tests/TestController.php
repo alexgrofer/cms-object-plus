@@ -6,7 +6,7 @@ use \yii as yii;
  * Контроллер для функциональных тестов
  * Class TestController
  */
-class TestController extends \MYOBJ\controllers\admin\AbsSiteController {
+class TestController extends \MYOBJ\appscms\src\AbsSiteController {
 	public function actionHeader_list() {
 		$this->setPageTitle('test page - '.$this->getAction()->getId());
 
