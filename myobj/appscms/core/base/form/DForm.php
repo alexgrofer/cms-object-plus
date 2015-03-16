@@ -48,17 +48,6 @@ class DForm extends \CFormModel {
 		$objDForm = new static($scenario);
 		return $objDForm;
 	}
-	public static function createOfModel(\CModel $model) {
-		$objDForm = new static($model->getScenario());
-		foreach($model->rules() as $rule) {
-			$names = explode(',',array_shift($rule));
-			foreach($names as $name) {
-				$normName = trim($name);$objDForm->addAttributeRule($normName, $rule, $model->$normName);
-			}
-		}
-		$objDForm->_custom_attributeLabels = $model->attributeLabels();
-		return $objDForm;
-	}
 
 	public function attributeNames() {
 		return $this->attributeNamesCustom;

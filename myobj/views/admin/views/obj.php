@@ -6,6 +6,7 @@ if(!$REND_acces_read) {
 	echo '<p class="alert">not acces read</p>';
 	return;
 }
+
 $htmldiv = '<div%s>%s</div>';
 $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
@@ -34,11 +35,21 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	}
 }
 
-$paramsQueryPostModel = yii::app()->getRequest()->getPost('MYOBJ_appscms_core_base_form_DForm');
+//может и выше надо
+$addForm = MYOBJ\appscms\core\base\form\DForm::create();
+//заполняем форму доп параметрами
+$elementsDFOrm = array();
+
+$isValidated=false;
+$paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
-	$REND_model->attributes = $paramsQueryPostModel;
-	//важный фактор только после этой конструкции форма $form начинает обрабатывать ошибки
-	$REND_model->validate();
+	$addForm->attributes = yii::app()->getRequest()->getPost(get_class($addForm));
+	if($addForm->validate()) {
+		//дополняем свойства и т.д $REND_model в случае необходимости
+
+		$REND_model->attributes = $paramsQueryPostModel;
+		$isValidated = $REND_model->validate();
+	}
 }
 
 //если есть настройка то только по ней
@@ -67,14 +78,30 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actio
 		$REND_model->{$thisRelation->foreignKey} = $this->dicturls['paramslist'][6];
 	}
 }
-$objForm = MYOBJ\appscms\core\base\form\DForm::createOfModel($REND_model); //может все же метод сделать может на простом сайте кто заюзает ну путь только тут вначале сделай
 
-$form = new CForm(array('elements'=>$elementsForm));
+$form = new CForm(array('elements'=>array(
+	'model'=>array(
+		'type'=>'form',
+		'title'=>'model',
+		'elements'=>$REND_model->elementsForm(),
+	),
+
+	'DForm'=>array(
+		'type'=>'form',
+		'title'=>'additionally',
+		'elements'=>array(
+			$elementsDFOrm
+		),
+	),
+)));
 $form->attributes = array('enctype' => 'multipart/form-data');
-$form->setModel($objForm);
+
+$form['model']->model = $REND_model;
+$form['DForm']->model = $addForm;
+
 echo $form->renderBegin();
 
-echo CHtml::errorSummary(array($objForm, $REND_model),'<div class="alert alert-danger">','</p>');
+echo CHtml::errorSummary(array($addForm, $REND_model),'<div class="alert alert-danger">','</p>');
 
 foreach($form->getElements() as $element) {
 	echo $element->render();
@@ -85,7 +112,7 @@ echo '<p>'.CHtml::submitButton('save').'</p>';
 echo $form->renderEnd();
 //END
 
-if(count($_POST) && $form->validate()) {
+if($isValidated) {
 	$REND_model->save();
 
 	if(isset($relation_relationobjonly_one_m) && $relation_relationobjonly_one_m==false) {
