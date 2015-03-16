@@ -1,6 +1,17 @@
 <?php
 abstract class AbsBaseModel extends CActiveRecord
 {
+	public static function create($scenario='insert',$addParam1=null,$addParam2=null,$addParam3=null,$addParam4=null) {
+		$objDForm = new static($scenario);
+		$objDForm->afterCreatde();
+		return $objDForm;
+	}
+
+	protected function afterFind() {
+		parent::afterFind();
+		$this->afterCreate();
+	}
+
 	public function primaryKey()
 	{
 		return 'id';
@@ -71,27 +82,6 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 	final public function attributeLabels() {
 		return array_merge($this->defaultAttributeLabels(), $this->customAttributeLabels);
-	}
-
-	/**
-	 * Если собираемся объявить новый объект нужно вызывать в ручную $newObj = $class();$newObj->declareObj();
-	 */
-	public function declareObj() {
-		//обявление элемента
-
-		foreach($this->attributes as $k => $v) {
-			$this->old_attributes[$k] = $v;
-		}
-	}
-	public function initObj() {
-		//инициализация элемента элемента
-	}
-
-	protected function afterFind() {
-		parent::afterFind();
-
-		$this->declareObj();
-		$this->initObj();
 	}
 
 	/**
@@ -180,5 +170,11 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 
 		return true;
+	}
+
+	public function afterCreate() {
+		foreach($this->attributes as $k => $v) {
+			$this->old_attributes[$k] = $v;
+		}
 	}
 }

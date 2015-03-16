@@ -1,6 +1,16 @@
 <?php
 abstract class AbsBaseHeaders extends AbsBaseModel
 {
+	public static function create($scenario='insert',$idClass=null,$addParam2=null,$addParam3=null,$addParam4=null) {
+		$objDForm = new static($scenario);
+		if(!$objDForm->is_independent) {
+			$objDForm->uclass_id = $idClass;
+		}
+		$objDForm->afterCreate();
+		return $objDForm;
+	}
+
+
 	const PRE_LINKS='links_';
 	const PRE_LINKS_BACK='links_back_';
 	const PRE_LINKS_MTM='links_mtm_';
@@ -297,66 +307,17 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	private $_formPropValid=null;
 	public function beforeValidate() {
 		if(parent::beforeValidate()) {
-			if($this->_formPropValid->validate()==false) {
+			if($this->_formPropValid && $this->_formPropValid->validate()==false) {
 				throw new CException(
 					Yii::t('cms','userProp errors: '.print_r($this->_formPropValid->getErrors(),true))
 				);
 			}
+
+			return true;
 		}
 		else {
 			return false;
 		}
-	}
-
-	public function declareObj() {
-		parent::declareObj();
-
-		//+++необходимо узнать список свойств у этого объекта
-		foreach($this->uclass->properties as $prop) {
-			//для списка названий свойств этого объекта
-			$this->_tmpUPropertiesNames[] = $prop->codename;
-		}
-
-		if($this->isitlines) {
-			$arrconfcms = Yii::app()->appcms->config;
-			$currentproperties = $this->uProperties;
-			$objFormProp = MYOBJ\appscms\core\base\form\DForm::create();
-			foreach($this->uclass->properties as $prop) {
-				$nameelem = $prop->codename;
-				$valProp = (isset($currentproperties[$prop->codename])) ? $currentproperties[$prop->codename] : null;
-				$objFormProp->addAttributeRule($nameelem, array('safe'), $valProp);
-				if ($prop->minfield) $objFormProp->addAttributeRule($nameelem, array('length', 'min' => $prop->minfield));
-				if ($prop->maxfield) $objFormProp->addAttributeRule($nameelem, array('length', 'max' => $prop->maxfield));
-				if ($prop->required) $objFormProp->addAttributeRule($nameelem, array('required'));
-				if ($prop->udefault) $objFormProp->addAttributeRule($nameelem, array('default', 'value' => $prop->udefault));
-
-				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
-				if (array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
-					$addarrsett = array();
-					$parsecvs = str_getcsv($prop->setcsv, "\n");
-					foreach ($parsecvs as $keyval) {
-						if (trim($keyval) == '') continue;
-						if (strpos($keyval, 'us_set') === false) {
-							if (strpos($keyval, '=>') === false) {
-								array_push($addarrsett, $keyval);
-							} else {
-								list($typeval, $val) = explode('=>', trim($keyval));
-								$addarrsett[$typeval] = $val;
-							}
-						}
-					}
-					if($addarrsett) $objFormProp->addAttributeRule($nameelem, $addarrsett);
-				}
-				if ($nametypef == 'bool') $objFormProp->addAttributeRule($nameelem, array('boolean'));
-				if ($nametypef == 'url') $objFormProp->addAttributeRule($nameelem, array('url'));
-				if ($nametypef == 'email') $objFormProp->addAttributeRule($nameelem, array('email'));
-
-				$this->_formPropValid = $objFormProp;
-			}
-		}
-	}
-	public function initObj() {
-		parent::initObj();
 	}
 
 	/**
@@ -446,5 +407,58 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return array(
 			'lines',
 		);
+	}
+
+	public function afterCreate() {
+		parent::afterCreate();
+
+		//start uProperties
+		//+++необходимо узнать список свойств у этого объекта
+		foreach($this->uclass->properties as $prop) {
+			//для списка названий свойств этого объекта
+			$this->_tmpUPropertiesNames[] = $prop->codename;
+		}
+
+		if($this->isitlines) {
+			$arrconfcms = Yii::app()->appcms->config;
+			$currentproperties = $this->uProperties;
+			$objFormProp = MYOBJ\appscms\core\base\form\DForm::create();
+			foreach($this->uclass->properties as $prop) {
+				$nameelem = $prop->codename;
+				$valProp = (isset($currentproperties[$prop->codename])) ? $currentproperties[$prop->codename] : null;
+				$objFormProp->addAttributeRule($nameelem, array('safe'), $valProp);
+				if ($prop->minfield) $objFormProp->addAttributeRule($nameelem, array('length', 'min' => $prop->minfield));
+				if ($prop->maxfield) $objFormProp->addAttributeRule($nameelem, array('length', 'max' => $prop->maxfield));
+				if ($prop->required) $objFormProp->addAttributeRule($nameelem, array('required'));
+				if ($prop->udefault) $objFormProp->addAttributeRule($nameelem, array('default', 'value' => $prop->udefault));
+
+				$nametypef = $arrconfcms['TYPES_MYFIELDS_CHOICES'][$prop->myfield];
+				if (array_key_exists($nametypef, $arrconfcms['rulesvalidatedef'])) {
+					$addarrsett = array();
+					$parsecvs = str_getcsv($prop->setcsv, "\n");
+					foreach ($parsecvs as $keyval) {
+						if (trim($keyval) == '') continue;
+						if (strpos($keyval, 'us_set') === false) {
+							if (strpos($keyval, '=>') === false) {
+								array_push($addarrsett, $keyval);
+							} else {
+								list($typeval, $val) = explode('=>', trim($keyval));
+								$addarrsett[$typeval] = $val;
+							}
+						}
+					}
+					if($addarrsett) $objFormProp->addAttributeRule($nameelem, $addarrsett);
+				}
+				if ($nametypef == 'bool') $objFormProp->addAttributeRule($nameelem, array('boolean'));
+				if ($nametypef == 'url') $objFormProp->addAttributeRule($nameelem, array('url'));
+				if ($nametypef == 'email') $objFormProp->addAttributeRule($nameelem, array('email'));
+
+				$this->_formPropValid = $objFormProp;
+			}
+		}
+		//end uProperties
+
+		//start EArray
+		//end EArray
 	}
 }

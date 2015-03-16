@@ -79,11 +79,7 @@ class uClasses extends AbsBaseModel
 	 */
 	public function initobject() {
 		$nameModelHeaders = $this->getNameModelHeaderClass();
-		$newobj = new $nameModelHeaders;
-		if(!$newobj->is_independent) {
-			$newobj->uclass_id = $this->primaryKey;
-		}
-		$newobj->declareObj();
+		$newobj = $nameModelHeaders::create('insert',$this->primaryKey);
 		return $newobj;
 	}
 

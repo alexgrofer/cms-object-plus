@@ -170,12 +170,12 @@ class AdminController extends \Controller {
 							$modelAD = $modelAD->findByPk($this->dicturls['paramslist'][4]);
 						}
 						else {
-							$modelAD = new $modelAD();
 							if($this->dicturls['paramslist'][0]=='class') {
-								$modelAD->uclass = $actclass;
+								$modelAD = \uClasses::getclass($actclass->primaryKey)->initobject();
 							}
-							//объявляем новый объект
-							$modelAD->declareObj();
+							else {
+								$modelAD = new $modelAD;
+							}
 						}
 						break;
 					case 'lenksobjedit':
@@ -353,19 +353,19 @@ class AdminController extends \Controller {
 									$attributes_csv[$headers_key_attr_csv[$k]] = $val;
 								}
 							}
-							$namemodel= get_class($modelAD);
-							$newobj = new $namemodel();
 
-							if($newobj instanceof \AbsBaseHeaders) {
-								$newobj->uclass_id = $attributes_csv['uclass_id'];
+							if($modelAD instanceof \AbsBaseHeaders) {
+								$newobj = \uClasses::getclass($attributes_csv['uclass_id'])->initobject();
 								if(count($properties_csv)) {
 									foreach($properties_csv as $keyP => $keyP) {
 										$newobj->uProperties = [$keyP,$keyP];
 									}
 								}
 							}
+							else {
+								$newobj = new $namemodel();
+							}
 
-							$newobj->declareObj();
 							$newobj->attributes = $attributes_csv;
 							if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
 								$namepk = $modelAD->primaryKey();

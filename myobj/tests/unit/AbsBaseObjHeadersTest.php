@@ -354,18 +354,6 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 	/*
 	 *
 	 */
-	public function DeclareObj() {
-		//была добавленна реляция toplink
-		//заполнен список имен свойств
-		//добавленны новые свойства класса для псевдосвойств
-		//установленные правила валидации для свойств
-		//установленны так же сложные правила исходя из ностройки свойства
-
-	}
-
-	/*
-	 *
-	 */
 	public function initObj() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		//$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_id_10');
