@@ -33,33 +33,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 
-	protected $elements_enable_class = array();
-	/**
-	 * Управляемое добавление новых свойств
-	 * Что угодно в модель поставить нельзя, только умышленно через этот метод!
-	 * если уже есть такое свойство класса будет исключение
-	 * @param $name
-	 * @param $value
-	 */
-	public function addElemClass($name, $defValue=null) {
-		if(!$this->isAddElemClass($name)) {
-			$this->elements_enable_class[] = $name;
-			$this->$name = $defValue;
-		}
-		else {
-			throw new CException(Yii::t('cms','element "{prop}" is already add class  "{class}"',
-				array('{prop}'=>$name, '{class}'=>get_class($this))));
-		}
-	}
-
-	public function __set($name, $value) {
-		//init new elements
-		if(in_array($name,$this->elements_enable_class)) {
-			$this->$name =  $value;
-		}
-		parent::__set($name, $value);
-	}
-
 	private $_isValidated;
 	public function beforeValidate() {
 		if(parent::beforeValidate()) {
