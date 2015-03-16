@@ -401,7 +401,7 @@ class AdminController extends \Controller {
 			elseif(isset($this->actionParams['usercontroller']) && $this->actionParams['usercontroller'] && isset($settui['controller'][$this->actionParams['usercontroller']])) {
 				$namecontroller = $settui['controller'][$this->actionParams['usercontroller']];
 			}
-			if(isset($namecontroller)) require(dirname(__FILE__).'/admin/sys/'.$namecontroller);
+			if(isset($namecontroller)) require(dirname(__FILE__).'/adminRequire/sys/'.$namecontroller);
 		}
 
 		//delete objects

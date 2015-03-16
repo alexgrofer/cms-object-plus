@@ -82,7 +82,7 @@ class SysUtils
 				}
 				$topTmp = $atop;
 				$tmpArr[] = array('obj' => $obj, 'left' => $tmpLeft);
-				treelem($aArr, $indexObjId, $keyId, $keyTop, $func, $tmpLeft);
+				self::treelem($aArr, $indexObjId, $keyId, $keyTop, $func, $tmpLeft);
 			}
 		}
 		return $tmpArr;
