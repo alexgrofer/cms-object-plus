@@ -33,28 +33,14 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 
-	private $_isValidated;
-	public function beforeValidate() {
-		if($beforeValidate = parent::beforeValidate()) {
-			$this->_isValidated = true;
-			return true;
+	public function save($runValidation=true,$attributes=null) {
+		$result = parent::save($runValidation,$attributes);
+		if(!$result && $this->getErrors()) {
+			throw new CException(
+				Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true))
+			);
 		}
-
-		return $beforeValidate;
-	}
-
-	protected function beforeSave() {
-		if($beforeSave = parent::beforeSave()) {
-			if($this->_isValidated==false && $this->validate()==false) {
-				throw new CException(
-					Yii::t('cms','this class errors: '.print_r($this->getErrors(),true))
-				);
-			}
-
-			return true;
-		}
-
-		return $beforeSave;
+		return $result;
 	}
 
 	public $customRules=array();
