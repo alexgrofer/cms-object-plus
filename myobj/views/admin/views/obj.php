@@ -67,12 +67,14 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $this->dicturls['actio
 		$REND_model->{$thisRelation->foreignKey} = $this->dicturls['paramslist'][6];
 	}
 }
+$objForm = MYOBJ\appscms\core\base\form\DForm::createOfModel($REND_model); //может все же метод сделать может на простом сайте кто заюзает ну путь только тут вначале сделай
 
-$form = new CForm(array('elements'=>$elementsForm), $REND_model);
+$form = new CForm(array('elements'=>$elementsForm), $objForm);
 $form->attributes = array('enctype' => 'multipart/form-data');
+$form->setModel($REND_model);
 echo $form->renderBegin();
 
-echo CHtml::errorSummary($REND_model,'<div class="alert alert-danger">','</p>');
+echo CHtml::errorSummary($objForm,'<div class="alert alert-danger">','</p>');
 
 foreach($form->getElements() as $element) {
 	echo $element->render();
