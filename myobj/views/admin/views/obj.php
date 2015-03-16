@@ -34,29 +34,6 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 	}
 }
 
-//work EArray  Добавляем в ручную только если это множественный массив
-$typesEArray = $REND_model->typesEArray();
-if(count($typesEArray)) {
-	foreach($typesEArray as $nameCol => $setting) {
-		$valuetypesEArray = $REND_model->get_EArray($nameCol);
-		if(isset($setting['elements']) && count($setting['elements'])) {
-			if($setting['conf']['isMany']) {
-				$index = count($valuetypesEArray)?count($valuetypesEArray):0;
-				foreach($setting['elements'] as $nameE) {
-					$nameElemClass = $nameCol.'__'.$nameE.'__'.$index.'earray_';
-					if(!$REND_model->isAddElemClass($nameElemClass)) {
-						//создадим пустой элемент важно что он без rules
-						$REND_model->addElemClass($nameElemClass);
-						$REND_model->genetate_form_EArray($nameCol,$nameE,$index);
-						$REND_model->customAttributeLabels[$nameElemClass] = $nameElemClass;
-					}
-				}
-			}
-		}
-	}
-}
-//end EArray
-
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
 	$REND_model->attributes = $paramsQueryPostModel;
