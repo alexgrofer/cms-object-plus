@@ -35,15 +35,17 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	private $_isValidated;
 	public function beforeValidate() {
-		if(parent::beforeValidate()) {
+		if($beforeValidate = parent::beforeValidate()) {
 			$this->_isValidated = true;
+			return true;
 		}
-		else return false;
+
+		return $beforeValidate;
 	}
 
 	protected function beforeSave() {
 		if($beforeSave = parent::beforeSave()) {
-			if($this->_isValidated==fales && $this->validate()==false) {
+			if($this->_isValidated==false && $this->validate()==false) {
 				throw new CException(
 					Yii::t('cms','this class errors: '.print_r($this->getErrors(),true))
 				);
