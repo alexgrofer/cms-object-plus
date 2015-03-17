@@ -61,8 +61,16 @@ if($paramsQueryPostModel) {
 					$NormNameUProp = substr($name,0,$pos);
 					$REND_model->uProperties = array($NormNameUProp, $val);
 				}
-				//EArray
+				//MTM PARAM
+				if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
+					$array_edit_post_mtmparam = array();
+					if(($pos = strpos($name,$nameps_mtm))) {
+						$name_norm = substr($name,0,$pos);
+						$array_edit_post_mtmparam[$name_norm] = trim($val);
+					}
+				}
 
+				//EArray
 
 			}
 		}
@@ -135,16 +143,6 @@ if($isValidated) {
 
 	if(isset($relation_relationobjonly_one_m) && $relation_relationobjonly_one_m==false) {
 		$objrelated->links_edit('add', $nameRelatThis, array($REND_model->primaryKey));
-	}
-
-	foreach($paramsQueryPostModel as $key => $val) {
-		if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
-			$array_edit_post_mtmparam = array();
-			if(($pos = strpos($key,$nameps_mtm))) {
-				$name_norm = substr($key,0,$pos);
-				$array_edit_post_mtmparam[$name_norm] = trim($val);
-			}
-		}
 	}
 
 	if(isset($array_edit_post_mtmparam) && count($array_edit_post_mtmparam)) {
