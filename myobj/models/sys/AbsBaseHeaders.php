@@ -304,13 +304,17 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		$this->_tmpUProperties[$arrayName_Value[0]] = $arrayName_Value[1];
 	}
 
+	/**
+	 * @var MYOBJ\appscms\core\base\form\DForm null
+	 */
 	private $_formPropValid=null;
 	public function beforeValidate() {
 		if(parent::beforeValidate()) {
-			if($this->_formPropValid && $this->_formPropValid->validate()==false) {
-				throw new CException(
-					Yii::t('cms','userProp errors: '.print_r($this->_formPropValid->getErrors(),true))
-				);
+
+			$this->_formPropValid->attributes = $this->getUProperties();
+			if($this->_formPropValid->validate()==false) {
+				$this->addErrors($this->_formPropValid->getErrors());
+				//добавить в логи что были ошибки ??
 			}
 
 			return true;

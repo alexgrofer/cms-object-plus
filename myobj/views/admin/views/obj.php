@@ -12,9 +12,17 @@ $htmlp='<p class="%s">%s</p>';
 $htmlspan='<span class="%s">%s</span>';
 $htmlinput='<input type="%s" name="%s" value="%s" class="%s" />';
 
-$addForm = MYOBJ\appscms\core\base\form\DForm::create();
-//заполняем форму доп параметрами
 $htmlElementsAddForm = array();
+$addForm = MYOBJ\appscms\core\base\form\DForm::create();
+if($REND_model instanceof AbsBaseHeaders) {
+	//uProperties
+	$namepConst_UPop = '__uprop';
+	foreach($REND_model->getUProperties() as $name => $val) {
+		$name.=$namepConst_UPop;
+		$addForm->addAttributeRule($name, array('safe'), $val);
+		$htmlElementsAddForm[$name] = array('type'=>'text');
+	}
+}
 
 if($REND_AttributeLabels) {
 	$REND_model->customAttributeLabels = array_merge($REND_model->attributeLabels(), $REND_AttributeLabels);
@@ -39,15 +47,24 @@ if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationE
 $isValidated=false;
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
-	$addForm->attributes = yii::app()->getRequest()->getPost(get_class($addForm));
+
+	$addForm->attributes = yii::app()->getRequest()->getPost('MYOBJ_appscms_core_base_form_DForm');
+
 	if($addForm->validate()) {
 
 		if($REND_model instanceof AbsBaseHeaders) {
-			//UProperties
-			foreach($REND_model->propertyNames() as $nameUProp) {
+
+			foreach($addForm->getAttributes() as $name => $val) {
+
+				//UProperties
+				if($pos = strpos($name,$namepConst_UPop)) {
+					$NormNameUProp = substr($name,0,$pos);
+					$REND_model->uProperties = array($NormNameUProp, $val);
+				}
+				//EArray
+
 
 			}
-			//EArray
 		}
 
 		$REND_model->attributes = $paramsQueryPostModel;
@@ -92,9 +109,7 @@ $form = new CForm(array('elements'=>array(
 	'DForm'=>array(
 		'type'=>'form',
 		'title'=>'additionally',
-		'elements'=>array(
-			$htmlElementsAddForm
-		),
+		'elements'=>$htmlElementsAddForm,
 	),
 )));
 $form->attributes = array('enctype' => 'multipart/form-data');
