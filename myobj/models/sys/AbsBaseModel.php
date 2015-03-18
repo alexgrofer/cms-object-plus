@@ -43,16 +43,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 
-	public function save($runValidation=true,$attributes=null) {
-		$result = parent::save($runValidation,$attributes);
-		if(!$result && $this->getErrors()) {
-			throw new CException(
-				Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true))
-			);
-		}
-		return $result;
-	}
-
 	public $customRules=array();
 	protected function defaultRules() {
 		return array();
@@ -180,5 +170,24 @@ abstract class AbsBaseModel extends CActiveRecord
 		foreach($this->attributes as $k => $v) {
 			$this->_old_attributes[$k] = $v;
 		}
+	}
+
+	private $wasAfterValidated=false;
+	public function afterValidate() {
+		parent::afterValidate();
+
+		$this->wasAfterValidated=true;
+	}
+
+	protected function beforeSave() {
+		if(parent::beforeSave()) {
+			/**
+			 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
+			 */
+			if ($this->wasAfterValidated == false && $this->getErrors()) {
+				throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
+			}
+		}
+		return false;
 	}
 }
