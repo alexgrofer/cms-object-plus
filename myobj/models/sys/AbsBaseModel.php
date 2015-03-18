@@ -184,9 +184,11 @@ abstract class AbsBaseModel extends CActiveRecord
 			/**
 			 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
 			 */
-			if ($this->wasAfterValidated == false && $this->getErrors()) {
+			if (((defined('YII_DEBUG') && YII_DEBUG) || $this->wasAfterValidated == false) && $this->getErrors()) {
 				throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 			}
+
+			return true;
 		}
 		return false;
 	}
