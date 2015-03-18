@@ -6,7 +6,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		if(!$objDForm->is_independent) {
 			$objDForm->uclass_id = $idClass;
 		}
-		$objDForm->afterCreate();
+		$objDForm->afterInit();
 		return $objDForm;
 	}
 
@@ -413,8 +413,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		);
 	}
 
-	public function afterCreate() {
-		parent::afterCreate();
+	public function afterInit() {
+		parent::afterInit();
 
 		//start uProperties
 		//+++необходимо узнать список свойств у этого объекта

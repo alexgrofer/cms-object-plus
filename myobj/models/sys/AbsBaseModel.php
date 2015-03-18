@@ -9,7 +9,7 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	protected function afterFind() {
 		parent::afterFind();
-		$this->afterCreate();
+		$this->afterInit();
 	}
 
 	public function primaryKey()
@@ -17,7 +17,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		return 'id';
 	}
 
-	public $old_attributes=array();
 	public static function model($className=null)
 	{
 		if(!$className) {
@@ -172,9 +171,14 @@ abstract class AbsBaseModel extends CActiveRecord
 		return true;
 	}
 
-	public function afterCreate() {
+	private $_old_attributes=array();
+	public function getOldAttributes() {
+		return $this->_old_attributes;
+	}
+
+	public function afterInit() {
 		foreach($this->attributes as $k => $v) {
-			$this->old_attributes[$k] = $v;
+			$this->_old_attributes[$k] = $v;
 		}
 	}
 }
