@@ -46,7 +46,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 	-- more options
 	`name` varchar(255) NOT NULL,
 	`content` text NOT NULL,
-	`sort` int(11) DEFAULT NULL,
+	`sort` int(11) NULL,
 	`vp1` varchar(255) NULL,
 	`vp2` varchar(255) NULL,
 	`vp3` varchar(255) NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `setcms_systemobjheaders` (
 CREATE TABLE `setcms_templatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`desc` varchar(255) NOT NULL DEFAULT '',
+	`desc` varchar(255) NOT NULL,
 	`path` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -67,7 +67,7 @@ CREATE TABLE `setcms_templatesystemobjheaders` (
 CREATE TABLE `setcms_viewsystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`desc` varchar(255) NOT NULL DEFAULT '',
+	`desc` varchar(255) NOT NULL,
 	`path` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -76,13 +76,13 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`controller` varchar(255) NOT NULL,
-	`action` varchar(255) NULL DEFAULT NULL,
+	`action` varchar(255) NULL,
 	`sort` int(11) NOT NULL DEFAULT 0,
 	`show` tinyint(1) NOT NULL DEFAULT 0,
 	-- keys
-	`parent_id` int(11) NULL DEFAULT NULL,
-	`template_default_id` int(11) DEFAULT NULL,
-	`template_mobile_default_id` int(11) DEFAULT NULL,
+	`parent_id` int(11) NULL,
+	`template_default_id` int(11) NULL,
+	`template_mobile_default_id` int(11) NULL,
 	--
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`controller`,`action`),
@@ -94,7 +94,7 @@ CREATE TABLE `setcms_navigatesystemobjheaders` (
 CREATE TABLE `setcms_paramsystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`content` longtext NOT NULL DEFAULT '',
+	`content` longtext NOT NULL,
 	-- keys
 	`navigate_id` int(11) NOT NULL,
 	--
@@ -126,11 +126,11 @@ CREATE TABLE `setcms_linessystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
 	`header_id` int(11) NOT NULL,
-	`uptextfield` longtext DEFAULT NULL,
-	`upcharfield` varchar(255) DEFAULT NULL,
-	`updatetimefield` datetime DEFAULT NULL,
-	`upintegerfield` int(11) DEFAULT NULL,
-	`upfloatfield` double DEFAULT NULL,
+	`uptextfield` longtext NULL,
+	`upcharfield` varchar(255) NULL,
+	`updatetimefield` datetime NULL,
+	`upintegerfield` int(11) NULL,
+	`upfloatfield` double NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_systemobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -143,7 +143,7 @@ CREATE TABLE `setcms_myobjheaders` (
 	-- more options
 	`name` varchar(255) NOT NULL,
 	`content` longtext NOT NULL,
-	`sort` int(11) DEFAULT NULL,
+	`sort` int(11) NULL,
 	`bpublic` tinyint(1) NOT NULL,
 	-- end
 	PRIMARY KEY (`id`),
@@ -154,11 +154,11 @@ CREATE TABLE `setcms_linesmyobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`property_id` int(11) NOT NULL,
 	`header_id` int(11) NOT NULL,
-	`uptextfield` longtext DEFAULT NULL,
-	`upcharfield` varchar(255) DEFAULT NULL,
-	`updatetimefield` datetime DEFAULT NULL,
-	`upintegerfield` int(11) DEFAULT NULL,
-	`upfloatfield` double DEFAULT NULL,
+	`uptextfield` longtext NULL,
+	`upcharfield` varchar(255) NULL,
+	`updatetimefield` datetime NULL,
+	`upintegerfield` int(11) NULL,
+	`upfloatfield` double NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`property_id`) REFERENCES `setcms_objproperties` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`header_id`) REFERENCES `setcms_myobjheaders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
