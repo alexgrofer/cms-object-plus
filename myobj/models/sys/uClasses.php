@@ -105,7 +105,8 @@ class uClasses extends AbsBaseModel
 	 * @return CActiveRecord
 	 */
 	public function objects() { //namesvprop left join props lines
-		$modelheaders = $this->initobject();
+		$nameClass = $this->getNameModelHeaderClass();
+		$modelheaders = $nameClass::model();
 		if(!$modelheaders->is_independent) {
 			$modelheaders->dbCriteria->compare($modelheaders->getTableAlias() . '.uclass_id', $this->primaryKey);
 		}

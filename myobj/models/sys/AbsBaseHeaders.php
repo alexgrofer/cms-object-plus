@@ -2,12 +2,12 @@
 abstract class AbsBaseHeaders extends AbsBaseModel
 {
 	public static function create($scenario='insert',$idClass=null,$addParam2=null,$addParam3=null,$addParam4=null) {
-		$objDForm = new static($scenario);
-		if(!$objDForm->is_independent) {
-			$objDForm->uclass_id = $idClass;
+		$newObj = new static($scenario);
+		if(!$newObj->is_independent) {
+			$newObj->uclass_id = $idClass;
 		}
-		$objDForm->afterInit();
-		return $objDForm;
+		$newObj->afterCreate();
+		return $newObj;
 	}
 
 
@@ -408,8 +408,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 */
 	private $_formPropValid=null;
 
-	public function afterInit() {
-		parent::afterInit();
+	public function afterCreate() {
+		parent::afterCreate();
 
 		//start uProperties
 		if ($this->isitlines) {

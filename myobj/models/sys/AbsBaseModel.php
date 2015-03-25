@@ -2,14 +2,14 @@
 abstract class AbsBaseModel extends CActiveRecord
 {
 	public static function create($scenario='insert',$addParam1=null,$addParam2=null,$addParam3=null,$addParam4=null) {
-		$objDForm = new static($scenario);
-		$objDForm->afterCreatde();
-		return $objDForm;
+		$newObj = new static($scenario);
+		$newObj->afterCreate();
+		return $newObj;
 	}
 
 	protected function afterFind() {
 		parent::afterFind();
-		$this->afterInit();
+		$this->afterCreate();
 	}
 
 	public function primaryKey()
@@ -167,7 +167,7 @@ abstract class AbsBaseModel extends CActiveRecord
 		return $this->_old_attributes;
 	}
 
-	public function afterInit() {
+	public function afterCreate() {
 		foreach($this->attributes as $k => $v) {
 			$this->_old_attributes[$k] = $v;
 		}
