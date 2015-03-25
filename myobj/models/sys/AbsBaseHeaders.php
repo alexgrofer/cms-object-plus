@@ -146,7 +146,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
-					$newobjlines = new $nameClassModelLines();
+					$newobjlines = $nameClassModelLines::create();
 					$namecolumn = $arrconfcms['TYPES_COLUMNS'][$objprop->myfield];
 					$newobjlines->$namecolumn = $this->_tmpUProperties[$objprop->codename];
 					$newobjlines->property_id = $objprop->primaryKey;

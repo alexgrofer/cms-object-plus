@@ -100,7 +100,7 @@ class AdminController extends \Controller {
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
 					//alias model
 					$NAMEMODEL_get = $params_modelget['namemodel'];
-					$modelAD =  new $NAMEMODEL_get();
+					$modelAD =  $NAMEMODEL_get::create();
 					//permission show classes
 					if(get_class($modelAD)=='uClasses') {
 						$show_none_permission_classes = array();
@@ -174,7 +174,7 @@ class AdminController extends \Controller {
 								$modelAD = \uClasses::getclass($actclass->primaryKey)->initobject();
 							}
 							else {
-								$modelAD = new $modelAD;
+								$modelAD = $modelAD::create();
 							}
 						}
 						break;
@@ -193,7 +193,7 @@ class AdminController extends \Controller {
 						$params_modelget = SysUtils::normalAliasModel($namemodelthis);
 
 						$NAMEMODEL_get = $params_modelget['namemodel'];
-						$modelAD_LINK =  new $NAMEMODEL_get();
+						$modelAD_LINK =  $NAMEMODEL_get::create();
 						$relation_model = $modelAD_LINK->relations();
 
 						$nameConfModelSelf = $this->dicturls['paramslist'][7];
@@ -363,7 +363,8 @@ class AdminController extends \Controller {
 								}
 							}
 							else {
-								$newobj = new $namemodel();
+								$namemodel = get_class($modelAD);
+								$newobj = $namemodel::create();
 							}
 
 							$newobj->attributes = $attributes_csv;
