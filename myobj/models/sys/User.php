@@ -26,19 +26,19 @@ class User extends AbsBaseModel
 		));
 	}
 	protected function beforeSave() {
-		if($beforeSave = parent::beforeSave()) {
-			if(!$this->isNewRecord) {
-				$objuser = $this->model()->findByPk($this->primaryKey);
-				if($objuser->password!=$this->password) {
-					$this->password = md5($this->password);
-				}
-			}
-			else {
+		if(!parent::beforeSave()) return false;
+
+		if(!$this->isNewRecord) {
+			$objuser = $this->model()->findByPk($this->primaryKey);
+			if($objuser->password!=$this->password) {
 				$this->password = md5($this->password);
 			}
-			return true;
 		}
-		return $beforeSave;
+		else {
+			$this->password = md5($this->password);
+		}
+
+		return true;
 	}
 	protected function defaultElementsForm() {
 		return array(

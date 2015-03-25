@@ -93,6 +93,7 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	protected function afterDelete() {
 		parent::afterDelete();
+
 		if(Yii::app()->appcms->config['sys_db_type_InnoDB']) {
 			foreach ($this->foreign_on_delete_cascade() as $nameRelation) {
 				if (isset($this->metaData->relations[$nameRelation])) {
@@ -180,16 +181,15 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	protected function beforeSave() {
-		if(parent::beforeSave()) {
-			/**
-			 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
-			 */
-			if (((defined('YII_DEBUG') && YII_DEBUG) || $this->wasAfterValidated == false) && $this->getErrors()) {
-				throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
-			}
+		if(!parent::beforeSave()) return false;
 
-			return true;
+		/**
+		 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
+		 */
+		if (((defined('YII_DEBUG') && YII_DEBUG) || $this->wasAfterValidated == false) && $this->getErrors()) {
+			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 		}
-		return false;
+
+		return true;
 	}
 }

@@ -249,6 +249,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 
 	protected function afterSave() {
 		parent::afterSave();
+
 		//если были изменены свойства то сохраняем их
 		if(count($this->_tmpUProperties)) {
 			$this->saveProperties();
@@ -275,12 +276,11 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function beforeSave() {
-		if($beforeSave = parent::beforeSave()) {
-			//для новых объектов необходимо подставить класс
-			if($this->isNewRecord) $this->uclass_id = $this->uclass->primaryKey;
-			return true;
-		}
-		return $beforeSave;
+		if(!parent::beforeSave()) return false;
+
+		//для новых объектов необходимо подставить класс
+		if($this->isNewRecord) $this->uclass_id = $this->uclass->primaryKey;
+		return true;
 	}
 
 	public function hasProperty($name) {
@@ -302,17 +302,16 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	}
 
 	public function beforeValidate() {
-		if(parent::beforeValidate()) {
-			if($this->isitlines) {
-				$this->_formPropValid->attributes = $this->getUProperties();
-				if ($this->_formPropValid->validate() == false) {
-					$this->addErrors($this->_formPropValid->getErrors());
-				}
-			}
+		if(!parent::beforeValidate()) return false;
 
-			return true;
+		if($this->isitlines) {
+			$this->_formPropValid->attributes = $this->getUProperties();
+			if ($this->_formPropValid->validate() == false) {
+				$this->addErrors($this->_formPropValid->getErrors());
+			}
 		}
-		return false;
+
+		return true;
 	}
 
 	/**
