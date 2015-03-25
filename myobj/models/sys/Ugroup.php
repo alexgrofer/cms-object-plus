@@ -4,12 +4,12 @@ class Ugroup extends AbsBaseModel {
 
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 	public function relations()
 	{
 		return array(
-			'users'=>array(self::MANY_MANY, 'User', 'setcms_user_ugroup(group_id,user_id)'),
+			'users'=>array(self::MANY_MANY, 'User', 'cmsplus_user_ugroup(group_id,user_id)'),
 		);
 	}
 	protected function defaultRules() {

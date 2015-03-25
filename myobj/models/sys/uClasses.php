@@ -8,15 +8,15 @@ class uClasses extends AbsBaseModel
 
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 
 	public function relations()
 	{
 		return array(
-			'properties'=>array(self::MANY_MANY, 'objProperties', 'setcms_uclasses_objproperties(from_uclasses_id, to_objproperties_id)'),
-			'association'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(from_uclasses_id, to_uclasses_id)'),
-			'association_back'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_association(to_uclasses_id, from_uclasses_id)'),
+			'properties'=>array(self::MANY_MANY, 'objProperties', 'cmsplus_uclasses_objproperties(from_uclasses_id, to_objproperties_id)'),
+			'association'=>array(self::MANY_MANY, 'uClasses', 'cmsplus_uclasses_association(from_uclasses_id, to_uclasses_id)'),
+			'association_back'=>array(self::MANY_MANY, 'uClasses', 'cmsplus_uclasses_association(to_uclasses_id, from_uclasses_id)'),
 			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
 		);
 	}

@@ -3,7 +3,7 @@ abstract class AbsBaseLines extends AbsBaseModel
 {
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 
 	public $uptextfield; //models.TextField(blank=True)

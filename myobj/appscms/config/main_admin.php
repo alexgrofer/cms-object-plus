@@ -3,23 +3,23 @@ use MYOBJ\appscms\core\base\SysUtils;
 
 $tables_db_dump = array(
 	//links
-	'setcms_linksobjectsallmy',
-	'setcms_linksobjectsallmy_links',
-	'setcms_linksobjectsallsystem',
-	'setcms_linksobjectsallsystem_links',
+	'cmsplus_linksobjectsallmy',
+	'cmsplus_linksobjectsallmy_links',
+	'cmsplus_linksobjectsallsystem',
+	'cmsplus_linksobjectsallsystem_links',
 	//my obj
-	'setcms_myobjheaders',
-	'setcms_myobjlines',
-	'setcms_myobjheaders_lines',
+	'cmsplus_myobjheaders',
+	'cmsplus_myobjlines',
+	'cmsplus_myobjheaders_lines',
 	//sys obj
-	'setcms_systemobjheaders',
-	'setcms_systemobjlines',
-	'setcms_systemobjheaders_lines',
+	'cmsplus_systemobjheaders',
+	'cmsplus_systemobjlines',
+	'cmsplus_systemobjheaders_lines',
 	//classes
-	'setcms_uclasses',
-	'setcms_objproperties',
-	'setcms_uclasses_association',
-	'setcms_uclasses_objproperties',
+	'cmsplus_uclasses',
+	'cmsplus_objproperties',
+	'cmsplus_uclasses_association',
+	'cmsplus_uclasses_objproperties',
 );
 
 $objects = SysUtils::array_array_merge(

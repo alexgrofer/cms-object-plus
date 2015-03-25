@@ -7,13 +7,13 @@ class User extends AbsBaseModel
 
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 	public function relations()
 	{
 		return array(
 			'userpasport'=>array(self::HAS_ONE, 'UserPasport', 'user_id'), // test
-			'groups'=>array(self::MANY_MANY, 'Ugroup', 'setcms_user_ugroup(user_id, group_id)'),
+			'groups'=>array(self::MANY_MANY, 'Ugroup', 'cmsplus_user_ugroup(user_id, group_id)'),
 		);
 	}
 	protected function defaultRules() {

@@ -13,12 +13,12 @@ class objProperties extends AbsBaseModel
  
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 	public function relations()
 	{
 		return array(
-			'classes'=>array(self::MANY_MANY, 'uClasses', 'setcms_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
+			'classes'=>array(self::MANY_MANY, 'uClasses', 'cmsplus_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
 		);
 	}
 	protected function defaultRules()

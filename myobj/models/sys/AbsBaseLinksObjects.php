@@ -16,7 +16,7 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 
 	public function tableName()
 	{
-		return 'setcms_'.strtolower(get_class($this));
+		return 'cmsplus_'.strtolower(get_class($this));
 	}
 
 	public function relations() {
