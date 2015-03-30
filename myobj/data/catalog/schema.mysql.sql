@@ -16,7 +16,7 @@ CREATE TABLE `cmsplus_catalog_option` (
 	`type` tinyint(1) NOT NULL,
 	`conf` varchar(255) NOT NULL DEFAULT '',
 
-	PRIMARY KEY (`id`),
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cmsplus_catalog_option_faq` (

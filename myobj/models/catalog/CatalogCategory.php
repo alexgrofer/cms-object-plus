@@ -21,7 +21,7 @@ class CatalogCategory extends AbsBaseModel
 
 	protected function defaultRules() {
 		return array(
-			array('name', 'required'),
+			array('name, codename', 'required'),
 			array('name, desc, codename', 'length', 'max'=>225),
 			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
 			array('parent_id', 'exist', 'attributeName'=>'id', 'className'=>get_class($this),'allowEmpty'=>true),

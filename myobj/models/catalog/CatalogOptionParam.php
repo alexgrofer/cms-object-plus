@@ -11,7 +11,7 @@ class CatalogOptionParam extends AbsBaseModel
 	public function relations()
 	{
 		return array(
-			'option'=>array(self::HAS_ONE, 'catalogOption', 'id_option'),
+			'option'=>array(self::BELONGS_TO, 'catalogOption', 'id_option'),
 		);
 	}
 	public function defaultRules()
