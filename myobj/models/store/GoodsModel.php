@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Товары
- * Class GoodsModel
- */
 class GoodsModel extends AbsGoodsModel
 {
 	//public $article;

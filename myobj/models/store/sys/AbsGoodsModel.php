@@ -17,7 +17,15 @@ abstract class AbsGoodsModel extends AbsBaseModel
 	 * Артикль товара
 	 * Описание товара
 	 * Катогория товара
+	 *
+	 * доп опции: шарина высота
 	 */
+
+	/**
+	 * ссылка на католог, какой категории пренадлежит этот товар
+	 * @var
+	 */
+	public $catalog_id;
 
 	abstract protected function getNameModelStore();
 }
