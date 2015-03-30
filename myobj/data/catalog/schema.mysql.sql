@@ -19,15 +19,6 @@ CREATE TABLE `cmsplus_catalog_option` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `cmsplus_catalog_option_faq` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`text` text NOT NULL,
-
-	PRIMARY KEY (`id`),
-	`option_id` int(11) NOT NULL,
-	FOREIGN KEY (`option_id`) REFERENCES `cmsplus_catalog_option` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `cmsplus_catalog_category_to_option` (
 	`category_id` int(11) NOT NULL,
 	`option_id` int(11) NOT NULL,

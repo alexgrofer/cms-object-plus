@@ -4,9 +4,9 @@
  * Склад
  * Class StoreModel
  */
-class RealtyStoreModel extends AbsStoreModel
+class StoreModel extends AbsStoreModel
 {
 	protected function getNameModelGoods() {
-		return 'RealtyGoodsModel';
+		return 'GoodsModel';
 	}
 }

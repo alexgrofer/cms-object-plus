@@ -4,12 +4,12 @@
  * Товары
  * Class GoodsModel
  */
-class RealtyGoodsModel extends AbsGoodsModel
+class GoodsModel extends AbsGoodsModel
 {
 	//public $article;
 	//public $brand_id;
 
 	protected function getNameModelStore() {
-		return 'RealtyStoreModel';
+		return 'StoreModel';
 	}
 }
