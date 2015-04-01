@@ -10,9 +10,11 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public $uclass_id=5;
 	//columns DB
 	public $name;
+	public $desc;
 	public $controller;
 	public $action;
 	public $sort;
+	public $show;
 	//key
 	public $parent_id;
 	public $template_default_id;
@@ -24,9 +26,10 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 		$rules = parent::defaultRules();
 		return array_merge($rules, array(
 			array('name, controller', 'required'),
-			array('name, controller, action', 'length', 'max'=>255),
+			array('name, desc, controller, action', 'length', 'max'=>255),
 			array('action', 'default', 'value'=>null),
 			array('sort', 'default', 'value'=>0),
+			array('show', 'boolean'),
 
 			array('parent_id', 'exist', 'className' => get_class($this), 'attributeName'=>'id', 'allowEmpty'=>true),
 			array('parent_id', 'default', 'value'=>null),
@@ -41,6 +44,8 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 	public function relations() {
 		$relations = parent::relations();
+
+		$relations['parent'] = array(self::BELONGS_TO, get_class($this), 'parent_id');
 
 		$relations['templateDefault'] = array(self::BELONGS_TO, 'TemplateSystemObjHeaders', 'template_default_id');
 		$relations['templateMobileDefault'] = array(self::BELONGS_TO, 'TemplateSystemObjHeaders', 'template_mobile_default_id');

@@ -103,6 +103,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @return array
 	 */
 	public function getUProperties($force=false) {
+		if(!$this->isitlines) return array();
+
 		if($force) {
 			$this->_tmpUProperties = array();
 			$this->refresh();

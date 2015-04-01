@@ -374,7 +374,7 @@ class AdminController extends \Controller {
 							}
 
 							$newobj->save();
-							if($newobj->getErrors()) throw new \CException(Yii::t('cms',serialize($newobj->getErrors())));
+							if($newobj->getErrors()) throw new \CException(Yii::t('cms',print_r($newobj->getErrors(), true)));
 						}
 						$row++;
 					}
