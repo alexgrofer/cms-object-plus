@@ -304,6 +304,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	public function beforeValidate() {
 		if(!parent::beforeValidate()) return false;
 
+		//uProperties
 		if($this->isitlines) {
 			$this->_formPropValid->attributes = $this->getUProperties();
 			if ($this->_formPropValid->validate() == false) {
@@ -455,8 +456,5 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->_formPropValid = $objFormProp;
 		}
 		//end uProperties
-
-		//start EArray
-		//end EArray
 	}
 }

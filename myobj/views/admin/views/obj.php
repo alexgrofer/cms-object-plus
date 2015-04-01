@@ -18,30 +18,39 @@ if($REND_model instanceof AbsBaseHeaders) {
 	//uProperties
 	$namepConst_UPop = '__uprop';
 	foreach($REND_model->getUProperties() as $name => $val) {
-		$name.=$namepConst_UPop;
-		$addForm->addAttributeRule($name, array('safe'), $val);
-		$htmlElementsAddForm[$name] = array('type'=>'text');
+		$dName=$name.$namepConst_UPop;
+		$addForm->addAttributeRule($dName, array('safe'), $val);
+		$htmlElementsAddForm[$dName] = array('type'=>'text');
+	}
+}
+else {
+	//MTM PARAM
+	if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
+		$array_names_v_mtm = array();
+		$nameps_mtm = '_col_mtm_model';
+
+		//смотрим в конфиге какие колонки из дочерней таблице показываем при selfobjrelation
+		foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
+			$SelectArr = $REND_model->links_edit('select',$this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$namer);
+
+			$nameElem = $namer.$nameps_mtm;
+			$addForm->addAttributeRule($nameElem, array('safe'), $SelectArr[$namer]);
+			$htmlElementsAddForm[$nameElem] = array('type'=>'text');
+
+			$array_names_v_mtm[$namer] = $SelectArr[$namer];
+		}
+	}
+	//EArray
+	$namepConst_EArray = '__earray';
+	foreach($REND_model->eArray() as $name => $confEA) {
+		$dName=$name.$namepConst_EArray;
+		$addForm->addAttributeRule($dName, array('safe'), $REND_model->getEArray($name));
+		$htmlElementsAddForm[$dName] = array('type'=>'text');
 	}
 }
 
 if($REND_AttributeLabels) {
 	$REND_model->customAttributeLabels = array_merge($REND_model->attributeLabels(), $REND_AttributeLabels);
-}
-
-if($this->dicturls['paramslist'][5]=='relationobjonly' && $REND_selfobjrelationElements) {
-	$array_names_v_mtm = array();
-	$nameps_mtm = '_col_mtm_model';
-
-	//смотрим в конфиге какие колонки из дочерней таблице показываем при selfobjrelation
-	foreach($REND_selfobjrelationElements[$this->dicturls['paramslist'][8]] as $namer) {
-		$SelectArr = $REND_model->links_edit('select',$this->dicturls['paramslist'][8],array($this->dicturls['paramslist'][6]),$namer);
-
-		$nameElem = $namer.$nameps_mtm;
-		$addForm->addAttributeRule($nameElem, array('safe'), $SelectArr[$namer]);
-		$htmlElementsAddForm[$nameElem] = array('type'=>'text');
-
-		$array_names_v_mtm[$namer] = $SelectArr[$namer];
-	}
 }
 
 $isValidated=false;
@@ -53,25 +62,30 @@ if($paramsQueryPostModel) {
 	if($addForm->validate()) {
 
 		if($REND_model instanceof AbsBaseHeaders) {
-
 			foreach($addForm->getAttributes() as $name => $val) {
-
 				//UProperties
 				if($pos = strpos($name,$namepConst_UPop)) {
 					$NormNameUProp = substr($name,0,$pos);
 					$REND_model->uProperties = array($NormNameUProp, $val);
 				}
+
+			}
+		}
+		else {
+			foreach($addForm->getAttributes() as $name => $val) {
 				//MTM PARAM
-				if(isset($array_names_v_mtm) && count($array_names_v_mtm)) {
+				if (isset($array_names_v_mtm) && count($array_names_v_mtm)) {
 					$array_edit_post_mtmparam = array();
-					if(($pos = strpos($name,$nameps_mtm))) {
-						$name_norm = substr($name,0,$pos);
+					if (($pos = strpos($name, $nameps_mtm))) {
+						$name_norm = substr($name, 0, $pos);
 						$array_edit_post_mtmparam[$name_norm] = trim($val);
 					}
 				}
-
 				//EArray
-
+				if($pos = strpos($name,$namepConst_EArray)) {
+					$NormNameUEArray = substr($name,0,$pos);
+					$REND_model->editEArray($NormNameUEArray, $val);
+				}
 			}
 		}
 

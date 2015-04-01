@@ -167,10 +167,31 @@ abstract class AbsBaseModel extends CActiveRecord
 		return $this->_old_attributes;
 	}
 
+	/**
+	 * @var MYOBJ\appscms\core\base\form\DForm null
+	 */
+	private $_formEArrayValid=null;
+
 	public function afterCreate() {
 		foreach($this->attributes as $k => $v) {
 			$this->_old_attributes[$k] = $v;
 		}
+
+		//start EArray
+		if ($this->eArray()) {
+
+			$objFormEArray = MYOBJ\appscms\core\base\form\DForm::create();
+
+			foreach($this->eArray() as $name => $confEA) {
+				$objFormEArray->addAttributeRule($name, array('safe'));
+				foreach($confEA['rules'] as $rule) {
+					$objFormEArray->addAttributeRule($name, $rule);
+				}
+			}
+
+			$this->_formEArrayValid = $objFormEArray;
+		}
+		//end EArray
 	}
 
 	private $wasAfterValidated=false;
@@ -191,5 +212,61 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 
 		return true;
+	}
+
+	public function beforeValidate() {
+		if(!parent::beforeValidate()) return false;
+
+		//EArray
+		if($this->eArray()) {
+			$this->_formEArrayValid->attributes = $this->getEArray();
+			if ($this->_formEArrayValid->validate() == false) {
+				$this->addErrors($this->_formEArrayValid->getErrors());
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Параметры конфигурации
+	 * array('name' => array('nameProp'=>'name', 'rules'=>array(array('length', 'max'=>255), array('required'))));
+	 * @return array
+	 */
+	public function eArray() {
+		return array();
+	}
+
+	/**
+	 * @param $name
+	 * @param $val val=='' ключ будет удален из массива
+	 */
+	public function editEArray($name, $val) {
+		$conf = $this->eArray(); $conf = $conf[$name];
+		$unserialize = unserialize($this->$conf['nameProp']);
+
+		if(!$unserialize) $unserialize = array();
+		$unserialize[$name] = $val;
+		if(!$val) unset($unserialize[$name]);
+
+		$this->setAttribute($conf['nameProp'], serialize($unserialize));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getEArray($name=null) {
+		$conf = $this->eArray();
+
+		if($name===null) {
+			$array = array();
+			foreach($conf as $name => $confEA) {
+				$array[$name] = $this->getEArray($name);
+			}
+			return $array;
+		}
+		$conf = $conf[$name];
+		$unserialize = unserialize($this->$conf['nameProp']);
+		return ($unserialize && isset($unserialize[$name]))?$unserialize[$name]:'';
 	}
 }
