@@ -1,16 +1,26 @@
 <?php
 
 /**
- * Логистическая таблица для курьерских компаний или своей логиистической службы
+ * Логистическая таблица доставки
  * Class AbsLogisticsModel
  */
 abstract class AbsLogisticsModel extends AbsBaseModel
 {
 	/**
-	 * не усложнять
-	 * адрес можно разбит ьпо полям включая индекс страну
+	 * id логистической компании как своей так и партнера (например PickPoint)
+	 * @var
+	 */
+	public $company_id;
+
+	/**
+	 * Модель логистической компании
+	 * @return mixed
+	 */
+	abstract public function getModelCompanyLogistic();
+
+	/**
+	 * адресс
 	 * статус отгрузки
-	 * id логистической компании
 	 * id заказа
 	 * пояснение к доставке
 	 * дата создания
@@ -18,6 +28,6 @@ abstract class AbsLogisticsModel extends AbsBaseModel
 	 * дата доставки
 	 * причина отказа
 	 * стоимость доставки
-	 * имя адресата
+	 * имя
 	 */
 }

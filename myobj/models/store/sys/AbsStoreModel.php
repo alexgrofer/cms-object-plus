@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Склад или магазин, точка выдачи
+ * Магазин, точка выдачи
  * Class AbsStoreModel
  */
 abstract class AbsStoreModel extends AbsBaseModel
@@ -10,7 +10,26 @@ abstract class AbsStoreModel extends AbsBaseModel
 	public $name;
 
 	/**
-	 * дата отгрузки в этот магазин
-	 * идентификатор кампании в системе если это агрегатор
+	 * Страна в которой находится магазин
+	 * @var
 	 */
+	public $country;
+
+	/**
+	 * Город в котором находится магазин
+	 * @var
+	 */
+	public $city;
+
+	/**
+	 * Адрес магазина
+	 * @var
+	 */
+	public $address;
+
+	/**
+	 * Описание магазина
+	 * @var
+	 */
+	public $desc;
 }

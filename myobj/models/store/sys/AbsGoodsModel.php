@@ -26,6 +26,4 @@ abstract class AbsGoodsModel extends AbsBaseModel
 	 * @var
 	 */
 	public $catalog_id;
-
-	abstract protected function getNameModelStore();
 }
