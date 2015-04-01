@@ -222,10 +222,10 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 	/*
 	 *
 	 */
-	public function testPropertyNames() {
+	public function testGetUPropertyNames() {
 		/* @var $objHeader TestAbsBaseObjHeaders */
 		$objHeader = $this->objectAbsBaseHeader('TestAbsBaseObjHeaders_sample_noSave');
-		$this->assertEquals($objHeader->propertyNames(), ['codename1', 'codename2']);
+		$this->assertEquals($objHeader->getUPropertyNames(), ['codename1', 'codename2']);
 	}
 
 	public function testGetPropCriteria() {

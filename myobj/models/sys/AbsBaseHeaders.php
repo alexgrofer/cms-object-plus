@@ -287,7 +287,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return in_array($name, $this->_tmpUPropertiesNames);
 	}
 
-	public function propertyNames() {
+	public function getUPropertyNames() {
 		return $this->_tmpUPropertiesNames;
 	}
 
@@ -309,6 +309,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 			$this->_formPropValid->attributes = $this->getUProperties();
 			if ($this->_formPropValid->validate() == false) {
 				$this->addErrors($this->_formPropValid->getErrors());
+				return false;
 			}
 		}
 

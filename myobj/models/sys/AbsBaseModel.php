@@ -222,6 +222,7 @@ abstract class AbsBaseModel extends CActiveRecord
 			$this->_formEArrayValid->attributes = $this->getEArray();
 			if ($this->_formEArrayValid->validate() == false) {
 				$this->addErrors($this->_formEArrayValid->getErrors());
+				return false;
 			}
 		}
 
