@@ -343,6 +343,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 * @throws CException
 	 */
 	public function getPropCriteria($type, $nameUProps, $option1, $option2=null) {
+		if(!$this->isitlines) {
+			throw new CException(Yii::t('cms','class '.$this->uclass->codename.' not support Uproperties'));
+		}
+
 		$config = Yii::app()->appcms->config;
 		$relations = $this->relations();
 		$criteria = new CDbCriteria;
