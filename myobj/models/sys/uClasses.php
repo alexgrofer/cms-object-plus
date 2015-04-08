@@ -20,10 +20,9 @@ class uClasses extends AbsBaseModel
 			//'objectCount'=>array(self::STAT, 'myObjHeaders', 'uclass_id'),
 		);
 	}
-	protected function defaultRules()
+	public function rules()
 	{
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+		return array(
 			array('name,  codename', 'required'),
 			array('name', 'length', 'max'=>255),
 
@@ -34,7 +33,7 @@ class uClasses extends AbsBaseModel
 			array('description', 'default', 'value'=>''),
 			array('tablespace', 'numerical'),
 
-		));
+		);
 	}
 	public function getobjectCount() {
 		return $this->objects()->count();

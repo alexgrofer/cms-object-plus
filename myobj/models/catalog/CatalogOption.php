@@ -17,7 +17,7 @@ class CatalogOption extends AbsBaseModel
 		);
 	}
 
-	public function defaultRules()
+	public function rules()
 	{
 		return array(
 			array('name, type', 'required'),

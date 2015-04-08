@@ -16,15 +16,14 @@ class TestObjHeaders extends AbsBaseHeaders {
 
 	public $isitlines = false;
 
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('param1, param2, param3', 'required'),
 			array('param2', 'length', 'min'=>3),
 			array('param2', 'checkParam2', 'my_param'=>'test'),
 			array('param3', 'length', 'min'=>4),
 			array('param3', 'default', 'value'=>'12345'),
-		));
+		);
 	}
 
 	public function checkParam2($attributeName, $paramsConf) {

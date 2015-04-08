@@ -21,10 +21,9 @@ class objProperties extends AbsBaseModel
 			'classes'=>array(self::MANY_MANY, 'uClasses', 'cmsplus_uclasses_objproperties(to_objproperties_id, from_uclasses_id)'),
 		);
 	}
-	protected function defaultRules()
+	public function rules()
 	{
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+		return array(
 			array('name, codename, myfield', 'required'),
 			array('name, description, udefault', 'length', 'max'=>255),
 
@@ -38,7 +37,7 @@ class objProperties extends AbsBaseModel
 			array('myfield, minfield, ,maxfield', 'numerical'),
 			array('udefault', 'default', 'value'=>false),
 			array('setcsv', 'default', 'value'=>''),
-		));
+		);
 	}
 	public function beforeSave() {
 		if(!parent::beforeSave()) return false;

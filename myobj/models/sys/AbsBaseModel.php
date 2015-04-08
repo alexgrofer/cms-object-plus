@@ -43,20 +43,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 
-	public $customRules=array();
-	protected function defaultRules() {
-		return array();
-	}
-
-	/**
-	 * Больше нельзя наследовать rules из этого класса, теперь используем метод defaultRules для задания правил
-	 * если необходимо динамически ДОБАВИТЬ правила используем свойство customRules
-	 * @return array
-	 */
-	final public function rules() {
-		return array_merge($this->defaultRules(), $this->customRules);
-	}
-
 	public $customElementsForm=array();
 	protected function defaultElementsForm() {
 		return array();

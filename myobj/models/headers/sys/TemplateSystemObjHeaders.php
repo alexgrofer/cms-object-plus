@@ -16,13 +16,12 @@ class TemplateSystemObjHeaders extends AbsBaseHeaders {
 
 	public $isitlines = false;
 
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('name, path', 'required'),
 			array('name, path, desc', 'length', 'max'=>255),
 			array('path', 'match', 'not' => true, 'pattern' => '/\.php\s*$/'),
-		));
+		);
 	}
 
 	public function relations() {

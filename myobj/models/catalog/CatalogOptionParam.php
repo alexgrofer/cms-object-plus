@@ -14,7 +14,7 @@ class CatalogOptionParam extends AbsBaseModel
 			'option'=>array(self::BELONGS_TO, 'catalogOption', 'id_option'),
 		);
 	}
-	public function defaultRules()
+	public function rules()
 	{
 		return array(
 			array('val', 'required'),

@@ -22,9 +22,8 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 	public $isitlines = false;
 
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('name, controller', 'required'),
 			array('name, desc, controller, action', 'length', 'max'=>255),
 			array('action', 'default', 'value'=>null),
@@ -39,7 +38,7 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 			array('template_mobile_default_id', 'exist', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>true),
 			array('template_mobile_default_id', 'default', 'value'=>null),
-		));
+		);
 	}
 
 	public function relations() {

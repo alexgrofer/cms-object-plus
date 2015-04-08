@@ -19,7 +19,7 @@ class CatalogCategory extends AbsBaseModel
 		);
 	}
 
-	protected function defaultRules() {
+	public function rules() {
 		return array(
 			array('name, codename', 'required'),
 			array('name, desc, codename', 'length', 'max'=>225),

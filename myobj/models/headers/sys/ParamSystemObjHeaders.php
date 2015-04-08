@@ -17,15 +17,14 @@ class ParamSystemObjHeaders extends AbsBaseHeaders {
 
 	public $isitlines = false;
 
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>255),
 			array('content', 'safe'),
 
 			array('navigate_id', 'exist', 'className' => 'NavigateSystemObjHeaders', 'attributeName'=>NavigateSystemObjHeaders::model()->primaryKey(), 'allowEmpty'=>false),
-		));
+		);
 	}
 
 	public function relations() {

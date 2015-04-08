@@ -9,17 +9,16 @@ class SystemObjHeaders extends AbsBaseHeaders
 	public $vp3;
 	public $bp1;
 
-	protected function defaultRules()
+	public function rules()
 	{
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+		return array(
 			array('name', 'required'),
 			array('sort', 'default', 'value'=>0),
 			array('vp1, vp2, vp3, content', 'default', 'value'=>''),
 			array('bp1', 'boolean'),
 			array('bp1', 'default', 'value'=>false),
 
-		));
+		);
 	}
 	protected function defaultElementsForm() {
 		return array(

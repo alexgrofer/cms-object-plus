@@ -26,13 +26,12 @@ abstract class AbsBaseLines extends AbsBaseModel
 		return $arr_relationsdef;
 	}
 
-	protected function defaultRules()
+	public function rules()
 	{
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+		return array(
 			array('upcharfield', 'length', 'max'=>255),
 			array('uptextfield, upcharfield', 'default', 'value'=>''),
 			array('uptimefield, updatefield, upintegerfield, upfloatfield', 'default', 'value'=>null),
-		));
+		);
 	}
 }

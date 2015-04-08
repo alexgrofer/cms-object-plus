@@ -12,10 +12,9 @@ class Ugroup extends AbsBaseModel {
 			'users'=>array(self::MANY_MANY, 'User', 'cmsplus_user_ugroup(group_id,user_id)'),
 		);
 	}
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('name', 'required'),
-		));
+		);
 	}
 }

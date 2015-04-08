@@ -16,14 +16,13 @@ class User extends AbsBaseModel
 			'groups'=>array(self::MANY_MANY, 'Ugroup', 'cmsplus_user_ugroup(user_id, group_id)'),
 		);
 	}
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('login, password, email', 'required'),
 			array('login, password, email', 'length', 'max'=>255),
 			array('email', 'email'),
 			array('login, email', 'unique', 'className'=>get_class($this), 'allowEmpty'=>false, 'allowEmpty'=>false),
-		));
+		);
 	}
 	protected function beforeSave() {
 		if(!parent::beforeSave()) return false;

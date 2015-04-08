@@ -60,11 +60,10 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return $relations;
 	}
 
-	protected function defaultRules() {
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+	public function rules() {
+		return array(
 			array('uclass_id', 'unsafe'),
-		));
+		);
 	}
 
 	protected function beforeFind() {

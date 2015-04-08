@@ -26,11 +26,10 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 		);
 	}
 
-	protected function defaultRules()
+	public function rules()
 	{
-		$rules = parent::defaultRules();
-		return array_merge($rules, array(
+		return array(
 			array('from_obj_id, from_class_id, to_obj_id, to_class_id ', 'unsafe'),
-		));
+		);
 	}
 }
