@@ -39,7 +39,7 @@ class User extends AbsBaseModel
 
 		return true;
 	}
-	protected function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'login'=>array(
 				'type'=>'text',

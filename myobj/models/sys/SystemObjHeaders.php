@@ -20,7 +20,7 @@ class SystemObjHeaders extends AbsBaseHeaders
 
 		);
 	}
-	protected function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

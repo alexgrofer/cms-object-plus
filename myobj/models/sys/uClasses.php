@@ -54,7 +54,7 @@ class uClasses extends AbsBaseModel
 			'tablespace' => 'table space',
 	   );
 	}
-	protected function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

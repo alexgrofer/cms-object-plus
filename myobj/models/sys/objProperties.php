@@ -66,7 +66,7 @@ class objProperties extends AbsBaseModel
 			'udefault' => 'default',
 	   );
 	}
-	protected function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',

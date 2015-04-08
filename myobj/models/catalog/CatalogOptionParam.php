@@ -22,7 +22,7 @@ class CatalogOptionParam extends AbsBaseModel
 		);
 	}
 
-	public function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'val'=>array(
 				'type'=>'text',

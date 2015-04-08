@@ -34,7 +34,7 @@ class TestObjHeaders extends AbsBaseHeaders {
 		}
 	}
 
-	protected function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'param1'=>array(
 				'type'=>'text',

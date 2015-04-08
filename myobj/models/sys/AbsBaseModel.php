@@ -43,14 +43,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 
-	public $customElementsForm=array();
-	protected function defaultElementsForm() {
-		return array();
-	}
-	final public function elementsForm() {
-		return array_merge($this->defaultElementsForm(), $this->customElementsForm);
-	}
-
 	public $customAttributeLabels=array();
 	protected function defaultAttributeLabels() {
 		return array();

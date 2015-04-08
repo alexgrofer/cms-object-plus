@@ -28,7 +28,7 @@ class CatalogCategory extends AbsBaseModel
 		);
 	}
 
-	public function defaultElementsForm() {
+	public function elementsForm() {
 		return array(
 			'name'=>array(
 				'type'=>'text',
