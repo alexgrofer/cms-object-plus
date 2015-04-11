@@ -12,6 +12,7 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 	public $name;
 	public $desc;
 	public $path;
+	public $group_id;
 	// end
 
 	public $isitlines = false;
@@ -28,6 +29,7 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 		$relations = parent::relations();
 
 		$relations['handles'] = array(self::HAS_MANY, 'HandleSystemObjHeaders', 'view_id');
+		$relations['group'] = array(self::BELONGS_TO, 'Ugroup', 'group_id');
 
 		return $relations;
 	}

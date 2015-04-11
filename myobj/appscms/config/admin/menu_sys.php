@@ -14,7 +14,6 @@ return array(
 	),
 	'conf'=>array(
 		'label'=>'conf','url'=>array('#'),'items'=>array(
-			'groups_sys'=>array('label'=>'groups sys', 'url'=>array('admin/objects/class/groups_sys/')),
 			'user'=>array(
 				'label'=>'user','url'=>array('admin/objects/models/user'),'items'=>array(
 					'group'=>array('label'=>'group','url'=>array('admin/objects/models/group')),

@@ -110,7 +110,6 @@ $arrayuirow = array(
 	'objects' => '',
 	'links' => '',
 	'editlinksclass' => '',
-	'navgroup' => '',
 	'new' => 'objects/models/'.$this->dicturls['paramslist'][1].'/action/edit/0/'.$relationLinkOnly,
 );
 $headershtml = '';
@@ -332,8 +331,6 @@ foreach($listall as $obj) {
 		$uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey).'">links</a>';
 		$uihtml .= ' | <a href="'.$this->createAdminUrl($arrayuirow['links'].$obj->primaryKey, array('is_bask_link'=>1)).'">back links</a>';
 	}
-
-	if($arrayuirow['navgroup']) $uihtml .= ' | <a href="'.$this->createAdminUrl(sprintf($arrayuirow['navgroup'],$obj->primaryKey)).'">group_permission</a>';
 
 	if($arrayuirow['editlinksclass']) {
 		$uihtml .= ' | link types: ';

@@ -1,3 +1,9 @@
+CREATE TABLE `cmsplus_ugroup` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`codename` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_uclasses` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -69,7 +75,11 @@ CREATE TABLE `cmsplus_viewsystemobjheaders` (
 	`name` varchar(255) NOT NULL,
 	`desc` varchar(255) NOT NULL,
 	`path` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
+	-- keys
+	`group_id` int(11) NULL,
+	--
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_navigatesystemobjheaders` (
@@ -113,14 +123,6 @@ CREATE TABLE `cmsplus_handlesystemobjheaders` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`view_id`) REFERENCES `cmsplus_viewsystemobjheaders` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`template_id`) REFERENCES `cmsplus_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---
-CREATE TABLE `cmsplus_groupsystemobjheaders` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`identifier_role` varchar(255) NOT NULL,
-	--
-	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_linessystemobjheaders` (
@@ -203,12 +205,6 @@ CREATE TABLE `cmsplus_user` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `cmsplus_ugroup` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` VARCHAR(255) NOT NULL,
-	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `cmsplus_user_ugroup` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
@@ -229,7 +225,6 @@ CREATE TABLE `cmsplus_userpasport` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 INSERT INTO `cmsplus_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
-	(1,'groups_sys','groups_sys','',8),
 	(2,'views_sys','views_sys','',6),
 	(3,'templates_sys','templates_sys','',7),
 	(4,'handle_sys','handle_sys','',5),
@@ -237,23 +232,19 @@ INSERT INTO `cmsplus_uclasses` (`id`,`name`,`codename`,`description`,`tablespace
 	(6,'param_sys','param_sys','',4),
 	(10,'db_dump_sys','db_dump_sys','',2);
 INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`) VALUES
-	(5,4), -- navigation_sys <> handle_sys
-	(2,1); -- views_sys <> groups_sys
+	(5,4) -- navigation_sys <> handle_sys
+;
 
 -- INSERT INTO `cmsplus_objproperties` (`id`,`name`,`codename`,`description`,`myfield`,`minfield`,`maxfield`,`required`,`udefault`,`setcsv`) VALUES
 -- INSERT INTO `cmsplus_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 
-INSERT INTO `cmsplus_groupsystemobjheaders` (`id`,`name`,`identifier_role`) VALUES
-(1,'guest cms','guest'),
-(2,'user cms','user'),
-(3,'moderator cms','moderator'),
-(4,'administrator cms','administrator');
-
 --
-INSERT INTO `cmsplus_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','admin@admin.com');
+INSERT INTO `cmsplus_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
 INSERT INTO `cmsplus_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','gro',1);
 --
-INSERT INTO `cmsplus_ugroup` (`id`,`name`) VALUES (1,'superAdmin');
+INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (1,'superAdmin','superAdmin');
+INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (2,'guest','guest');
+INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (3,'user','user');
 --
 INSERT INTO `cmsplus_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
 

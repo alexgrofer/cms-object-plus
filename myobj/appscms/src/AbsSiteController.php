@@ -80,11 +80,13 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$vars = [];
+		//переменные из контроллера попадут только в контент хендлер
 		if($isContent) {
 			$vars = $this->varsRender;
 		}
 
 		$objView = $this->_tempHandleViews[$name];
+		//показываем представление всехда если это контент хендлер
 		if($isContent==false && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
@@ -96,11 +98,13 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	final private function isShowAccessRender($objView) {
-		$groupsView = $objView->getobjlinks('groups_sys')->findAll();
+		//если не определили группу для представления оно будет показано всегда!
+		if(!$objView->group) return true;
 
-		foreach($groupsView as $objgroup) {
-			if(Yii::app()->user->checkAccess($objgroup->identifier_role)) return true;
-		}
+		//не давать отработать RBAC при условии что представление предназначенно только для гостей
+		if(!Yii::app()->user->isGuest && $objView->group->codename=='guest') return false;
+
+		if(Yii::app()->user->checkAccess($objView->group)) return true;
 
 		return false;
 	}

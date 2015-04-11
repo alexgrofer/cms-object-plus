@@ -7,7 +7,9 @@ return array(
 		'cols' => array('id'=>'id','name'=>'namehandle','vp1'=>'id view','vp2'=>'id template'),
 		'AttributeLabels' => array('vp1'=>'id view', 'vp2'=>'id template'),
 		'relation' => array(
-			'название в реляции'=>array('псевдоним название модели(или codename класса)', 'название обратной реляции', true или ничего -ссылка не на модель а другой клас),
+			'название в реляции'=>array('псевдоним название модели(или codename класса)',
+			'название обратной реляции' null если ее нет,
+			true или ничего - если true это будет ссылка не на модель а другой клас),
 		),
 		'namemodel' => 'название модели даже если это заголовок',
 		'group_read' => 'группа для чтения',
@@ -43,11 +45,6 @@ return array(
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),
-	'groups_sys' => array(
-		'namemodel' => 'GroupSystemObjHeaders',
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
 	'templates_sys' => array(
 		'relation' => array(
 			'navigationsDef'=>array('navigation_sys','templateDefault', true),
@@ -61,6 +58,7 @@ return array(
 	'views_sys' => array(
 		'relation' => array(
 			'handles'=>array('handle_sys','view', true),
+			'group'=>array('group',null, false),
 		),
 		'namemodel' => 'ViewSystemObjHeaders',
 		'group_read' => 'administrator',

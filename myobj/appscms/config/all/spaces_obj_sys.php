@@ -14,7 +14,6 @@ return array(
 	'5' => array('namemodel'=>'HandleSystemObjHeaders',  'nameModelLinks'=>['base'=>'linksObjectsSystem']),
 	'6' => array('namemodel'=>'ViewSystemObjHeaders',    'nameModelLinks'=>['base'=>'linksObjectsSystem']),
 	'7' => array('namemodel'=>'TemplateSystemObjHeaders','nameModelLinks'=>['base'=>'linksObjectsSystem']),
-	'8' => array('namemodel'=>'GroupSystemObjHeaders',   'nameModelLinks'=>['base'=>'linksObjectsSystem']),
 	//test
 	'9' => array('namemodel'=>'TestObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsMy']),
 );
