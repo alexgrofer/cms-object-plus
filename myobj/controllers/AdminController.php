@@ -70,7 +70,7 @@ class AdminController extends \Controller {
         if(defined('YII_DEBUG') && YII_DEBUG){
             //Yii::app()->assetManager->forceCopy = true;
         }
-		if(Yii::app()->user->isGuest) {
+		if(Yii::app()->user->checkAccess('administrator')==false) { //вход только для админов
 			$this->render('/admin/views/user/autorize');
 			Yii::app()->end();
 		}
