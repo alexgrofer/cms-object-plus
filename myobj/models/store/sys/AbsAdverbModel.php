@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Объявления похожи на товары, но нет склада
+ * Class AbsAdverbModel
+ */
 abstract class AbsAdverbModel extends AbsBaseModel
 {
 	/**
