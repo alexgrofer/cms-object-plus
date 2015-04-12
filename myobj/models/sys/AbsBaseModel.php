@@ -248,4 +248,12 @@ abstract class AbsBaseModel extends CActiveRecord
 		$unserialize = unserialize($this->$conf['nameProp']);
 		return ($unserialize && isset($unserialize[$name]))?$unserialize[$name]:'';
 	}
+
+	/**
+	 * Описывает элементы формы для объекта
+	 * @return array
+	 */
+	public function elementsForm() {
+		return array();
+	}
 }
