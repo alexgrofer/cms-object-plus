@@ -2,6 +2,11 @@
 .pagination input {display:none}
 </style>
 <?php
+echo '<h4>'.get_class($REND_model).'</h4>';
+if($REND_model instanceof AbsBaseHeaders) {
+	echo '<h5>class header: '.$REND_model->uclass->codename.'</h5>';
+}
+
 if(!$REND_acces_read) {
 	echo '<p class="alert">not acces read</p>';
 	return;
