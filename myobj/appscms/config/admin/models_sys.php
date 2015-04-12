@@ -25,8 +25,10 @@ return array(
 	),
 	'group' => array(
 		'namemodel' => 'Ugroup',
-		'relation' => array('users'=>array('user','groups')), // реляция => [название модели B, реляция в которой обратная ссылка модели B]
-		'cols' => array('id'=>'id','name'=>'name','guid'=>'guid'),
+		'relation' => array(
+			'users'=>array('user','groups'),
+			'showView'=>array('views_sys','group',true),
+		),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),
