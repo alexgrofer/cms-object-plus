@@ -355,7 +355,13 @@ class AdminController extends \Controller {
 							}
 
 							if($modelAD instanceof \AbsBaseHeaders) {
-								$newobj = \uClasses::getclass($attributes_csv['uclass_id'])->initobject();
+								if($modelAD->is_independent==false) {
+									$newobj = \uClasses::getclass($attributes_csv['uclass_id'])->initobject();
+								}
+								else {
+									$newobj = \uClasses::getclass($modelAD->uclass_id)->initobject();
+								}
+
 								if(count($properties_csv)) {
 									foreach($properties_csv as $keyP => $keyP) {
 										$newobj->uProperties = [$keyP,$keyP];
