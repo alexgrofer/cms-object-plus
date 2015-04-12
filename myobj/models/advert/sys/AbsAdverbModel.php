@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Объявления похожи на товары, но нет склада
+ * Объявления
  * Class AbsAdverbModel
  */
 abstract class AbsAdverbModel extends AbsBaseModel
