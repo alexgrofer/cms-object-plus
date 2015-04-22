@@ -40,7 +40,12 @@ abstract class AbsSiteController extends \Controller {
 	 */
 	final protected function renderNavigateContent($navigate, $action) {
 		if($action=='index') $action=null;
-		$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller'=>$navigate, 'action'=>$action));
+		if($navigate=='show' && $action=='obj') {
+			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByPk(Yii::app()->request->getParam('id'));
+		}
+		else {
+			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $navigate, 'action' => $action));
+		}
 
 		if($objNav) {
 			if(!($templateObj = $objNav->templateDefault)) {
