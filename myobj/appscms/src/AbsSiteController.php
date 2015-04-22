@@ -38,7 +38,8 @@ abstract class AbsSiteController extends \Controller {
 	 * @throws \CException
 	 * @throws \CHttpException
 	 */
-	final protected function renderNavigateContent($navigate, $action=null) {
+	final protected function renderNavigateContent($navigate, $action) {
+		if($action=='index') $action=null;
 		$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller'=>$navigate, 'action'=>$action));
 
 		if($objNav) {
