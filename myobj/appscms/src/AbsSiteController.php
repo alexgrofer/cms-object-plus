@@ -96,7 +96,7 @@ abstract class AbsSiteController extends \Controller {
 		if($isContent==false && !$this->isShowAccessRender($objView)) {
 			return null;
 		}
-		return $this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars, true);
+		$this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars);
 	}
 
 	protected function afterAction($action) {
