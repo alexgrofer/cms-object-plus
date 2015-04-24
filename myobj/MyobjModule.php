@@ -15,11 +15,7 @@ class MyobjModule extends CWebModule
 		$isAdminUI = ($routeArr[1] == 'admin')?true:false;
 
 		if(!$isAdminUI) {
-			if ($routeArr[1] == 'test') {
-				$this->setControllerPath(Yii::getPathOfAlias('MYOBJ.controllers.tests'));
-			} else {
-				$this->setControllerPath(Yii::getPathOfAlias('MYOBJ.controllers.site'));
-			}
+			$this->setControllerPath(Yii::getPathOfAlias('MYOBJ.controllers.site'));
 		}
 
 		yii::app()->setComponents(array(

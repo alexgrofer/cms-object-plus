@@ -57,7 +57,7 @@ abstract class AbsSiteController extends \Controller {
 			$this->render(DIR_TEMPLATES_SITE.$templateObj->path.'_content');
 		}
 		else {
-			throw new \CHttpException(404,'page not is find');
+			throw new \CHttpException(404,'CMS ERROR page not is find');
 		}
 	}
 
