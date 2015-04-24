@@ -16,4 +16,11 @@ return array(
 			'defaultRoles' => array('guest'),
 		),
 	),
+	'urlManager'=>array(
+		'urlFormat'=>'path',
+		'rules'=>array(
+			'myobj/admin'=>'myobj/admin',
+			//
+		),
+	),
 );

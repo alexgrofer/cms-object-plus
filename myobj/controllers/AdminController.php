@@ -46,15 +46,6 @@ class AdminController extends \Controller {
 	}
 
 	/**
-	 * Так как на данный момент я НЕ работаю через нормальную схему controller/action пишу в рут всю строку
-	 * что бы узнать полный путь без параметро GET Yii::app()->createUrl($this->route);
-	 * @return string
-	 */
-	public function getRoute() {
-		return Yii::app()->request->getParam('r');
-	}
-
-	/**
 	 * Так как в основном все реализованно на одном экшене admin, проще получать ссылку через метод createAdminUrl
 	 * @param $route
 	 * @param array $params
@@ -75,7 +66,7 @@ class AdminController extends \Controller {
 			Yii::app()->end();
 		}
 		//init urls
-		$paramslisturl = explode('/',Yii::app()->request->getParam('r'));
+		$paramslisturl = explode('/',Yii::app()->request->pathInfo);
 		if(count($paramslisturl)<3) $this->redirect(Yii::app()->createUrl('myobj/admin/objects/models/classes'));
 		$this->dicturls['class'] = $paramslisturl[2];
 		$this->dicturls['paramslist'] = array_merge(array_slice($paramslisturl,3), array('','','','','','',''));
