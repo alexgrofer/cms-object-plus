@@ -53,7 +53,7 @@ class AdminController extends \Controller {
 	 * @return string
 	 */
 	public function createAdminUrl($route,$params=array(),$ampersand='&') {
-		return parent::createUrl('admin/'.$route, $params,$ampersand);
+		return $this->createUrl('/myobj/admin/'.$route, $params,$ampersand);
 	}
 
 	public function run($actionID) {
