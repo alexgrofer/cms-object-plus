@@ -20,8 +20,8 @@ return array(
 		'urlFormat'=>'path',
 		'showScriptName'=>false,
 		'rules'=>array(
-			'myobj/admin'=>'myobj/admin',
-			//test create url $this->createUrl('/myobj/admin',array('id'=>100,'year'=>2008));
+			'myobj/admin/<url:.*>'=>'myobj/admin/<url>', //
+			//test create url $this->createUrl('/myobj/admin/test',array('id'=>100,'year'=>2008)); 
 			'showScriptName'=>false,
 		),
 	),
