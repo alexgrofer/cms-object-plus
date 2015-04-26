@@ -26,7 +26,7 @@ abstract class AbsSiteController extends \Controller {
 	 */
 	public $template_id=null;
 
-	/* в представдениях можно передать переменные так:
+	/* в представдениях можно передать переменные так тогда они смогут быть доступны в хендлерах в _tempHandleViews:
 	public function indexAction() {
 		$this->varsRender['name'] = 'var name';
 	}
@@ -38,7 +38,7 @@ abstract class AbsSiteController extends \Controller {
 	 * @throws \CException
 	 * @throws \CHttpException
 	 */
-	final protected function renderNavigateContent($navigate, $action) {
+	final protected function checkLayout($navigate, $action) {
 		if($action=='index') $action=null;
 		if($navigate=='show' && $action=='obj') {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByPk(Yii::app()->request->getParam('id'));
@@ -54,11 +54,12 @@ abstract class AbsSiteController extends \Controller {
 			$this->thisObjNav = $objNav;
 
 			$this->layout=DIR_TEMPLATES_SITE.$templateObj->path;
-			$this->render(DIR_TEMPLATES_SITE.$templateObj->path.'_content');
 		}
 		else {
 			throw new \CHttpException(404,'CMS ERROR page not is find');
 		}
+
+		return true;
 	}
 
 	private $_tempHandleViews=null;
@@ -66,11 +67,9 @@ abstract class AbsSiteController extends \Controller {
 	 * выводит в поток рендер представления для установленного рендера навигацмм
 	 * @param $name название хендла, используется для поиска, для каждого шаблона должен быть уникален
 	 * @param $idHandle необходим для сортировке в панели редиктирования шаблона, не должен быть уникален
-	 * @param bool $isContent если true все переменные попадут в контент только этого представления,
-	 * 		еще на $isContent==true не распространяются права на представления, это право будет обусловленно фильтром контроллеоа
 	 * @return null|string Вернет null если нет прав или поток представления
 	 */
-	final public function renderHandle($name, $idHandle, $isContent=false) {
+	final public function renderHandle($name, $idHandle) {
 		if($this->_tempHandleViews === null) {
 			$this->_tempHandleViews = array();
 			$template_id = $this->template_id ?: $this->thisObjNav->template_default_id;
@@ -86,21 +85,13 @@ abstract class AbsSiteController extends \Controller {
 		}
 
 		$vars = [];
-		//переменные из контроллера попадут только в контент хендлер
-		if($isContent) {
-			$vars = $this->varsRender;
-		}
 
 		$objView = $this->_tempHandleViews[$name];
-		//показываем представление всехда если это контент хендлер
-		if($isContent==false && !$this->isShowAccessRender($objView)) {
-			return null;
-		}
-		$this->renderPartial(DIR_VIEWS_SITE.$objView->path, $vars);
+		$this->renderPartial(DIR_VIEWS_SITE.$objView->path.'/handler', $vars);
 	}
 
-	protected function afterAction($action) {
-		return $this->renderNavigateContent(yii::app()->getController()->getId(), $action->getId());
+	protected function beforeAction($action) {
+		return $this->checkLayout(yii::app()->getController()->getId(), $action->getId());
 	}
 
 	final private function isShowAccessRender($objView) {

@@ -95,7 +95,7 @@ if(empty($objHandle)) {
 if($currentObjectTemplate) {
 	echo '<form method="post">';
 	echo CHtml::hiddenField('select_template_id', $currentObjectTemplate->primaryKey);
-	$contentTemplate = file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE .$currentObjectTemplate->path.'_content'.'.php');
+	$contentTemplate = file_get_contents(yii::getPathOfAlias('MYOBJ.views').DIR_TEMPLATES_SITE .$currentObjectTemplate->path.'.php');
 	preg_match_all('~->renderHandle\(\s*\'(.+)\',~', $contentTemplate, $arrayPreg_Match);
 	if (count($arrayPreg_Match)) {
 		echo '<table  class="table table-condensed"><tr><td>name</td><td>view</td></tr>';
