@@ -3,10 +3,6 @@ class Ugroup extends AbsBaseModel {
 	public $name;
 	public $codename;
 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
 	public function relations()
 	{
 		return array(

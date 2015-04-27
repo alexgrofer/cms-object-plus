@@ -14,11 +14,6 @@ abstract class AbsBaseLinksObjects extends AbsBaseModel {
 		);
 	}
 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
-
 	public function relations() {
 		return array(
 			'uclass_to'=>array(self::BELONGS_TO, 'uClasses', 'from_class_id'),

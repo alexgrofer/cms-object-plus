@@ -27,11 +27,6 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 	 */
 	public $uclass_id;
 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
-
 	/**
 	 * @var bool В запросе будет join нить таблицы при работе со свойствами.
 	 * если false и свойства используются тогда будет запрос при каждом вызов списка свойств

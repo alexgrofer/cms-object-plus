@@ -5,10 +5,6 @@ class UserPasport extends AbsBaseModel
 	public $lastname;
 	public $user_id;
 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
 	public function relations()
 	{
 		return array(

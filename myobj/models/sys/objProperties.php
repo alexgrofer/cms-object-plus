@@ -10,11 +10,7 @@ class objProperties extends AbsBaseModel
 	public $required; //models.BooleanField(blank=True)
 	public $udefault=''; //models.CharField(max_length=255,blank=True)
 	public $setcsv=''; //models.CharField(max_length=255,blank=True)
- 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
+
 	public function relations()
 	{
 		return array(

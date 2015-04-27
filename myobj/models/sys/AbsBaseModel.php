@@ -7,6 +7,11 @@ abstract class AbsBaseModel extends CActiveRecord
 		return $newObj;
 	}
 
+	public function tableName()
+	{
+		return 'cmsplus_'.strtolower(get_class($this));
+	}
+
 	protected function afterFind() {
 		parent::afterFind();
 		$this->afterCreate();

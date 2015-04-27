@@ -6,11 +6,6 @@ class uClasses extends AbsBaseModel
 	public $description; //models.CharField(max_length=255,blank=True)
 	public $tablespace; //models.PositiveSmallIntegerField(choices=MYCONF.MYSPACE_TABLES_CHOICES, default=1)
 
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
-
 	public function relations()
 	{
 		return array(

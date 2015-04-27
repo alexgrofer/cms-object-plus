@@ -1,11 +1,6 @@
 <?php
 abstract class AbsBaseLines extends AbsBaseModel
 {
-	public function tableName()
-	{
-		return 'cmsplus_'.strtolower(get_class($this));
-	}
-
 	public $uptextfield; //models.TextField(blank=True)
 	public $upcharfield; //models.CharField(max_length=255,blank=True)
 	public $uptimefield; //models.TimeField(blank=True,null=True)
