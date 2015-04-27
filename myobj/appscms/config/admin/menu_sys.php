@@ -8,7 +8,7 @@ return array(
 	'mvc'=>array(
 		'label'=>'mvc','url'=>array('#'),'items'=>array(
 			'templates'=>array('label'=>'templates','url'=>array('admin/objects/class/templates_sys')),
-			'views'=>array('label'=>'views','url'=>array('admin/objects/class/views_sys/')),
+			'views'=>array('label'=>'views_handles','url'=>array('admin/objects/class/views_sys/')),
 			'nav'=>array('label'=>'nav','url'=>array('admin/objects/class/navigation_sys', 'usercontroller'=>'usernav')),
 		),
 	),
