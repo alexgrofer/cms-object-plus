@@ -18,7 +18,6 @@ return array(
 	//USER
 	'user' => array(
 		'namemodel' => 'User',
-		'relation' => array('groups'=>array('group','users'),'userpasport'=>array('userpasport','user')),
 		'cols' => array('id'=>'id','login'=>'user name'),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
@@ -29,13 +28,6 @@ return array(
 			'users'=>array('user','groups'),
 			'showView'=>array('views_sys','group',true),
 		),
-		'group_read' => 'administrator',
-		'group_write' => 'administrator',
-	),
-	'userpasport' => array(
-		'namemodel' => 'UserPasport',
-		'relation' => array('user'=>array('user','userpasport')),
-		'cols' => array('id'=>'id','lastname'=>'last name','firstname'=>'first name', 'user_id'=>'user_id'),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),

@@ -17,7 +17,6 @@ return array(
 			'user'=>array(
 				'label'=>'user','url'=>array('admin/objects/models/user'),'items'=>array(
 					'group'=>array('label'=>'group','url'=>array('admin/objects/models/group')),
-					'userpasport'=>array('label'=>'userpasport','url'=>array('admin/objects/models/userpasport')),
 				),
 			),
 			'db damps'=>array('label'=>'db damps','url'=>array('admin/objects/class/db_dump_sys','usercontroller'=>'userdbdamp')),

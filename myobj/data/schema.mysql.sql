@@ -204,7 +204,7 @@ CREATE TABLE `cmsplus_user` (
 	`email` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+--
 CREATE TABLE `cmsplus_user_ugroup` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
@@ -213,15 +213,6 @@ CREATE TABLE `cmsplus_user_ugroup` (
 	UNIQUE KEY (`user_id`,`group_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `cmsplus_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `cmsplus_userpasport` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`firstname` varchar(255) NOT NULL,
-	`lastname` varchar(255) NOT NULL,
-	`user_id` int(11) NULL,
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`user_id`) REFERENCES `cmsplus_user` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 INSERT INTO `cmsplus_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
@@ -240,7 +231,6 @@ INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`)
 
 --
 INSERT INTO `cmsplus_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
-INSERT INTO `cmsplus_userpasport` (`id`,`firstname`,`lastname`,`user_id`) VALUES (1,'alex','gro',1);
 --
 INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (1,'superAdmin','superAdmin');
 INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (2,'guest','guest');
