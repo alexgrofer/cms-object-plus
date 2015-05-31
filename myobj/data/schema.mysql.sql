@@ -1,4 +1,4 @@
-CREATE TABLE `cmsplus_ugroup` (
+CREATE TABLE `cmsplus_ugroup_admin` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255) NOT NULL,
 	`codename` VARCHAR(255) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `cmsplus_viewsystemobjheaders` (
 	`group_id` int(11) NULL,
 	--
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup` (`id`) ON UPDATE CASCADE
+	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup_admin` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_navigatesystemobjheaders` (
@@ -197,7 +197,7 @@ CREATE TABLE `cmsplus_linksobjectssystemhandle` (
 	FOREIGN KEY (`to_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
-CREATE TABLE `cmsplus_user` (
+CREATE TABLE `cmsplus_user_admin` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`login` VARCHAR(255) NOT NULL,
 	`password` VARCHAR(255) NOT NULL,
@@ -205,14 +205,14 @@ CREATE TABLE `cmsplus_user` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
-CREATE TABLE `cmsplus_user_ugroup` (
+CREATE TABLE `cmsplus_user_ugroup_admin` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
 	`group_id` int(11) NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`user_id`,`group_id`),
-	FOREIGN KEY (`user_id`) REFERENCES `cmsplus_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (`user_id`) REFERENCES `cmsplus_user_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 INSERT INTO `cmsplus_uclasses` (`id`,`name`,`codename`,`description`,`tablespace`) VALUES
@@ -230,13 +230,13 @@ INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`)
 -- INSERT INTO `cmsplus_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 
 --
-INSERT INTO `cmsplus_user` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
+INSERT INTO `cmsplus_user_admin` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
 --
-INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (1,'superAdmin','superAdmin');
-INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (2,'guest','guest');
-INSERT INTO `cmsplus_ugroup` (`id`,`name`,`codename`) VALUES (3,'user','user');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (1,'superAdmin','superAdmin');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (2,'guest','guest');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (3,'user','user');
 --
-INSERT INTO `cmsplus_user_ugroup` (`user_id`,`group_id`) VALUES (1,1);
+INSERT INTO `cmsplus_user_ugroup_admin` (`user_id`,`group_id`) VALUES (1,1);
 
 -- test потом удалить
 CREATE TABLE `cmsplus_testobjheaders` (

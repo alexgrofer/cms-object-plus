@@ -1,14 +1,19 @@
 <?php
-class User extends AbsBaseModel
+class UserAdmin extends AbsBaseModel
 {
 	public $login;
 	public $password;
 	public $email;
 
+	public function tableName()
+	{
+		return 'cmsplus_user_admin';
+	}
+
 	public function relations()
 	{
 		return array(
-			'groups'=>array(self::MANY_MANY, 'Ugroup', 'cmsplus_user_ugroup(user_id, group_id)'),
+			'groups'=>array(self::MANY_MANY, 'UgroupAdmin', 'cmsplus_user_ugroup_admin(user_id, group_id)'),
 		);
 	}
 	public function rules() {

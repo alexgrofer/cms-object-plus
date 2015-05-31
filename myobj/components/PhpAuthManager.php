@@ -2,7 +2,12 @@
 class PhpAuthManager extends CPhpAuthManager {
 	public function init() {
 		if ($this->authFile === null) {
-			$this->authFile = Yii::getPathOfAlias('MYOBJ.data.auth').'.php';
+			if(Yii::app()->controller->id=='admin') {
+				$this->authFile = Yii::getPathOfAlias('MYOBJ.data.authAdmin') . '.php';
+			}
+			else {
+				$this->authFile = Yii::getPathOfAlias('MYOBJ.data.realty.auth') . '.php';
+			}
 		}
 
 		parent::init();

@@ -5,16 +5,21 @@ class WebUser extends CWebUser {
 
 	public function getGroups() {
 		if ($this->_groups === null) {
-			if ($user = $this->getObjlUser()) {
+			if ($user = $this->getObjUser()) {
 				$this->_groups = $user->groups;
 			}
 		}
 		return $this->_groups;
 	}
 
-	public function getObjlUser() {
+	public function getObjUser() {
 		if (!$this->isGuest && $this->_model === null) {
-			$this->_model = User::model()->findByPk($this->id);
+			if(Yii::app()->controller->id=='admin') {
+				$this->_model = UserAdmin::model()->findByPk($this->id);
+			}
+			else {
+				$this->_model = User::model()->findByPk($this->id);
+			}
 		}
 		return $this->_model;
 	}

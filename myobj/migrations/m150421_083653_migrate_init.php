@@ -16,6 +16,9 @@ class m150421_083653_migrate_init extends CDbMigration
 		));
 		Yii::app()->db->getLastInsertID(); //последняя запись
 		*/
+
+		$sql = file_get_contents(dirname(__FILE__).'/../data/schema.mysql.sql');
+		$this->execute($sql);
 	}
 
 	public function safeDown()

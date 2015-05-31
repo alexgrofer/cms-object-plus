@@ -20,7 +20,7 @@ class LoginForm extends CFormModel
 		$isValidate = parent::validate($attributes, $clearErrors);
 
 		if($isValidate) {
-			$this->_identity=new UserIdentity($this->login,$this->password);
+			$this->_identity=new UserIdentityAdmin($this->login,$this->password);
 			if(!$this->_identity->authenticate()) {
 				$this->addError('authenticate', 'incorrect authenticate');
 				return false;

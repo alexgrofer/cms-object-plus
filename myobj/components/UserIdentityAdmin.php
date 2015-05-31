@@ -1,8 +1,8 @@
 <?php
-class UserIdentity extends CUserIdentity {
+class UserIdentityAdmin extends CUserIdentity {
 	private $_id;
 	public function authenticate() {
-		$record=User::model()->findByAttributes(array('login'=>$this->username));
+		$record=UserAdmin::model()->findByAttributes(array('login'=>$this->username));
 		if($record===null) {
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		}
@@ -11,7 +11,7 @@ class UserIdentity extends CUserIdentity {
 		}
 		else {
 			$this->_id=$record->primaryKey;
-			$this->setState('title', ''); //https://ru.wikipedia.org/wiki/HMAC
+			$this->setState('title', ''); //Yii::app()->user->title
 			$this->errorCode=self::ERROR_NONE;
 		}
 		return !$this->errorCode;

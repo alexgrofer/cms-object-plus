@@ -29,7 +29,7 @@ class ViewSystemObjHeaders extends AbsBaseHeaders {
 		$relations = parent::relations();
 
 		$relations['handles'] = array(self::HAS_MANY, 'HandleSystemObjHeaders', 'view_id');
-		$relations['group'] = array(self::BELONGS_TO, 'Ugroup', 'group_id');
+		$relations['group'] = array(self::BELONGS_TO, 'UgroupAdmin', 'group_id');
 
 		return $relations;
 	}

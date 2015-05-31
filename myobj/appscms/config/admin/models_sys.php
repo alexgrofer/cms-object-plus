@@ -17,13 +17,13 @@ return array(
 	),
 	//USER
 	'user' => array(
-		'namemodel' => 'User',
+		'namemodel' => 'UserAdmin',
 		'cols' => array('id'=>'id','login'=>'user name'),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
 	),
 	'group' => array(
-		'namemodel' => 'Ugroup',
+		'namemodel' => 'UgroupAdmin',
 		'relation' => array(
 			'users'=>array('user','groups'),
 			'showView'=>array('views_sys','group',true),
