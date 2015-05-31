@@ -86,7 +86,7 @@ CREATE TABLE `cmsplus_navigatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`desc` varchar(255) NOT NULL,
-	`controller` varchar(255) NOT NULL,
+	`controller` varchar(255) NULL,
 	`action` varchar(255) NULL,
 	`sort` int(11) NOT NULL DEFAULT 0,
 	`show` tinyint(1) NOT NULL DEFAULT 0,

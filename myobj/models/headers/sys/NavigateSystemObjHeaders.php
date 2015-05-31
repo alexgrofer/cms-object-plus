@@ -22,11 +22,25 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 	public $isitlines = false;
 
+	public function beforeValidate() {
+		if(!parent::beforeValidate()) return false;
+
+		//Когда контроллер указан экшен не должен быть пустым
+		if($this->getAttribute('controller')) {
+			$this->getValidatorList()->add(
+				CValidator::createValidator('required', $this, 'action')
+			);
+		}
+
+		return true;
+	}
+
 	public function rules() {
 		return array(
-			array('name, controller', 'required'),
+			array('name', 'required'),
+			array('controller, action', 'default', 'value'=>null),
+
 			array('name, desc, controller, action', 'length', 'max'=>255),
-			array('action', 'default', 'value'=>null),
 			array('sort', 'default', 'value'=>0),
 			array('show', 'boolean'),
 
