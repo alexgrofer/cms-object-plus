@@ -85,6 +85,7 @@ CREATE TABLE `cmsplus_viewsystemobjheaders` (
 CREATE TABLE `cmsplus_navigatesystemobjheaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
+	`codename` varchar(255) NULL,
 	`desc` varchar(255) NOT NULL,
 	`controller` varchar(255) NULL,
 	`action` varchar(255) NULL,
@@ -96,8 +97,8 @@ CREATE TABLE `cmsplus_navigatesystemobjheaders` (
 	`template_mobile_default_id` int(11) NULL,
 	--
 	PRIMARY KEY (`id`),
+	UNIQUE KEY (`codename`),
 	UNIQUE KEY (`controller`,`action`),
-	FOREIGN KEY (`parent_id`) REFERENCES `cmsplus_navigatesystemobjheaders` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`template_default_id`) REFERENCES `cmsplus_templatesystemobjheaders` (`id`) ON UPDATE CASCADE,
 	FOREIGN KEY (`template_mobile_default_id`) REFERENCES `cmsplus_templatesystemobjheaders` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

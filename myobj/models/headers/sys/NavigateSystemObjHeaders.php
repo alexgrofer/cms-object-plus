@@ -10,6 +10,7 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public $uclass_id=5;
 	//columns DB
 	public $name;
+	public $codename;
 	public $desc;
 	public $controller;
 	public $action;
@@ -26,10 +27,19 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 		if(!parent::beforeValidate()) return false;
 
 		//Когда контроллер указан экшен не должен быть пустым
-		if($this->getAttribute('controller')) {
+		if($this->getAttribute('controller')!='') {
 			$this->getValidatorList()->add(
 				CValidator::createValidator('required', $this, 'action')
 			);
+
+			$this->setAttribute('codename', null);
+		}
+		else {
+			$this->getValidatorList()->add(
+				CValidator::createValidator('required', $this, 'codename')
+			);
+
+			$this->setAttribute('action', null);
 		}
 
 		return true;
@@ -38,13 +48,12 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('controller, action', 'default', 'value'=>null),
+			array('codename, controller, action', 'default', 'value'=>null),
 
-			array('name, desc, controller, action', 'length', 'max'=>255),
+			array('name, codename, desc, controller, action', 'length', 'max'=>255),
 			array('sort', 'default', 'value'=>0),
 			array('show', 'boolean'),
 
-			array('parent_id', 'exist', 'className' => get_class($this), 'attributeName'=>'id', 'allowEmpty'=>true),
 			array('parent_id', 'default', 'value'=>null),
 
 			array('template_default_id', 'exist', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>true),

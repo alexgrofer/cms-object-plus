@@ -41,7 +41,9 @@ abstract class AbsSiteController extends \Controller {
 	final protected function checkLayout($navigate, $action) {
 		if($action=='index') $action=null;
 		if($navigate=='show' && $action=='obj') {
-			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByPk(Yii::app()->request->getParam('id'));
+			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
+			//не нужно искать через поиск навигацию которая работает через стандартный контроллер
+			if($objNav && $objNav->getAttribute('controller')) $objNav=null;
 		}
 		else {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $navigate, 'action' => $action));

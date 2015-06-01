@@ -9,7 +9,7 @@ use \yii as yii;
  * @package MYOBJ\controllers
  */
 class ShowController extends \MYOBJ\appscms\src\AbsSiteController {
-	public function actionObj($id) {
+	public function actionObj($codename) {
 
 	}
 }
