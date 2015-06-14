@@ -26,8 +26,8 @@ if($currentObjectTemplate) {
 	//все хендлы навигации для выбранного или текущего шаблона
 	$arrayObjectsHandles = $THIS_NAVIGATE->getobjlinks('handle_sys', 'handle')->findAllByAttributes(['template_id'=>$currentObjectTemplate->primaryKey]);
 	$arrayObjectsHandlesKeysCodenameHandle = [];
-	foreach($arrayObjectsHandles as $objHandle) {
-		$arrayObjectsHandlesKeysCodenameHandle[$objHandle->codename] = $objHandle;
+	foreach($arrayObjectsHandles as $objHandle_current) {
+		$arrayObjectsHandlesKeysCodenameHandle[$objHandle_current->codename] = $objHandle_current;
 	}
 	unset($arrayObjectsHandles);
 }
@@ -56,17 +56,23 @@ if($objRequest->getPost('submit_handle_config')) {
 					'template_id'=>$currentObjectTemplate->primaryKey,
 					'view_id'=>$idView,
 				]);
-				$objHandle->save();
-				$THIS_NAVIGATE->editlinks('add', 'handle_sys', array($objHandle->primaryKey), 'handle');
+				if($objHandle->validate()) {
+					$objHandle->save();
+					$THIS_NAVIGATE->editlinks('add', 'handle_sys', array($objHandle->primaryKey), 'handle');
+				}
+				else break;
 			}
 		}
 	}
-	if($objHandle->validate()) {
+	if(isset($objHandle) && $objHandle->validate()) {
 		$this->redirect(Yii::app()->request->url);
+	}
+	elseif(!isset($objHandle)) {
+		echo '<p><b>error: none select handles</b></p>';
 	}
 }
 
-if(empty($objHandle)) {
+if(isset($objHandle)) {
 	echo CHtml::errorSummary($REND_model, '<div class="alert alert-danger">', '</p>');
 }
 ?>
