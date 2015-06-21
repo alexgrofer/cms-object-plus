@@ -3,6 +3,16 @@ namespace MYOBJ\appscms\src;
 use yii;
 use uClasses;
 
+/**
+ * Наследовать класс если необходима работат ьчерез хендлы меню системы
+ *
+ * -при создании файла контроллера необходимо добавить controller и action
+ *
+ * -что бы не создавать файл контроллера можно использовать /myobj/show/obj/codename/index - где index это колонка codename
+ *
+ * Class AbsSiteController
+ * @package MYOBJ\appscms\src
+ */
 abstract class AbsSiteController extends \Controller {
 	protected $thisObjNav = null;
 	protected $varsRender = array();
@@ -25,12 +35,6 @@ abstract class AbsSiteController extends \Controller {
 	 * По умолчанию берется шаблон по умолчанию в навигации
 	 */
 	public $template_id=null;
-
-	/* в представдениях можно передать переменные так тогда они смогут быть доступны в хендлерах в _tempHandleViews:
-	public function indexAction() {
-		$this->varsRender['name'] = 'var name';
-	}
-	*/
 
 	/**
 	 * @param $navigate codename для поиска элемента навигации

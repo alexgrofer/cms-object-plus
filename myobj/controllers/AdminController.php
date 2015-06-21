@@ -4,6 +4,11 @@ use \yii as yii;
 use \CActiveRecord as CActiveRecord;
 use MYOBJ\appscms\core\base\SysUtils;
 
+/**
+ * Административная панель доступна по url /myobj/admin/objects/models/classes
+ * Class AdminController
+ * @package MYOBJ\controllers
+ */
 class AdminController extends \Controller {
 	public $layout='/admin/layouts/column1';
 	public $apcms;
