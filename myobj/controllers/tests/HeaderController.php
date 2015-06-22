@@ -67,6 +67,9 @@ class HeaderController extends \MYOBJ\appscms\src\AbsSiteController {
 				//сохранение объектов AR в онлайне только если если это существующий объект и нет ошибок
 				if($objEdit->isNewRecord==false && $is_save_event && !\CJSON::decode($strJson)) {
 					$function_save();
+
+					//если необходимо сделать редирект после сохранения
+					$this->redirect($this->createUrl('edit'));
 				}
 				//вернем данные об ошибках
 				yii::app()->end($strJson);

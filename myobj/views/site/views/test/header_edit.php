@@ -1,3 +1,9 @@
+<style>
+	/*
+	что бы убрать мелькания
+	input, textarea, {background: #fff; border: 1px solid red}
+	*/
+</style>
 <?php
 echo CHtml::link('list obj', yii::app()->createUrl('myobj/tests/header/list')).'<br><br>';
 echo CHtml::link('create new obj', yii::app()->createUrl('myobj/tests/header/edit')).'<br><br>';
@@ -133,8 +139,12 @@ $configForm = array(
 
 				if(hasError==false) {
 					if(spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) {
-						alert("save ok");
-						return false;
+						//если не нужно перезагружать после удачного сохранения то:
+						//alert("save ok");
+						//return false;
+
+						//если нужно перезагрузить то
+						return true;
 					}
 				}
 
