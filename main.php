@@ -20,8 +20,12 @@ return array(
 		'urlFormat'=>'path',
 		'showScriptName'=>false,
 		'rules'=>array(
-			'myobj/admin/<url:.*>'=>'myobj/admin/<url>', //
-			//test create url $this->createUrl('/myobj/admin/test',array('id'=>100,'year'=>2008)); 
+			//cms
+			'myobj/admin/<url:.*>'=>'myobj/admin/<url>',
+			//tests
+			'myobj/tests/<url:.*>'=>'myobj/tests/<url>',
+			//project is in folder
+			//'<controller>/<action>'=>'myobj/nameProjectFolder/<controller>/<action>',
 			'showScriptName'=>false,
 		),
 	),
