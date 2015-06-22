@@ -28,11 +28,6 @@ abstract class AbsDbTestCase extends CDbTestCase
 		$this->setConfig();
 	}
 
-	public $fixtures=array(
-		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
-		'objProperty'=>'objProperties', //объекты objProperties
-	);
-
 	/**
 	 * Метод устанавливает необходимую конфигурацию в тестовом режиме, так как в обычном режиме конфигурацию изменить нельзя
 	 * @param array $newConfig

@@ -1,7 +1,7 @@
 <?php
 class AbsBaseObjHeadersTest extends AbsDbTestCase {
 
-	public $fixtures=array(
+	protected $fixtures=array(
 		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
 		'objProperty'=>'objProperties', //объекты objProperties
 	);
