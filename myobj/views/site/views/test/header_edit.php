@@ -1,6 +1,6 @@
 <?php
-echo CHtml::link('list obj', yii::app()->createUrl('myobj/test/header_list')).'<br><br>';
-echo CHtml::link('create new obj', yii::app()->createUrl('myobj/test/header_edit')).'<br><br>';
+echo CHtml::link('list obj', yii::app()->createUrl('myobj/tests/header/list')).'<br><br>';
+echo CHtml::link('create new obj', yii::app()->createUrl('myobj/tests/header/edit')).'<br><br>';
 
 $nameClassObjEdit = get_class($objEdit);
 

@@ -3,27 +3,23 @@ namespace MYOBJ\controllers;
 use \yii as yii;
 
 /**
- * Контроллер для функциональных тестов
+ * пример url: /myobj/tests/header/list
+ * нужно создать навигацию с controller = tests/header, action = list
+ * Контроллер для функциональных тестов cms - заголовки и модели
  * Class TestController
  */
-class TestController extends \MYOBJ\appscms\src\AbsSiteController {
-	public function actionHeader_list() {
-		$this->setPageTitle('test page - '.$this->getAction()->getId());
-
+class HeaderController extends \MYOBJ\appscms\src\AbsSiteController {
+	public function actionList() {
 		$modelTestHeader = \uClasses::getclass('test_header')->objects();
 
-		$this->varsRender['modelTestHeader'] = $modelTestHeader;
-	}
-
-	public function actionShow() {
-		
+		$this->render(DIR_VIEWS_SITE.'test/header_list', array('modelTestHeader'=>$modelTestHeader));
 	}
 
 	/**
 	 * @param bool $id редакрируемый объект, если пуст то создает новый
-	 * 			ХОТЯ для каждой логической единыцы лучше делать отдельный экшен - actionHeader_new
+	 * 			ХОТЯ для каждой логической единыцы лучше делать отдельный экшен - actionNew
 	 */
-	public function actionHeader_edit($id=false) {
+	public function actionEdit($id=false) {
 		$this->setPageTitle('test page - '.$this->getAction()->id);
 
 		if($id) {
@@ -84,13 +80,14 @@ class TestController extends \MYOBJ\appscms\src\AbsSiteController {
 					$this->refresh();
 				}
 				else {
-					$this->redirect(yii::app()->createUrl('myobj/test/header_edit', array('id'=>$objEdit->id)));
+					$this->redirect($this->createUrl('edit', array('id'=>$objEdit->id)));
 				}
 			}
 		}
 
-
-		$this->varsRender['objEdit'] = $objEdit;
-		$this->varsRender['validate_params_value'] = $validate_params_value;
+		$this->render(DIR_VIEWS_SITE.'test/header_edit', array(
+			'objEdit'=>$objEdit,
+			'validate_params_value'=>$validate_params_value,
+		));
 	}
 }

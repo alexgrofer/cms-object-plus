@@ -1,5 +1,6 @@
 <?php
 //echo '<br/>'.$this->params['testParam'];
+echo CHtml::link('create new obj', yii::app()->createUrl('myobj/tests/header/edit')).'<br><br>';
 /**
  * -Тестируем постраничность
  * --стандартная
@@ -9,5 +10,5 @@
  */
 $objects = $modelTestHeader->findAll();
 foreach($objects as $objHeaderTest) {
-	echo CHtml::link('obj - '.$objHeaderTest->id, $this->createUrl('header_edit', array('id'=>$objHeaderTest->id))).'<br>';
+	echo CHtml::link('obj - '.$objHeaderTest->id, $this->createUrl('edit', array('id'=>$objHeaderTest->id))).'<br>';
 }

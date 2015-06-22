@@ -1,0 +1,4 @@
+name,codename,desc,sort,controller,action,show
+"test headers list",,,0,tests/header,list,1
+"test headers edit",,,0,tests/header,edit,1
+
