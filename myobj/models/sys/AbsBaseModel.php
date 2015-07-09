@@ -254,6 +254,12 @@ abstract class AbsBaseModel extends CActiveRecord
 		return ($unserialize && isset($unserialize[$name]))?$unserialize[$name]:'';
 	}
 
+	public function setEArray($array) {
+		foreach($array as $name => $val) {
+			$this->editEArray($name, $val);
+		}
+	}
+
 	/**
 	 * Описывает элементы формы для объекта
 	 * @return array
