@@ -107,6 +107,10 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function beforeAction($action) {
+		if($action instanceof \CCaptchaAction) {
+			return parent::beforeAction($action);
+		}
+
 		//is redirect after AJAX request
 		if(isset(Yii::app()->session['urlRedirectAfterAJAX']) && $urlRedirect = Yii::app()->session['urlRedirectAfterAJAX']) {
 			unset(Yii::app()->session['urlRedirectAfterAJAX']);
