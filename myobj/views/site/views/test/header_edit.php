@@ -10,10 +10,18 @@ echo CHtml::link('create new obj', yii::app()->createUrl('myobj/tests/header/edi
 
 $nameClassObjEdit = get_class($objEdit);
 
+//НАСТРОЙКИ
+
 //сохранять объект AR при изменении поля по событиям type, change (для существующих объектов)
 $is_save_event = true;
 //включить ajax
 $enableAjaxValidation = true;
+//параметры которые будет проверяться с помощью ajax
+$ajaxPropValidate = array("'param2'");
+//параметры которые будет проверяться с помощью ajax динамически только при событиях (type или change), остальные будут отправленны аяксом только при событии submit
+$ajaxParamsOnlyEventTypeChange = array("'param2'");
+
+// -- //
 
 $idForm = 'form'.$nameClassObjEdit;
 $configForm = array(
@@ -38,8 +46,11 @@ $configForm = array(
 				this.enableAjaxValidation = false; //отключим аякс со свойства, так как НЕ на каждое это может быть нужно
 				//если включен enableAjaxValidation И (если свойство отмеченно в настройке ajaxPropValidate для валидации ajax ИЛИ если необходимо онлайн сохранение то для всех)
 				if(
-					spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true //только если включен enableAjaxValidation
-						&&
+					(
+						spaceMyFormEdit_'.$nameClassObjEdit.'.enableAjaxValidation==true //только если включен enableAjaxValidation
+							&&
+						($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxParamsOnlyEventTypeChange)!=-1 //И если свойство есть в списке на проверку аяксом при событиях (type или change)
+					)
 					($.inArray(attribute.name, spaceMyFormEdit_'.$nameClassObjEdit.'.ajaxPropValidate)!=-1 //если свойство есть в списке проверок ajax
 						||
 					spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) //если работаем в ражиме онлайн сохранения
@@ -48,7 +59,7 @@ $configForm = array(
 					attributeName = "'.$nameClassObjEdit.'["+attribute.name+"]";
 					form.find("input, select, textarea").each(function() {
 						if(this.name == attributeName) { //только если это текущее свойство
-							$("#TestObjHeaders_validate_params").val(attribute.name); //пометим поле для проверки, проверится на сервере только оно
+							$("#'.$nameClassObjEdit.'_validate_params").val(attribute.name); //пометим поле для проверки, проверится на сервере только оно
 						}
 						//для остальных
 						else if(spaceMyFormEdit_'.$nameClassObjEdit.'.startSafeParamsForm[this.name] != undefined) { //только для safe свойств
@@ -67,14 +78,14 @@ $configForm = array(
 							spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event = {};
 						}
 						spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name] = 1; //добавим в массив ошибоку
-						$("#TestObjHeaders_save_event").val(0); // запретим онлайн редактирование
+						$("#'.$nameClassObjEdit.'_save_event").val(0); // запретим онлайн редактирование
 					}
 					else if(spaceMyFormEdit_'.$nameClassObjEdit.'["errors_save_event"] != undefined) { //если ошибки нет И были на других полях
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name] != undefined) { //если на этом поле была ошибка
 							delete(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event[attribute.name]); // удалим ее из массива
 						}
 						if($.isEmptyObject(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event)) { //если ошибок больше нет
-							$("#TestObjHeaders_save_event").val(1); // включим онлайн редактировани
+							$("#'.$nameClassObjEdit.'_save_event").val(1); // включим онлайн редактировани
 							$(form).trigger("submit"); //отправим форму целиком по сабмиту
 							delete(spaceMyFormEdit_'.$nameClassObjEdit.'.errors_save_event); //удалим сам массив
 						}
@@ -113,7 +124,7 @@ $configForm = array(
 						}
 					}
 				});
-				$("#TestObjHeaders_validate_params").val(arr); //если arr пуст уйдет пустая строка
+				$("#'.$nameClassObjEdit.'_validate_params").val(arr); //если arr пуст уйдет пустая строка
 
 				return true;
 			}',
@@ -126,7 +137,7 @@ $configForm = array(
 						}
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.isNewObj==true) {
 							$(this).prop("disabled", false); //все данные уходят уже на сохранение
-							$("#TestObjHeaders_validate_params").val(""); //все проверяется вместе
+							$("#'.$nameClassObjEdit.'_validate_params").val(""); //все проверяется вместе
 						}
 						if(spaceMyFormEdit_'.$nameClassObjEdit.'.is_save_event==true) {
 							$(this).prop("disabled", false);
@@ -195,6 +206,7 @@ spaceMyFormEdit_<?php echo $nameClassObjEdit?>.is_save_event = <?php echo ($is_s
 spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxPropValidate = [<?php echo implode(', ', array("'param2'"))?>];
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxPropValidate = [<?php echo implode(', ', $ajaxPropValidate)?>];
+spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxParamsOnlyEventTypeChange = [<?php echo implode(', ', $ajaxParamsOnlyEventTypeChange)?>];
 //end
 </script>
