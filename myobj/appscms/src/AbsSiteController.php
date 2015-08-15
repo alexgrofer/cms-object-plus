@@ -3,6 +3,8 @@ namespace MYOBJ\appscms\src;
 use yii;
 use uClasses;
 
+Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'content-type');
+
 /**
  * Наследовать класс если необходима работат ьчерез хендлы меню системы
  *
@@ -16,6 +18,14 @@ use uClasses;
 abstract class AbsSiteController extends \Controller {
 	protected $thisObjNav = null;
 	protected $varsRender = array();
+
+	/**
+	 * Экшены которые должны работать по стандартной модели контроллеров yii
+	 * @return array
+	 */
+	protected function getListActionIsStandardController() {
+		return array();
+	}
 
 	private $_params=null;
 
@@ -107,7 +117,7 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function beforeAction($action) {
-		if($action instanceof \CCaptchaAction) {
+		if($action instanceof \CCaptchaAction || in_array($action->getId(), $this->getListActionIsStandardController())) {
 			return parent::beforeAction($action);
 		}
 
