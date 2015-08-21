@@ -13,7 +13,7 @@ class DateExtendValidator extends CDateValidator
 	*/
 
 	public function clientValidateAttribute($object,$attribute) {
-		return "if(1){messages.push(".CJSON::encode($this->message).");}";
+		//return "if(1){messages.push(".CJSON::encode($this->message).");}";
 	}
 }
 
