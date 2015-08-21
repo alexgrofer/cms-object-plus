@@ -10,7 +10,7 @@ $arrayuirow['remove'] = $this->dicturls['class'].'/class/'.$this->dicturls['para
 $listobjsort = MYOBJ\appscms\core\base\SysUtils::treelem($objectsNavigate,null,'id','parent_id',function($str) {return $str.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';});
 
 ?>
-<a class="btn" href="<?=$this->createAdminUrl($arrayuirow['new'])?>">new object</a>
+<a class="btn" href="<?php echo $this->createAdminUrl($arrayuirow['new'])?>">new object</a>
 <form method="post">
 <table class="table table-striped table-bordered table-condensed table-hover">
 <tr>

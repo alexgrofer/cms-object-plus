@@ -197,7 +197,7 @@ printf($htmlinput,'hidden','selectorsids',implode(',',$selectorsids),'');
 printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_excluded),'');
 
 ?>
-<a  class="btn" href="<?=$this->createAdminUrl($arrayuirow['new'])?>">new object</a>
+<a  class="btn" href="<?php echo $this->createAdminUrl($arrayuirow['new'])?>">new object</a>
 <p>
 <input name="exportcsv" type="file" /><input name="exportcsv_ispk" type="checkbox" />resave_pk создаст с таким id
 <input onclick="return confirm(\'export CSV file\')" class="btn btn-danger" type="submit" value="export" />
