@@ -1,14 +1,10 @@
 <?php
-namespace MYOBJ\controllers;
-use \yii as yii;
-use \CActiveRecord as CActiveRecord;
-
 /**
  * Начинаю делать новый контроллер для админки
  * Class NewAdminController
  * @package MYOBJ\controllers
  */
-class NewAdminController extends \Controller {
+class NewAdminController extends Controller {
 	/**
 	 * Просмотр объекта модели
 	 * @param $nameModel - название модели

@@ -9,3 +9,5 @@ Yii::import('MYOBJ.components.cms.behaviors.*');
 Yii::import('MYOBJ.components.cms.widgets.*');
 
 Yii::import('MYOBJ.components.cms.widgets.*');
+
+Yii::import('MYOBJ.appscms.src.validators.*');

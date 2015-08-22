@@ -1,7 +1,4 @@
 <?php
-namespace MYOBJ\controllers;
-use \yii as yii;
-
 /**
  * пример url: /myobj/tests/header/list
  * нужно создать навигацию с controller = tests/header, action = list
@@ -10,7 +7,7 @@ use \yii as yii;
  */
 class HeaderController extends \MYOBJ\appscms\src\AbsSiteController {
 	public function actionList() {
-		$modelTestHeader = \uClasses::getclass('test_header')->objects();
+		$modelTestHeader = uClasses::getclass('test_header')->objects();
 
 		$this->render(DIR_VIEWS_SITE.'test/header_list', array('modelTestHeader'=>$modelTestHeader));
 	}
@@ -23,10 +20,10 @@ class HeaderController extends \MYOBJ\appscms\src\AbsSiteController {
 		$this->setPageTitle('test page - '.$this->getAction()->id);
 
 		if($id) {
-			$objEdit = \uClasses::getclass('test_header')->objects()->findByPk($id);
+			$objEdit = uClasses::getclass('test_header')->objects()->findByPk($id);
 		}
 		else {
-			$objEdit = \uClasses::getclass('test_header')->initobject();
+			$objEdit = uClasses::getclass('test_header')->initobject();
 		}
 
 		$nameModel = get_class($objEdit);
@@ -62,10 +59,10 @@ class HeaderController extends \MYOBJ\appscms\src\AbsSiteController {
 			//ajax
 			if(Yii::app()->request->isAjaxRequest) {
 				//проверка атрибуте в онлайне
-				$strJson = \CActiveForm::validate($objEdit, $validate_params);
+				$strJson = CActiveForm::validate($objEdit, $validate_params);
 
 				//сохранение объектов AR в онлайне только если если это существующий объект и нет ошибок
-				if($objEdit->isNewRecord==false && $is_save_event && !\CJSON::decode($strJson)) {
+				if($objEdit->isNewRecord==false && $is_save_event && !CJSON::decode($strJson)) {
 					$function_save();
 
 					//если необходимо сделать редирект после сохранения

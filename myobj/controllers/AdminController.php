@@ -1,15 +1,11 @@
 <?php
-namespace MYOBJ\controllers;
-use \yii as yii;
-use \CActiveRecord as CActiveRecord;
 use MYOBJ\appscms\core\base\SysUtils;
 
 /**
  * Административная панель доступна по url /myobj/admin/objects/models/classes
  * Class AdminController
- * @package MYOBJ\controllers
  */
-class AdminController extends \Controller {
+class AdminController extends Controller {
 	public $layout='/admin/layouts/column1';
 	public $apcms;
 	public $dicturls = array();
@@ -37,12 +33,12 @@ class AdminController extends \Controller {
 	/**
 	 * Некоторые url нужно средиректить в исходное состояние до action/
 	 * @return string
-	 * @throws \CException
+	 * @throws CException
 	 */
 	public function getUrlBeforeAction() {
 		if(($pos = strpos(Yii::app()->request->url,'action/'))===false) {
 			return Yii::app()->request->url;
-			//throw new \CException(Yii::t('cms','url not corresponds pattern action/'));
+			//throw new CException(Yii::t('cms','url not corresponds pattern action/'));
 		}
 		return substr(Yii::app()->request->url,0,strpos(Yii::app()->request->url,'action/'));
 	}
@@ -90,7 +86,7 @@ class AdminController extends \Controller {
 				$settui = $params_modelget;
 
 				if($this->dicturls['paramslist'][0]=='class') {
-					$actclass = \uClasses::getclass($this->dicturls['paramslist'][1]);
+					$actclass = uClasses::getclass($this->dicturls['paramslist'][1]);
 					$modelAD = $actclass->objects();
 				}
 				elseif($this->dicturls['paramslist'][0]=='models' && $this->dicturls['paramslist'][1]!='') {
@@ -108,7 +104,7 @@ class AdminController extends \Controller {
 
 					//view links class obj
 					if($this->dicturls['paramslist'][3]=='links') {
-						$actclass = \uClasses::getclass($this->dicturls['paramslist'][2]);
+						$actclass = uClasses::getclass($this->dicturls['paramslist'][2]);
 						$name_relat_association = Yii::app()->request->getParam('is_bask_link')==false?'association':'association_back';
 						$objctsassociation = $actclass->$name_relat_association;
 						$modelAD->dbCriteria->addInCondition('id', SysUtils::arrvaluesmodel($objctsassociation,'id'));
@@ -167,7 +163,7 @@ class AdminController extends \Controller {
 						}
 						else {
 							if($this->dicturls['paramslist'][0]=='class') {
-								$modelAD = \uClasses::getclass($actclass->primaryKey)->initobject();
+								$modelAD = uClasses::getclass($actclass->primaryKey)->initobject();
 							}
 							else {
 								$modelAD = $modelAD::create();
@@ -175,7 +171,7 @@ class AdminController extends \Controller {
 						}
 						break;
 					case 'lenksobjedit':
-						$association_class = \uClasses::getclass($this->dicturls['paramslist'][6]);
+						$association_class = uClasses::getclass($this->dicturls['paramslist'][6]);
 						$getlinks = $association_class->objects()->findByPk($this->dicturls['paramslist'][4])->getobjlinks($this->dicturls['paramslist'][1], Yii::app()->request->getParam('type_link'), Yii::app()->request->getParam('is_bask_link',false));
 						$this->paramsrender['REND_selectedarr'] = SysUtils::arrvaluesmodel($getlinks->findAll(),'id');
 						break;
@@ -285,7 +281,7 @@ class AdminController extends \Controller {
 					$linkAnFuncSetCritModel();
 					Yii::import('ext.ECSVExport');
 					$namefile = '';
-					if($modelAD instanceof \AbsBaseHeaders) {
+					if($modelAD instanceof AbsBaseHeaders) {
 						$namefile = 'class-'.$actclass->codename;
 					}
 					else {
@@ -296,7 +292,7 @@ class AdminController extends \Controller {
 					foreach($objects as $obj) {
 						$array_insert = $obj->attributes;
 						$prop_array = array();
-						if($modelAD instanceof \AbsBaseHeaders) {
+						if($modelAD instanceof AbsBaseHeaders) {
 							$prop_array = $obj->uProperties;
 							foreach($prop_array as $key => $val) {
 								$prop_array[$key.'__prop'] = $val;
@@ -305,7 +301,7 @@ class AdminController extends \Controller {
 						}
 						$most_array_all[] = array_merge($array_insert,$prop_array);
 					}
-					$csv = new \ECSVExport($most_array_all);
+					$csv = new ECSVExport($most_array_all);
 
 					$content = $csv->toCSV();
 					$namefile .=  '_'.Yii::app()->dateFormatter->format('yyyy-MM-dd_HH-mm', time()).'.csv';
@@ -350,12 +346,12 @@ class AdminController extends \Controller {
 								}
 							}
 
-							if($modelAD instanceof \AbsBaseHeaders) {
+							if($modelAD instanceof AbsBaseHeaders) {
 								if($modelAD->is_independent==false) {
-									$newobj = \uClasses::getclass($attributes_csv['uclass_id'])->initobject();
+									$newobj = uClasses::getclass($attributes_csv['uclass_id'])->initobject();
 								}
 								else {
-									$newobj = \uClasses::getclass($modelAD->uclass_id)->initobject();
+									$newobj = uClasses::getclass($modelAD->uclass_id)->initobject();
 								}
 
 								if(count($properties_csv)) {
@@ -376,7 +372,7 @@ class AdminController extends \Controller {
 							}
 
 							$newobj->save();
-							if($newobj->getErrors()) throw new \CException(Yii::t('cms',print_r($newobj->getErrors(), true)));
+							if($newobj->getErrors()) throw new CException(Yii::t('cms',print_r($newobj->getErrors(), true)));
 						}
 						$row++;
 					}
@@ -421,7 +417,7 @@ class AdminController extends \Controller {
 	function actionLinkHelper($listset=array(),$listsetexcluded=array()) {
 		switch($this->dicturls['action']) {
 			case 'lenksobjedit':
-				$ObjHeader = \uClasses::getclass($this->dicturls['paramslist'][6])->objects()->findByPk($this->dicturls['actionid']);
+				$ObjHeader = uClasses::getclass($this->dicturls['paramslist'][6])->objects()->findByPk($this->dicturls['actionid']);
 				if(count($listset)) {
 					$ObjHeader->editlinks('add',$this->dicturls['paramslist'][1],$listset,Yii::app()->request->getParam('type_link'),Yii::app()->request->getParam('is_bask_link',false));
 				}
@@ -442,7 +438,7 @@ class AdminController extends \Controller {
 					$objRelations = $obj->relations();
 					$addparam = array();
 					//если ключ внейний и юзер пытается установить ключу null(отвязывает элемент) нежно заапдейтить новый
-					if(count($listset) && $objRelations[$nameRelation][0]==\CActiveRecord::BELONGS_TO) {
+					if(count($listset) && $objRelations[$nameRelation][0]==CActiveRecord::BELONGS_TO) {
 						$addparam = array($listset[0]);
 					}
 					$obj->UserRelated->links_edit('remove',$nameRelation,$listsetexcluded,$addparam);
