@@ -19,14 +19,6 @@ abstract class AbsSiteController extends \Controller {
 	protected $thisObjNav = null;
 	protected $varsRender = array();
 
-	/**
-	 * Экшены которые должны работать по стандартной модели контроллеров yii
-	 * @return array
-	 */
-	protected function getListActionIsStandardController() {
-		return array();
-	}
-
 	private $_params=null;
 
 	public function redirect($url,$terminate=true,$statusCode=302) {
@@ -62,22 +54,11 @@ abstract class AbsSiteController extends \Controller {
 	 * @throws \CException
 	 * @throws \CHttpException
 	 */
-	final protected function checkLayout($navigate, $action) {
-		if($action=='index') $action=null;
-		if($navigate=='show' && $action=='obj') {
-			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
-			//не нужно искать через поиск навигацию которая работает через стандартный контроллер
-			if($objNav && $objNav->getAttribute('controller')) $objNav=null;
-		}
-		else {
-			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $navigate, 'action' => $action));
-		}
-
-		if($objNav) {
-			if(!($templateObj = $objNav->templateDefault)) {
+	final protected function checkLayout() {
+		if($this->thisObjNav) {
+			if(!($templateObj = $this->thisObjNav->templateDefault)) {
 				throw new \CException(Yii::t('cms','none object template'));
 			}
-			$this->thisObjNav = $objNav;
 
 			$this->layout=DIR_TEMPLATES_SITE.$templateObj->path;
 		}
@@ -117,7 +98,20 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function beforeAction($action) {
-		if($action instanceof \CCaptchaAction || in_array($action->getId(), $this->getListActionIsStandardController())) {
+		$idController = yii::app()->getController()->getId();
+		$idAction = $action->id;
+		if($idAction=='index') $idAction=null;
+		if($idController=='show' && $idAction=='obj') {
+			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
+			//не нужно искать через поиск навигацию которая работает через стандартный контроллер
+			if($objNav && $objNav->getAttribute('controller')) $objNav=null;
+		}
+		else {
+			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $idController, 'action' => $idAction));
+		}
+		$this->thisObjNav = $objNav;
+
+		if($action instanceof \CCaptchaAction || ($this->thisObjNav==false || $this->thisObjNav->is_smart_tmp==false)) {
 			return parent::beforeAction($action);
 		}
 
@@ -127,7 +121,7 @@ abstract class AbsSiteController extends \Controller {
 			$this->redirect($urlRedirect);
 		}
 
-		return $this->checkLayout(yii::app()->getController()->getId(), $action->getId());
+		return $this->checkLayout();
 	}
 
 	final private function isShowAccessRender($objView) {

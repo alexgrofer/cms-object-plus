@@ -16,6 +16,9 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	public $action;
 	public $sort;
 	public $show;
+
+	public $is_smart_tmp;
+
 	//key
 	public $parent_id;
 	public $template_default_id;
@@ -61,6 +64,9 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 
 			array('template_mobile_default_id', 'exist', 'attributeName'=>TemplateSystemObjHeaders::model()->primaryKey(), 'className' => 'TemplateSystemObjHeaders', 'allowEmpty'=>true),
 			array('template_mobile_default_id', 'default', 'value'=>null),
+
+			array('is_smart_tmp', 'boolean'),
+			array('is_smart_tmp', 'default', 'value'=>false),
 		);
 	}
 
