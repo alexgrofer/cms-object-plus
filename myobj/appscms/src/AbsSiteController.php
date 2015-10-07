@@ -123,16 +123,4 @@ abstract class AbsSiteController extends \Controller {
 
 		return $this->checkLayout();
 	}
-
-	final private function isShowAccessRender($objView) {
-		//если не определили группу для представления оно будет показано всегда!
-		if(!$objView->group) return true;
-
-		//не давать отработать RBAC при условии что представление предназначенно только для гостей
-		if(!Yii::app()->user->isGuest && $objView->group->codename=='guest') return false;
-
-		if(Yii::app()->user->checkAccess($objView->group)) return true;
-
-		return false;
-	}
 }
