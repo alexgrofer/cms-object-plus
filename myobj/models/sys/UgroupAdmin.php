@@ -1,7 +1,6 @@
 <?php
 class UgroupAdmin extends AbsBaseModel {
 	public $name;
-	public $codename;
 
 	public function tableName()
 	{

@@ -1,7 +1,6 @@
 CREATE TABLE `cmsplus_ugroup_admin` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255) NOT NULL,
-	`codename` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
@@ -234,9 +233,9 @@ INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`)
 --
 INSERT INTO `cmsplus_user_admin` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
 --
-INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (1,'superAdmin','superAdmin');
-INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (2,'guest','guest');
-INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`,`codename`) VALUES (3,'user','user');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (1,'superAdmin');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (2,'guest');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (3,'user');
 --
 INSERT INTO `cmsplus_user_ugroup_admin` (`user_id`,`group_id`) VALUES (1,1);
 

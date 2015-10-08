@@ -7,6 +7,11 @@ class WebUser extends CWebUser {
 		if ($this->_groups === null) {
 			if ($user = $this->getObjUser()) {
 				$this->_groups = $user->groups;
+				if(!$this->_groups) { //если MTM нет
+					if(Yii::app()->controller->id!='admin') { //только для сайта
+						$this->_groups = array($user->group);
+					}
+				}
 			}
 		}
 		return $this->_groups;
