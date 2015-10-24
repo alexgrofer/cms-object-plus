@@ -23,8 +23,8 @@ class DForm extends \CFormModel {
 	public function addAttributeRule($name, $rule, $initVal=null) {
 		$this->_custom_rules[] = array_merge(array($name), is_array($rule)?$rule:array($rule));
 
-		$this->attributeNamesCustom[] = $name;
 		if(!property_exists($this,$name)) {
+			$this->attributeNamesCustom[] = $name;
 			$this->$name = $initVal;
 		}
 
