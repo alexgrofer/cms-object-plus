@@ -5,16 +5,7 @@ use uClasses;
 
 Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'content-type');
 
-/**
- * Наследовать класс если необходима работат ьчерез хендлы меню системы
- *
- * -при создании файла контроллера необходимо добавить controller и action
- *
- * -что бы не создавать файл контроллера можно использовать /myobj/show/obj/codename/index - где index это колонка codename
- *
- * Class AbsSiteController
- * @package MYOBJ\appscms\src
- */
+
 abstract class AbsSiteController extends \Controller {
 	protected $thisObjNav = null;
 	protected $varsRender = array();
@@ -100,18 +91,15 @@ abstract class AbsSiteController extends \Controller {
 	protected function beforeAction($action) {
 		$idController = yii::app()->getController()->getId();
 		$idAction = $action->id;
-		if($idAction=='index') $idAction=null;
-		if($idController=='show' && $idAction=='obj') {
+		if($idController=='page' && $idAction=='objNav') {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
-			//не нужно искать через поиск навигацию которая работает через стандартный контроллер
-			if($objNav && $objNav->getAttribute('controller')) $objNav=null;
 		}
 		else {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $idController, 'action' => $idAction));
 		}
 		$this->thisObjNav = $objNav;
 
-		if($action instanceof \CCaptchaAction || ($this->thisObjNav==false || $this->thisObjNav->is_smart_tmp==false)) {
+		if($action instanceof \CCaptchaAction || ($this->thisObjNav==null || $this->thisObjNav->is_smart_tmp==false)) {
 			return parent::beforeAction($action);
 		}
 

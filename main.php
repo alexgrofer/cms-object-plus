@@ -20,6 +20,8 @@ return array(
 		'urlFormat'=>'path',
 		'showScriptName'=>false,
 		'rules'=>array(
+			//site
+			'page/<codename>' => 'myobj/page/objNav/codename/<codename>',
 			//cms
 			'myobj/admin/<url:.*>'=>'myobj/admin/<url>',
 			//tests
