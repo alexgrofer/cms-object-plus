@@ -68,6 +68,10 @@ abstract class AbsSiteController extends \Controller {
 	 * @return null|string Вернет null если нет прав или поток представления
 	 */
 	final public function renderHandle($name, $idHandle) {
+		if($this->thisObjNav==null) {
+			return null;
+		}
+
 		if($this->_tempHandleViews === null) {
 			$this->_tempHandleViews = array();
 			$template_id = $this->template_id ?: $this->thisObjNav->template_default_id;
