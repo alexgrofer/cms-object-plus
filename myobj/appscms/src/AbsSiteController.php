@@ -7,6 +7,8 @@ Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'cont
 
 
 abstract class AbsSiteController extends \Controller {
+	public $layout=false;
+
 	protected $thisObjNav = null;
 	protected $varsRender = array();
 
@@ -103,7 +105,7 @@ abstract class AbsSiteController extends \Controller {
 		}
 		$this->thisObjNav = $objNav;
 
-		if($action instanceof \CCaptchaAction || ($this->thisObjNav==null || $this->thisObjNav->is_smart_tmp==false)) {
+		if($action instanceof \CCaptchaAction || $this->thisObjNav==null) {
 			return parent::beforeAction($action);
 		}
 

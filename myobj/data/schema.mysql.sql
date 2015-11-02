@@ -90,7 +90,6 @@ CREATE TABLE `cmsplus_navigatesystemobjheaders` (
 	`action` varchar(255) NULL,
 	`sort` int(11) NOT NULL DEFAULT 0,
 	`show` tinyint(1) NOT NULL DEFAULT 0,
-	`is_smart_tmp` tinyint(1) NOT NULL DEFAULT 0,
 	-- keys
 	`parent_id` int(11) NULL,
 	`template_default_id` int(11) NULL,
