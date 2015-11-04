@@ -48,7 +48,7 @@ abstract class AbsSiteController extends \Controller {
 	 * @throws \CHttpException
 	 */
 	final protected function checkLayout() {
-		if($this->thisObjNav) {
+		if($this->thisObjNav || $this->thisObjNav->show==false) {
 			if(!($templateObj = $this->thisObjNav->templateDefault)) {
 				throw new \CException(Yii::t('cms','none object template'));
 			}
@@ -56,7 +56,7 @@ abstract class AbsSiteController extends \Controller {
 			$this->layout=DIR_TEMPLATES_SITE.$templateObj->path;
 		}
 		else {
-			throw new \CHttpException(404,'CMS ERROR page not is find');
+			throw new \CHttpException(404,Yii::t('cms','Page not found'));
 		}
 
 		return true;

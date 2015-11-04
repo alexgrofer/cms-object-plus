@@ -34,10 +34,10 @@ foreach($listobjsort as $objarr) {
 	$objclass_navigation_sys = uClasses::getclass('navigation_sys');
 	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/param_sys/action/relationobjonly/'.$obj->primaryKey.'/add/relation_name/navigate').'">edit params</a>';
 
-	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/templates_sys/action/relationobj/'.$obj->primaryKey.'/add/relation_name/navigationsDef').'">template</a>';
+	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/templates_sys/action/relationobj/'.$obj->primaryKey.'/add/relation_name/navigationsDef').'">template def</a>';
 	$uihtml .= ' | <a class="btn" href="'.$this->createAdminUrl('objects/class/templates_sys/action/relationobj/'.$obj->primaryKey.'/add/relation_name/navigationsMobileDef').'">template mobile</a>';
 
-	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$this->createAdminUrl($arrayuirow['edittempl'].$obj->primaryKey, array('usercontroller'=>'usernav')).'">template</a>';
+	if($arrayuirow['edittempl']) $uihtml .= ' | <a class="btn btn-primary" href="'.$this->createAdminUrl($arrayuirow['edittempl'].$obj->primaryKey, array('usercontroller'=>'usernav')).'">handles</a>';
 
 	$visibl = ($obj->show)?'+':'-';
 
