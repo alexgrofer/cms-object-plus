@@ -91,7 +91,7 @@ abstract class AbsSiteController extends \Controller {
 		$vars = [];
 
 		$objView = $this->_tempHandleViews[$name];
-		$this->renderPartial(DIR_VIEWS_HANDLER_SITE.$objView->path, $vars);
+		$this->renderPartial(DIR_VIEWS_HANDLES_SITE.$objView->path, $vars);
 	}
 
 	protected function beforeAction($action) {
