@@ -58,6 +58,10 @@ class AdminController extends Controller {
 	}
 
 	public function run($actionID) {
+		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==false) {
+			Yii::app()->user->logout();
+			$this->redirect(Yii::app()->request->url);
+		}
 		//login
         if(defined('YII_DEBUG') && YII_DEBUG){
             //Yii::app()->assetManager->forceCopy = true;

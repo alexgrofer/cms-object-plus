@@ -11,7 +11,7 @@ class UserIdentityAdmin extends CUserIdentity {
 		}
 		else {
 			$this->_id=$record->primaryKey;
-			$this->setState('title', ''); //Yii::app()->user->title
+			Yii::app()->user->setState('isAdmin', 1);
 			$this->errorCode=self::ERROR_NONE;
 		}
 		return !$this->errorCode;

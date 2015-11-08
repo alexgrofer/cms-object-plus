@@ -95,6 +95,11 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function beforeAction($action) {
+		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==true) {
+			Yii::app()->user->logout();
+			$this->redirect(Yii::app()->request->url);
+		}
+
 		$idController = yii::app()->getController()->getId();
 		$idAction = $action->id;
 		if($idController=='page' && $idAction=='objNav') {
