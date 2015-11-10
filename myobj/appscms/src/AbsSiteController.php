@@ -7,6 +7,17 @@ Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'cont
 
 
 abstract class AbsSiteController extends \Controller {
+	public function init()
+	{
+		Yii::app()->errorHandler->errorAction='/myobj/'.yii::app()->getController()->getId().'/error';
+	}
+
+	public function actionError() {
+		if($error=Yii::app()->errorHandler->error) {
+			$this->render(DIR_VIEWS_SITE . 'error', $error);
+		}
+	}
+
 	public $layout=false;
 
 	protected $thisObjNav = null;
