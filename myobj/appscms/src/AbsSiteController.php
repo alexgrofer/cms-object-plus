@@ -7,8 +7,20 @@ Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'cont
 
 
 abstract class AbsSiteController extends \Controller {
-	public function init()
-	{
+	public function init() {
+		//set language
+		$request=Yii::app()->request;
+		Yii::app()->language = $request->cookies['language_space'] ?
+			$request->cookies['language_space']->value : 'en';
+		if($lang=$request->getQuery('setLanguage')) {
+			$cookie = new \CHttpCookie('language_space', $lang);
+			$cookie->expire = time()+60*60*24*360; //year
+			$request->cookies['language_space'] = $cookie;
+			unset($_GET['setLanguage']);
+			$this->redirect($this->createUrl($request->pathInfo, $_GET));
+		}
+
+		//set errorHandler
 		Yii::app()->errorHandler->errorAction='/myobj/'.yii::app()->getController()->getId().'/error';
 	}
 
