@@ -7,6 +7,8 @@ Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'cont
 
 
 abstract class AbsSiteController extends \Controller {
+	public $isMobile;
+
 	public function init() {
 		//set language
 		$request=Yii::app()->request;
@@ -17,6 +19,21 @@ abstract class AbsSiteController extends \Controller {
 			$cookie->expire = time()+60*60*24*360; //year
 			$request->cookies['language_space'] = $cookie;
 			unset($_GET['setLanguage']);
+			$this->redirect($this->createUrl($request->pathInfo, $_GET));
+		}
+		//set mobile version
+		$this->isMobile = $request->cookies['is_mobile'] ?
+			$request->cookies['is_mobile']->value : false;
+		if($request->getQuery('setIsMobileVersion')) {
+			if($request->getQuery('setIsMobileVersion')=='false') {
+				unset(Yii::app()->request->cookies['is_mobile']);
+			}
+			else {
+				$cookie = new \CHttpCookie('is_mobile', 1);
+				$cookie->expire = time() + 60 * 60 * 24 * 360; //year
+				$request->cookies['is_mobile'] = $cookie;
+			}
+			unset($_GET['setIsMobileVersion']);
 			$this->redirect($this->createUrl($request->pathInfo, $_GET));
 		}
 
@@ -72,7 +89,8 @@ abstract class AbsSiteController extends \Controller {
 	 */
 	final protected function checkLayout() {
 		if($this->thisObjNav || $this->thisObjNav->show==false) {
-			if(!($templateObj = $this->thisObjNav->templateDefault)) {
+			$templateObj = ($this->isMobile)?$this->thisObjNav->templateMobileDefault:$this->thisObjNav->templateDefault;
+			if(!$templateObj) {
 				throw new \CException(Yii::t('cms','none object template'));
 			}
 
@@ -99,7 +117,7 @@ abstract class AbsSiteController extends \Controller {
 
 		if($this->_tempHandleViews === null) {
 			$this->_tempHandleViews = array();
-			$template_id = $this->template_id ?: $this->thisObjNav->template_default_id;
+			$template_id = $this->template_id ?: (($this->isMobile)?$this->thisObjNav->template_mobile_default_id:$this->thisObjNav->template_default_id);
 			$handles = $this->thisObjNav->getobjlinks('handle_sys', 'handle')->findAllByAttributes(['template_id'=>$template_id]);
 
 			foreach($handles as $handle) {
