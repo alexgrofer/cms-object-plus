@@ -58,6 +58,7 @@ class AdminController extends Controller {
 	}
 
 	public function run($actionID) {
+		//разлогирование юзера если он пришел из другой таблицы юзеров с сайта, а не из админки
 		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==false) {
 			Yii::app()->user->logout();
 			$this->redirect(Yii::app()->request->url);

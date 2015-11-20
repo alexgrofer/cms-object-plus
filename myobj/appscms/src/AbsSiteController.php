@@ -108,7 +108,7 @@ abstract class AbsSiteController extends \Controller {
 	 * выводит в поток рендер представления для установленного рендера навигацмм
 	 * @param $name название хендла, используется для поиска, для каждого шаблона должен быть уникален
 	 * @param $idHandle необходим для сортировке в панели редиктирования шаблона, не должен быть уникален
-	 * @return null|string Вернет null если нет прав или поток представления
+	 * @return null|string
 	 */
 	final public function renderHandle($name, $idHandle) {
 		if($this->thisObjNav==null) {
@@ -136,6 +136,7 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	protected function beforeAction($action) {
+		//разлогирование юзера если он пришел из другой таблицы юзеров из админки, а не из сайта
 		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==true) {
 			Yii::app()->user->logout();
 			$this->redirect(Yii::app()->request->url);

@@ -77,8 +77,7 @@ CREATE TABLE `cmsplus_viewsystemobjheaders` (
 	-- keys
 	`group_id` int(11) NULL,
 	--
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup_admin` (`id`) ON UPDATE CASCADE
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_navigatesystemobjheaders` (
@@ -233,8 +232,8 @@ INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`)
 INSERT INTO `cmsplus_user_admin` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
 --
 INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (1,'superAdmin');
-INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (2,'guest');
-INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (3,'user');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (2,'administrator');
+INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (3,'guest');
 --
 INSERT INTO `cmsplus_user_ugroup_admin` (`user_id`,`group_id`) VALUES (1,1);
 

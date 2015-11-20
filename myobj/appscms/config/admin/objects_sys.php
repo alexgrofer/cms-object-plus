@@ -58,7 +58,6 @@ return array(
 	'views_sys' => array(
 		'relation' => array(
 			'handles'=>array('handle_sys','view', true),
-			'group'=>array('group','showView', false),
 		),
 		'namemodel' => 'ViewSystemObjHeaders',
 		'group_read' => 'administrator',

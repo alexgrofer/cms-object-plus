@@ -26,7 +26,6 @@ return array(
 		'namemodel' => 'UgroupAdmin',
 		'relation' => array(
 			'users'=>array('user','groups'),
-			'showView'=>array('views_sys','group',true),
 		),
 		'group_read' => 'administrator',
 		'group_write' => 'administrator',
