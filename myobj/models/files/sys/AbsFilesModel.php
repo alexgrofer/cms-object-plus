@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Файлы
- * Class AbsFiles
- */
 abstract class AbsFilesModel extends AbsBaseModel
 {
 	public $hash;

@@ -2,7 +2,7 @@
 
 /**
  * Картинки
- * Class AbsFiles
+ * Class ImageModel
  */
 abstract class ImageModel extends AbsFilesModel
 {

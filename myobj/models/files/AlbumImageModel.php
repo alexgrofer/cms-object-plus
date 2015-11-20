@@ -2,7 +2,7 @@
 
 /**
  * Альбомы
- * Class AbsFiles
+ * Class AlbumImageModel
  */
 abstract class AlbumImageModel extends AbsFilesModel
 {

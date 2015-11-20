@@ -2,7 +2,7 @@
 
 /**
  * Документы
- * Class AbsFiles
+ * Class DocModel
  */
 abstract class DocModel extends AbsFilesModel
 {
