@@ -4,7 +4,7 @@
  * Группы
  */
 class CommunityGroup extends AbsBaseModel {
-	public $type_enter; //тип публичности (открытая, зактывая, скрытая - доступ по приглашению)
+	public $type;
 
 	public function relations()
 	{
@@ -17,6 +17,10 @@ class CommunityGroup extends AbsBaseModel {
 			'admins'=>array(self::MANY_MANY, 'User', 'cmsplus_community_rights_admins(community_id, user_id)'),
 			//модераторы
 			'moderators'=>array(self::MANY_MANY, 'User', 'cmsplus_community_rights_moderators(community_id, user_id)'),
+			//редакторы
+			'editors'=>array(self::MANY_MANY, 'User', 'cmsplus_community_rights_editors(community_id, user_id)'),
+			//бан лист
+			'ban_list'=>array(self::MANY_MANY, 'User', 'cmsplus_community_ban_list(community_id, user_id)'),
 		);
 	}
 }
