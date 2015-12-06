@@ -11,5 +11,5 @@ abstract class AbsFilesModel extends AbsBaseModel
 	 * Подтвержденная загрузка файла. при онлайн загрузках
 	 * @var
 	 */
-	public $is_activate;
+	public $is_load;
 }
