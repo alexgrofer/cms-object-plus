@@ -9,6 +9,22 @@ Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'cont
 abstract class AbsSiteController extends \Controller {
 	public $isMobile;
 
+	const NAME_PARAM_PAGE_TITLE = 'page_title';
+	const NAME_PARAM_PAGE_DESCRIPTION = 'page_description';
+	const NAME_PARAM_PAGE_KEYWORDS = 'page_keywords';
+
+	public $pageDescription;
+	public $pageKeywords;
+
+	const NAME_TEMPLATE_ERROR_PAGE = 'error';
+	const NAME_VIEW_ERROR_PAGE = 'error';
+	public function actionError() {
+		if($error=Yii::app()->errorHandler->error) {
+			$this->layout=DIR_TEMPLATES_SITE.(static::NAME_TEMPLATE_ERROR_PAGE);
+			$this->render(DIR_VIEWS_SITE.(static::NAME_VIEW_ERROR_PAGE), $error);
+		}
+	}
+
 	public function init() {
 		//set language
 		$request=Yii::app()->request;
@@ -39,12 +55,6 @@ abstract class AbsSiteController extends \Controller {
 
 		//set errorHandler
 		Yii::app()->errorHandler->errorAction='/myobj/'.yii::app()->getController()->getId().'/error';
-	}
-
-	public function actionError() {
-		if($error=Yii::app()->errorHandler->error) {
-			$this->render(DIR_VIEWS_SITE . 'error', $error);
-		}
 	}
 
 	public $layout=false;
@@ -160,6 +170,17 @@ abstract class AbsSiteController extends \Controller {
 		if(isset(Yii::app()->session['urlRedirectAfterAJAX']) && $urlRedirect = Yii::app()->session['urlRedirectAfterAJAX']) {
 			unset(Yii::app()->session['urlRedirectAfterAJAX']);
 			$this->redirect($urlRedirect);
+		}
+
+		//word meta
+		if(isset($this->params[static::NAME_PARAM_PAGE_TITLE])) {
+			$this->pageTitle = $this->params[static::NAME_PARAM_PAGE_TITLE];
+		}
+		if(isset($this->params[static::NAME_PARAM_PAGE_DESCRIPTION])) {
+			$this->pageDescription = $this->params[static::NAME_PARAM_PAGE_DESCRIPTION];
+		}
+		if(isset($this->params[static::NAME_PARAM_PAGE_KEYWORDS])) {
+			$this->pageKeywords = $this->params[static::NAME_PARAM_PAGE_KEYWORDS];
 		}
 
 		return $this->checkLayout();
