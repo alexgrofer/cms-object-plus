@@ -156,6 +156,9 @@ abstract class AbsSiteController extends \Controller {
 		$idAction = $action->id;
 		if($idAction=='objNav') {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
+			if(!$objNav) {
+				throw new \CHttpException(404,Yii::t('cms','Page not found'));
+			}
 		}
 		else {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('controller' => $idController, 'action' => $idAction));
