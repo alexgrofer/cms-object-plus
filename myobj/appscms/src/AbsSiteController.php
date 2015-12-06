@@ -154,7 +154,7 @@ abstract class AbsSiteController extends \Controller {
 
 		$idController = yii::app()->getController()->getId();
 		$idAction = $action->id;
-		if($idController=='page' && $idAction=='objNav') {
+		if($idAction=='objNav') {
 			$objNav = \uClasses::getclass('navigation_sys')->objects()->findByAttributes(array('codename' => Yii::app()->request->getParam('codename')));
 		}
 		else {
