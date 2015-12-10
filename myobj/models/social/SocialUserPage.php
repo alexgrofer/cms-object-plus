@@ -1,7 +1,6 @@
 <?php
 
-class CommunityUserPage extends AbsBaseModel {
-	public $user_id;
+class SocialUserPage extends AbsSocialCommunity {
 	//страна
 	//город
 

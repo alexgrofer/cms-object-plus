@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Группы
- */
-class CommunityGroup extends AbsBaseModel {
+class SocialGroup extends AbsSocialCommunity {
 	public $type_enter; //тип публичности (открытая, зактывая, скрытая - доступ по приглашению)
 
 	public function relations()

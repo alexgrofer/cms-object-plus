@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Документы
- * Class DocModel
- */
-abstract class DocModel extends AbsFilesModel
-{
-	/**
-	 * Имя файла
-	 * @var
-	 */
+class DocModel extends AbsStoreFilesModel {
 	public $name;
 }

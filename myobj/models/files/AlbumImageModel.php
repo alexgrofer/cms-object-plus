@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Альбомы
- * Class AlbumImageModel
- */
-abstract class AlbumImageModel extends AbsFilesModel
-{
-
+class AlbumImageModel extends AbsBaseModel {
+	public $name;
+	public $desc;
+	public $image_prev_id;
 }

@@ -1,6 +1,6 @@
 <?php
 
-class WallModel extends AbsBaseModel {
+class SocialWallModel extends AbsBaseModel {
 	public $user_id;
 	public $group_id;
 	public $content;

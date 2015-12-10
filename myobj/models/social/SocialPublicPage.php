@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Группы
+ * Публичные страницы
  */
-class CommunityGroup extends AbsBaseModel {
+class SocialPublicPage extends AbsSocialCommunity {
 	public $type;
 
 	public function relations()

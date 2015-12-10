@@ -1,20 +1,10 @@
 <?php
 
-/**
- * Картинки
- * Class ImageModel
- */
-abstract class ImageModel extends AbsFilesModel
-{
-	/**
-	 * Имя
-	 * @var
-	 */
-	public $name;
+class ImageModel extends AbsStoreFilesModel {
+	public function tableName() {
+		return 'cmsplus_store_file_image';
+	}
+
 	public $description;
-	/**
-	 * Альбом
-	 * @var
-	 */
 	public $album_id;
 }
