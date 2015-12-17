@@ -325,61 +325,73 @@ class AdminController extends Controller {
 				$headers_key_prop_csv=array();
 				$headers_key_attr_csv=array();
 				$count_data = 0;
+				$arr_all_csv = array();
 				if (($handle = fopen($_FILES['exportcsv']['tmp_name'], 'r'))!==false) {
 					$transaction=Yii::app()->db->beginTransaction();
 					///transaction
 					try {
-
 					while (($data = fgetcsv($handle))!==false) {
-						if($row==1) {
+						if ($row == 1) {
 							$count_data = count($data);
 							$headers_key_attr_csv = $data;
-							foreach($data as $k => $nanecol) {
-								if($posprop=strpos($nanecol,'__prop')) {
-									$headers_key_prop_csv[$k] = substr($nanecol,0,$posprop);
+							foreach ($data as $k => $nanecol) {
+								if ($posprop = strpos($nanecol, '__prop')) {
+									$headers_key_prop_csv[$k] = substr($nanecol, 0, $posprop);
 								}
 							}
-						}
-						elseif(count($data)==$count_data) {
-							foreach($data as $k => $val) {
-								if(isset($headers_key_prop_csv[$k])) {
+						} elseif (count($data) == $count_data) {
+							foreach ($data as $k => $val) {
+								if (isset($headers_key_prop_csv[$k])) {
 									$properties_csv[$headers_key_prop_csv[$k]] = $val;
-								}
-								else {
-									if($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
+								} else {
+									if ($modelAD->primaryKey() && $headers_key_attr_csv[$k] == $modelAD->primaryKey() && !isset($_POST['exportcsv_ispk'])) continue;
 									$attributes_csv[$headers_key_attr_csv[$k]] = $val;
 								}
 							}
-
-							if($modelAD instanceof AbsBaseHeaders) {
-								if($modelAD->is_independent==false) {
-									$newobj = uClasses::getclass($attributes_csv['uclass_id'])->initobject();
-								}
-								else {
-									$newobj = uClasses::getclass($modelAD->uclass_id)->initobject();
-								}
-
-								if(count($properties_csv)) {
-									foreach($properties_csv as $keyP => $keyP) {
-										$newobj->uProperties = [$keyP,$keyP];
-									}
-								}
+							if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
+								$arr_all_csv[$attributes_csv[$modelAD->primaryKey()]] = $attributes_csv;
 							}
 							else {
-								$namemodel = get_class($modelAD);
-								$newobj = $namemodel::create();
+								$arr_all_csv[$row] = $attributes_csv;
 							}
-
-							$newobj->attributes = $attributes_csv;
-							if(isset($attributes_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
-								$namepk = $modelAD->primaryKey();
-								$newobj->$namepk = $attributes_csv[$modelAD->primaryKey()];
-							}
-
-							$newobj->save();
-							if($newobj->getErrors()) throw new CException(Yii::t('cms',print_r($newobj->getErrors(), true)));
 						}
 						$row++;
+					}
+					//sort key
+					if(isset($_POST['exportcsv_ispk'])) {
+						usort($arr_all_csv, function ($a, $b) use($modelAD) {
+							return ($a[$modelAD->primaryKey()] < $b[$modelAD->primaryKey()]) ? -1 : 1;
+						});
+					}
+					foreach($arr_all_csv as $row_csv) {
+						if ($modelAD instanceof AbsBaseHeaders) {
+							if ($modelAD->is_independent == false) {
+								$newobj = uClasses::getclass($row_csv['uclass_id'])->initobject();
+							} else {
+								$newobj = uClasses::getclass($modelAD->uclass_id)->initobject();
+							}
+
+							if (count($properties_csv)) {
+								foreach ($properties_csv as $keyP => $keyP) {
+									$newobj->uProperties = [$keyP, $keyP];
+								}
+							}
+						} else {
+							$namemodel = get_class($modelAD);
+							$newobj = $namemodel::create();
+						}
+
+						$newobj->attributes = $row_csv;
+						if (isset($row_csv[$modelAD->primaryKey()]) && isset($_POST['exportcsv_ispk'])) {
+							$namepk = $modelAD->primaryKey();
+							$newobj->$namepk = $row_csv[$modelAD->primaryKey()];
+						}
+
+						$newobj->save();
+						if ($newobj->getErrors()) {
+							throw new CException(Yii::t('cms', print_r($newobj->getErrors(), true)));
+						}
+
 					}
 
 					///transaction
