@@ -21,6 +21,8 @@ class AppCMS extends CComponent {
 		SysUtils::importRecursName('MYOBJ.appscms.config.all','import_*');
 		//const
 		SysUtils::importRecursName('MYOBJ.appscms.config.all','const_*');
+		//components
+		SysUtils::importRecursName('MYOBJ.appscms.config.all','init_components_*');
 
 		$this->config = SysUtils::importRecursName('MYOBJ.appscms.config','main_all.php',true,true);
 

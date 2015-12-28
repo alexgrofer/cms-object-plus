@@ -20,6 +20,7 @@ class NavigateSystemObjHeaders extends AbsBaseHeaders {
 	//key
 	public $parent_id;
 	public $template_default_id;
+	public $template_mobile_default_id;
 	// end
 
 	public $isitlines = false;
