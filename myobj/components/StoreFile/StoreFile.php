@@ -13,7 +13,13 @@ class StoreFile extends CComponent {
 
 	}
 
-	public function loadFile(CUploadedFile $file, $type) {
+	public function getUrl($id, $type) {
+		$modelFile = ImageModel::model()->findByPk($id);
+		$homedir = 'store_upload';
+		return '/'.$homedir.'/'.$modelFile->folder.'/'.$modelFile->code_name.'.jpg';
+	}
+
+	public function loadFile(CUploadedFile $file, $type, $arraySetting) {
 		$code_name = \MYOBJ\appscms\core\base\SysUtilsString::read_str(10);
 
 		if(static::$last_folder) {
@@ -21,17 +27,46 @@ class StoreFile extends CComponent {
 		}
 		else {
 			$last_obj = current(ImageModel::model()->findAll(array('order'=>'id DESC', 'limit'=>1)));
-			$folder = $last_obj->folder;
-			$absFolder = (FOLDER_UPLOAD).$folder;
+			if($last_obj) {
+				$folder = $last_obj->folder;
+				$absFolder = (FOLDER_UPLOAD) . $folder;
+			}
 
-			if(file_exists($absFolder)==false || (count(scandir($absFolder)) - 2)>=static::MAX_FILES_FOLDER) {
+			if(!$last_obj || file_exists($absFolder)==false || (count(scandir($absFolder)) - 2)>=static::MAX_FILES_FOLDER) {
 				$folder = \MYOBJ\appscms\core\base\SysUtilsString::read_str(25);
 				static::$last_folder = $folder;
 				CFileHelper::createDirectory((FOLDER_UPLOAD).$folder);
 			}
 		}
 
-		$file->saveAs((FOLDER_UPLOAD).$folder.'/'.$code_name.'.'.$file->getExtensionName());
+		$extension = $file->getExtensionName();
+
+		if($type==static::TYPE_IMAGE) {
+
+			$image = new EasyImage($file->getTempName());
+
+			if(isset($arraySetting['resize'])) {
+				$image->resize($arraySetting['resize']['width'], $arraySetting['resize']['height']);
+			}
+
+			if(isset($arraySetting['crop'])) {
+				$image->crop($arraySetting['crop']['width'], $arraySetting['crop']['height']);
+			}
+
+			if(isset($arraySetting['type'])) {
+				$extension = $arraySetting['type'];
+			}
+
+			$quality = 100;
+			if(isset($arraySetting['quality'])) {
+				$quality = $arraySetting['quality'];
+			}
+
+			$image->save((FOLDER_UPLOAD).$folder.'/'.$code_name.'.'.$extension, $quality);
+		}
+		else {
+			$file->saveAs((FOLDER_UPLOAD).$folder.'/'.$code_name.'.'.$extension, false);
+		}
 
 		$objModel = new ImageModel();
 		//base
