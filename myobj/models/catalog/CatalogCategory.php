@@ -3,7 +3,6 @@ class CatalogCategory extends AbsBaseModel
 {
 	public $name; //Телевизоры
 	public $desc; //Телевизоры и плазменные панели
-	public $codename;
 	public $parent_id;
 
 	public function tableName()
@@ -21,9 +20,8 @@ class CatalogCategory extends AbsBaseModel
 
 	public function rules() {
 		return array(
-			array('name, codename', 'required'),
-			array('name, desc, codename', 'length', 'max'=>225),
-			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
+			array('name', 'required'),
+			array('name, desc', 'length', 'max'=>225),
 			array('parent_id', 'exist', 'attributeName'=>'id', 'className'=>get_class($this),'allowEmpty'=>true),
 		);
 	}
@@ -34,9 +32,6 @@ class CatalogCategory extends AbsBaseModel
 				'type'=>'text',
 			),
 			'desc'=>array(
-				'type'=>'text',
-			),
-			'codename'=>array(
 				'type'=>'text',
 			),
 			'parent_id'=>array(

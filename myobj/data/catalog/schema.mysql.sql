@@ -2,7 +2,6 @@ CREATE TABLE `cmsplus_catalog_category` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`desc` varchar(255) NOT NULL,
-	`codename` varchar(255) NOT NULL,
 	`parent_id` int(11) DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`codename`),
