@@ -4,7 +4,6 @@ CREATE TABLE `cmsplus_catalog_category` (
 	`desc` varchar(255) NOT NULL,
 	`parent_id` int(11) DEFAULT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY (`codename`),
 	KEY `parent_id` (`parent_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
