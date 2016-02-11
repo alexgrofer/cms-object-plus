@@ -20,9 +20,8 @@ class SysUtils
 			return $str;
 		};
 
+		$content = $tamplate['pagination'];
 		$countlinks = (int)(ceil($countlinks / (float)($count_elems)));
-		$linksp = '';
-		$linkspt = '';
 		$finc = $indexpage % $count_pages;
 		$idnext = $indexpage + 2;
 		$idprev = $indexpage;
@@ -35,33 +34,43 @@ class SysUtils
 
 		$rangenorm = array_slice(range(0, ($countlinks - 1)), $startslice, $count_pages);
 
-		if ($startslice > 0) {
-			$linksp .= $func_getlink(sprintf($tamplate['nextleft'], $urlp), $idleftnext);
+		$in_start = '';
+		if(isset($tamplate['in_start']) && $startslice > 0) {
+			$in_start = $func_getlink(sprintf($tamplate['in_start'], $urlp), $idleftnext);
 		}
+		$content = str_replace('{{IN_START}}', $in_start, $content);
 
-		if ($indexpage != 0) {
-			$linkspt .= $func_getlink(sprintf($tamplate['prevpg'], $urlp), $idprev);
+		$in_left = '';
+		if(isset($tamplate['in_left']) && $indexpage != 0) {
+			$in_left = $func_getlink(sprintf($tamplate['in_left'], $urlp), $idprev);
 		}
+		$content = str_replace('{{IN_LEFT}}', $in_left, $content);
 
-		foreach ($rangenorm as $i) {
+		$elements = '';
+		foreach($rangenorm as $i) {
 			$actclassl = '';
 			if ($indexpage == $i) $actclassl = $tamplate['action'];
 
 			$idthisutl = ($i + 1);
 
-			$linksp .= $func_getlink(sprintf($tamplate['elem'], $actclassl, $idthisutl), $idthisutl);
+			$elements .= $func_getlink(sprintf($tamplate['elements'], $actclassl, $idthisutl), $idthisutl);
 		}
+		$content = str_replace('{{ELEMENTS}}', $elements, $content);
 
-		if ($indexpage != $countlinks - 1) {
-			$linkspt .= $func_getlink(sprintf($tamplate['nextpg'], $urlp), $idnext);
+		$in_right = '';
+		if(isset($tamplate['in_right']) && $indexpage != $countlinks - 1) {
+			$in_right = $func_getlink(sprintf($tamplate['in_right'], $urlp), $idnext);
 		}
-		if ($idthisutl < $countlinks) {
-			$linksp .= $func_getlink(sprintf($tamplate['nextright'], $urlp), $idrightnext);
+		$content = str_replace('{{IN_RIGHT}}', $in_right, $content);
+
+		$in_end = '';
+		if(isset($tamplate['in_end']) && $idthisutl < $countlinks) {
+			$in_end = $func_getlink(sprintf($tamplate['in_end'], $urlp), $idrightnext);
 		}
+		$content = str_replace('{{IN_END}}', $in_end, $content);
 
 
-		$pagination = sprintf($tamplate['pagination'], $linkspt, $linksp);
-		return $pagination;
+		return $content;
 	}
 
 	public static function treelem($aArr, $atop, $keyId, $keyTop, $func, $tmpLeft = null)

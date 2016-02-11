@@ -391,20 +391,24 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 
 $tamplate = array(
 		'action'=>' class="active"',
-		'nextleft'=>'<li><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">&laquo;</a></li>',
-		'prevpg'=>'<li class="previous"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="prevpg" href="#">Ctrl &larr;</a></li>',
-		'nextpg'=>'<li class="next"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="nextpg" href="#">Ctrl &rarr;</a></li>',
-		'nextright'=>'<li><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">&raquo;</a></li>',
-		'elem'=>'<li%s><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">T_ID_PAGE</a>
+		'in_start'=>'<li><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">&laquo;</a></li>',
+		'in_left'=>'<li class="previous"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="prevpg" href="#">Ctrl &larr;</a></li>',
+		'in_right'=>'<li class="next"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="nextpg" href="#">Ctrl &rarr;</a></li>',
+		'in_end'=>'<li><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">&raquo;</a></li>',
+		'elements'=>'<li%s><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">T_ID_PAGE</a>
 
 		</li>',
 		'pagination' => '
 		<div id="pagination" class="pagination">
 
 			<ul class="pager">
-				%s
+				{{IN_LEFT}}{{IN_RIGHT}}
 			</ul>
-			<p class="pagin-lenks"><ul>%s</ul></p>
+			<p class="pagin-lenks"><ul>
+			{{IN_START}}
+			{{ELEMENTS}}
+			{{IN_END}}
+			</ul></p>
 		</div>
 <script>
 $("#pagination a").bind("click", function(){
@@ -414,7 +418,7 @@ $("#pagination a").bind("click", function(){
 $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if($("#prevpg").length){$("#prevpg")[0].click()}}else if(event.keyCode == 39){if($("#nextpg").length){$("#nextpg")[0].click()}}}});
 </script>
 ');
-echo '<div style="padding-bottom: 60px">'.MYOBJ\appscms\core\base\SysUtils::pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate).'</div>';
+echo '<div style="padding-bottom: 60px">'.MYOBJ\appscms\core\base\SysUtils::pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate, 3).'</div>';
 }
 ?>
 <input name="pkeys_all" type="hidden" value="<?php echo implode(',',$pkeys_all);?>" />
