@@ -395,7 +395,7 @@ $tamplate = array(
 		'prevpg'=>'<li class="previous"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="prevpg" href="#">Ctrl &larr;</a></li>',
 		'nextpg'=>'<li class="next"><input type="submit" name="goin_T_ID_PAGE" value="true" /><a id="nextpg" href="#">Ctrl &rarr;</a></li>',
 		'nextright'=>'<li><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">&raquo;</a></li>',
-		'elem'=>'<li%s><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">%s</a>
+		'elem'=>'<li%s><input type="submit" name="goin_T_ID_PAGE" value="true" /><a href="#">T_ID_PAGE</a>
 
 		</li>',
 		'pagination' => '
