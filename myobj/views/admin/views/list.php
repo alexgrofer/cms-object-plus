@@ -313,8 +313,12 @@ foreach($listall as $obj) {
 		$valobj = '';
 		if(strpos($colname, '.')!==false) {
 			$arrRlname=explode('.',$colname);
-			$valobj = $obj->$arrRlname[0]->$arrRlname[1];
-
+			$propRelat = array_pop($arrRlname);
+			$valobj = $obj;
+			foreach($arrRlname as $valRel) {
+				if($valobj) $valobj = $valobj->$valRel;
+			}
+			if($valobj) $valobj = $valobj->$propRelat;
 		}
 		else {
 			$valobj = $obj->$colname;

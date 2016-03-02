@@ -18,7 +18,7 @@ return array(
 		'editForm' => array('name','vp1','content'), //в админке видим только эти поля
 		//название дополнительных колонок в дочерней таблице MANY_MANY которые можем править при редактировании связанного объекта
 		'selfobjrelationElements' => array('properties'=>array('test', 'test2')),
-		'witch' => array('relattest', 'relattest.relattest2'), @todo сделать возможность witch
+		'witch' => array('relattest', 'relattest.relattest2'),
 		'cols_props' => array('text_news_example'=>'text_news_example','annotation_news_example'=>'annotation_news_example'), //колонки-свойства объектов
 		'find' => array('id', 'text_news_example__prop', 'annotation_news_example__prop'), //поиска в меню
 		'order_by' => array('id','name', 'text_news_example__prop', 'annotation_news_example__prop'), //сортировка в меню
