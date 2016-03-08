@@ -1,33 +1,17 @@
 <?php
-
 /**
  * Class FormModelTest
  * Тестируем форму редактирования добавления и другие возможности формы (ajax)
+ * http://www.yiiframework.com/doc/guide/1.1/ru/test.functional
  */
-class FormModelTest extends WebTestCase {
-	protected function setUp()
+class FormModelTest extends AbsWebTestCase {
+
+	public function testShow()
 	{
-		Yii::app()->assetManager->basePath = yii::getPathOfAlias('MYOBJ.tests.fixtures.'.get_class($this));
-		parent::setUp();
-
-		//изменим конфиг приложения
-		//добавляем тестовое табличное пространство
-		$spacescl = Yii::app()->appcms->config['spacescl'];
-		if(isset($spacescl['777'])===false) {
-			$spacescl['777'] = array('namemodel'=>'TestAbsBaseObjHeaders', 'nameModelLinks'=>['base'=>'linksObjectsSystem']);
-			self::editTestConfig($spacescl, 'spacescl');
-		}
-	}
-
-	public $fixtures=array(
-		'objectAbsBaseHeader'=>'TestAbsBaseObjHeaders', //объекты TestAbsBaseObjHeaders
-		'objProperty'=>'objProperties', //объекты objProperties
-	);
-
-	//tests
-
-	public function testIndex() {
-		$this->open('');
-		$this->assertTextPresent('Welcome');
+		$this->open('post/1');
+		// проверяем наличие заголовка некой записи
+		$this->assertTextPresent('ssss');
+		// проверяем наличие формы комментария
+		$this->assertTextPresent('Leave a Comment');
 	}
 }
