@@ -1,5 +1,7 @@
 <?php
 
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
 $config =  CMap::mergeArray(
 	require(dirname(__FILE__).'/../../../config/test.php'),
 	array(

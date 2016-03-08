@@ -102,14 +102,10 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 	 * @depends testSetUProperties
 	 */
 	public function testSaveProperties(TestAbsBaseObjHeaders $objHeader) {
-		//нужно узнать какими были свойства до того как из изменили
-		$this->assertEquals($objHeader->getOldProperties(), ['codename1'=>'type upcharfield line3 header 3', 'codename2'=>'type uptextfield line4 header 3']);
-
+		//запишем новые значения в базу
 		$objHeader->saveProperties();
-		//теперь свойства переписаны и старыми являются новые
-		$this->assertEquals($objHeader->getOldProperties(), ['codename1'=>'type upcharfield line3 header 3new', 'codename2'=>'type uptextfield line4 header 3new']);
 
-		//проверим что свойства сохранились
+		//проверим что свойства сохранились в базе
 		$findObjHeader = $objHeader::model()->findByPk($objHeader->primaryKey);
 		$this->assertEquals($findObjHeader->uProperties, ['codename1'=>'type upcharfield line3 header 3new', 'codename2'=>'type uptextfield line4 header 3new']);
 	}
@@ -230,7 +226,7 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 
 	public function testGetPropCriteria() {
 		/* @var $modelObjects TestAbsBaseObjHeaders */
-		$modelObjects = uClasses::getclass('codename3')->objects();
+		$modelObjects = uClasses::getclass('codename3')->initobject();
 		//необходимо склонировать текущую критерию
 		$fix_criteria = clone $modelObjects->getDbCriteria();
 		//если несколько свойства необходимо каждое поставить в скобки
@@ -331,7 +327,7 @@ class AbsBaseObjHeadersTest extends AbsDbTestCase {
 		 * Просто обычный поиск когда условие "И"
 		 * Если одно свойство в getPropCriteria (Внутри скобки не обязательны)
 		 */
-		$modelObjects = uClasses::getclass('codename3')->objects();
+		$modelObjects = uClasses::getclass('codename3')->initobject();
 		$fix_criteria = clone $modelObjects->getDbCriteria();
 
 		//установка критерии для поиска по свойству
