@@ -30,6 +30,17 @@ class DForm extends \CFormModel {
 
 		return $this;
 	}
+
+	public function addRulesAR($rulesAR) {
+		foreach($rulesAR as $rule) {
+			$name = array_shift($rule);
+			if(strripos($name, ',')!==false) {
+				foreach(explode(',', $name) as $name2) $this->addAttributeRule(trim($name2), $rule);
+			}
+			else $this->addAttributeRule(trim($name), $rule);
+		}
+	}
+
 	public function __set($name, $value) {
 		if(in_array($name, $this->attributeNamesCustom)) {
 			$this->$name = $value;
@@ -44,6 +55,12 @@ class DForm extends \CFormModel {
 	public function addAttributeLabel($name,$lab) {
 		$this->_custom_attributeLabels[$name] = $lab;
 		return $this;
+	}
+
+	public function addAttributeLabelAR($array) {
+		foreach($array as $name => $label) {
+			$this->addAttributeLabel($name, $label);
+		}
 	}
 
 	public static function create($scenario='') {
