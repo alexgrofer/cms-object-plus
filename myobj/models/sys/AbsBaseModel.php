@@ -149,6 +149,9 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function getOldAttributes() {
 		return $this->_old_attributes;
 	}
+	public function getOldAttribute($name) {
+		return $this->_old_attributes[$name];
+	}
 
 	/**
 	 * @var MYOBJ\appscms\core\base\form\DForm null
