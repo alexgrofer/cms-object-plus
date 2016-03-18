@@ -158,10 +158,14 @@ abstract class AbsBaseModel extends CActiveRecord
 	 */
 	private $_formEArrayValid=null;
 
+	public function init() {
+		parent::init();
+
+		$this->_old_attributes = $this->attributes;
+	}
+
 	public function afterCreate() {
-		foreach($this->attributes as $k => $v) {
-			$this->_old_attributes[$k] = $v;
-		}
+		$this->_old_attributes = $this->attributes;
 
 		//start EArray
 		if ($this->eArray()) {
@@ -269,5 +273,22 @@ abstract class AbsBaseModel extends CActiveRecord
 	 */
 	public function elementsForm() {
 		return array();
+	}
+
+	public $isUpdateAttributesChanged = false;
+	public function update($attributes=null) {
+		if(!$attributes && $this->isUpdateAttributesChanged) {
+			$attributesEdit = array();
+			foreach($this->isUpdateAttributesChanged as $attribute) {
+				if($this->$attribute != $this->getOldAttribute($attribute)) {
+					$attributesEdit[] = $attribute;
+				}
+			}
+			if($attributesEdit) {
+				$attributes = $attributesEdit;
+			}
+		}
+
+		return parent::update($attributes);
 	}
 }
