@@ -22,7 +22,7 @@ class uClasses extends AbsBaseModel
 			array('name', 'length', 'max'=>255),
 
 			array('codename', 'match', 'not' => true, 'pattern' => '/\s+/'),
-			array('codename', 'unique', 'attributeName'=>'codename', 'className'=>get_class($this), 'allowEmpty'=>false, 'allowEmpty'=>false),
+			array('codename', 'unique', 'attributeName'=>'codename', 'className'=>get_class($this), 'allowEmpty'=>false),
 
 			array('tablespace', 'default', 'value'=>1),
 			array('description', 'default', 'value'=>''),

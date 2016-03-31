@@ -86,7 +86,12 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 		}
 		if($type=='select') {
 			if(!$thisObj->isNewRecord) {
-				return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $mtmToPrimaryKey.'='.$idsObj[0]))->queryRow();
+				if($idsObj) {
+					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal, $mtmToPrimaryKey . '=' . $idsObj[0]))->queryRow();
+				}
+				else {
+					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal))->queryAll();
+				}
 			} return null;
 		}
 	}
