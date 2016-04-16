@@ -1,6 +1,9 @@
 <?php
 namespace MYOBJ\appscms\src;
 
+/*
+ * CategoryEnumeration::create(CategoryEnumeration::ID_PARAM_1)->getName();
+ */
 abstract class AbsEnumeration extends \CComponent {
 	//const ID_PARAM_1 = 0;
 
@@ -23,9 +26,7 @@ abstract class AbsEnumeration extends \CComponent {
 		);
 	}
 	*/
-	public function fields() {
-		return array();
-	}
+	abstract public function fields();
 
 	final public function getId() {
 		return $this->_id;
