@@ -197,7 +197,7 @@ printf($htmlinput,'hidden','selectorsids',implode(',',$selectorsids),'');
 printf($htmlinput,'hidden','selectorsids_excluded',implode(',',$selectorsids_excluded),'');
 
 ?>
-<a  class="btn" href="<?php echo $this->createAdminUrl($arrayuirow['new'])?>">new object</a>
+<a  class="btn" href="<?=$this->createAdminUrl($arrayuirow['new'])?>">new object</a>
 <p>
 <input name="exportcsv" type="file" /><input name="exportcsv_ispk" type="checkbox" />resave_pk создаст с таким id
 <input onclick="return confirm(\'export CSV file\')" class="btn btn-danger" type="submit" value="export" />
@@ -242,15 +242,15 @@ if((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]) && trim
 }
 ?>
 <div class="form-inline">
-<input name="serach_hooks_left[<?php echo $n_p?>]" id="<?php echo $n_p?>_leftcl" type="checkbox" <?php echo ((isset($_POST['serach_hooks_left']) && isset($_POST['serach_hooks_left'][$n_p]))?'checked="checked"':'');?> />
+<input name="serach_hooks_left[<?=$n_p?>]" id="<?=$n_p?>_leftcl" type="checkbox" <?=((isset($_POST['serach_hooks_left']) && isset($_POST['serach_hooks_left'][$n_p]))?'checked="checked"':'');?> />
 <?php
 echo '<label for="'.$n_p.'_leftcl">(</label>&nbsp;'.CHtml::dropDownList('filter_param['.$n_p.']', ((isset($_POST['filter_param']) && isset($_POST['filter_param'][$n_p]))?$_POST['filter_param'][$n_p]:''),$select_params_model);
 ?>&nbsp;
-<input  class="input-mini" name="serach_condition[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
+<input  class="input-mini" name="serach_condition[<?=$n_p?>]" type="text" value="<?=((isset($_POST['serach_condition']) && isset($_POST['serach_condition'][$n_p]))?$_POST['serach_condition'][$n_p]:'=')
 ;?>" />
-&nbsp;<input name="serach_param[<?php echo $n_p?>]" type="text" value="<?php echo ((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
-<input name="serach_hooks_right[<?php echo $n_p?>]" id="<?php echo $n_p?>_rightcl"  type="checkbox" <?php echo ((isset($_POST['serach_hooks_right']) && isset($_POST['serach_hooks_right'][$n_p]))?'checked="checked"':'');?> />
-	<label for="<?php echo $n_p?>_rightcl">)&nbsp;</label>|----------|&nbsp;<input name="serach_cond[<?php echo $n_p?>]" id="<?php echo $n_p?>_orlab"  type="checkbox" <?php echo ((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> />&nbsp;<label for="<?php echo $n_p?>_orlab">OR</label>
+&nbsp;<input name="serach_param[<?=$n_p?>]" type="text" value="<?=((isset($_POST['serach_param']) && isset($_POST['serach_param'][$n_p]))?$_POST['serach_param'][$n_p]:'');?>" />
+<input name="serach_hooks_right[<?=$n_p?>]" id="<?=$n_p?>_rightcl"  type="checkbox" <?=((isset($_POST['serach_hooks_right']) && isset($_POST['serach_hooks_right'][$n_p]))?'checked="checked"':'');?> />
+	<label for="<?=$n_p?>_rightcl">)&nbsp;</label>|----------|&nbsp;<input name="serach_cond[<?=$n_p?>]" id="<?=$n_p?>_orlab"  type="checkbox" <?=((isset($_POST['serach_cond']) && isset($_POST['serach_cond'][$n_p]))?'checked="checked"':'');?> />&nbsp;<label for="<?=$n_p?>_orlab">OR</label>
 </div>
 <?php
 }
@@ -283,7 +283,7 @@ if($COUNT_P) {
 ?>
 <table class="table table-striped table-bordered table-condensed table-hover">
 <tr class="success">
-<td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?php echo $headershtml?></td><td>ui</td>
+<td><input class="btn btn-mini" name="allsetchecked" type="submit" value="s"> <input class="btn btn-mini btn-danger" name="checkedaction" type="submit" value="action check" /></td><td><?=$headershtml?></td><td>ui</td>
 </tr>
 <?php
 if($REND_relation) {
@@ -425,7 +425,7 @@ $(document).keydown(function(event){if(event.ctrlKey){if(event.keyCode == 37){if
 echo '<div style="padding-bottom: 60px">'.MYOBJ\appscms\core\base\SysUtils::pagination($idpage,$COUNT_P,$COUNTVIEWELEMS,$COUNTVIEWPAGES,'',true,$tamplate, 3).'</div>';
 }
 ?>
-<input name="pkeys_all" type="hidden" value="<?php echo implode(',',$pkeys_all);?>" />
+<input name="pkeys_all" type="hidden" value="<?=implode(',',$pkeys_all);?>" />
 <?php
 }
 else echo '<div class="well">none objects</div>';

@@ -192,7 +192,7 @@ echo $form->renderEnd();
 ?>
 <script>
 //start user edit form
-var spaceMyFormEdit_<?php echo $nameClassObjEdit?> = {};
+var spaceMyFormEdit_<?=$nameClassObjEdit?> = {};
 <?php
 foreach($objEdit->attributes as $k=>$v) {
 	if($objEdit->isAttributeSafe($k)) {
@@ -200,13 +200,13 @@ foreach($objEdit->attributes as $k=>$v) {
 	}
 }
 ?>
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.isNewObj = <?php echo ($objEdit->isNewRecord) ?'true':'false'; ?>;
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.enableAjaxValidation = <?php echo ($enableAjaxValidation) ?'true':'false'; ?>;
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.is_save_event = <?php echo ($is_save_event) ?'true':'false'; ?>;
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.startSafeParamsForm = {<?php echo implode(', ', $arrJS_startSafeParamsForm)?>};
+spaceMyFormEdit_<?=$nameClassObjEdit?>.isNewObj = <?=($objEdit->isNewRecord) ?'true':'false'; ?>;
+spaceMyFormEdit_<?=$nameClassObjEdit?>.enableAjaxValidation = <?=($enableAjaxValidation) ?'true':'false'; ?>;
+spaceMyFormEdit_<?=$nameClassObjEdit?>.is_save_event = <?=($is_save_event) ?'true':'false'; ?>;
+spaceMyFormEdit_<?=$nameClassObjEdit?>.startSafeParamsForm = {<?=implode(', ', $arrJS_startSafeParamsForm)?>};
 //-в случае если мы знаем что только определенные свойства должны проверяться(отправляться) ajax при создании нового объекта
 //--в случае если идет online редактиравание ajax свойства уже не нужно учитывать так как запрос отправляется всегда при редактировании любого свойтва
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxPropValidate = [<?php echo implode(', ', $ajaxPropValidate)?>];
-spaceMyFormEdit_<?php echo $nameClassObjEdit?>.ajaxParamsOnlyEventTypeChange = [<?php echo implode(', ', $ajaxParamsOnlyEventTypeChange)?>];
+spaceMyFormEdit_<?=$nameClassObjEdit?>.ajaxPropValidate = [<?=implode(', ', $ajaxPropValidate)?>];
+spaceMyFormEdit_<?=$nameClassObjEdit?>.ajaxParamsOnlyEventTypeChange = [<?=implode(', ', $ajaxParamsOnlyEventTypeChange)?>];
 //end
 </script>

@@ -16,6 +16,6 @@ $cs->registerCssFile($assetsFolder.'/css/main.css');
 ?>
 <?php $this->beginContent('/admin/layouts/main')?>
 
-<?php echo $content?>
+<?=$content?>
 
 <?php $this->endContent()?>

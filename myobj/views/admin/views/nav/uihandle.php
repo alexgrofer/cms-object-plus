@@ -109,9 +109,9 @@ if($currentObjectTemplate) {
 			$codenameHandle = trim($codenameHandle);
 			?>
 			<tr>
-				<td><?php echo $codenameHandle ?></td>
+				<td><?=$codenameHandle ?></td>
 				<td>
-					<p><select name="<?php echo $codenameHandle?>_select_config_handle_name">
+					<p><select name="<?=$codenameHandle?>_select_config_handle_name">
 						<?php
 						//всегда даем возможность удалить хендлер
 						echo '<option value="0">none</option>';

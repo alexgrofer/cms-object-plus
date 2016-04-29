@@ -47,24 +47,24 @@ if(isset($_POST['LoginForm'])) {
 ?>
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm'); ?>
-<?php echo CHtml::errorSummary($model,'<div class="alert alert-danger">','</p>'); ?>
+<?=CHtml::errorSummary($model,'<div class="alert alert-danger">','</p>'); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'login'); ?>
-		<?php echo $form->textField($model,'login'); ?>
-		<?php echo $form->error($model,'login'); ?>
+		<?=$form->labelEx($model,'login'); ?>
+		<?=$form->textField($model,'login'); ?>
+		<?=$form->error($model,'login'); ?>
 	</div>
 	<div class="row">
-		<?php echo $form->labelEx($model,'password'); ?>
-		<?php echo $form->passwordField($model,'password'); ?>
-		<?php echo $form->error($model,'password'); ?>
+		<?=$form->labelEx($model,'password'); ?>
+		<?=$form->passwordField($model,'password'); ?>
+		<?=$form->error($model,'password'); ?>
 	</div>
 	<div class="row rememberMe">
-		<?php echo $form->checkBox($model,'rememberMe'); ?>
-		<?php echo $form->label($model,'rememberMe'); ?>
-		<?php echo $form->error($model,'rememberMe'); ?>
+		<?=$form->checkBox($model,'rememberMe'); ?>
+		<?=$form->label($model,'rememberMe'); ?>
+		<?=$form->error($model,'rememberMe'); ?>
 	</div>
-	<?php echo CHtml::submitButton(); ?>
+	<?=CHtml::submitButton(); ?>
 
 <?php $this->endWidget(); ?>
 </div>

@@ -52,7 +52,7 @@ if($arrSubMenu) {
 <?php
 $this->renderClip('header');
 }?>
-<?php echo $content; ?>
+<?=$content; ?>
 </div>
 </body>
 </html>
