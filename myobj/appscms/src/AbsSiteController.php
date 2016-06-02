@@ -29,7 +29,7 @@ abstract class AbsSiteController extends \Controller {
 		//set language
 		$request=Yii::app()->request;
 		Yii::app()->language = $request->cookies['language_space'] ?
-			$request->cookies['language_space']->value : 'en';
+			$request->cookies['language_space']->value : 'ru';
 		if($lang=$request->getQuery('setLanguage')) {
 			$cookie = new \CHttpCookie('language_space', $lang);
 			$cookie->expire = time()+60*60*24*360; //year
