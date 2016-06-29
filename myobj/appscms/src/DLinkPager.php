@@ -12,8 +12,9 @@ class DLinkPager extends \CLinkPager {
 
 	protected function createPageButton($html_elem,$page,$class,$hidden,$selected)
 	{
-		if($hidden || $selected)
-			$class.=' '.($hidden ? $this->hiddenPageCssClass : $this->selectedPageCssClass);
+		if($hidden || $selected) {
+			$class .= ' ' . ($hidden ? $this->hiddenPageCssClass : $this->selectedPageCssClass);
+		}
 		$str = str_replace('URL_ID', $this->createPageUrl($page), $html_elem);
 		$str = str_replace('ID_ELEM', $page+1, $str);
 		return str_replace('{{CLASS}}', $class, $str);
@@ -38,7 +39,9 @@ class DLinkPager extends \CLinkPager {
 		// prev page
 		$button = '';
 		if (isset($this->html_params['prev']) !== false) {
-			if(($page=$currentPage-1)<0) $page=0;
+			if(($page=$currentPage-1)<0) {
+				$page=0;
+			}
 			$button = $this->createPageButton($this->html_params['prev'],$page,$this->previousPageCssClass,$currentPage<=0,false);
 		}
 		$content = str_replace('{{IN_PREV}}', $button, $content);
@@ -55,11 +58,22 @@ class DLinkPager extends \CLinkPager {
 		// next page
 		$button = '';
 		if (isset($this->html_params['next']) !== false) {
-			if(($page=$currentPage+1)>=$pageCount-1)
-				$page=$pageCount-1;
+			if(($page=$currentPage+1)>=$pageCount-1) {
+				$page = $pageCount - 1;
+			}
 			$button = $this->createPageButton($this->html_params['next'],$page,$this->nextPageCssClass,$currentPage>=$pageCount-1,false);
 		}
 		$content = str_replace('{{IN_NEXT}}', $button, $content);
+
+		// yet page
+		$button = '';
+		if (isset($this->html_params['yet']) !== false && $pageCount > $currentPage+1) {
+			if(($page=$currentPage+1)>=$pageCount-1) {
+				$page = $pageCount - 1;
+			}
+			$button = $this->createPageButton($this->html_params['yet'],$page,$this->nextPageCssClass,$currentPage>=$pageCount-1,false);
+		}
+		$content = str_replace('{{IN_YET}}', $button, $content);
 
 		// last page
 		$button = '';

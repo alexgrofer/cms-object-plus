@@ -37,21 +37,55 @@ abstract class AbsSiteController extends \Controller {
 			unset($_GET['setLanguage']);
 			$this->redirect($this->createUrl($request->pathInfo, $_GET));
 		}
+		//
+
 		//set mobile version
-		$this->isMobile = $request->cookies['is_mobile'] ?
-			$request->cookies['is_mobile']->value : false;
-		if($request->getQuery('setIsMobileVersion')) {
-			if($request->getQuery('setIsMobileVersion')=='false') {
-				unset(Yii::app()->request->cookies['is_mobile']);
+		$getTopMobailDomain = function() {
+			if($pos = strpos($_SERVER['HTTP_HOST'], 'm.')!==false and $pos==2) {
+				$this->isMobile=1;
+				return substr($_SERVER['HTTP_HOST'], $pos+1);
 			}
 			else {
-				$cookie = new \CHttpCookie('is_mobile', 1);
-				$cookie->expire = time() + 60 * 60 * 24 * 360; //year
-				$request->cookies['is_mobile'] = $cookie;
+				return $_SERVER['HTTP_HOST'];
 			}
-			unset($_GET['setIsMobileVersion']);
-			$this->redirect($this->createUrl($request->pathInfo, $_GET));
+		};
+		$modMobileDomain = function($setMobile) use($getTopMobailDomain) {
+			if(strpos($_SERVER['HTTP_HOST'], 'm.')!==false) {
+				if($setMobile) {
+					return false;
+				}
+				else {
+					$_SERVER['HTTP_HOST'] = $getTopMobailDomain();
+				}
+			}
+			else {
+				if($setMobile) {
+					$_SERVER['HTTP_HOST'] = 'm.'.$_SERVER['HTTP_HOST'];
+				}
+				else {
+					return false;
+				}
+			}
+			return $_SERVER['HTTP_HOST'];
+		};
+
+		if($request->getQuery('not_mobile')) {
+			$cookie = new \CHttpCookie('not_mobile', 1);
+			$cookie->expire = time() + 60 * 60 * 24 * 360; //year
+			$cookie->domain = '.'.$getTopMobailDomain();
+			$request->cookies['not_mobile'] = $cookie;
+			if($modMobileDomain(false)) {
+				unset($_GET['not_mobile']);
+				$this->redirect($this->createUrl($request->pathInfo, $_GET));
+			}
 		}
+		elseif(1 && !$request->cookies['not_mobile']) { //1 проверка что это телефон
+			if($modMobileDomain(true)) {
+				$this->redirect($this->createUrl($request->pathInfo, $_GET));
+			}
+		}
+		$getTopMobailDomain();
+		//
 
 		//set errorHandler
 		Yii::app()->errorHandler->errorAction='/myobj/'.yii::app()->getController()->getId().'/error';
@@ -99,7 +133,7 @@ abstract class AbsSiteController extends \Controller {
 	 */
 	final protected function checkLayout() {
 		if($this->thisObjNav || $this->thisObjNav->show==false) {
-			$templateObj = ($this->isMobile)?$this->thisObjNav->templateMobileDefault:$this->thisObjNav->templateDefault;
+			$templateObj = ($this->isMobile) ? ($this->thisObjNav->templateMobileDefault ?: $this->thisObjNav->templateDefault) :$this->thisObjNav->templateDefault;
 			if(!$templateObj) {
 				throw new \CException(Yii::t('cms','none object template'));
 			}
