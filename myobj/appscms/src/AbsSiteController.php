@@ -26,18 +26,7 @@ abstract class AbsSiteController extends \Controller {
 	}
 
 	public function init() {
-		//set language
 		$request=Yii::app()->request;
-		Yii::app()->language = $request->cookies['language_space'] ?
-			$request->cookies['language_space']->value : 'ru';
-		if($lang=$request->getQuery('setLanguage')) {
-			$cookie = new \CHttpCookie('language_space', $lang);
-			$cookie->expire = time()+60*60*24*360; //year
-			$request->cookies['language_space'] = $cookie;
-			unset($_GET['setLanguage']);
-			$this->redirect($this->createUrl($request->pathInfo, $_GET));
-		}
-		//
 
 		//set mobile version
 		$getTopMobailDomain = function() {
@@ -49,6 +38,11 @@ abstract class AbsSiteController extends \Controller {
 				return $_SERVER['HTTP_HOST'];
 			}
 		};
+
+		//cookie all is mobile
+		Yii::app()->session->setCookieParams(array('domain'=>'.'.$getTopMobailDomain()));
+		Yii::app()->user->identityCookie = (array('domain'=>'.'.$getTopMobailDomain()));
+
 		$modMobileDomain = function($setMobile) use($getTopMobailDomain) {
 			if(strpos($_SERVER['HTTP_HOST'], 'm.')!==false) {
 				if($setMobile) {
@@ -85,6 +79,18 @@ abstract class AbsSiteController extends \Controller {
 			}
 		}
 		$getTopMobailDomain();
+		//
+
+		//set language
+		Yii::app()->language = $request->cookies['language_space'] ?
+			$request->cookies['language_space']->value : 'ru';
+		if($lang=$request->getQuery('setLanguage')) {
+			$cookie = new \CHttpCookie('language_space', $lang);
+			$cookie->expire = time()+60*60*24*360; //year
+			$request->cookies['language_space'] = $cookie;
+			unset($_GET['setLanguage']);
+			$this->redirect($this->createUrl($request->pathInfo, $_GET));
+		}
 		//
 
 		//set errorHandler
