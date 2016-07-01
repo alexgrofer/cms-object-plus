@@ -82,15 +82,22 @@ abstract class AbsSiteController extends \Controller {
 		//
 
 		//set language
-		Yii::app()->language = $request->cookies['language_space'] ?
-			$request->cookies['language_space']->value : 'ru';
-		if($lang=$request->getQuery('setLanguage')) {
+		$lang = 'ru';
+
+		if($request->getQuery('setLanguage')) {
+			$lang = $request->getQuery('setLanguage');
 			$cookie = new \CHttpCookie('language_space', $lang);
 			$cookie->expire = time()+60*60*24*360; //year
+			$cookie->domain = '.'.$getTopMobailDomain();
 			$request->cookies['language_space'] = $cookie;
 			unset($_GET['setLanguage']);
 			$this->redirect($this->createUrl($request->pathInfo, $_GET));
 		}
+		elseif($request->cookies['language_space']) {
+			$lang = $request->cookies['language_space']->value;
+		}
+		
+		Yii::app()->language = $lang;
 		//
 
 		//set errorHandler
