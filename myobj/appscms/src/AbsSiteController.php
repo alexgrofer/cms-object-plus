@@ -25,6 +25,10 @@ abstract class AbsSiteController extends \Controller {
 		}
 	}
 
+	protected static function check_mobie() {
+		return false;
+	}
+
 	public function init() {
 		$request=Yii::app()->request;
 
@@ -73,7 +77,7 @@ abstract class AbsSiteController extends \Controller {
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
 			}
 		}
-		elseif(1 && !$request->cookies['not_mobile']) { //1 проверка что это телефон
+		elseif(static::check_mobie() && !$request->cookies['not_mobile']) { //1 проверка что это телефон
 			if($modMobileDomain(true)) {
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
 			}
