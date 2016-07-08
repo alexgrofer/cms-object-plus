@@ -3,10 +3,10 @@ namespace MYOBJ\appscms\src;
 use yii;
 use uClasses;
 
-Yii::app()->clientScript->registerMetaTag('text/html;charset=UTF-8', null, 'content-type');
 
 
-abstract class AbsSiteController extends \Controller {
+
+abstract class AbsSiteController extends \CController {
 	public $isMobile;
 
 	const NAME_PARAM_PAGE_TITLE = 'page_title';
@@ -77,8 +77,9 @@ abstract class AbsSiteController extends \Controller {
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
 			}
 		}
-		elseif(static::check_mobie() && !$request->cookies['not_mobile']) { //1 проверка что это телефон
+		elseif($request->getQuery('force_mobile') || (static::check_mobie() && !$request->cookies['not_mobile'])) { //1 проверка что это телефон
 			if($modMobileDomain(true)) {
+				unset($_GET['force_mobile']);
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
 			}
 		}
@@ -196,7 +197,10 @@ abstract class AbsSiteController extends \Controller {
 		$this->renderPartial(DIR_VIEWS_HANDLES_SITE.$objView->path, $vars);
 	}
 
+	public $pathRoute;
 	protected function beforeAction($action) {
+		$this->pathRoute = yii::app()->getController()->getId().'/'.$action->id;
+
 		//разлогирование юзера если он пришел из другой таблицы юзеров из админки, а не из сайта
 		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==true) {
 			Yii::app()->user->logout();
