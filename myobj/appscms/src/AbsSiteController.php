@@ -43,10 +43,6 @@ abstract class AbsSiteController extends \CController {
 			}
 		};
 
-		//cookie all is mobile
-		Yii::app()->session->setCookieParams(array('domain'=>'.'.$getTopMobailDomain()));
-		Yii::app()->user->identityCookie = (array('domain'=>'.'.$getTopMobailDomain()));
-
 		$modMobileDomain = function($setMobile) use($getTopMobailDomain) {
 			if(strpos($_SERVER['HTTP_HOST'], 'm.')!==false) {
 				if($setMobile) {
@@ -70,7 +66,7 @@ abstract class AbsSiteController extends \CController {
 		if($request->getQuery('not_mobile')) {
 			$cookie = new \CHttpCookie('not_mobile', 1);
 			$cookie->expire = time() + 60 * 60 * 24 * 360; //year
-			$cookie->domain = '.'.$getTopMobailDomain();
+			$cookie->domain = COOKIE_DOMAIN;
 			$request->cookies['not_mobile'] = $cookie;
 			if($modMobileDomain(false)) {
 				unset($_GET['not_mobile']);
@@ -93,7 +89,7 @@ abstract class AbsSiteController extends \CController {
 			$lang = $request->getQuery('setLanguage');
 			$cookie = new \CHttpCookie('language_space', $lang);
 			$cookie->expire = time()+60*60*24*360; //year
-			$cookie->domain = '.'.$getTopMobailDomain();
+			$cookie->domain = COOKIE_DOMAIN;
 			$request->cookies['language_space'] = $cookie;
 			unset($_GET['setLanguage']);
 			$this->redirect($this->createUrl($request->pathInfo, $_GET));
