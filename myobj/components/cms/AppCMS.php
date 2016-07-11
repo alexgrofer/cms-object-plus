@@ -32,6 +32,9 @@ class AppCMS extends CComponent {
 			//const
 			SysUtils::importRecursName('MYOBJ.appscms.config.admin','const_*');
 
+			Yii::app()->session->setCookieParams(array('domain'=>$_SERVER['HTTP_HOST']));
+			Yii::app()->user->identityCookie = (array('domain'=>$_SERVER['HTTP_HOST']));
+
 			$this->config = array_merge_recursive($this->config, SysUtils::importRecursName('MYOBJ.appscms.config', 'main_admin.php', true, true));
 		}
 	}
