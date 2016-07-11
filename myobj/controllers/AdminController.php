@@ -5,7 +5,7 @@ use MYOBJ\appscms\core\base\SysUtils;
  * Административная панель доступна по url /myobj/admin/objects/models/classes
  * Class AdminController
  */
-class AdminController extends Controller {
+class AdminController extends \CController {
 	public $layout='/admin/layouts/column1';
 	public $apcms;
 	public $dicturls = array();
