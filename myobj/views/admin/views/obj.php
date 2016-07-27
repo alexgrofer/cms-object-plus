@@ -48,10 +48,15 @@ else {
 	//EArray
 	$namepConst_EArray = '__earray';
 	$param_sep = '_nameearray_';
-	foreach($REND_model->confEArray() as $name => $confEA) {
-		$dName=$name.$param_sep.$confEA['nameProp'].$namepConst_EArray;
-		$addForm->addAttributeRule($dName, array('safe'), $REND_model->getEArray($name, $confEA['nameProp']));
-		$htmlElementsAddForm[$dName] = array('type'=>'text');
+	$confEA = $REND_model->confEArray();
+	foreach($confEA as $nameParamEA => $confParam) {
+		if (isset($confParam['paramsRules'])) {
+			foreach ($confParam['paramsRules'] as $namePropEA => $rules) {
+				$dName = $nameParamEA . $param_sep . $namePropEA . $namepConst_EArray;
+				$addForm->addAttributeRule($dName, array('safe'), $REND_model->getEArray($nameParamEA, $namePropEA));
+				$htmlElementsAddForm[$dName] = array('type' => 'text');
+			}
+		}
 	}
 }
 

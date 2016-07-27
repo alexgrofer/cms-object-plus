@@ -6,12 +6,13 @@ class TestAbsBaseModel extends AbsBaseModel {
 	public function confEArray() {
 		return array(
 			'param1' => array(
-				'nameProp'=>'p_EArray_1',
 				'type'=>'serialize', //json
-				'rules'=>array(
-					array('length', 'max'=>5),
-					array('required'),
-				),
+				'paramsRules'=>array(
+					'p_EArray_1' => array(
+						array('required'),
+						array('length', 'max'=>5),
+					),
+				)
 			),
 		);
 	}

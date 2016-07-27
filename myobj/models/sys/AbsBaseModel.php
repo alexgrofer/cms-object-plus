@@ -170,8 +170,8 @@ abstract class AbsBaseModel extends CActiveRecord
 		//EArray
 		foreach($this->confEArray() as $name => $conf) {
 			$objFormEArray = MYOBJ\appscms\core\base\form\DForm::create();
-			foreach($conf['rules'] as $rule) {
-				$objFormEArray->addAttributeRule($conf['nameProp'], $rule);
+			foreach($conf['paramsRules'] as $nameParam => $rules) {
+				$objFormEArray->addAttributeRule($nameParam, $rules);
 			}
 			$this->_formEArrayValid[$name] = $objFormEArray;
 		}
@@ -214,11 +214,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		return true;
 	}
 
-	/**
-	 * Параметры конфигурации
-	 * array('name' => array('nameProp'=>'name', type=>'serialize', 'rules'=>array(array('length', 'max'=>255), array('required'))));
-	 * @return array
-	 */
 	public function confEArray() {
 		return array();
 	}
