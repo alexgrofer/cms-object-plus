@@ -169,6 +169,8 @@ abstract class AbsBaseModel extends CActiveRecord
 
 		//EArray
 		foreach($this->confEArray() as $name => $conf) {
+			if(!isset($conf['paramsRules'])) continue;
+
 			$objFormEArray = MYOBJ\appscms\core\base\form\DForm::create();
 			foreach($conf['paramsRules'] as $nameParam => $rules) {
 				$objFormEArray->addAttributeRule($nameParam, $rules);
@@ -202,13 +204,17 @@ abstract class AbsBaseModel extends CActiveRecord
 		if(!parent::beforeValidate()) return false;
 
 		//EArray
-		foreach($this->confEArray() as $nameParam => $v) {
+		$is_errors_earray = false;
+		foreach($this->confEArray() as $nameParam => $conf) {
+			if(!isset($conf['paramsRules'])) continue;
+
 			$this->_formEArrayValid[$nameParam]->attributes = $this->getEArray($nameParam);
 			if ($this->_formEArrayValid[$nameParam]->validate() == false) {
 				$this->addErrors($this->_formEArrayValid[$nameParam]->getErrors());
-				return false;
+				$is_errors_earray = true;
 			}
 		}
+		if($is_errors_earray) return false;
 		//
 
 		return true;
