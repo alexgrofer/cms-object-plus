@@ -47,9 +47,10 @@ else {
 	}
 	//EArray
 	$namepConst_EArray = '__earray';
-	foreach($REND_model->eArray() as $name => $confEA) {
-		$dName=$name.$namepConst_EArray;
-		$addForm->addAttributeRule($dName, array('safe'), $REND_model->getEArray($name));
+	$param_sep = '_nameearray_';
+	foreach($REND_model->confEArray() as $name => $confEA) {
+		$dName=$name.$param_sep.$confEA['nameProp'].$namepConst_EArray;
+		$addForm->addAttributeRule($dName, array('safe'), $REND_model->getEArray($name, $confEA['nameProp']));
 		$htmlElementsAddForm[$dName] = array('type'=>'text');
 	}
 }
@@ -89,7 +90,8 @@ if($paramsQueryPostModel) {
 				//EArray
 				if($pos = strpos($name,$namepConst_EArray)) {
 					$NormNameUEArray = substr($name,0,$pos);
-					$REND_model->editEArray($NormNameUEArray, $val);
+					list($EAPropName, $EAPropParamName) = explode($param_sep, $NormNameUEArray);
+					$REND_model->editEArray($EAPropName, array($EAPropParamName=>$val));
 				}
 			}
 		}

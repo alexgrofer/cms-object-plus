@@ -156,7 +156,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	/**
 	 * @var MYOBJ\appscms\core\base\form\DForm null
 	 */
-	private $_formEArrayValid=null;
+	private $_formEArrayValid=array();
 
 	public function init() {
 		parent::init();
@@ -167,21 +167,15 @@ abstract class AbsBaseModel extends CActiveRecord
 	public function afterCreate() {
 		$this->_old_attributes = $this->attributes;
 
-		//start EArray
-		if ($this->eArray()) {
-
+		//EArray
+		foreach($this->confEArray() as $name => $conf) {
 			$objFormEArray = MYOBJ\appscms\core\base\form\DForm::create();
-
-			foreach($this->eArray() as $name => $confEA) {
-				$objFormEArray->addAttributeRule($name, array('safe'));
-				foreach($confEA['rules'] as $rule) {
-					$objFormEArray->addAttributeRule($name, $rule);
-				}
+			foreach($conf['rules'] as $rule) {
+				$objFormEArray->addAttributeRule($conf['nameProp'], $rule);
 			}
-
-			$this->_formEArrayValid = $objFormEArray;
+			$this->_formEArrayValid[$name] = $objFormEArray;
 		}
-		//end EArray
+		//
 	}
 
 	private $wasAfterValidated=false;
@@ -208,63 +202,64 @@ abstract class AbsBaseModel extends CActiveRecord
 		if(!parent::beforeValidate()) return false;
 
 		//EArray
-		if($this->eArray()) {
-			$this->_formEArrayValid->attributes = $this->getEArray();
-			if ($this->_formEArrayValid->validate() == false) {
-				$this->addErrors($this->_formEArrayValid->getErrors());
+		foreach($this->confEArray() as $nameParam => $v) {
+			$this->_formEArrayValid[$nameParam]->attributes = $this->getEArray($nameParam);
+			if ($this->_formEArrayValid[$nameParam]->validate() == false) {
+				$this->addErrors($this->_formEArrayValid[$nameParam]->getErrors());
 				return false;
 			}
 		}
+		//
 
 		return true;
 	}
 
 	/**
 	 * Параметры конфигурации
-	 * array('name' => array('nameProp'=>'name', 'rules'=>array(array('length', 'max'=>255), array('required'))));
+	 * array('name' => array('nameProp'=>'name', type=>'serialize', 'rules'=>array(array('length', 'max'=>255), array('required'))));
 	 * @return array
 	 */
-	public function eArray() {
+	public function confEArray() {
 		return array();
 	}
 
 	/**
 	 * @param $name
-	 * @param $val val=='' ключ будет удален из массива
+	 * @param $array = array('param_earray_1'=>1), $array val=>'' ключ будет удален из массива
 	 */
-	public function editEArray($name, $val) {
-		$conf = $this->eArray(); $conf = $conf[$name];
-		$unserialize = unserialize($this->$conf['nameProp']);
+	public function editEArray($name, $array) {
+		$unserialize = unserialize($this->$name);
 
-		if(!$unserialize) $unserialize = array();
-		$unserialize[$name] = $val;
-		if(!$val) unset($unserialize[$name]);
+		if(!$unserialize) {
+			$unserialize = array();
+		}
 
-		$this->setAttribute($conf['nameProp'], serialize($unserialize));
+		$unserialize = array_merge($unserialize, $array);
+
+		foreach($unserialize as $k => $val) {
+			if($val==='' || $val===null || $val===false) {
+				unset($unserialize);
+			}
+		}
+
+		$this->setAttribute($name, serialize($unserialize));
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getEArray($name=null) {
-		$conf = $this->eArray();
+	public function getEArray($name, $name_param=null) {
+		$unserialize = unserialize($this->$name);
 
-		if($name===null) {
-			$array = array();
-			foreach($conf as $name => $confEA) {
-				$array[$name] = $this->getEArray($name);
-			}
-			return $array;
+		if($name_param===null) {
+			return $unserialize;
 		}
-		$conf = $conf[$name];
-		$unserialize = unserialize($this->$conf['nameProp']);
-		return ($unserialize && isset($unserialize[$name]))?$unserialize[$name]:'';
-	}
 
-	public function setEArray($array) {
-		foreach($array as $name => $val) {
-			$this->editEArray($name, $val);
+		if(!isset($unserialize[$name_param])) {
+			return null;
 		}
+
+		return $unserialize[$name_param];
 	}
 
 	/**

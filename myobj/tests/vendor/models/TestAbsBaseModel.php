@@ -1,4 +1,18 @@
 <?php
 class TestAbsBaseModel extends AbsBaseModel {
 
+	public $param1;
+
+	public function confEArray() {
+		return array(
+			'param1' => array(
+				'nameProp'=>'p_EArray_1',
+				'type'=>'serialize',
+				'rules'=>array(
+					array('length', 'max'=>5),
+					array('required'),
+				),
+			),
+		);
+	}
 }
