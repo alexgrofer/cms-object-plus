@@ -7,7 +7,7 @@ class TestAbsBaseModel extends AbsBaseModel {
 		return array(
 			'param1' => array(
 				'nameProp'=>'p_EArray_1',
-				'type'=>'serialize',
+				'type'=>'serialize', //json
 				'rules'=>array(
 					array('length', 'max'=>5),
 					array('required'),

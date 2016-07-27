@@ -223,33 +223,54 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array();
 	}
 
+	private function unserializeType($name) {
+		$conf = $this->confEArray(); $conf = $conf[$name];
+
+		if(!$this->$name) return array();
+
+		if($conf['type']=='serialize') {
+			return unserialize($this->$name);
+		}
+		elseif($conf['type']=='json') {
+			return CJSON::decode($this->$name);
+		}
+	}
+	private function serializeType($name, $val) {
+		$conf = $this->confEArray(); $conf = $conf[$name];
+
+		if($this->$name==='') return '';
+
+		if($conf['type']=='serialize') {
+			return serialize($val);
+		}
+		elseif($conf['type']=='json') {
+			return CJSON::encode($val);
+		}
+	}
+
 	/**
 	 * @param $name
 	 * @param $array = array('param_earray_1'=>1), $array val=>'' ключ будет удален из массива
 	 */
 	public function editEArray($name, $array) {
-		$unserialize = unserialize($this->$name);
-
-		if(!$unserialize) {
-			$unserialize = array();
-		}
+		$unserialize = $this->unserializeType($name);
 
 		$unserialize = array_merge($unserialize, $array);
 
 		foreach($unserialize as $k => $val) {
-			if($val==='' || $val===null || $val===false) {
-				unset($unserialize);
+			if(trim($val)==='' || $val===null || $val===false) {
+				unset($unserialize[$k]);
 			}
 		}
 
-		$this->setAttribute($name, serialize($unserialize));
+		$this->$name = $this->serializeType($name, $unserialize);
 	}
 
 	/**
 	 * @return array
 	 */
 	public function getEArray($name, $name_param=null) {
-		$unserialize = unserialize($this->$name);
+		$unserialize = $this->unserializeType($name);
 
 		if($name_param===null) {
 			return $unserialize;
