@@ -259,7 +259,7 @@ abstract class AbsBaseModel extends CActiveRecord
 		$unserialize = array_merge($unserialize, $array);
 
 		foreach($unserialize as $k => $val) {
-			if(trim($val)==='' || $val===null || $val===false) {
+			if(!$val) {
 				unset($unserialize[$k]);
 			}
 		}
