@@ -68,7 +68,7 @@ $isValidated=false;
 $paramsQueryPostModel = yii::app()->getRequest()->getPost(get_class($REND_model));
 if($paramsQueryPostModel) {
 
-	$addForm->attributes = yii::app()->getRequest()->getPost('MYOBJ_appscms_core_base_form_DForm');
+	$addForm->attributes = yii::app()->getRequest()->getPost(NAME_DF);
 
 	if($addForm->validate()) {
 
