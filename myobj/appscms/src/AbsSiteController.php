@@ -198,7 +198,7 @@ abstract class AbsSiteController extends \CController {
 		$this->pathRoute = yii::app()->getController()->getId().'/'.$action->id;
 
 		//разлогирование юзера если он пришел из другой таблицы юзеров из админки, а не из сайта
-		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState('isAdmin')==true) {
+		if(Yii::app()->user->isGuest==false && Yii::app()->user->getState(NAME_USER_STATE_KEY_IS_ADMIN)) {
 			Yii::app()->user->logout();
 			$this->redirect(Yii::app()->request->url);
 		}
