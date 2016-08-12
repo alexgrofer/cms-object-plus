@@ -29,6 +29,16 @@ abstract class AbsSiteController extends \CController {
 		return false;
 	}
 
+	protected function setCookie($name, $val, $expire=false, $domain=false) {
+		$cookie = new \CHttpCookie($name, $val);
+		$cookie->expire = $expire ?: time() + 60 * 60 * 24 * 360; //year
+		$cookie->domain = $domain ?: COOKIE_DOMAIN;
+		Yii::app()->request->cookies[$name] = $cookie;
+	}
+	protected function getCookie($name) {
+		return (Yii::app()->request->cookies[$name])?Yii::app()->request->cookies[$name]->value:false;
+	}
+
 	public function init() {
 		$request=Yii::app()->request;
 
@@ -64,16 +74,13 @@ abstract class AbsSiteController extends \CController {
 		};
 
 		if($request->getQuery('not_mobile')) {
-			$cookie = new \CHttpCookie('not_mobile', 1);
-			$cookie->expire = time() + 60 * 60 * 24 * 360; //year
-			$cookie->domain = COOKIE_DOMAIN;
-			$request->cookies['not_mobile'] = $cookie;
+			$this->setCookie('not_mobile', 1);
 			if($modMobileDomain(false)) {
 				unset($_GET['not_mobile']);
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
 			}
 		}
-		elseif($request->getQuery('force_mobile') || (static::check_mobie() && !$request->cookies['not_mobile'])) { //1 проверка что это телефон
+		elseif($request->getQuery('force_mobile') || (static::check_mobie() && !$this->getCookie('not_mobile'))) { //1 проверка что это телефон
 			if($modMobileDomain(true)) {
 				unset($_GET['force_mobile']);
 				$this->redirect($this->createUrl($request->pathInfo, $_GET));
@@ -87,15 +94,12 @@ abstract class AbsSiteController extends \CController {
 
 		if($request->getQuery('setLanguage')) {
 			$lang = $request->getQuery('setLanguage');
-			$cookie = new \CHttpCookie('language_space', $lang);
-			$cookie->expire = time()+60*60*24*360; //year
-			$cookie->domain = COOKIE_DOMAIN;
-			$request->cookies['language_space'] = $cookie;
+			$this->setCookie('language_space', $lang);
 			unset($_GET['setLanguage']);
 			$this->redirect($this->createUrl($request->pathInfo, $_GET));
 		}
-		elseif($request->cookies['language_space']) {
-			$lang = $request->cookies['language_space']->value;
+		elseif($this->getCookie('language_space')) {
+			$lang = $this->getCookie('language_space');
 		}
 		
 		Yii::app()->language = $lang;
