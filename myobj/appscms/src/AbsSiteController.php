@@ -231,6 +231,7 @@ abstract class AbsSiteController extends \CController {
 		}
 
 		//word meta
+		$this->pageTitle = $this->thisObjNav->name;
 		if(isset($this->params[static::NAME_PARAM_PAGE_TITLE])) {
 			$this->pageTitle = $this->params[static::NAME_PARAM_PAGE_TITLE];
 		}
