@@ -40,6 +40,10 @@ class DForm extends \CFormModel {
 
 	public function addRulesAR($rulesAR) {
 		foreach($rulesAR as $rule) {
+			if($rule[1]=='unique' && isset($rule[2])==false) {
+				continue;
+			}
+
 			$name = array_shift($rule);
 			if(strripos($name, ',')!==false) {
 				foreach(explode(',', $name) as $name2) $this->addAttributeRule(trim($name2), $rule);
