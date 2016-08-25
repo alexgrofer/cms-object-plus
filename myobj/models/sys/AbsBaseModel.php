@@ -253,15 +253,20 @@ abstract class AbsBaseModel extends CActiveRecord
 	 * @param $name
 	 * @param $array = array('param_earray_1'=>1), $array val=>'' ключ будет удален из массива
 	 */
-	public function editEArray($name, $array) {
-		$unserialize = $this->unserializeType($name);
+	public function editEArray($name, $array, $is_merge=true) {
+		if($is_merge) {
+			$unserialize = $this->unserializeType($name);
 
-		$unserialize = array_merge($unserialize, $array);
+			$unserialize = array_merge($unserialize, $array);
 
-		foreach($unserialize as $k => $val) {
-			if(!$val) {
-				unset($unserialize[$k]);
+			foreach($unserialize as $k => $val) {
+				if(!$val) {
+					unset($unserialize[$k]);
+				}
 			}
+		}
+		else {
+			$unserialize = $array;
 		}
 
 		$this->$name = $this->serializeType($name, $unserialize);
