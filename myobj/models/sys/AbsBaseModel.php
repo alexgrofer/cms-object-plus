@@ -237,9 +237,10 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 	}
 	private function serializeType($name, $val) {
-		$conf = $this->confEArray(); $conf = $conf[$name];
+		$conf = $this->confEArray();
+		$conf = $conf[$name];
 
-		if($this->$name==='') return '';
+		if(!$val) return '';
 
 		if($conf['type']=='serialize') {
 			return serialize($val);
@@ -312,5 +313,25 @@ abstract class AbsBaseModel extends CActiveRecord
 		}
 
 		return parent::update($attributes);
+	}
+
+	private $setAttributesNew = array();
+	public function setAttributes($values,$safeOnly=true) {
+		parent::setAttributes($values,$safeOnly);
+
+		$this->setAttributesNew = $values;
+	}
+	public function setAttribute($name,$value) {
+		$this->setAttributesNew[$name] = $value;
+
+		return parent::setAttribute($name,$value);
+	}
+
+	public function save($runValidation=true,$attributes=null) {
+		if($this->isNewRecord==false && !$attributes && $this->setAttributesNew) {
+			$attributes = array_keys($this->setAttributesNew);
+			//$this->setAttributesNew = array();
+		}
+		return parent::save($runValidation,$attributes);
 	}
 }
