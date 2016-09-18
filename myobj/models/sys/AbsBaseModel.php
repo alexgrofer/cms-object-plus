@@ -315,7 +315,12 @@ abstract class AbsBaseModel extends CActiveRecord
 		return parent::update($attributes);
 	}
 
-	private $setAttributesNew = array();
+	public $mode_compare_save = false;
+	public function get_mode_compare_save_none_compare() {
+		return array();
+	}
+
+	public $setAttributesNew = array();
 	public function setAttributes($values,$safeOnly=true) {
 		parent::setAttributes($values,$safeOnly);
 
@@ -328,10 +333,37 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public function save($runValidation=true,$attributes=null) {
-		if($this->isNewRecord==false && !$attributes && $this->setAttributesNew) {
-			$attributes = array_keys($this->setAttributesNew);
-			//$this->setAttributesNew = array();
+		if($this->isNewRecord==false && !$attributes) {
+			$attributes = array();
+
+			if($this->mode_compare_save) {
+				$old = $this->getOldAttributes();
+				$noneCompare = $this->get_mode_compare_save_none_compare();
+				foreach($this->getAttributes() as $k=>$v) {
+					if(isset($noneCompare[$k]) || ($v!==null && $old[$k]!=$v)) {
+						$attributes[] = $k;
+					}
+				}
+			}
+			elseif($this->setAttributesNew) {
+				$attributes = array_keys($this->setAttributesNew);
+				$this->setAttributesNew = array();
+			}
+
+			$names = $this->attributeNames();
+			foreach($attributes as $k=>$name) {
+				if(array_search($name, $names)===false) {
+					unset($attributes[$k]);
+				}
+			}
+
+			if(!$attributes) {
+				$attributes=null;
+			}
 		}
+
+		$this->_old_attributes = $this->getAttributes();
+
 		return parent::save($runValidation,$attributes);
 	}
 }
