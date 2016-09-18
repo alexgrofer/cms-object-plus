@@ -16,14 +16,6 @@ abstract class AbsSiteController extends \CController {
 	public $pageDescription;
 	public $pageKeywords;
 
-	const NAME_TEMPLATE_ERROR_PAGE = 'error';
-	const NAME_VIEW_ERROR_PAGE = 'error';
-	public function actionError() {
-		if($error=Yii::app()->errorHandler->error) {
-			$this->layout=DIR_TEMPLATES_SITE.(static::NAME_TEMPLATE_ERROR_PAGE);
-			$this->render(DIR_VIEWS_SITE.(static::NAME_VIEW_ERROR_PAGE), $error);
-		}
-	}
 
 	protected static function check_mobie() {
 		return false;
@@ -103,10 +95,6 @@ abstract class AbsSiteController extends \CController {
 		}
 		
 		Yii::app()->language = $lang;
-		//
-
-		//set errorHandler
-		Yii::app()->errorHandler->errorAction='/myobj/'.yii::app()->getController()->getId().'/error';
 	}
 
 	public $layout=false;
