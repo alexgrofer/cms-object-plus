@@ -104,16 +104,6 @@ abstract class AbsSiteController extends \CController {
 
 	private $_params=null;
 
-	public function redirect($url,$terminate=true,$statusCode=302) {
-		if(Yii::app()->request->isAjaxRequest) {
-			Yii::app()->session['urlRedirectAfterAJAX'] = $url;
-			return;
-		}
-		else {
-			parent::redirect($url, $terminate, $statusCode);
-		}
-	}
-
 	public function getParams() {
 		if($this->_params===null && $this->thisObjNav) {
 			$this->_params = array();
@@ -210,12 +200,6 @@ abstract class AbsSiteController extends \CController {
 
 		if($action instanceof \CCaptchaAction || $this->thisObjNav==null) {
 			return parent::beforeAction($action);
-		}
-
-		//is redirect after AJAX request
-		if(isset(Yii::app()->session['urlRedirectAfterAJAX']) && $urlRedirect = Yii::app()->session['urlRedirectAfterAJAX']) {
-			unset(Yii::app()->session['urlRedirectAfterAJAX']);
-			$this->redirect($urlRedirect);
 		}
 
 		//word meta
