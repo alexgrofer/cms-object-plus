@@ -7,8 +7,8 @@ abstract class AbsStoreFilesModel extends AbsBaseModel {
 	public $date_time_create;
 	public $hash;
 
-	public function beforeSave() {
-		if(!parent::beforeSave()) return false;
+	public function uBeforeSave() {
+		if(!parent::uBeforeSave()) return false;
 
 		if($this->isNewRecord) {
 			$this->date_time_create = new CDbExpression('NOW()');

@@ -187,9 +187,20 @@ abstract class AbsBaseModel extends CActiveRecord
 		$this->wasAfterValidated=true;
 	}
 
-	protected function beforeSave() {
+	//теперь используем всегда uBeforeSave
+	final protected function beforeSave() {
 		if(!parent::beforeSave()) return false;
 
+		/**
+		 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
+		 */
+		if (((defined('YII_DEBUG') && YII_DEBUG) || $this->wasAfterValidated == false) && $this->getErrors()) {
+			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
+		}
+
+		return true;
+	}
+	protected function uBeforeSave() {
 		/**
 		 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
 		 */
@@ -298,23 +309,6 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array();
 	}
 
-	public $isUpdateAttributesChanged = false;
-	public function update($attributes=null) {
-		if(!$attributes && $this->isUpdateAttributesChanged) {
-			$attributesEdit = array();
-			foreach($this->isUpdateAttributesChanged as $attribute) {
-				if($this->$attribute != $this->getOldAttribute($attribute)) {
-					$attributesEdit[] = $attribute;
-				}
-			}
-			if($attributesEdit) {
-				$attributes = $attributesEdit;
-			}
-		}
-
-		return parent::update($attributes);
-	}
-
 	public $mode_compare_save = false;
 	public function get_mode_compare_save_none_compare() {
 		return array();
@@ -333,6 +327,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public function save($runValidation=true,$attributes=null) {
+		//get_mode_compare_save_none_compare
 		if($this->isNewRecord==false && !$attributes) {
 			$attributes = array();
 
@@ -361,9 +356,12 @@ abstract class AbsBaseModel extends CActiveRecord
 				$attributes=null;
 			}
 		}
-
 		$this->_old_attributes = $this->getAttributes();
+		//
 
-		return parent::save($runValidation,$attributes);
+		if($this->uBeforeSave()) {
+			return parent::save($runValidation, $attributes);
+		}
+		return false;
 	}
 }

@@ -35,8 +35,8 @@ class objProperties extends AbsBaseModel
 			array('setcsv', 'default', 'value'=>''),
 		);
 	}
-	public function beforeSave() {
-		if(!parent::beforeSave()) return false;
+	public function uBeforeSave() {
+		if(!parent::uBeforeSave()) return false;
 
 		if(trim($this->setcsv)=='') {
 			$arrconfcms = Yii::app()->appcms->config;
