@@ -1,6 +1,5 @@
 <?php
-class CmsRelatedBehavior extends CActiveRecordBehavior
-{
+class CmsRelatedBehavior extends CActiveRecordBehavior {
 	public function links_edit($type, $namerelation, array $idsObj=null, $addparam=array(), $where=array()) {
 		$thisObj = $this->getOwner();
 		$thisTable = $thisObj->tableName();
@@ -19,6 +18,14 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			$mtmNameTable = trim($arrDataM[0]);
 			$mtmFromPrimaryKey = trim($arrDataM[1]);
 			$mtmToPrimaryKey = trim($arrDataM[2]);
+		}
+
+		$thisCondition = '';
+		if($thisRelation->condition) {
+			$criteria = new CDbCriteria();
+			$criteria->addCondition($thisRelation->condition);
+			$criteria->params = $thisRelation->params;
+			$thisCondition = $criteria->condition;
 		}
 
 		$newId = isset($addparam[0])?$addparam[0]:null;
@@ -42,7 +49,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 			case 'edit':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj)));
+					$command->update($mtmNameTable, $addparam, array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where, $thisCondition));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
 					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation => $newId), array('in', $namePrimaryKeyThisRelation, $idsObj));
@@ -54,7 +61,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			case 'remove':
 				$newId = isset($addparam[0])?$addparam[0]:null;
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where));
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where, $thisCondition));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
 					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation=>$newId), array('in', $namePrimaryKeyThisRelation, $idsObj));
@@ -66,7 +73,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			break;
 			case 'clear':
 				if($typeThisRelation == CActiveRecord::MANY_MANY) {
-					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $where));
+					$command->delete($mtmNameTable,array('and', $mtmFromPrimaryKey.'='.$thisObjPrimaryKeyVal, $where, $thisCondition));
 				}
 				elseif(in_array($typeThisRelation, array(CActiveRecord::HAS_ONE, CActiveRecord::HAS_MANY))) {
 					$command->update($nameTableThisRelation, array($nameLinkPrimaryKeyThisRelation=>null), array('and', $namePrimaryKeyThisRelation.'='.$thisObjPrimaryKeyVal));
@@ -84,15 +91,9 @@ class CmsRelatedBehavior extends CActiveRecordBehavior
 			$transaction->rollBack();
 			throw $e;
 		}
-		if($type=='select') {
-			if(!$thisObj->isNewRecord) {
-				if($idsObj) {
-					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal, $mtmToPrimaryKey . ' IN ('.implode(',', $idsObj).')'))->queryAll();
-				}
-				else {
-					return $command->select($addparam)->from($mtmNameTable)->where(array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal))->queryAll();
-				}
-			} return null;
+		if($type=='select' && $typeThisRelation == CActiveRecord::MANY_MANY) {
+			$arrayWhere = array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where, $thisCondition);
+			return $command->select($addparam)->from($mtmNameTable)->where($arrayWhere)->queryAll();
 		}
 	}
 }
