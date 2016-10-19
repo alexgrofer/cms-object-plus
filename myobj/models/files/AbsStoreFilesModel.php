@@ -11,7 +11,7 @@ abstract class AbsStoreFilesModel extends AbsBaseModel {
 		if(!parent::uBeforeSave()) return false;
 
 		if($this->isNewRecord) {
-			$this->date_time_create = new CDbExpression('NOW()');
+			$this->date_time_create = date('Y-m-d H:i:s');
 		}
 		return true;
 	}
