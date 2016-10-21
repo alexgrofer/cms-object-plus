@@ -95,5 +95,9 @@ class CmsRelatedBehavior extends CActiveRecordBehavior {
 			$arrayWhere = array('and', $mtmFromPrimaryKey . '=' . $thisObjPrimaryKeyVal, array('in', $mtmToPrimaryKey, $idsObj), $where, $thisCondition);
 			return $command->select($addparam)->from($mtmNameTable)->where($arrayWhere)->queryAll();
 		}
+
+		if($type!='select') {
+			$thisObj->afterSaveLinkEdit($type, $namerelation, $idsObj);
+		}
 	}
 }

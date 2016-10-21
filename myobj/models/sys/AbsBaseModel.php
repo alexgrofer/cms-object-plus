@@ -368,4 +368,8 @@ abstract class AbsBaseModel extends CActiveRecord
 
 		$this->_old_attributes = $this->getAttributes();
 	}
+
+	public function afterSaveLinkEdit($type, $namerelation, $idsObj) {
+
+	}
 }
