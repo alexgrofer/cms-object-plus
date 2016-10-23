@@ -180,22 +180,24 @@ abstract class AbsBaseModel extends CActiveRecord
 		//
 	}
 
-	private $wasAfterValidated=false;
 	public function afterValidate() {
 		parent::afterValidate();
-
-		$this->wasAfterValidated=true;
 	}
 
+	private $onBeforeSave = false;
 	protected function beforeSave() {
-		if(!parent::beforeSave()) return false;
-
-		/**
-		 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
-		 */
-		if (((defined('YII_DEBUG') && YII_DEBUG) || $this->wasAfterValidated == false) && $this->getErrors()) {
+		if ((defined('YII_DEBUG') && YII_DEBUG) && $this->validate()==false && $this->getErrors()) {
 			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 		}
+
+		if(!$this->onBeforeSave) {
+			$this->onBeforeSave = true;
+		}
+		else {
+			$this->onBeforeSave = false;
+		}
+
+		if(!parent::beforeSave()) return false;
 
 		return true;
 	}
@@ -316,40 +318,38 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public function save($runValidation=true,$attributes=null) {
-		if($this->beforeSave()) {
-			//get_mode_compare_save_none_compare
-			if($this->isNewRecord==false && !$attributes) {
-				$attributes = array();
+		//get_mode_compare_save_none_compare
+		$this->beforeSave();
+		if($this->isNewRecord==false && !$attributes) {
+			$attributes = array();
 
-				if($this->mode_compare_save) {
-					$old = $this->getOldAttributes();
-					$noneCompare = $this->get_mode_compare_save_none_compare();
-					foreach($this->getAttributes() as $k=>$v) {
-						if(isset($noneCompare[$k]) || ($v!==null && $old[$k]!=$v)) {
-							$attributes[] = $k;
-						}
+			if($this->mode_compare_save) {
+				$old = $this->getOldAttributes();
+				$noneCompare = $this->get_mode_compare_save_none_compare();
+				foreach($this->getAttributes() as $k=>$v) {
+					if(isset($noneCompare[$k]) || ($v!==null && $old[$k]!=$v)) {
+						$attributes[] = $k;
 					}
-				}
-				elseif($this->setAttributesNew) {
-					$attributes = array_keys($this->setAttributesNew);
-					$this->setAttributesNew = array();
-				}
-
-				$names = $this->attributeNames();
-				foreach($attributes as $k=>$name) {
-					if(array_search($name, $names)===false) {
-						unset($attributes[$k]);
-					}
-				}
-
-				if(!$attributes) {
-					$attributes=null;
 				}
 			}
-			//
-			return parent::save($runValidation, $attributes);
+			elseif($this->setAttributesNew) {
+				$attributes = array_keys($this->setAttributesNew);
+				$this->setAttributesNew = array();
+			}
+
+			$names = $this->attributeNames();
+			foreach($attributes as $k=>$name) {
+				if(array_search($name, $names)===false) {
+					unset($attributes[$k]);
+				}
+			}
+
+			if(!$attributes) {
+				$attributes=null;
+			}
 		}
-		return false;
+		//
+		return parent::save($runValidation, $attributes);
 	}
 
 	protected function afterSave() {
