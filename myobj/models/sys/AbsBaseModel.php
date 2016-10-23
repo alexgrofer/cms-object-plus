@@ -187,13 +187,9 @@ abstract class AbsBaseModel extends CActiveRecord
 		$this->wasAfterValidated=true;
 	}
 
-	//теперь используем всегда uBeforeSave
-	final protected function beforeSave() {
+	protected function beforeSave() {
 		if(!parent::beforeSave()) return false;
 
-		return true;
-	}
-	protected function uBeforeSave() {
 		/**
 		 * если юзер в коде даже не пытался вызвать $obj->validate() перед сохранением
 		 */
@@ -320,7 +316,7 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public function save($runValidation=true,$attributes=null) {
-		if($this->uBeforeSave()) {
+		if($this->beforeSave()) {
 			//get_mode_compare_save_none_compare
 			if($this->isNewRecord==false && !$attributes) {
 				$attributes = array();

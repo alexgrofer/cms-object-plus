@@ -271,8 +271,8 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		return true;
 	}
 
-	public function uBeforeSave() {
-		if(!parent::uBeforeSave()) return false;
+	public function beforeSave() {
+		if(!parent::beforeSave()) return false;
 
 		//для новых объектов необходимо подставить класс
 		if($this->isNewRecord) $this->uclass_id = $this->uclass->primaryKey;

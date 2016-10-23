@@ -7,8 +7,8 @@ abstract class AbsStoreFilesModel extends AbsBaseModel {
 	public $date_time_create;
 	public $hash;
 
-	public function uBeforeSave() {
-		if(!parent::uBeforeSave()) return false;
+	public function beforeSave() {
+		if(!parent::beforeSave()) return false;
 
 		if($this->isNewRecord) {
 			$this->date_time_create = date('Y-m-d H:i:s');
