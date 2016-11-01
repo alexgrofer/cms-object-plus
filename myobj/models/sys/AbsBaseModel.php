@@ -184,17 +184,20 @@ abstract class AbsBaseModel extends CActiveRecord
 		parent::afterValidate();
 	}
 
-	private $onBeforeSave = false;
+	private $isNewRecordBeforeSave = false;
+	public function getIsNewRecordBeforeSave() {
+		$result =  $this->isNewRecordBeforeSave;
+		$this->isNewRecordBeforeSave = false;
+
+		return $result;
+	}
 	protected function beforeSave() {
 		if ((defined('YII_DEBUG') && YII_DEBUG) && $this->validate()==false && $this->getErrors()) {
 			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 		}
 
-		if(!$this->onBeforeSave) {
-			$this->onBeforeSave = true;
-		}
-		else {
-			$this->onBeforeSave = false;
+		if($this->isNewRecord) {
+			$this->isNewRecordBeforeSave = true;
 		}
 
 		if(!parent::beforeSave()) return false;
@@ -354,6 +357,7 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	protected function afterSave() {
 		parent::afterSave();
+		$this->setIsNewRecord(false);
 
 		$this->_old_attributes = $this->getAttributes();
 	}
