@@ -191,7 +191,13 @@ abstract class AbsBaseModel extends CActiveRecord
 
 		return $result;
 	}
-	protected function beforeSave() {
+
+	final protected function beforeSave() {
+		if(!parent::beforeSave()) return false;
+
+		return true;
+	}
+	protected function uBeforeSave() {
 		if ((defined('YII_DEBUG') && YII_DEBUG) && $this->validate()==false && $this->getErrors()) {
 			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 		}
@@ -322,7 +328,7 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	public function save($runValidation=true,$attributes=null) {
 		//get_mode_compare_save_none_compare
-		$this->beforeSave();
+		$this->uBeforeSave();
 		if($this->isNewRecord==false && !$attributes) {
 			$attributes = array();
 
