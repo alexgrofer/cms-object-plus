@@ -12,6 +12,7 @@ abstract class AbsStoreFilesModel extends AbsBaseModel {
 
 		if($this->isNewRecord) {
 			$this->date_time_create = date('Y-m-d H:i:s');
+			$this->hash = \MYOBJ\appscms\core\base\SysUtilsString::read_str(5);
 		}
 	}
 }
