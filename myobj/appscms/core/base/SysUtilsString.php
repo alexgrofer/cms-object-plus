@@ -12,8 +12,20 @@ class SysUtilsString
 		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 	}
 
-	public static function read_str($len) {
-		return substr(str_shuffle('1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'), 0, $len);
+	public static function read_str($len, $only_string=false) {
+		$all = array(
+			'qwertyuipasdfghjklzxcvbnm',
+			'QWERTYUIPASDFGHJKLZXCVBNM',
+		);
+		if($only_string==false) {
+			$all[] = '123456789';
+		}
+		$count = count($all);
+		$str = '';
+		foreach($all as $line) {
+			$str .= substr(str_shuffle($line), 0, ceil($len/$count));
+		}
+		return substr(str_shuffle($str),0,$len);
 	}
 
 	public static function transliterate($str) {
