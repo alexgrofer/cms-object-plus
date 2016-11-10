@@ -197,8 +197,10 @@ abstract class AbsBaseModel extends CActiveRecord
 
 		return true;
 	}
+
+	const IS_VALIDATE_FORCE_EXCEPTION = true;
 	protected function uBeforeSave() {
-		if ((defined('YII_DEBUG') && YII_DEBUG) && $this->validate()==false && $this->getErrors()) {
+		if (static::IS_VALIDATE_FORCE_EXCEPTION && $this->validate()==false && $this->getErrors()) {
 			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
 		}
 
