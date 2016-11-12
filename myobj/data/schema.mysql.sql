@@ -15,11 +15,10 @@ CREATE TABLE `cmsplus_uclasses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_uclasses_association` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_uclasses_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_uclasses_id`),
+
+	PRIMARY KEY (`from_uclasses_id`,`to_uclasses_id`),
 	FOREIGN KEY (`to_uclasses_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`from_uclasses_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -40,11 +39,10 @@ CREATE TABLE `cmsplus_objproperties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_uclasses_objproperties` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_uclasses_id` int(11) NOT NULL,
 	`to_objproperties_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_uclasses_id`,`to_objproperties_id`),
+
+	PRIMARY KEY (`from_uclasses_id`,`to_objproperties_id`),
 	FOREIGN KEY (`from_uclasses_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
@@ -171,37 +169,34 @@ CREATE TABLE `cmsplus_linesmyobjheaders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_linksobjectsmy` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
 	`to_class_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
+
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_linksobjectssystem` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
 	`to_class_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
+
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_linksobjectssystemhandle` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`from_obj_id` int(11) NOT NULL,
 	`from_class_id` int(11) NOT NULL,
 	`to_obj_id` int(11) NOT NULL,
 	`to_class_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
+
+	PRIMARY KEY (`from_obj_id`,`from_class_id`,`to_obj_id`,`to_class_id`),
 	FOREIGN KEY (`from_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`to_class_id`) REFERENCES `cmsplus_uclasses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -215,11 +210,10 @@ CREATE TABLE `cmsplus_user_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 CREATE TABLE `cmsplus_user_ugroup_admin` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
 	`group_id` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY (`user_id`,`group_id`),
+
+	PRIMARY KEY (`user_id`,`group_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `cmsplus_user_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (`group_id`) REFERENCES `cmsplus_ugroup_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
