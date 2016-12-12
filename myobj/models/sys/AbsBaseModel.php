@@ -311,21 +311,9 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array();
 	}
 
-	public $mode_compare_save = false;
+	protected $mode_compare_save = false;
 	public function get_mode_compare_save_none_compare() {
 		return array();
-	}
-
-	public $setAttributesNew = array();
-	public function setAttributes($values,$safeOnly=true) {
-		parent::setAttributes($values,$safeOnly);
-
-		$this->setAttributesNew = $values;
-	}
-	public function setAttribute($name,$value) {
-		$this->setAttributesNew[$name] = $value;
-
-		return parent::setAttribute($name,$value);
 	}
 
 	public function save($runValidation=true,$attributes=null) {
@@ -338,20 +326,16 @@ abstract class AbsBaseModel extends CActiveRecord
 				$old = $this->getOldAttributes();
 				$noneCompare = $this->get_mode_compare_save_none_compare();
 				foreach($this->getAttributes() as $k=>$v) {
-					if(isset($noneCompare[$k]) || ($v!==null && $old[$k]!=$v)) {
+					if(isset($noneCompare[$k]) || $old[$k]!=$v) {
 						$attributes[] = $k;
 					}
 				}
-			}
-			elseif($this->setAttributesNew) {
-				$attributes = array_keys($this->setAttributesNew);
-				$this->setAttributesNew = array();
-			}
 
-			$names = $this->attributeNames();
-			foreach($attributes as $k=>$name) {
-				if(array_search($name, $names)===false) {
-					unset($attributes[$k]);
+				$names = $this->attributeNames();
+				foreach($attributes as $k=>$name) {
+					if(array_search($name, $names)===false) {
+						unset($attributes[$k]);
+					}
 				}
 			}
 
