@@ -316,6 +316,10 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array();
 	}
 
+	private $_attributes_change = array();
+	protected function getAttributesChange() {
+		return $this->_attributes_change;
+	}
 	public function save($runValidation=true,$attributes=null) {
 		//get_mode_compare_save_none_compare
 		$this->uBeforeSave();
@@ -341,6 +345,9 @@ abstract class AbsBaseModel extends CActiveRecord
 
 			if(!$attributes) {
 				$attributes=null;
+			}
+			else {
+				$this->_attributes_change = $attributes;
 			}
 		}
 		//
