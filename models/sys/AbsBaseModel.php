@@ -200,10 +200,6 @@ abstract class AbsBaseModel extends CActiveRecord
 
 	const IS_VALIDATE_FORCE_EXCEPTION = true;
 	protected function uBeforeSave() {
-		if (static::IS_VALIDATE_FORCE_EXCEPTION && $this->validate()==false && $this->getErrors()) {
-			throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
-		}
-
 		if($this->isNewRecord) {
 			$this->isNewRecordBeforeSave = true;
 		}
@@ -322,31 +318,43 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 	public function save($runValidation=true,$attributes=null) {
 		//get_mode_compare_save_none_compare
+		if($runValidation && $this->validate($attributes) == false) {
+			if (static::IS_VALIDATE_FORCE_EXCEPTION) {
+				throw new CException(Yii::t('cms', 'this class errors: ' . print_r($this->getErrors(), true)));
+			}
+			else {
+				return false;
+			}
+		}
+		if($runValidation) {
+			//если проверка была повторная проверка в методе parent::save не нужна
+			$runValidation = false;
+		}
 		$this->uBeforeSave();
-		if($this->isNewRecord==false && !$attributes) {
+
+		if ($this->isNewRecord == false && !$attributes) {
 			$attributes = array();
 
-			if($this->mode_compare_save) {
+			if ($this->mode_compare_save) {
 				$old = $this->getOldAttributes();
 				$noneCompare = $this->get_mode_compare_save_none_compare();
-				foreach($this->getAttributes() as $k=>$v) {
-					if(isset($noneCompare[$k]) || $old[$k]!=$v) {
+				foreach ($this->getAttributes() as $k => $v) {
+					if (isset($noneCompare[$k]) || $old[$k] != $v) {
 						$attributes[] = $k;
 					}
 				}
 
 				$names = $this->attributeNames();
-				foreach($attributes as $k=>$name) {
-					if(array_search($name, $names)===false) {
+				foreach ($attributes as $k => $name) {
+					if (array_search($name, $names) === false) {
 						unset($attributes[$k]);
 					}
 				}
 			}
 
-			if(!$attributes) {
-				$attributes=null;
-			}
-			else {
+			if (!$attributes) {
+				$attributes = null;
+			} else {
 				$this->_attributes_change = $attributes;
 			}
 		}
