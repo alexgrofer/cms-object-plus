@@ -2,6 +2,7 @@
 
 class ClientDateValidator extends CValidator {
 	public $patternDateJS='/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/';
+	public $message='Error date';
 
 	public function clientValidateAttribute($object,$attribute) {
 		return "
@@ -9,15 +10,16 @@ class ClientDateValidator extends CValidator {
 			var matches = ".$this->patternDateJS.".exec(date);
 			if(matches == null) return false;
 			if(matches[1].length==4) {
-				var y = matches[1];
-				var m = matches[2];
-				var d = matches[3];
+				var y = parseInt(matches[1]);
+				var m = parseInt(matches[2]);
+				var d = parseInt(matches[3]);
 			}
 			else {
-				var d = matches[1];
-				var m = matches[2];
-				var y = matches[3];
+				var d = parseInt(matches[1]);
+				var m = parseInt(matches[2]);
+				var y = parseInt(matches[3]);
 			}
+			m -= 1;
 			var composedDate = new Date(y, m, d);
 			return composedDate.getDate() == d &&
 				composedDate.getMonth() == m &&
