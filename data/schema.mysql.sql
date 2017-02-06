@@ -233,7 +233,7 @@ INSERT INTO `cmsplus_uclasses_association` (`from_uclasses_id`,`to_uclasses_id`)
 -- INSERT INTO `cmsplus_uclasses_objproperties` (`from_uclasses_id`,`to_objproperties_id`) VALUES
 
 --
-INSERT INTO `cmsplus_user_admin` (`id`,`login`,`password`,`email`) VALUES (1,'admin',MD5('admin'),'admin@admin.com');
+INSERT INTO `cmsplus_user_admin` (`id`,`login`,`password`,`email`) VALUES (1,'alex','0e1eaa9dce23db83ff7fe7d1303b0303','alexfort85@gmail.com');
 --
 INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (1,'superAdmin');
 INSERT INTO `cmsplus_ugroup_admin` (`id`,`name`) VALUES (2,'administrator');
