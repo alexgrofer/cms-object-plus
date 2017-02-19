@@ -331,8 +331,21 @@ abstract class AbsBaseModel extends CActiveRecord
 			$runValidation = false;
 		}
 		$this->uBeforeSave();
+		//
+		$this->getCheckChangeAttributes($attributes);
+		//
+		return parent::save($runValidation, $attributes);
+	}
+	public function update($attributes=null) {
+		$this->uBeforeSave();
+		//
+		$this->getCheckChangeAttributes($attributes);
+		//
+		return parent::update($attributes);
+	}
 
-		if ($this->isNewRecord == false && !$attributes) {
+	private function getCheckChangeAttributes(&$attributes=null) {
+		if($this->isNewRecord == false) {
 			$attributes = array();
 
 			if ($this->mode_compare_save) {
@@ -358,8 +371,7 @@ abstract class AbsBaseModel extends CActiveRecord
 				$this->_attributes_change = $attributes;
 			}
 		}
-		//
-		return parent::save($runValidation, $attributes);
+		return $attributes;
 	}
 
 	protected function afterSave() {
