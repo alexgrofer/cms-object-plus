@@ -56,11 +56,19 @@ abstract class AbsBaseModel extends CActiveRecord
 		return array_merge($this->defaultAttributeLabels(), $this->customAttributeLabels);
 	}
 
+	public $forceNocacheClassesParams = false;
 	/**
 	 * метод будет вызван до любого запроса к базе, как для обычных выборок(findAll и т.д) так и для count
 	 */
 	protected function beforeMyQuery() {
-
+		//cache params
+		$cacheClasses = Yii::app()->params['cacheClasses'];
+		$nameClass = get_class($this);
+		if($this->forceNocacheClassesParams == false && $cacheClasses && isset($cacheClasses[$nameClass])) {
+			$configCache = $cacheClasses[$nameClass];
+			$this->cache($configCache[0], $configCache[1]);
+		}
+		//
 	}
 
 	protected function beforeFind() {
