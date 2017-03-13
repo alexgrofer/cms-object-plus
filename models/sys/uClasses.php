@@ -41,7 +41,7 @@ class uClasses extends AbsBaseModel
 		}
 		return $oprion;
 	}
-	protected function defaultAttributeLabels() {
+	public function defaultAttributeLabels() {
 		return array(
 			'name' => 'name',
 			'codename' => 'code name',

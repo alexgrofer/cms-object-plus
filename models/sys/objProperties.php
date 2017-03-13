@@ -50,7 +50,7 @@ class objProperties extends AbsBaseModel
 	public function getTYPES_MYFIELDSOptions() {
 		return Yii::app()->appcms->config['TYPES_MYFIELDS_CHOICES'];
 	}
-	protected function defaultAttributeLabels() {
+	public function defaultAttributeLabels() {
 		return array(
 			'name' => 'name',
 			'codename' => 'code name',

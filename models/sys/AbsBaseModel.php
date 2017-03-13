@@ -49,10 +49,10 @@ abstract class AbsBaseModel extends CActiveRecord
 	}
 
 	public $customAttributeLabels=array();
-	protected function defaultAttributeLabels() {
+	public function defaultAttributeLabels() {
 		return array();
 	}
-	final public function attributeLabels() {
+	public function attributeLabels() {
 		return array_merge($this->defaultAttributeLabels(), $this->customAttributeLabels);
 	}
 
