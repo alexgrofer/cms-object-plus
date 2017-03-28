@@ -163,7 +163,7 @@ class AdminController extends \CController {
 						// acces
 						if($this->paramsrender['REND_acces_write']==false && count($_POST)) $this->redirect($this->getUrlBeforeAction());
 						//
-						if((int)$this->dicturls['paramslist'][4]>0) {
+						if(is_numeric($this->dicturls['paramslist'][4])) {
 							$modelAD = $modelAD->findByPk($this->dicturls['paramslist'][4]);
 						}
 						else {
@@ -246,7 +246,7 @@ class AdminController extends \CController {
 						break;
 					case 'remove':
 						if($this->paramsrender['REND_acces_write']==false) $this->redirect($this->getUrlBeforeAction());
-						if((int)$this->dicturls['paramslist'][4]>0) {
+						if(is_numeric($this->dicturls['paramslist'])) {
 							$modelAD = $modelAD->findByPk($this->dicturls['paramslist'][4]);
 							$objectsDelete[] = $modelAD;
 						}
