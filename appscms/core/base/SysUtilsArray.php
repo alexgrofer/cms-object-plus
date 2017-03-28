@@ -30,4 +30,21 @@ class SysUtilsArray
 		}
 		return false;
 	}
+
+	public static function find_arr_params($array, $elemFind) {
+		$count = count($elemFind);
+		$i = 0;
+		foreach($array as $e) {
+			foreach($elemFind as $findKey => $valKey) {
+				if($e[$findKey]==$valKey) {
+					$elem = $e;
+					$i++;
+					if($count==$i) {
+						return $elem;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
