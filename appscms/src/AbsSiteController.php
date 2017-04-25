@@ -21,14 +21,47 @@ abstract class AbsSiteController extends \CController {
 		return false;
 	}
 
-	protected function setCookie($name, $val, $expire=false, $domain=false) {
-		$cookie = new \CHttpCookie($name, $val);
-		$cookie->expire = $expire ?: time() + 60 * 60 * 24 * 360; //year
-		$cookie->domain = $domain ?: COOKIE_DOMAIN;
-		Yii::app()->request->cookies[$name] = $cookie;
+	protected function paramsCookie($param, $name) {
+		$array = array(
+			'params1' => array(
+				'name' => 'n',
+			),
+		);
+		return $array[$param][$name];
 	}
-	protected function getCookie($name) {
-		return (Yii::app()->request->cookies[$name])?Yii::app()->request->cookies[$name]->value:false;
+
+	protected function setCookie($name, $val, $expire=false, $domain=false, $param=false) {
+		if(!$param) {
+			$cookie = new \CHttpCookie($name, $val);
+			$cookie->expire = $expire ?: time() + 60 * 60 * 24 * 360; //year
+			$cookie->domain = $domain ?: COOKIE_DOMAIN;
+			Yii::app()->request->cookies[$name] = $cookie;
+		}
+		else {
+			$array = Yii::app()->request->cookies[$param] ? \CJSON::decode(Yii::app()->request->cookies[$param]) : array();
+			$array[$this->paramsCookie($param, $name)] = $val;
+			if(trim($val)=='') {
+				unset($array[$this->paramsCookie($param, $name)]);
+			}
+			$cookie = new \CHttpCookie($param, $array?\CJSON::encode($array):'');
+			$cookie->expire = $expire ?: time() + 60 * 60 * 24 * 360; //year
+			$cookie->domain = $domain ?: COOKIE_DOMAIN;
+			Yii::app()->request->cookies[$param] = $cookie;
+		}
+	}
+	protected function getCookie($name, $param=false) {
+		if(!$param) {
+			return (Yii::app()->request->cookies[$name]) ? Yii::app()->request->cookies[$name]->value : false;
+		}
+		else {
+			if(Yii::app()->request->cookies[$param]) {
+				$array = Yii::app()->request->cookies[$param]?\CJSON::decode(Yii::app()->request->cookies[$param]):array();
+				return isset($array[$this->paramsCookie($param, $name)])?$array[$this->paramsCookie($param, $name)]:false;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 
 	public function init() {
