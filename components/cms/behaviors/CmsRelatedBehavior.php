@@ -99,5 +99,7 @@ class CmsRelatedBehavior extends CActiveRecordBehavior {
 		if($type!='select') {
 			$thisObj->afterSaveLinkEdit($type, $namerelation, $idsObj);
 		}
+
+		$thisObj->refresh();
 	}
 }
