@@ -511,14 +511,14 @@ class ObjectsController extends AbsSite {
 					}
 					$nameType[] = $name.$typeT;
 
-					$dfdf = function ($array, $elemFind) {
+					$sdsd =  function ($array, $elemFind) {
 						$count = count($elemFind);
 						foreach($array as $e) {
 							$i=0;
 							foreach($elemFind as $findKey => $valKey) {
-								yii::log($e[$findKey].'-'.$valKey, 'pr_custom', 'project');
-								if(strcasecmp($e[$findKey], $valKey) == 0) {
-									yii::log($e[$findKey].'-ok-'.$valKey, 'pr_custom', 'project');
+								yii::log(\MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($valKey)).'-'.\MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($e[$findKey])), 'pr_custom', 'project');
+								if(\MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($valKey)) == \MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($e[$findKey]))) {
+									yii::log(\MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($valKey)).'-ok-'.\MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($e[$findKey])), 'pr_custom', 'project');
 									$i++;
 									if($count==$i) {
 										return $e;
@@ -529,7 +529,7 @@ class ObjectsController extends AbsSite {
 						return false;
 					};
 
-					$findElem = $dfdf($findElemSQL, array('name' => $name, 'type' => $typeT));
+					$findElem = $sdsd($findElemSQL, array('name' => $name, 'type' => $typeT));
 					if ($findElem) {
 						$id = $findElem['id'];
 						$codename = $findElem['codename'];
