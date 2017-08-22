@@ -33,14 +33,13 @@ class SysUtilsArray
 
 	public static function find_arr_params($array, $elemFind) {
 		$count = count($elemFind);
-		$i = 0;
 		foreach($array as $e) {
+			$i=0;
 			foreach($elemFind as $findKey => $valKey) {
 				if(trim($e[$findKey])==trim($valKey)) {
-					$elem = $e;
 					$i++;
 					if($count==$i) {
-						return $elem;
+						return $e;
 					}
 				}
 			}
