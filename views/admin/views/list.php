@@ -415,7 +415,7 @@ $tamplate = array(
 			</ul></p>
 		</div>
 <script>
-$("#pagination a").bind("click", function(){
+$("#pagination a").on("click", function(){
 	$(this).prev()[0].click();
 	return false;
 });

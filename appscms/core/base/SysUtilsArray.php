@@ -36,7 +36,7 @@ class SysUtilsArray
 		$i = 0;
 		foreach($array as $e) {
 			foreach($elemFind as $findKey => $valKey) {
-				if($e[$findKey]==$valKey) {
+				if(trim($e[$findKey])==trim($valKey)) {
 					$elem = $e;
 					$i++;
 					if($count==$i) {
