@@ -31,12 +31,17 @@ class SysUtilsArray
 		return false;
 	}
 
+	public static function mb_strcasecmp($str1, $str2, $encoding = null) {
+		if (null === $encoding) { $encoding = mb_internal_encoding(); }
+		return strcmp(mb_strtoupper($str1, $encoding), mb_strtoupper($str2, $encoding));
+	}
+
 	public static function find_arr_params($array, $elemFind) {
 		$count = count($elemFind);
 		foreach($array as $e) {
 			$i=0;
 			foreach($elemFind as $findKey => $valKey) {
-				if(strcasecmp($e[$findKey], $valKey) == 0) {
+				if(static::mb_strcasecmp($e[$findKey], $valKey) == 0) {
 					$i++;
 					if($count==$i) {
 						return $e;
