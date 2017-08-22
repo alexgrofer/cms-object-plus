@@ -32,6 +32,8 @@ class SysUtilsArray
 	}
 
 	public static function mb_strcasecmp($str1, $str2, $encoding = null) {
+		$str1 = trim($str1);
+		$str2 = trim($str2);
 		if (null === $encoding) { $encoding = mb_internal_encoding(); }
 		return strcmp(mb_strtoupper($str1, $encoding), mb_strtoupper($str2, $encoding));
 	}
