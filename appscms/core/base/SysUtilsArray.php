@@ -31,11 +31,8 @@ class SysUtilsArray
 		return false;
 	}
 
-	public static function mb_strcasecmp($str1, $str2, $encoding = null) {
-		$str1 = trim($str1);
-		$str2 = trim($str2);
-		if (null === $encoding) { $encoding = mb_internal_encoding(); }
-		return strcmp(mb_strtoupper($str1, $encoding), mb_strtoupper($str2, $encoding));
+	public static function mb_strcasecmp($str1, $str2) {
+		return \MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($str1)) == \MYOBJ\appscms\core\base\SysUtilsString::transliterate(mb_strtolower($str2));
 	}
 
 	public static function find_arr_params($array, $elemFind) {
@@ -43,7 +40,7 @@ class SysUtilsArray
 		foreach($array as $e) {
 			$i=0;
 			foreach($elemFind as $findKey => $valKey) {
-				if(static::mb_strcasecmp($e[$findKey], $valKey) == 0) {
+				if(static::mb_strcasecmp($e[$findKey], $valKey)) {
 					$i++;
 					if($count==$i) {
 						return $e;
