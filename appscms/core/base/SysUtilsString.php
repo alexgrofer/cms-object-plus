@@ -37,4 +37,19 @@ class SysUtilsString
 		));
 		return $str;
 	}
+
+	public static function trimAll($str) {
+		$func = function($matches) {
+			if($matches[1]=="\n" && $matches[0]!="\r\n") {
+				return "\r\n\r\n";
+			}
+			elseif($matches[1]=="\n") {
+				return "\r\n";
+			}
+
+			return ' ';
+		};
+
+		return trim(preg_replace_callback('/(\s)+/', $func, $str));
+	}
 }
