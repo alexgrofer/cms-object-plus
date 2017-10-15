@@ -38,9 +38,9 @@ class DForm extends \CFormModel {
 		return $this;
 	}
 
-	public function addRulesAR($rulesAR) {
+	public function addRulesAR($rulesAR, $is_unic_continue=true) {
 		foreach($rulesAR as $rule) {
-			if($rule[1]=='unique') {
+			if($rule[1]=='unique' && $is_unic_continue) {
 				continue;
 			}
 			$name = array_shift($rule);
