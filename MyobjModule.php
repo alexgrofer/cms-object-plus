@@ -2,16 +2,15 @@
 
 class MyobjModule extends CWebModule
 {
-	public function init()
-	{
-		// this method is called when the module is being created
-		// you may place code here to customize the module or the application
-
+	public static function createCMS() {
 		Yii::setPathOfAlias('MYOBJ', dirname(__FILE__));
 
-		$routeArr=explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
-		//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
-		$isAdminUI = (isset($routeArr[1]) && $routeArr[1] == 'admin')?true:false;
+		$isAdminUI = false;
+		if(IS_CONSOLE==false) {
+			$routeArr = explode('/', yii::app()->getUrlManager()->parseUrl(yii::app()->getRequest()));
+			//только в случае если ввел url,в модульных тестах могут быть проблемы из за этого
+			$isAdminUI = (isset($routeArr[1]) && $routeArr[1] == 'admin') ? true : false;
+		}
 
 		yii::app()->setComponents(array(
 			'appcms'=>array(
@@ -20,6 +19,14 @@ class MyobjModule extends CWebModule
 			)
 		));
 		yii::app()->appcms->init();
+	}
+
+	public function init()
+	{
+		// this method is called when the module is being created
+		// you may place code here to customize the module or the application
+
+		static::createCMS();
 	}
 
 	public function beforeControllerAction($controller, $action)
