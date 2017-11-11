@@ -138,7 +138,7 @@ abstract class AbsBaseHeaders extends AbsBaseModel
 		foreach($classproperties as $objprop) {
 			if(array_key_exists($objprop->codename, $this->_tmpUProperties)!==false) {
 				if(array_key_exists($objprop->codename,$arraylinesvalue)!==false) {
-					$arraylinesvalue[$objprop->codename]['objline']->$arraylinesvalue[$objprop->codename]['namecol'] = $this->_tmpUProperties[$objprop->codename];
+					$arraylinesvalue[$objprop->codename]['objline']->{$arraylinesvalue[$objprop->codename]['namecol']} = $this->_tmpUProperties[$objprop->codename];
 					$arraylinesvalue[$objprop->codename]['objline']->save();
 				}
 				else {
