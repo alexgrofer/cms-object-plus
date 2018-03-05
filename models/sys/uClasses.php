@@ -102,6 +102,7 @@ class uClasses extends AbsBaseModel
 		$nameClass = $this->getNameModelHeaderClass();
 		$modelheaders = $nameClass::model();
 		if(!$modelheaders->is_independent) {
+			$modelheaders->uclass_id = $this->primaryKey;
 			$modelheaders->dbCriteria->compare($modelheaders->getTableAlias() . '.uclass_id', $this->primaryKey);
 		}
 		return $modelheaders;

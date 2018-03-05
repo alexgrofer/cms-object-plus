@@ -163,7 +163,7 @@ class AdminController extends \CController {
 						// acces
 						if($this->paramsrender['REND_acces_write']==false && count($_POST)) $this->redirect($this->getUrlBeforeAction());
 						//
-						if(is_numeric($this->dicturls['paramslist'][4])) {
+						if($this->dicturls['paramslist'][4]!=0) {
 							$modelAD = $modelAD->findByPk($this->dicturls['paramslist'][4]);
 						}
 						else {
